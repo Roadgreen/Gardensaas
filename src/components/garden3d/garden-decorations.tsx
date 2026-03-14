@@ -1,0 +1,565 @@
+'use client';
+
+import { useRef, useMemo } from 'react';
+import { useFrame } from '@react-three/fiber';
+import * as THREE from 'three';
+
+interface GardenDecorationsProps {
+  gardenLength: number;
+  gardenWidth: number;
+  season: 'spring' | 'summer' | 'autumn' | 'winter';
+}
+
+// Watering can
+function WateringCan({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position} rotation={[0, 0.4, 0]}>
+      <mesh position={[0, 0.06, 0]} castShadow>
+        <cylinderGeometry args={[0.06, 0.08, 0.12, 8]} />
+        <meshStandardMaterial color="#5B8C5A" metalness={0.3} roughness={0.6} />
+      </mesh>
+      <mesh position={[0, 0.14, -0.02]} rotation={[0, 0, 0]}>
+        <torusGeometry args={[0.04, 0.008, 4, 8, Math.PI]} />
+        <meshStandardMaterial color="#4A7A49" metalness={0.4} />
+      </mesh>
+      <mesh position={[0.08, 0.1, 0]} rotation={[0, 0, -0.6]} castShadow>
+        <cylinderGeometry args={[0.015, 0.01, 0.1, 6]} />
+        <meshStandardMaterial color="#5B8C5A" metalness={0.3} />
+      </mesh>
+      <mesh position={[0.12, 0.14, 0]} rotation={[0, 0, -0.6]}>
+        <sphereGeometry args={[0.02, 6, 4]} />
+        <meshStandardMaterial color="#4A7A49" metalness={0.4} />
+      </mesh>
+    </group>
+  );
+}
+
+// Wheelbarrow
+function Wheelbarrow({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position} rotation={[0, -0.8, 0]}>
+      <mesh position={[0, 0.1, 0]} castShadow>
+        <boxGeometry args={[0.2, 0.1, 0.12]} />
+        <meshStandardMaterial color="#8B7355" />
+      </mesh>
+      <mesh position={[0.12, 0.04, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.04, 0.04, 0.02, 8]} />
+        <meshStandardMaterial color="#5D4037" />
+      </mesh>
+      <mesh position={[-0.12, 0.1, 0.05]} rotation={[0, 0, 0.2]} castShadow>
+        <boxGeometry args={[0.15, 0.02, 0.02]} />
+        <meshStandardMaterial color="#A0845C" />
+      </mesh>
+      <mesh position={[-0.12, 0.1, -0.05]} rotation={[0, 0, 0.2]} castShadow>
+        <boxGeometry args={[0.15, 0.02, 0.02]} />
+        <meshStandardMaterial color="#A0845C" />
+      </mesh>
+      <mesh position={[-0.04, 0.04, 0.06]}>
+        <boxGeometry args={[0.015, 0.08, 0.015]} />
+        <meshStandardMaterial color="#777" metalness={0.3} />
+      </mesh>
+      <mesh position={[-0.04, 0.04, -0.06]}>
+        <boxGeometry args={[0.015, 0.08, 0.015]} />
+        <meshStandardMaterial color="#777" metalness={0.3} />
+      </mesh>
+      <mesh position={[0, 0.14, 0]}>
+        <boxGeometry args={[0.16, 0.04, 0.08]} />
+        <meshStandardMaterial color="#5C3D1E" />
+      </mesh>
+    </group>
+  );
+}
+
+// Bird
+function Bird({ startPosition, speed }: { startPosition: [number, number, number]; speed: number }) {
+  const birdRef = useRef<THREE.Group>(null);
+  const wingLeftRef = useRef<THREE.Mesh>(null);
+  const wingRightRef = useRef<THREE.Mesh>(null);
+  const isGrounded = useRef(Math.random() > 0.5);
+  const groundTimer = useRef(Math.random() * 5);
+
+  const bodyColor = useMemo(() => {
+    const colors = ['#8B4513', '#D2691E', '#A0522D', '#555555', '#4169E1'];
+    return colors[Math.floor(Math.random() * colors.length)];
+  }, []);
+
+  useFrame((_, delta) => {
+    if (!birdRef.current) return;
+    const t = performance.now() * 0.001;
+
+    groundTimer.current -= delta;
+
+    if (isGrounded.current) {
+      birdRef.current.position.y = startPosition[1];
+      birdRef.current.rotation.x = Math.sin(t * 3) * 0.2;
+      if (Math.sin(t * 2) > 0.9) {
+        birdRef.current.position.y = startPosition[1] + 0.03;
+      }
+      if (groundTimer.current < 0) {
+        isGrounded.current = false;
+        groundTimer.current = 3 + Math.random() * 5;
+      }
+    } else {
+      birdRef.current.position.x = startPosition[0] + Math.sin(t * speed * 0.3) * 2;
+      birdRef.current.position.z = startPosition[2] + Math.cos(t * speed * 0.2) * 1.5;
+      birdRef.current.position.y = startPosition[1] + 1 + Math.sin(t * 0.5) * 0.3;
+      birdRef.current.rotation.y = t * speed * 0.3;
+
+      if (wingLeftRef.current) wingLeftRef.current.rotation.z = Math.sin(t * 12) * 0.5 - 0.3;
+      if (wingRightRef.current) wingRightRef.current.rotation.z = -Math.sin(t * 12) * 0.5 + 0.3;
+
+      if (groundTimer.current < 0) {
+        isGrounded.current = true;
+        groundTimer.current = 2 + Math.random() * 4;
+      }
+    }
+  });
+
+  return (
+    <group ref={birdRef} position={startPosition}>
+      <mesh castShadow>
+        <sphereGeometry args={[0.025, 6, 4]} />
+        <meshStandardMaterial color={bodyColor} />
+      </mesh>
+      <mesh position={[0, 0.015, 0.02]}>
+        <sphereGeometry args={[0.015, 6, 4]} />
+        <meshStandardMaterial color={bodyColor} />
+      </mesh>
+      <mesh position={[0, 0.012, 0.035]} rotation={[-0.3, 0, 0]}>
+        <coneGeometry args={[0.005, 0.015, 4]} />
+        <meshStandardMaterial color="#FFA000" />
+      </mesh>
+      <mesh position={[0.008, 0.02, 0.03]}>
+        <sphereGeometry args={[0.003, 4, 3]} />
+        <meshStandardMaterial color="#111" />
+      </mesh>
+      <mesh ref={wingLeftRef} position={[-0.025, 0.005, 0]}>
+        <boxGeometry args={[0.03, 0.004, 0.02]} />
+        <meshStandardMaterial color={bodyColor} />
+      </mesh>
+      <mesh ref={wingRightRef} position={[0.025, 0.005, 0]}>
+        <boxGeometry args={[0.03, 0.004, 0.02]} />
+        <meshStandardMaterial color={bodyColor} />
+      </mesh>
+      <mesh position={[0, 0.005, -0.03]} rotation={[0.3, 0, 0]}>
+        <boxGeometry args={[0.01, 0.004, 0.02]} />
+        <meshStandardMaterial color={bodyColor} />
+      </mesh>
+    </group>
+  );
+}
+
+// Butterfly with flapping wings
+function Butterfly({ startPosition, speed }: { startPosition: [number, number, number]; speed: number }) {
+  const butterflyRef = useRef<THREE.Group>(null);
+  const wingColor = useMemo(() => {
+    const colors = ['#FF69B4', '#DDA0DD', '#FFD700', '#87CEEB', '#FFA07A', '#FF6347'];
+    return colors[Math.floor(Math.random() * colors.length)];
+  }, []);
+
+  useFrame(() => {
+    if (!butterflyRef.current) return;
+    const t = performance.now() * 0.001;
+    butterflyRef.current.position.x = startPosition[0] + Math.sin(t * speed * 0.5) * 1.5;
+    butterflyRef.current.position.z = startPosition[2] + Math.cos(t * speed * 0.3) * 1;
+    butterflyRef.current.position.y = startPosition[1] + 0.3 + Math.sin(t * 2) * 0.15;
+    butterflyRef.current.rotation.y = t * speed * 0.5 + Math.PI / 2;
+  });
+
+  return (
+    <group ref={butterflyRef} position={startPosition}>
+      <mesh>
+        <capsuleGeometry args={[0.004, 0.02, 3, 4]} />
+        <meshStandardMaterial color="#333" />
+      </mesh>
+      <ButterflyWing position={[-0.015, 0.003, 0]} color={wingColor} side="left" />
+      <ButterflyWing position={[0.015, 0.003, 0]} color={wingColor} side="right" />
+      <mesh position={[-0.005, 0.012, 0.005]} rotation={[0.5, 0, -0.3]}>
+        <cylinderGeometry args={[0.001, 0.001, 0.015, 3]} />
+        <meshStandardMaterial color="#333" />
+      </mesh>
+      <mesh position={[0.005, 0.012, 0.005]} rotation={[0.5, 0, 0.3]}>
+        <cylinderGeometry args={[0.001, 0.001, 0.015, 3]} />
+        <meshStandardMaterial color="#333" />
+      </mesh>
+    </group>
+  );
+}
+
+function ButterflyWing({ position, color, side }: { position: [number, number, number]; color: string; side: 'left' | 'right' }) {
+  const wingRef = useRef<THREE.Mesh>(null);
+  useFrame(() => {
+    if (!wingRef.current) return;
+    const t = performance.now() * 0.001;
+    const flutter = Math.sin(t * 15) * 0.8;
+    wingRef.current.rotation.z = side === 'left' ? -flutter - 0.2 : flutter + 0.2;
+  });
+
+  return (
+    <mesh ref={wingRef} position={position}>
+      <boxGeometry args={[0.02, 0.001, 0.015]} />
+      <meshStandardMaterial color={color} transparent opacity={0.8} side={THREE.DoubleSide} />
+    </mesh>
+  );
+}
+
+// Bee
+function Bee({ startPosition, speed }: { startPosition: [number, number, number]; speed: number }) {
+  const beeRef = useRef<THREE.Group>(null);
+  const wingRef = useRef<THREE.Group>(null);
+
+  useFrame(() => {
+    if (!beeRef.current) return;
+    const t = performance.now() * 0.001;
+    // Erratic bee-like path
+    beeRef.current.position.x = startPosition[0] + Math.sin(t * speed * 0.7) * 0.8 + Math.sin(t * speed * 1.5) * 0.3;
+    beeRef.current.position.z = startPosition[2] + Math.cos(t * speed * 0.5) * 0.6;
+    beeRef.current.position.y = startPosition[1] + 0.25 + Math.sin(t * 3) * 0.08;
+    beeRef.current.rotation.y = t * speed * 0.7;
+
+    if (wingRef.current) {
+      wingRef.current.children.forEach((w, i) => {
+        (w as THREE.Mesh).rotation.z = Math.sin(t * 30) * 0.4 * (i === 0 ? -1 : 1);
+      });
+    }
+  });
+
+  return (
+    <group ref={beeRef} position={startPosition}>
+      {/* Body */}
+      <mesh>
+        <capsuleGeometry args={[0.008, 0.015, 3, 4]} />
+        <meshStandardMaterial color="#F5C518" />
+      </mesh>
+      {/* Stripes */}
+      <mesh position={[0, 0, 0.003]}>
+        <boxGeometry args={[0.018, 0.005, 0.005]} />
+        <meshStandardMaterial color="#1a1a1a" />
+      </mesh>
+      <mesh position={[0, 0, -0.005]}>
+        <boxGeometry args={[0.018, 0.005, 0.005]} />
+        <meshStandardMaterial color="#1a1a1a" />
+      </mesh>
+      {/* Wings */}
+      <group ref={wingRef}>
+        <mesh position={[-0.01, 0.008, 0]}>
+          <boxGeometry args={[0.012, 0.001, 0.01]} />
+          <meshStandardMaterial color="#FFFFFF" transparent opacity={0.5} />
+        </mesh>
+        <mesh position={[0.01, 0.008, 0]}>
+          <boxGeometry args={[0.012, 0.001, 0.01]} />
+          <meshStandardMaterial color="#FFFFFF" transparent opacity={0.5} />
+        </mesh>
+      </group>
+    </group>
+  );
+}
+
+// Garden sign
+function GardenSign({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position} rotation={[0, 0.3, 0]}>
+      <mesh position={[0, 0.15, 0]} castShadow>
+        <boxGeometry args={[0.04, 0.3, 0.03]} />
+        <meshStandardMaterial color="#8B6914" />
+      </mesh>
+      <mesh position={[0, 0.28, 0.02]} castShadow>
+        <boxGeometry args={[0.22, 0.12, 0.015]} />
+        <meshStandardMaterial color="#D4A050" />
+      </mesh>
+      {/* Little heart carved in sign */}
+      <mesh position={[0, 0.28, 0.03]}>
+        <sphereGeometry args={[0.015, 6, 4]} />
+        <meshStandardMaterial color="#E11D48" />
+      </mesh>
+    </group>
+  );
+}
+
+// Decorative tree
+function SmallTree({ position, season }: { position: [number, number, number]; season: string }) {
+  const leafColor = useMemo(() => {
+    switch (season) {
+      case 'spring': return '#66BB6A';
+      case 'summer': return '#2E7D32';
+      case 'autumn': return '#E65100';
+      case 'winter': return '#90A4AE';
+      default: return '#4CAF50';
+    }
+  }, [season]);
+
+  const ref = useRef<THREE.Group>(null);
+  useFrame(() => {
+    if (!ref.current) return;
+    const t = performance.now() * 0.001;
+    ref.current.rotation.z = Math.sin(t * 0.5 + position[0] * 3) * 0.015;
+  });
+
+  return (
+    <group ref={ref} position={position}>
+      <mesh position={[0, 0.15, 0]} castShadow>
+        <cylinderGeometry args={[0.04, 0.06, 0.3, 6]} />
+        <meshStandardMaterial color="#795548" />
+      </mesh>
+      <mesh position={[0, 0.35, 0]} castShadow>
+        <coneGeometry args={[0.22, 0.25, 7]} />
+        <meshStandardMaterial color={leafColor} />
+      </mesh>
+      <mesh position={[0, 0.5, 0]} castShadow>
+        <coneGeometry args={[0.17, 0.22, 7]} />
+        <meshStandardMaterial color={leafColor} />
+      </mesh>
+      <mesh position={[0, 0.62, 0]} castShadow>
+        <coneGeometry args={[0.11, 0.16, 7]} />
+        <meshStandardMaterial color={leafColor} />
+      </mesh>
+      {season === 'winter' && (
+        <>
+          <mesh position={[0, 0.37, 0]}>
+            <coneGeometry args={[0.23, 0.05, 7]} />
+            <meshStandardMaterial color="#F5F5F5" transparent opacity={0.6} />
+          </mesh>
+          <mesh position={[0, 0.52, 0]}>
+            <coneGeometry args={[0.18, 0.04, 7]} />
+            <meshStandardMaterial color="#F5F5F5" transparent opacity={0.6} />
+          </mesh>
+        </>
+      )}
+      {season === 'spring' && (
+        <>
+          {/* Cherry blossom spots */}
+          <mesh position={[0.15, 0.4, 0.05]}>
+            <sphereGeometry args={[0.02, 4, 3]} />
+            <meshStandardMaterial color="#FFB7D5" />
+          </mesh>
+          <mesh position={[-0.1, 0.5, 0.08]}>
+            <sphereGeometry args={[0.018, 4, 3]} />
+            <meshStandardMaterial color="#FFB7D5" />
+          </mesh>
+        </>
+      )}
+      {/* Shadow blob */}
+      <mesh position={[0, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.15, 6]} />
+        <meshBasicMaterial color="#000000" transparent opacity={0.1} />
+      </mesh>
+    </group>
+  );
+}
+
+// Mushroom
+function Mushroom({ position }: { position: [number, number, number] }) {
+  const capColor = useMemo(() => {
+    const colors = ['#E53935', '#F4511E', '#8D6E63', '#FFB300'];
+    return colors[Math.floor(Math.random() * colors.length)];
+  }, []);
+
+  return (
+    <group position={position}>
+      <mesh position={[0, 0.02, 0]}>
+        <cylinderGeometry args={[0.01, 0.012, 0.04, 6]} />
+        <meshStandardMaterial color="#FFF8E1" />
+      </mesh>
+      <mesh position={[0, 0.04, 0]}>
+        <sphereGeometry args={[0.02, 6, 4, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        <meshStandardMaterial color={capColor} />
+      </mesh>
+      <mesh position={[0.01, 0.048, 0.005]}>
+        <sphereGeometry args={[0.004, 4, 3]} />
+        <meshStandardMaterial color="white" />
+      </mesh>
+      <mesh position={[-0.005, 0.05, -0.01]}>
+        <sphereGeometry args={[0.003, 4, 3]} />
+        <meshStandardMaterial color="white" />
+      </mesh>
+    </group>
+  );
+}
+
+// Flower pot
+function FlowerPot({ position, season }: { position: [number, number, number]; season: string }) {
+  return (
+    <group position={position}>
+      <mesh position={[0, 0.04, 0]} castShadow>
+        <cylinderGeometry args={[0.05, 0.04, 0.08, 8]} />
+        <meshStandardMaterial color="#C0664F" />
+      </mesh>
+      <mesh position={[0, 0.08, 0]}>
+        <cylinderGeometry args={[0.055, 0.05, 0.015, 8]} />
+        <meshStandardMaterial color="#B05A45" />
+      </mesh>
+      <mesh position={[0, 0.075, 0]}>
+        <cylinderGeometry args={[0.045, 0.045, 0.01, 8]} />
+        <meshStandardMaterial color="#5C3D1E" />
+      </mesh>
+      <mesh position={[0, 0.12, 0]}>
+        <sphereGeometry args={[0.022, 6, 4]} />
+        <meshStandardMaterial color={season === 'winter' ? '#E8E8E8' : '#FF69B4'} />
+      </mesh>
+      <mesh position={[0, 0.095, 0]}>
+        <cylinderGeometry args={[0.004, 0.004, 0.04, 4]} />
+        <meshStandardMaterial color="#4CAF50" />
+      </mesh>
+    </group>
+  );
+}
+
+// Water droplets effect
+function WaterDroplets({ position, active }: { position: [number, number, number]; active: boolean }) {
+  const ref = useRef<THREE.Group>(null);
+  const drops = useMemo(() =>
+    Array.from({ length: 12 }, (_, i) => ({
+      x: (Math.random() - 0.5) * 0.3,
+      z: (Math.random() - 0.5) * 0.3,
+      speed: 1 + Math.random() * 2,
+      offset: Math.random() * Math.PI * 2,
+    })),
+  []);
+
+  useFrame(() => {
+    if (!ref.current || !active) return;
+    const t = performance.now() * 0.001;
+    ref.current.children.forEach((child, i) => {
+      const d = drops[i];
+      const mesh = child as THREE.Mesh;
+      const phase = (t * d.speed + d.offset) % 1;
+      mesh.position.y = 0.6 - phase * 0.6;
+      mesh.visible = active;
+      const fade = phase < 0.8 ? 1 : (1 - phase) / 0.2;
+      (mesh.material as THREE.MeshBasicMaterial).opacity = fade * 0.6;
+    });
+  });
+
+  if (!active) return null;
+
+  return (
+    <group ref={ref} position={position}>
+      {drops.map((d, i) => (
+        <mesh key={`drop-${i}`} position={[d.x, 0.5, d.z]}>
+          <sphereGeometry args={[0.008, 4, 3]} />
+          <meshBasicMaterial color="#93C5FD" transparent opacity={0.6} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+export function GardenDecorations({ gardenLength, gardenWidth, season }: GardenDecorationsProps) {
+  const halfL = gardenLength / 2;
+  const halfW = gardenWidth / 2;
+
+  const birdPositions = useMemo(() => {
+    return Array.from({ length: 3 }, (_, i) => ({
+      pos: [
+        Math.sin(i * 2.1) * 0.5 * gardenLength,
+        0.03,
+        Math.cos(i * 3.7) * 0.5 * gardenWidth,
+      ] as [number, number, number],
+      speed: 0.4 + i * 0.2,
+    }));
+  }, [gardenLength, gardenWidth]);
+
+  const butterflyPositions = useMemo(() => {
+    if (season === 'winter') return [];
+    return Array.from({ length: season === 'spring' ? 5 : 3 }, (_, i) => ({
+      pos: [
+        Math.sin(i * 1.7 + 0.5) * 0.4 * gardenLength,
+        0.2,
+        Math.cos(i * 2.3 + 1) * 0.4 * gardenWidth,
+      ] as [number, number, number],
+      speed: 0.5 + i * 0.15,
+    }));
+  }, [gardenLength, gardenWidth, season]);
+
+  const beePositions = useMemo(() => {
+    if (season === 'winter') return [];
+    return Array.from({ length: season === 'summer' ? 4 : 2 }, (_, i) => ({
+      pos: [
+        Math.sin(i * 2.5 + 3) * 0.3 * gardenLength,
+        0.15,
+        Math.cos(i * 1.8 + 2) * 0.3 * gardenWidth,
+      ] as [number, number, number],
+      speed: 0.6 + i * 0.2,
+    }));
+  }, [gardenLength, gardenWidth, season]);
+
+  const mushroomPositions = useMemo(() => {
+    if (season === 'winter') return [];
+    return Array.from({ length: 4 }, (_, i) => [
+      halfL + 0.5 + Math.sin(i * 3) * 0.5,
+      0,
+      -halfW + i * (gardenWidth / 3) - 0.3,
+    ] as [number, number, number]);
+  }, [halfL, halfW, gardenWidth, season]);
+
+  return (
+    <group>
+      {/* Watering can */}
+      <WateringCan position={[halfL + 0.5, 0, halfW - 0.3]} />
+
+      {/* Wheelbarrow */}
+      <Wheelbarrow position={[-halfL - 0.7, 0, -halfW + 0.5]} />
+
+      {/* Garden sign */}
+      <GardenSign position={[0, 0, halfW + 0.7]} />
+
+      {/* Trees */}
+      <SmallTree position={[halfL + 1.4, 0, halfW + 1]} season={season} />
+      <SmallTree position={[-halfL - 1.2, 0, -halfW - 0.8]} season={season} />
+      <SmallTree position={[halfL + 1, 0, -halfW - 1.2]} season={season} />
+      <SmallTree position={[-halfL - 1.5, 0, halfW + 0.6]} season={season} />
+
+      {/* Birds */}
+      {birdPositions.map((bird, i) => (
+        <Bird key={`bird-${i}`} startPosition={bird.pos} speed={bird.speed} />
+      ))}
+
+      {/* Butterflies */}
+      {butterflyPositions.map((bf, i) => (
+        <Butterfly key={`bf-${i}`} startPosition={bf.pos} speed={bf.speed} />
+      ))}
+
+      {/* Bees */}
+      {beePositions.map((bee, i) => (
+        <Bee key={`bee-${i}`} startPosition={bee.pos} speed={bee.speed} />
+      ))}
+
+      {/* Mushrooms */}
+      {mushroomPositions.map((pos, i) => (
+        <Mushroom key={`mush-${i}`} position={pos} />
+      ))}
+
+      {/* Flower pots */}
+      <FlowerPot position={[halfL + 0.4, 0, 0]} season={season} />
+      <FlowerPot position={[-halfL - 0.4, 0, halfW - 0.5]} season={season} />
+
+      {/* Rock cluster */}
+      <group position={[-halfL - 0.6, 0, halfW + 0.4]}>
+        <mesh position={[0, 0.03, 0]} castShadow>
+          <sphereGeometry args={[0.06, 6, 4]} />
+          <meshStandardMaterial color="#9E9E9E" roughness={0.9} />
+        </mesh>
+        <mesh position={[0.06, 0.02, 0.02]} castShadow>
+          <sphereGeometry args={[0.04, 5, 4]} />
+          <meshStandardMaterial color="#BDBDBD" roughness={0.9} />
+        </mesh>
+        <mesh position={[-0.03, 0.02, 0.04]} castShadow>
+          <sphereGeometry args={[0.035, 5, 3]} />
+          <meshStandardMaterial color="#A0A0A0" roughness={0.9} />
+        </mesh>
+      </group>
+
+      {/* Compost bin */}
+      <group position={[-halfL - 0.8, 0, 0.3]} rotation={[0, 0.5, 0]}>
+        <mesh position={[0, 0.08, 0]} castShadow>
+          <boxGeometry args={[0.15, 0.16, 0.12]} />
+          <meshStandardMaterial color="#6D4C2A" />
+        </mesh>
+        <mesh position={[0, 0.17, 0]}>
+          <boxGeometry args={[0.17, 0.02, 0.14]} />
+          <meshStandardMaterial color="#5C3D1E" />
+        </mesh>
+      </group>
+    </group>
+  );
+}
