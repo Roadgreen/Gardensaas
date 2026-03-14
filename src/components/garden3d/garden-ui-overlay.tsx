@@ -22,6 +22,9 @@ interface GardenUIOverlayProps {
   onTogglePlacement?: () => void;
   onRemoveSelectedPlant?: () => void;
   selectedPlantIndex?: number | null;
+  // Tool system
+  activeTool?: string | null;
+  onToolSelect?: (tool: string | null) => void;
 }
 
 const SEASON_ICONS: Record<string, string> = {
@@ -72,6 +75,15 @@ const WEATHER_ICONS: Record<string, string> = {
   Breezy: '\u{1F343}',
 };
 
+// Game toolbar tools
+const TOOLS = [
+  { id: 'water', icon: '\u{1F4A7}', label: 'Water', color: '#60A5FA', description: 'Water your plants' },
+  { id: 'plant', icon: '\u{1F331}', label: 'Plant', color: '#4ADE80', description: 'Place a new plant' },
+  { id: 'harvest', icon: '\u{1F33E}', label: 'Harvest', color: '#FFD700', description: 'Harvest ripe crops' },
+  { id: 'info', icon: '\u{1F50D}', label: 'Info', color: '#A78BFA', description: 'Inspect plant details' },
+  { id: 'fertilize', icon: '\u{2728}', label: 'Boost', color: '#F59E0B', description: 'Fertilize soil' },
+];
+
 const overlayBase: React.CSSProperties = {
   background: 'rgba(15, 40, 24, 0.88)',
   backdropFilter: 'blur(12px)',
@@ -101,11 +113,14 @@ export function GardenUIOverlay({
   onTogglePlacement,
   onRemoveSelectedPlant,
   selectedPlantIndex = null,
+  activeTool = null,
+  onToolSelect,
 }: GardenUIOverlayProps) {
   const [weather, setWeather] = useState('Sunny');
   const [currentDate, setCurrentDate] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [showToolbar, setShowToolbar] = useState(false);
+  const [toolTooltip, setToolTooltip] = useState<string | null>(null);
 
   useEffect(() => {
     setWeather(getWeather(season));
@@ -130,6 +145,19 @@ export function GardenUIOverlay({
       onSelectPlantType?.(plantId);
     }
   }, [selectedPlantType, onSelectPlantType]);
+
+  const handleToolClick = useCallback((toolId: string) => {
+    if (activeTool === toolId) {
+      onToolSelect?.(null);
+    } else {
+      onToolSelect?.(toolId);
+      // If plant tool, also trigger placement mode
+      if (toolId === 'plant') {
+        setShowToolbar(true);
+        onTogglePlacement?.();
+      }
+    }
+  }, [activeTool, onToolSelect, onTogglePlacement]);
 
   return (
     <>
@@ -164,6 +192,7 @@ export function GardenUIOverlay({
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
+            animation: 'pulse 2s ease-in-out infinite',
           }}>
             <span>{'\u{1F4CB}'}</span>
             {taskCount} task{taskCount !== 1 ? 's' : ''}
@@ -225,45 +254,35 @@ export function GardenUIOverlay({
         )}
       </div>
 
-      {/* ===== BOTTOM: Plant Toolbar ===== */}
+      {/* ===== BOTTOM: Game Hotbar Toolbar ===== */}
       <div style={{
         position: 'absolute',
-        bottom: showDialogue ? '110px' : '12px',
+        bottom: showDialogue ? '120px' : '16px',
         left: '50%',
         transform: 'translateX(-50%)',
         zIndex: 25,
         transition: 'bottom 0.3s ease',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: '8px',
       }}>
-        {/* Toggle toolbar button */}
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}>
-          <button
-            onClick={() => { setShowToolbar(!showToolbar); if (!showToolbar) onTogglePlacement?.(); }}
-            style={{
-              ...overlayBase,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '10px 20px',
-              fontSize: '14px',
-              fontWeight: 'bold',
-              background: isPlacementMode
-                ? 'linear-gradient(135deg, rgba(74, 222, 128, 0.4), rgba(34, 197, 94, 0.4))'
-                : overlayBase.background,
-              border: isPlacementMode
-                ? '2px solid #4ADE80'
-                : '1px solid rgba(74, 222, 128, 0.3)',
-              transition: 'all 0.2s',
-              borderRadius: '16px',
-            }}
-          >
-            <span style={{ fontSize: '18px' }}>{isPlacementMode ? '\u{2705}' : '\u{1F331}'}</span>
-            {isPlacementMode ? (selectedPlantType ? 'Tap garden to plant!' : 'Select a plant below') : 'Plant Something'}
-          </button>
-        </div>
+        {/* Tool tooltip */}
+        {toolTooltip && (
+          <div style={{
+            ...overlayBase,
+            padding: '4px 12px',
+            fontSize: '11px',
+            color: '#86EFAC',
+            borderRadius: '8px',
+            animation: 'fadeInUp 0.2s ease-out',
+          }}>
+            {toolTooltip}
+          </div>
+        )}
 
-        {/* Plant selection toolbar */}
-        {showToolbar && isPlacementMode && (
+        {/* Plant selection toolbar (when plant tool active) */}
+        {showToolbar && (activeTool === 'plant' || isPlacementMode) && (
           <div style={{
             ...overlayBase,
             padding: '10px',
@@ -351,6 +370,99 @@ export function GardenUIOverlay({
             </div>
           </div>
         )}
+
+        {/* Main hotbar - game style tool slots */}
+        <div style={{
+          ...overlayBase,
+          padding: '6px 10px',
+          borderRadius: '16px',
+          display: 'flex',
+          gap: '4px',
+          alignItems: 'center',
+          border: '2px solid rgba(74, 222, 128, 0.35)',
+          background: 'rgba(10, 30, 18, 0.92)',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.4), 0 0 15px rgba(74, 222, 128, 0.08)',
+        }}>
+          {TOOLS.map((tool, index) => (
+            <div key={tool.id} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <button
+                onClick={() => handleToolClick(tool.id)}
+                onMouseEnter={() => setToolTooltip(tool.description)}
+                onMouseLeave={() => setToolTooltip(null)}
+                style={{
+                  width: '48px',
+                  height: '48px',
+                  borderRadius: '12px',
+                  border: activeTool === tool.id
+                    ? `2px solid ${tool.color}`
+                    : '2px solid rgba(255,255,255,0.1)',
+                  background: activeTool === tool.id
+                    ? `${tool.color}22`
+                    : 'rgba(0,0,0,0.3)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '2px',
+                  transition: 'all 0.2s',
+                  position: 'relative',
+                  fontFamily: '"Nunito", system-ui, sans-serif',
+                  transform: activeTool === tool.id ? 'translateY(-4px) scale(1.05)' : 'translateY(0)',
+                  boxShadow: activeTool === tool.id
+                    ? `0 4px 12px ${tool.color}33, 0 0 8px ${tool.color}22`
+                    : 'none',
+                }}
+              >
+                <span style={{ fontSize: '20px', lineHeight: 1 }}>{tool.icon}</span>
+                <span style={{
+                  fontSize: '8px',
+                  color: activeTool === tool.id ? tool.color : '#9CA3AF',
+                  fontWeight: activeTool === tool.id ? 'bold' : 'normal',
+                  letterSpacing: '0.5px',
+                }}>
+                  {tool.label}
+                </span>
+
+                {/* Hotkey number */}
+                <span style={{
+                  position: 'absolute',
+                  top: '2px',
+                  right: '4px',
+                  fontSize: '8px',
+                  color: 'rgba(156, 163, 175, 0.4)',
+                  fontWeight: 'bold',
+                }}>
+                  {index + 1}
+                </span>
+
+                {/* Active indicator dot */}
+                {activeTool === tool.id && (
+                  <span style={{
+                    position: 'absolute',
+                    bottom: '-6px',
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    width: '6px',
+                    height: '6px',
+                    borderRadius: '50%',
+                    background: tool.color,
+                    boxShadow: `0 0 6px ${tool.color}`,
+                  }} />
+                )}
+              </button>
+              {/* Separator between tools */}
+              {index < TOOLS.length - 1 && (
+                <div style={{
+                  width: '1px',
+                  height: '24px',
+                  background: 'rgba(255,255,255,0.08)',
+                  margin: '0 2px',
+                }} />
+              )}
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* ===== DIALOGUE BOX (Animal Crossing style) ===== */}
@@ -359,7 +471,7 @@ export function GardenUIOverlay({
           onClick={onDialogueClose}
           style={{
             position: 'absolute',
-            bottom: '16px',
+            bottom: '100px',
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 30,

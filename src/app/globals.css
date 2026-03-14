@@ -130,3 +130,57 @@ html {
   border-right: 10px solid transparent;
   border-top: 10px solid #4ADE80;
 }
+
+/* Fade-in-up animation for UI elements */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Gentle sway for nature elements */
+@keyframes sway {
+  0%, 100% { transform: rotate(-2deg); }
+  50% { transform: rotate(2deg); }
+}
+
+.animate-sway {
+  animation: sway 3s ease-in-out infinite;
+}
+
+/* Quest badge glow */
+@keyframes quest-glow {
+  0%, 100% { box-shadow: 0 0 5px rgba(245, 158, 11, 0.3); }
+  50% { box-shadow: 0 0 15px rgba(245, 158, 11, 0.5), 0 0 30px rgba(245, 158, 11, 0.2); }
+}
+
+.animate-quest-glow {
+  animation: quest-glow 2s ease-in-out infinite;
+}
+
+/* Game tool slot hover */
+@keyframes tool-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+
+/* Warm earth-tone accent highlights */
+.earth-glow {
+  box-shadow: 0 0 20px rgba(139, 69, 19, 0.15), 0 0 40px rgba(74, 222, 128, 0.08);
+}
+
+/* Flower pop color accents */
+.flower-accent-pink {
+  background: linear-gradient(135deg, #FFB7D5, #FF69B4);
+}
+.flower-accent-yellow {
+  background: linear-gradient(135deg, #FFD700, #FFA000);
+}
+.flower-accent-purple {
+  background: linear-gradient(135deg, #DDA0DD, #9B59B6);
+}

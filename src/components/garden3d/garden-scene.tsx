@@ -58,6 +58,7 @@ function SkyDome({ season, timeOfDay }: { season: string; timeOfDay: string }) {
 // Sun/Moon
 function CelestialBody({ timeOfDay, season }: { timeOfDay: string; season: string }) {
   const bodyRef = useRef<THREE.Mesh>(null);
+  const glowRef = useRef<THREE.Mesh>(null);
 
   const sunAngle = useMemo(() => {
     const hour = new Date().getHours();
@@ -74,6 +75,15 @@ function CelestialBody({ timeOfDay, season }: { timeOfDay: string; season: strin
     return [x, Math.max(y, 3), -10];
   }, [sunAngle]);
 
+  // Animated sun glow
+  useFrame(() => {
+    if (glowRef.current && !isNight) {
+      const t = performance.now() * 0.001;
+      const pulse = 0.12 + Math.sin(t * 0.5) * 0.05;
+      (glowRef.current.material as THREE.MeshBasicMaterial).opacity = pulse;
+    }
+  });
+
   return (
     <group>
       {/* Sun or Moon */}
@@ -82,32 +92,31 @@ function CelestialBody({ timeOfDay, season }: { timeOfDay: string; season: strin
         <meshBasicMaterial color={isNight ? '#FFF9C4' : '#FFF176'} />
       </mesh>
 
-      {/* Sun glow */}
+      {/* Sun glow - animated */}
       {!isNight && (
-        <mesh position={position}>
+        <mesh ref={glowRef} position={position}>
           <sphereGeometry args={[3, 12, 8]} />
           <meshBasicMaterial color="#FFF176" transparent opacity={0.15} />
         </mesh>
       )}
 
-      {/* Stars at evening */}
+      {/* Stars at evening - twinkling */}
       {timeOfDay === 'evening' && (
         <group>
-          {Array.from({ length: 30 }).map((_, i) => {
-            const theta = (i / 30) * Math.PI * 2;
+          {Array.from({ length: 40 }).map((_, i) => {
+            const theta = (i / 40) * Math.PI * 2;
             const phi = Math.random() * Math.PI * 0.4 + 0.2;
             return (
-              <mesh
+              <TwinkleStar
                 key={`star-${i}`}
                 position={[
                   Math.sin(phi) * Math.cos(theta) * 40,
                   Math.cos(phi) * 30 + 10,
                   Math.sin(phi) * Math.sin(theta) * 40,
                 ]}
-              >
-                <sphereGeometry args={[0.1, 4, 3]} />
-                <meshBasicMaterial color="#FFFFFF" />
-              </mesh>
+                speed={0.5 + Math.random() * 2}
+                offset={Math.random() * Math.PI * 2}
+              />
             );
           })}
         </group>
@@ -123,6 +132,25 @@ function CelestialBody({ timeOfDay, season }: { timeOfDay: string; season: strin
         </group>
       )}
     </group>
+  );
+}
+
+// Twinkling star component
+function TwinkleStar({ position, speed, offset }: { position: [number, number, number]; speed: number; offset: number }) {
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame(() => {
+    if (!ref.current) return;
+    const t = performance.now() * 0.001;
+    const twinkle = (Math.sin(t * speed + offset) + 1) / 2;
+    ref.current.scale.setScalar(0.5 + twinkle * 0.8);
+    (ref.current.material as THREE.MeshBasicMaterial).opacity = 0.4 + twinkle * 0.6;
+  });
+
+  return (
+    <mesh ref={ref} position={position}>
+      <sphereGeometry args={[0.1, 4, 3]} />
+      <meshBasicMaterial color="#FFFFFF" transparent opacity={0.8} />
+    </mesh>
   );
 }
 
@@ -182,7 +210,7 @@ function CameraController({ isIsometric }: { isIsometric: boolean }) {
   return null;
 }
 
-// Lighting setup
+// Lighting setup with time-based transitions
 function SceneLighting({ timeOfDay, season }: { timeOfDay: string; season: string }) {
   const ambientIntensity = useMemo(() => {
     if (timeOfDay === 'evening') return 0.3;
@@ -235,6 +263,10 @@ function SceneLighting({ timeOfDay, season }: { timeOfDay: string; season: strin
           0.3,
         ]}
       />
+      {/* Warm point light for cozy feel in evening */}
+      {timeOfDay === 'evening' && (
+        <pointLight position={[0, 1, 0]} intensity={0.3} color="#FFA726" distance={8} />
+      )}
     </>
   );
 }
@@ -252,6 +284,7 @@ function SceneContent({
   onDialogueClose,
   isIsometric,
   plants,
+  activeTool,
 }: {
   config: GardenConfig;
   selectedPlantIndex: number | null;
@@ -264,6 +297,7 @@ function SceneContent({
   onDialogueClose: () => void;
   isIsometric: boolean;
   plants: Plant[];
+  activeTool: string | null;
 }) {
   const halfL = config.length / 2;
   const halfW = config.width / 2;
@@ -363,6 +397,7 @@ export function GardenScene({ config }: GardenSceneProps) {
   const [gardenerDialogue, setGardenerDialogue] = useState('');
   const [showGardenerDialogue, setShowGardenerDialogue] = useState(false);
   const [plants, setPlants] = useState<Plant[]>([]);
+  const [activeTool, setActiveTool] = useState<string | null>(null);
 
   const season = useMemo(() => getSeason(), []);
   const timeOfDay = useMemo(() => getTimeOfDay(), []);
@@ -399,6 +434,10 @@ export function GardenScene({ config }: GardenSceneProps) {
 
   const handleIsometricToggle = useCallback(() => {
     setIsIsometric((prev) => !prev);
+  }, []);
+
+  const handleToolSelect = useCallback((tool: string | null) => {
+    setActiveTool(tool);
   }, []);
 
   // Count harvest-ready plants
@@ -457,6 +496,7 @@ export function GardenScene({ config }: GardenSceneProps) {
           onDialogueClose={handleDialogueClose}
           isIsometric={isIsometric}
           plants={plants}
+          activeTool={activeTool}
         />
       </Canvas>
 
@@ -472,6 +512,8 @@ export function GardenScene({ config }: GardenSceneProps) {
         isIsometric={isIsometric}
         plantCount={config.plantedItems.length}
         harvestReadyCount={harvestReadyCount}
+        activeTool={activeTool}
+        onToolSelect={handleToolSelect}
       />
     </div>
   );

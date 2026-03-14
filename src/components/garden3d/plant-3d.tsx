@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useMemo } from 'react';
+import { useRef, useState, useMemo, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
@@ -49,7 +49,7 @@ function SeedModel() {
   useFrame(() => {
     if (!ref.current) return;
     const t = performance.now() * 0.001;
-    ref.current.position.y = 0.01 + Math.sin(t * 3) * 0.002;
+    ref.current.position.y = 0.01 + Math.sin(t * 3) * 0.003;
   });
   return (
     <group ref={ref}>
@@ -67,13 +67,15 @@ function SeedModel() {
   );
 }
 
-// Sprout stage rendering
+// Sprout stage rendering - with gentle emergence animation
 function SproutModel({ color }: { color: string }) {
   const ref = useRef<THREE.Group>(null);
   useFrame(() => {
     if (!ref.current) return;
     const t = performance.now() * 0.001;
-    ref.current.rotation.z = Math.sin(t * 2) * 0.05;
+    // More lively sway for sprouts
+    ref.current.rotation.z = Math.sin(t * 2.5) * 0.08;
+    ref.current.rotation.x = Math.sin(t * 1.5 + 1) * 0.04;
   });
   return (
     <group ref={ref}>
@@ -137,9 +139,11 @@ function PlantModel({
       meshRef.current.rotation.z = Math.sin(t * 0.5) * 0.08 + 0.12;
       meshRef.current.rotation.x = 0.08;
     } else {
-      // Wind sway - gentle and organic
-      meshRef.current.rotation.z = Math.sin(t * 1.2 + px * 8) * 0.04;
-      meshRef.current.rotation.x = Math.sin(t * 0.8 + px * 5 + 1) * 0.02;
+      // Wind sway - multi-layered for organic feel
+      const windBase = Math.sin(t * 1.2 + px * 8) * 0.04;
+      const windGust = Math.sin(t * 0.3 + px * 3) * Math.sin(t * 2.5) * 0.02;
+      meshRef.current.rotation.z = windBase + windGust;
+      meshRef.current.rotation.x = Math.sin(t * 0.8 + px * 5 + 1) * 0.025 + Math.sin(t * 0.2) * 0.01;
     }
 
     // Harvest glow pulsing
@@ -440,10 +444,10 @@ function ShapeBody({ shape, color, scale, stemColor, leafColor, isThirsty }: {
 function HarvestSparkles({ y }: { y: number }) {
   const ref = useRef<THREE.Group>(null);
   const sparkles = useMemo(() =>
-    Array.from({ length: 4 }, (_, i) => ({
-      angle: (i / 4) * Math.PI * 2,
+    Array.from({ length: 6 }, (_, i) => ({
+      angle: (i / 6) * Math.PI * 2,
       speed: 1.5 + i * 0.3,
-      dist: 0.06 + i * 0.02,
+      dist: 0.06 + i * 0.015,
     })),
   []);
 
@@ -452,10 +456,11 @@ function HarvestSparkles({ y }: { y: number }) {
     const t = performance.now() * 0.001;
     ref.current.children.forEach((child, i) => {
       const sp = sparkles[i];
+      if (!sp) return;
       const mesh = child as THREE.Mesh;
       mesh.position.x = Math.cos(t * sp.speed + sp.angle) * sp.dist;
       mesh.position.z = Math.sin(t * sp.speed + sp.angle) * sp.dist;
-      mesh.position.y = y + Math.sin(t * 2 + i) * 0.03;
+      mesh.position.y = y + Math.sin(t * 2 + i) * 0.04;
       const sc = 0.5 + Math.sin(t * 4 + i * 2) * 0.5;
       mesh.scale.setScalar(sc);
     });
@@ -466,7 +471,7 @@ function HarvestSparkles({ y }: { y: number }) {
       {sparkles.map((_, i) => (
         <mesh key={`spark-${i}`}>
           <boxGeometry args={[0.008, 0.008, 0.008]} />
-          <meshBasicMaterial color="#FFD700" />
+          <meshBasicMaterial color={i % 2 === 0 ? '#FFD700' : '#FFF176'} />
         </mesh>
       ))}
     </group>
@@ -478,7 +483,9 @@ function ThirstIndicator({ y }: { y: number }) {
   useFrame(() => {
     if (!ref.current) return;
     const t = performance.now() * 0.001;
-    ref.current.position.y = y + Math.sin(t * 2) * 0.015;
+    ref.current.position.y = y + Math.sin(t * 2) * 0.02;
+    // Gentle bounce
+    ref.current.scale.setScalar(0.9 + Math.sin(t * 3) * 0.1);
   });
 
   return (
@@ -512,21 +519,49 @@ export function Plant3D({ plant, position, plantedDate, onSelect, isSelected }: 
     }
   }, [stage]);
 
+  // Stage emoji for visual flair
+  const stageEmoji = useMemo(() => {
+    switch (stage) {
+      case 'seed': return '\u{1F330}';
+      case 'sprout': return '\u{1F331}';
+      case 'growing': return '\u{1F33F}';
+      case 'mature': return '\u{1F33E}';
+      case 'harvest': return '\u{2728}';
+    }
+  }, [stage]);
+
   const daysPlanted = useMemo(() => {
     const now = new Date();
     const planted = new Date(plantedDate);
     return Math.floor((now.getTime() - planted.getTime()) / (1000 * 60 * 60 * 24));
   }, [plantedDate]);
 
-  // Pop-in animation
+  // Pop-in + grow animation
   const groupRef = useRef<THREE.Group>(null);
   const popRef = useRef(0);
+  const [justPlaced] = useState(() => {
+    const planted = new Date(plantedDate);
+    const now = new Date();
+    return (now.getTime() - planted.getTime()) < 60000; // planted within last minute
+  });
+
   useFrame((_, delta) => {
     if (!groupRef.current) return;
     if (popRef.current < 1) {
-      popRef.current = Math.min(popRef.current + delta * 3, 1);
-      const eased = 1 - Math.pow(1 - popRef.current, 3);
-      groupRef.current.scale.setScalar(eased);
+      // Bouncy spring-like pop-in
+      popRef.current = Math.min(popRef.current + delta * (justPlaced ? 1.5 : 3), 1);
+      const t = popRef.current;
+      const eased = t < 0.5
+        ? 4 * t * t * t
+        : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      const overshoot = justPlaced ? 1 + Math.sin(t * Math.PI) * 0.15 : eased;
+      groupRef.current.scale.setScalar(Math.min(overshoot, 1.15));
+    } else {
+      // Settle to 1
+      const currentScale = groupRef.current.scale.x;
+      if (currentScale > 1.001) {
+        groupRef.current.scale.setScalar(currentScale * 0.95 + 1 * 0.05);
+      }
     }
   });
 
@@ -562,15 +597,28 @@ export function Plant3D({ plant, position, plantedDate, onSelect, isSelected }: 
         {hovered && !isSelected && (
           <Html position={[0, 0.3, 0]} center distanceFactor={4} style={{ pointerEvents: 'none' }}>
             <div style={{
-              background: 'rgba(0,0,0,0.7)',
-              borderRadius: '6px',
-              padding: '3px 8px',
+              background: 'rgba(0,0,0,0.75)',
+              borderRadius: '8px',
+              padding: '4px 10px',
               fontSize: '11px',
               fontFamily: '"Nunito", sans-serif',
               color: 'white',
               whiteSpace: 'nowrap',
+              border: '1px solid rgba(74, 222, 128, 0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
             }}>
+              <span style={{
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                background: plant.color,
+                display: 'inline-block',
+                border: '1px solid rgba(255,255,255,0.3)',
+              }} />
               {plant.name.en}
+              <span style={{ fontSize: '9px', color: '#9CA3AF' }}>{stageEmoji}</span>
             </div>
           </Html>
         )}
@@ -583,11 +631,11 @@ export function Plant3D({ plant, position, plantedDate, onSelect, isSelected }: 
             background: 'linear-gradient(145deg, #0F2818, #1A3D28)',
             borderRadius: '14px',
             padding: '14px 18px',
-            minWidth: '190px',
+            minWidth: '200px',
             fontSize: '12px',
             fontFamily: '"Nunito", sans-serif',
             color: 'white',
-            boxShadow: '0 10px 35px rgba(0,0,0,0.45)',
+            boxShadow: '0 10px 35px rgba(0,0,0,0.45), 0 0 20px rgba(74, 222, 128, 0.1)',
             border: '2px solid #4ADE80',
             pointerEvents: 'none',
           }}>
@@ -600,8 +648,11 @@ export function Plant3D({ plant, position, plantedDate, onSelect, isSelected }: 
               <span style={{
                 color: isHarvest ? '#FFD700' : '#E5E7EB',
                 fontWeight: isHarvest ? 'bold' : 'normal',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
               }}>
-                {stageLabel} {isHarvest ? '!!!' : ''}
+                {stageEmoji} {stageLabel} {isHarvest ? '!!!' : ''}
               </span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
@@ -633,13 +684,13 @@ export function Plant3D({ plant, position, plantedDate, onSelect, isSelected }: 
               }} />
             </div>
             {isThirsty && (
-              <div style={{ color: '#60A5FA', fontSize: '11px', marginTop: '6px' }}>
-                Needs watering!
+              <div style={{ color: '#60A5FA', fontSize: '11px', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                {'\u{1F4A7}'} Needs watering!
               </div>
             )}
             {isHarvest && (
               <div style={{ color: '#FFD700', fontSize: '12px', marginTop: '5px', fontWeight: 'bold', textAlign: 'center' }}>
-                Ready to harvest!
+                {'\u{1F389}'} Ready to harvest!
               </div>
             )}
           </div>

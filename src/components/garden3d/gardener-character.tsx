@@ -127,6 +127,53 @@ export function getRandomAdvice(): string {
   return ADVICE_LINES[Math.floor(Math.random() * ADVICE_LINES.length)];
 }
 
+// Emote particles (hearts, stars, music notes) spawned on click
+function EmoteParticles({ active }: { active: boolean }) {
+  const ref = useRef<THREE.Group>(null);
+  const particles = useMemo(() =>
+    Array.from({ length: 5 }, (_, i) => ({
+      angle: (i / 5) * Math.PI * 2 + Math.random() * 0.5,
+      speed: 0.8 + Math.random() * 0.5,
+      dist: 0.1 + Math.random() * 0.1,
+    })),
+  []);
+
+  const startTime = useRef(0);
+
+  useEffect(() => {
+    if (active) startTime.current = performance.now() * 0.001;
+  }, [active]);
+
+  useFrame(() => {
+    if (!ref.current || !active) return;
+    const t = performance.now() * 0.001;
+    const elapsed = t - startTime.current;
+    ref.current.children.forEach((child, i) => {
+      const p = particles[i];
+      const mesh = child as THREE.Mesh;
+      mesh.position.x = Math.cos(p.angle + elapsed * 2) * p.dist * (1 + elapsed);
+      mesh.position.y = elapsed * p.speed * 0.5;
+      mesh.position.z = Math.sin(p.angle + elapsed * 2) * p.dist * (1 + elapsed);
+      const fade = Math.max(0, 1 - elapsed / 1.5);
+      mesh.scale.setScalar(fade * 0.8);
+      (mesh.material as THREE.MeshBasicMaterial).opacity = fade;
+    });
+  });
+
+  if (!active) return null;
+
+  return (
+    <group ref={ref} position={[0, 1.1, 0]}>
+      {particles.map((_, i) => (
+        <mesh key={`emote-${i}`}>
+          <boxGeometry args={[0.02, 0.02, 0.02]} />
+          <meshBasicMaterial color={i % 2 === 0 ? '#FF69B4' : '#FFD700'} transparent opacity={1} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 export function GardenerCharacter({
   position,
   gardenBounds,
@@ -146,6 +193,8 @@ export function GardenerCharacter({
   const [isWaving, setIsWaving] = useState(true);
   const [isWalking, setIsWalking] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const [showEmotes, setShowEmotes] = useState(false);
+  const [breathPhase, setBreathPhase] = useState(0);
 
   const walkTarget = useRef<THREE.Vector3>(new THREE.Vector3(...position));
   const walkTimer = useRef(0);
@@ -162,33 +211,45 @@ export function GardenerCharacter({
     if (!groupRef.current) return;
     const t = performance.now() * 0.001;
 
-    // Idle bounce
+    // Idle breathing / bounce - more exaggerated for game feel
     if (bodyGroupRef.current) {
       const bounce = isWalking
-        ? Math.abs(Math.sin(t * 8)) * 0.04
-        : Math.sin(t * 2) * 0.015;
+        ? Math.abs(Math.sin(t * 8)) * 0.05
+        : Math.sin(t * 2) * 0.02 + Math.sin(t * 0.7) * 0.008;
       bodyGroupRef.current.position.y = bounce;
+
+      // Subtle body sway when idle
+      if (!isWalking && !isWaving) {
+        bodyGroupRef.current.rotation.z = Math.sin(t * 0.8) * 0.015;
+      } else {
+        bodyGroupRef.current.rotation.z *= 0.9;
+      }
     }
 
-    // Head gentle tilt
+    // Head gentle tilt - more personality
     if (headRef.current && !isWalking) {
-      headRef.current.rotation.z = Math.sin(t * 1.2) * 0.03;
-      headRef.current.rotation.x = Math.sin(t * 0.8 + 1) * 0.02;
+      headRef.current.rotation.z = Math.sin(t * 1.2) * 0.04 + Math.sin(t * 0.4) * 0.02;
+      headRef.current.rotation.x = Math.sin(t * 0.8 + 1) * 0.03;
+      // Occasional head nod
+      const nodCycle = t % 8;
+      if (nodCycle > 6 && nodCycle < 6.5) {
+        headRef.current.rotation.x += Math.sin((nodCycle - 6) * Math.PI * 4) * 0.06;
+      }
     }
 
-    // Waving animation
+    // Waving animation - more expressive
     if (isWaving && armRightRef.current) {
-      armRightRef.current.rotation.z = Math.sin(t * 8) * 0.5 - 1.5;
-      armRightRef.current.rotation.x = 0;
+      armRightRef.current.rotation.z = Math.sin(t * 10) * 0.6 - 1.5;
+      armRightRef.current.rotation.x = Math.sin(t * 5) * 0.15;
     } else if (armRightRef.current && !isWalking) {
       // Idle arm sway
-      armRightRef.current.rotation.z = Math.sin(t * 1.5) * 0.05;
-      armRightRef.current.rotation.x = Math.sin(t * 1) * 0.03;
+      armRightRef.current.rotation.z = Math.sin(t * 1.5) * 0.06;
+      armRightRef.current.rotation.x = Math.sin(t * 1) * 0.04;
     }
 
     if (armLeftRef.current && !isWalking) {
-      armLeftRef.current.rotation.z = -Math.sin(t * 1.5 + 0.5) * 0.05;
-      armLeftRef.current.rotation.x = -Math.sin(t * 1 + 0.5) * 0.03;
+      armLeftRef.current.rotation.z = -Math.sin(t * 1.5 + 0.5) * 0.06;
+      armLeftRef.current.rotation.x = -Math.sin(t * 1 + 0.5) * 0.04;
     }
 
     // Walk logic
@@ -260,7 +321,9 @@ export function GardenerCharacter({
 
   const handleClick = useCallback(() => {
     setIsWaving(true);
+    setShowEmotes(true);
     setTimeout(() => setIsWaving(false), 2000);
+    setTimeout(() => setShowEmotes(false), 1500);
     onAdviceRequest?.();
   }, [onAdviceRequest]);
 
@@ -447,11 +510,11 @@ export function GardenerCharacter({
           </mesh>
         </group>
 
-        {/* Hover glow ring */}
+        {/* Hover glow ring - animated */}
         {hovered && (
           <mesh position={[0, 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
             <ringGeometry args={[0.3, 0.36, 16]} />
-            <meshBasicMaterial color="#FDE047" transparent opacity={0.5} />
+            <meshBasicMaterial color="#FDE047" transparent opacity={0.6} />
           </mesh>
         )}
 
@@ -460,12 +523,29 @@ export function GardenerCharacter({
           <circleGeometry args={[0.18, 8]} />
           <meshBasicMaterial color="#000000" transparent opacity={0.15} />
         </mesh>
+
+        {/* Exclamation mark when hovered (game NPC indicator) */}
+        {hovered && !showDialogue && (
+          <group position={[0, 1.25, 0]}>
+            <mesh>
+              <boxGeometry args={[0.03, 0.1, 0.03]} />
+              <meshBasicMaterial color="#FDE047" />
+            </mesh>
+            <mesh position={[0, -0.07, 0]}>
+              <sphereGeometry args={[0.018, 6, 4]} />
+              <meshBasicMaterial color="#FDE047" />
+            </mesh>
+          </group>
+        )}
       </group>
+
+      {/* Emote particles on click */}
+      <EmoteParticles active={showEmotes} />
 
       {/* Speech bubble */}
       {showDialogue && (
         <Html
-          position={[0, 1.35, 0]}
+          position={[0, 1.4, 0]}
           center
           distanceFactor={5}
           style={{ pointerEvents: 'auto' }}
@@ -473,25 +553,51 @@ export function GardenerCharacter({
           <div
             onClick={(e) => { e.stopPropagation(); onDialogueClose?.(); }}
             style={{
-              background: 'white',
+              background: 'linear-gradient(145deg, #ffffff, #f0fdf4)',
               borderRadius: '18px',
-              padding: '12px 16px',
-              maxWidth: '220px',
+              padding: '14px 18px',
+              maxWidth: '240px',
               fontSize: '13px',
               fontFamily: '"Nunito", "Comic Sans MS", cursive, sans-serif',
               color: '#1a1a1a',
-              boxShadow: '0 6px 24px rgba(0,0,0,0.12)',
+              boxShadow: '0 8px 30px rgba(0,0,0,0.15), 0 0 15px rgba(74, 222, 128, 0.15)',
               border: '3px solid #86EFAC',
               position: 'relative',
               cursor: 'pointer',
               userSelect: 'none',
               lineHeight: '1.5',
+              animation: 'fadeInUp 0.3s ease-out',
             }}
           >
-            <div style={{ fontWeight: 'bold', color: '#16A34A', marginBottom: '4px', fontSize: '11px' }}>
+            <div style={{
+              fontWeight: 'bold',
+              color: '#16A34A',
+              marginBottom: '4px',
+              fontSize: '11px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '4px',
+            }}>
               Sprout
+              <span style={{
+                display: 'inline-block',
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                background: '#4ADE80',
+                animation: 'pulse 1.5s ease-in-out infinite',
+              }} />
             </div>
             {dialogue}
+            <div style={{
+              textAlign: 'right',
+              fontSize: '10px',
+              color: '#86EFAC',
+              marginTop: '6px',
+              opacity: 0.7,
+            }}>
+              tap to dismiss
+            </div>
             <div style={{
               position: 'absolute',
               bottom: '-12px',
