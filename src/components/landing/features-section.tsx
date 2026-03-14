@@ -9,6 +9,8 @@ import {
   Users,
   Droplets,
   Bot,
+  Gamepad2,
+  Trophy,
 } from 'lucide-react';
 
 const features = [
@@ -19,14 +21,16 @@ const features = [
       'Get personalized plant suggestions based on your soil type, climate zone, and sun exposure. Never guess what to grow again.',
     color: 'text-green-400',
     bg: 'bg-green-900/50',
+    xp: '+50 XP',
   },
   {
     icon: Eye,
     title: '3D Garden Visualization',
     description:
-      'See your garden come alive in a charming 3D view with a cute gardener character who gives daily wisdom.',
+      'See your garden come alive in a charming 3D world with cute plants, butterflies, and Sprout your gardener companion.',
     color: 'text-emerald-400',
     bg: 'bg-emerald-900/50',
+    xp: '+30 XP',
   },
   {
     icon: Bot,
@@ -36,6 +40,7 @@ const features = [
     color: 'text-lime-400',
     bg: 'bg-lime-900/50',
     pro: true,
+    xp: '+100 XP',
   },
   {
     icon: Calendar,
@@ -44,6 +49,7 @@ const features = [
       'Month-by-month guidance on when to plant, water, and harvest each crop for your specific climate.',
     color: 'text-yellow-400',
     bg: 'bg-yellow-900/50',
+    xp: '+25 XP',
   },
   {
     icon: Users,
@@ -52,6 +58,7 @@ const features = [
       'Discover which plants thrive together and which to keep apart. Maximize your yield with smart pairing.',
     color: 'text-teal-400',
     bg: 'bg-teal-900/50',
+    xp: '+40 XP',
   },
   {
     icon: Droplets,
@@ -60,6 +67,7 @@ const features = [
       'Detailed watering schedules, soil preparation tips, and organic pest management for every plant.',
     color: 'text-cyan-400',
     bg: 'bg-cyan-900/50',
+    xp: '+20 XP',
   },
 ];
 
@@ -84,14 +92,19 @@ export function FeaturesSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="inline-block px-4 py-1.5 rounded-full bg-green-900/40 border border-green-800/30 text-green-400 text-sm font-medium mb-4">
-            Features
-          </span>
+          <motion.span
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-900/40 border border-green-800/30 text-green-400 text-sm font-medium mb-4"
+            whileInView={{ scale: [0.9, 1] }}
+            viewport={{ once: true }}
+          >
+            <Gamepad2 className="w-4 h-4" />
+            Features & Abilities
+          </motion.span>
           <h2 className="text-3xl md:text-4xl font-bold text-green-50 mb-4">
-            Everything You Need to Grow
+            Unlock Your Garden Powers
           </h2>
           <p className="text-green-200/60 text-lg max-w-2xl mx-auto">
-            From planning to harvesting, our tools guide you every step of the way.
+            From planning to harvesting, level up your garden skills with every feature.
           </p>
         </motion.div>
 
@@ -104,13 +117,18 @@ export function FeaturesSection() {
         >
           {features.map((feature) => (
             <motion.div key={feature.title} variants={itemVariants}>
-              <Card hover className="h-full relative">
+              <Card hover className="h-full relative game-card">
                 {feature.pro && (
-                  <span className="absolute top-4 right-4 px-2 py-0.5 bg-amber-500/20 text-amber-400 text-xs font-medium rounded-full">
+                  <span className="absolute top-4 right-4 px-2 py-0.5 bg-amber-500/20 text-amber-400 text-xs font-medium rounded-full flex items-center gap-1">
+                    <Trophy className="w-3 h-3" />
                     PRO
                   </span>
                 )}
-                <div className={`w-12 h-12 rounded-xl ${feature.bg} flex items-center justify-center mb-4`}>
+                {/* XP badge */}
+                <span className="absolute top-4 left-4 px-2 py-0.5 bg-yellow-500/10 text-yellow-400 text-xs font-bold rounded-full border border-yellow-600/20">
+                  {feature.xp}
+                </span>
+                <div className={`w-12 h-12 rounded-xl ${feature.bg} flex items-center justify-center mb-4 mt-4`}>
                   <feature.icon className={`w-6 h-6 ${feature.color}`} />
                 </div>
                 <CardTitle className="mb-3">{feature.title}</CardTitle>

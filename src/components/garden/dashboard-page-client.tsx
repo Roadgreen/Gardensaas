@@ -31,6 +31,7 @@ import {
   TreeDeciduous,
 } from 'lucide-react';
 import { MONTH_NAMES, SOIL_LABELS, CLIMATE_LABELS, SUN_LABELS } from '@/types';
+import { SproutMascot } from '@/components/sprout-mascot';
 
 const sidebarLinks = [
   { href: '/garden/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -526,6 +527,7 @@ export function DashboardPageClient() {
           </div>
         </div>
       </div>
+      <SproutMascot page="dashboard" />
     </div>
   );
 }

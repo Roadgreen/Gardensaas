@@ -444,6 +444,52 @@ function WaterDroplets({ position, active }: { position: [number, number, number
   );
 }
 
+// Ambient pollen/firefly particles
+function AmbientParticles({ gardenLength, gardenWidth, season }: { gardenLength: number; gardenWidth: number; season: string }) {
+  const ref = useRef<THREE.Group>(null);
+  const isEvening = new Date().getHours() >= 18;
+  const count = season === 'winter' ? 8 : 16;
+
+  const particles = useMemo(() =>
+    Array.from({ length: count }, (_, i) => ({
+      x: (Math.random() - 0.5) * (gardenLength + 4),
+      z: (Math.random() - 0.5) * (gardenWidth + 4),
+      y: 0.3 + Math.random() * 1.2,
+      speed: 0.2 + Math.random() * 0.4,
+      offset: Math.random() * Math.PI * 2,
+      size: 0.008 + Math.random() * 0.008,
+    })),
+  [gardenLength, gardenWidth, count]);
+
+  useFrame(() => {
+    if (!ref.current) return;
+    const t = performance.now() * 0.001;
+    ref.current.children.forEach((child, i) => {
+      const p = particles[i];
+      if (!p) return;
+      const mesh = child as THREE.Mesh;
+      mesh.position.y = p.y + Math.sin(t * p.speed + p.offset) * 0.15;
+      mesh.position.x = p.x + Math.sin(t * 0.15 + p.offset) * 0.5;
+      mesh.position.z = p.z + Math.cos(t * 0.1 + p.offset) * 0.3;
+      const pulse = (Math.sin(t * 2 + p.offset) + 1) / 2;
+      (mesh.material as THREE.MeshBasicMaterial).opacity = 0.3 + pulse * 0.6;
+    });
+  });
+
+  const color = isEvening ? '#FFFF88' : season === 'winter' ? '#E0E8FF' : '#FFE082';
+
+  return (
+    <group ref={ref}>
+      {particles.map((p, i) => (
+        <mesh key={`ambient-${i}`} position={[p.x, p.y, p.z]}>
+          <sphereGeometry args={[p.size, 4, 3]} />
+          <meshBasicMaterial color={color} transparent opacity={0.5} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 export function GardenDecorations({ gardenLength, gardenWidth, season }: GardenDecorationsProps) {
   const halfL = gardenLength / 2;
   const halfW = gardenWidth / 2;
@@ -560,6 +606,9 @@ export function GardenDecorations({ gardenLength, gardenWidth, season }: GardenD
           <meshStandardMaterial color="#5C3D1E" />
         </mesh>
       </group>
+
+      {/* Ambient pollen/firefly particles */}
+      <AmbientParticles gardenLength={gardenLength} gardenWidth={gardenWidth} season={season} />
     </group>
   );
 }

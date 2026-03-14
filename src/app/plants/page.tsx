@@ -7,6 +7,7 @@ import { usePlants } from '@/lib/hooks';
 import { Button } from '@/components/ui/button';
 import { Search, Filter } from 'lucide-react';
 import type { Difficulty } from '@/types';
+import { SproutMascot } from '@/components/sprout-mascot';
 
 type CategoryFilter = 'all' | 'vegetable' | 'herb' | 'fruit' | 'root' | 'ancient' | 'exotic';
 type SeasonFilter = 'all' | 'spring' | 'summer' | 'autumn' | 'winter';
@@ -164,6 +165,7 @@ export default function PlantsPage() {
           </div>
         )}
       </div>
+      <SproutMascot page="plants" />
     </div>
   );
 }

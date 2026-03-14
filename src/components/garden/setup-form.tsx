@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Input, Select } from '@/components/ui/input';
+import { Input } from '@/components/ui/input';
 import { useGarden } from '@/lib/hooks';
 import {
   SOIL_LABELS,
@@ -14,34 +14,141 @@ import {
   type ClimateZone,
   type SunExposure,
 } from '@/types';
-import { ArrowLeft, ArrowRight, Check, Ruler, Mountain, Cloud, Sun } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Ruler, Mountain, Cloud, Sun, Sprout, Trophy, Star } from 'lucide-react';
 
 const steps = [
-  { id: 'dimensions', title: 'Garden Size', icon: Ruler, description: 'How big is your garden?' },
-  { id: 'soil', title: 'Soil Type', icon: Mountain, description: 'What kind of soil do you have?' },
-  { id: 'climate', title: 'Climate Zone', icon: Cloud, description: 'Where are you located?' },
-  { id: 'sun', title: 'Sun Exposure', icon: Sun, description: 'How much sun does your garden get?' },
+  {
+    id: 'welcome',
+    title: 'Welcome, Gardener!',
+    icon: Sprout,
+    description: 'Sprout is ready to help you start your garden adventure!',
+    quest: 'Quest: Begin Your Garden Journey',
+  },
+  {
+    id: 'dimensions',
+    title: 'Choose Your Plot',
+    icon: Ruler,
+    description: 'Every great garden starts with the right space. How big is yours?',
+    quest: 'Quest: Map Your Territory',
+  },
+  {
+    id: 'soil',
+    title: 'Know Your Earth',
+    icon: Mountain,
+    description: 'Different soil, different superpowers! What does your garden have?',
+    quest: 'Quest: Identify Your Soil',
+  },
+  {
+    id: 'climate',
+    title: 'Your Climate Zone',
+    icon: Cloud,
+    description: 'Where in the world does your garden live?',
+    quest: 'Quest: Set Your Location',
+  },
+  {
+    id: 'sun',
+    title: 'Sun Power',
+    icon: Sun,
+    description: 'How much sunshine does your garden get?',
+    quest: 'Quest: Measure the Light',
+  },
+];
+
+const SOIL_DESCRIPTIONS: Record<string, string> = {
+  clay: 'Dense & heavy. Holds water well but drains slowly.',
+  sandy: 'Light & gritty. Drains fast but needs more water.',
+  loamy: 'The gold standard! Rich, balanced, and fertile.',
+  silty: 'Smooth & fertile. Retains moisture nicely.',
+  peaty: 'Dark & spongy. Acidic and moisture-rich.',
+  chalky: 'Alkaline & stony. Free-draining with lime.',
+};
+
+const SOIL_EMOJIS: Record<string, string> = {
+  clay: '\u{1F9F1}',
+  sandy: '\u{1F3D6}',
+  loamy: '\u{2B50}',
+  silty: '\u{1F30A}',
+  peaty: '\u{1F333}',
+  chalky: '\u{26F0}',
+};
+
+const CLIMATE_DESCRIPTIONS: Record<string, string> = {
+  tropical: 'Hot & humid year-round. Paradise for tropical plants!',
+  subtropical: 'Warm with mild winters. Great growing season!',
+  mediterranean: 'Hot dry summers, mild wet winters. Classic!',
+  temperate: 'Four distinct seasons. Most versatile for gardening!',
+  continental: 'Hot summers, cold winters. Strong seasonal shifts.',
+  subarctic: 'Short cool summers, long cold winters. Hardy plants only!',
+};
+
+const CLIMATE_EMOJIS: Record<string, string> = {
+  tropical: '\u{1F334}',
+  subtropical: '\u{1F33A}',
+  mediterranean: '\u{1F33B}',
+  temperate: '\u{1F343}',
+  continental: '\u{2744}\u{FE0F}',
+  subarctic: '\u{1F9CA}',
+};
+
+const SUN_DESCRIPTIONS: Record<string, string> = {
+  'full-sun': 'Your garden is a sun champion! Most veggies will thrive here.',
+  'partial-shade': 'A nice mix! Perfect for leafy greens and herbs.',
+  'full-shade': 'Shady haven. Great for ferns, lettuce, and mushrooms!',
+};
+
+const SUN_EMOJIS: Record<string, string> = {
+  'full-sun': '\u{2600}\u{FE0F}',
+  'partial-shade': '\u{26C5}',
+  'full-shade': '\u{1F327}\u{FE0F}',
+};
+
+const GARDEN_SIZE_PRESETS = [
+  { label: 'Window Box', length: 1, width: 0.5, emoji: '\u{1FA9F}' },
+  { label: 'Balcony', length: 2, width: 1, emoji: '\u{1F3E0}' },
+  { label: 'Small Plot', length: 3, width: 2, emoji: '\u{1F331}' },
+  { label: 'Medium Garden', length: 5, width: 3, emoji: '\u{1F333}' },
+  { label: 'Large Garden', length: 8, width: 5, emoji: '\u{1F3E1}' },
+  { label: 'Farm Plot', length: 12, width: 8, emoji: '\u{1F33E}' },
 ];
 
 export function SetupForm() {
   const [step, setStep] = useState(0);
   const { config, updateConfig } = useGarden();
   const router = useRouter();
+  const [xp, setXp] = useState(0);
+  const [showXpGain, setShowXpGain] = useState(false);
+  const [xpGainAmount, setXpGainAmount] = useState(0);
 
   const [length, setLength] = useState(config.length.toString());
   const [width, setWidth] = useState(config.width.toString());
 
+  const gainXp = (amount: number) => {
+    setXpGainAmount(amount);
+    setShowXpGain(true);
+    setTimeout(() => {
+      setXp((prev) => prev + amount);
+      setShowXpGain(false);
+    }, 800);
+  };
+
   const canProceed = () => {
-    if (step === 0) {
-      return parseFloat(length) > 0 && parseFloat(width) > 0;
-    }
+    if (step === 0) return true; // welcome
+    if (step === 1) return parseFloat(length) > 0 && parseFloat(width) > 0;
     return true;
   };
 
   const handleNext = () => {
-    if (step === 0) {
+    if (step === 1) {
       updateConfig({ length: parseFloat(length), width: parseFloat(width) });
+      gainXp(25);
+    } else if (step === 2) {
+      gainXp(20);
+    } else if (step === 3) {
+      gainXp(20);
+    } else if (step === 4) {
+      gainXp(35);
     }
+
     if (step < steps.length - 1) {
       setStep(step + 1);
     } else {
@@ -53,31 +160,87 @@ export function SetupForm() {
     if (step > 0) setStep(step - 1);
   };
 
+  const selectPreset = (preset: typeof GARDEN_SIZE_PRESETS[0]) => {
+    setLength(preset.length.toString());
+    setWidth(preset.width.toString());
+    updateConfig({ length: preset.length, width: preset.width });
+  };
+
   const soilOptions = Object.entries(SOIL_LABELS).map(([value, label]) => ({ value, label }));
   const climateOptions = Object.entries(CLIMATE_LABELS).map(([value, label]) => ({ value, label }));
   const sunOptions = Object.entries(SUN_LABELS).map(([value, label]) => ({ value, label }));
 
   return (
     <div className="min-h-screen bg-[#0D1F17] flex flex-col items-center justify-center px-6 py-12">
-      {/* Progress bar */}
-      <div className="w-full max-w-lg mb-12">
-        <div className="flex items-center justify-between mb-4">
+      {/* XP Bar */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-lg mb-6"
+      >
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center gap-2">
+            <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
+            <span className="text-sm font-bold text-yellow-400">{xp} XP</span>
+          </div>
+          <span className="text-xs text-green-500/50">Level {Math.floor(xp / 100) + 1} Gardener</span>
+        </div>
+        <div className="w-full h-3 rounded-full bg-[#1A2F23] border border-green-800/30 overflow-hidden">
+          <motion.div
+            className="h-full rounded-full bg-gradient-to-r from-yellow-500 to-amber-400"
+            animate={{ width: `${Math.min((xp % 100), 100)}%` }}
+            transition={{ duration: 0.5 }}
+          />
+        </div>
+        {/* XP gain popup */}
+        <AnimatePresence>
+          {showXpGain && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="text-center mt-2"
+            >
+              <span className="text-yellow-400 font-bold text-lg">+{xpGainAmount} XP!</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+
+      {/* Quest banner */}
+      <motion.div
+        key={`quest-${step}`}
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="w-full max-w-lg mb-4"
+      >
+        <div className="flex items-center gap-3 px-4 py-2 rounded-xl bg-amber-900/20 border border-amber-700/30">
+          <Trophy className="w-4 h-4 text-amber-400" />
+          <span className="text-amber-300 text-sm font-medium">{steps[step].quest}</span>
+        </div>
+      </motion.div>
+
+      {/* Progress steps */}
+      <div className="w-full max-w-lg mb-8">
+        <div className="flex items-center justify-between">
           {steps.map((s, i) => (
             <div key={s.id} className="flex items-center">
-              <div
+              <motion.div
+                animate={i === step ? { scale: [1, 1.1, 1] } : {}}
+                transition={i === step ? { duration: 1.5, repeat: Infinity } : {}}
                 className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
                   i < step
-                    ? 'bg-green-600 text-white'
+                    ? 'bg-green-600 text-white shadow-lg shadow-green-600/30'
                     : i === step
-                    ? 'bg-green-600 text-white ring-4 ring-green-600/30'
+                    ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white ring-4 ring-green-600/30 shadow-lg shadow-green-600/30'
                     : 'bg-[#1A2F23] text-green-600 border border-green-800/50'
                 }`}
               >
                 {i < step ? <Check className="w-5 h-5" /> : <s.icon className="w-5 h-5" />}
-              </div>
+              </motion.div>
               {i < steps.length - 1 && (
                 <div
-                  className={`hidden sm:block w-16 lg:w-24 h-0.5 mx-2 transition-colors duration-300 ${
+                  className={`hidden sm:block w-10 lg:w-16 h-0.5 mx-1 transition-colors duration-300 ${
                     i < step ? 'bg-green-600' : 'bg-green-900/50'
                   }`}
                 />
@@ -92,12 +255,23 @@ export function SetupForm() {
         <AnimatePresence mode="wait">
           <motion.div
             key={step}
-            initial={{ opacity: 0, x: 20 }}
+            initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
+            exit={{ opacity: 0, x: -40 }}
+            transition={{ duration: 0.35 }}
           >
-            <div className="text-center mb-8">
+            <div className="text-center mb-6">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', delay: 0.1 }}
+                className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-green-600/30 to-emerald-600/20 border border-green-600/30 mb-4"
+              >
+                {(() => {
+                  const Icon = steps[step].icon;
+                  return <Icon className="w-8 h-8 text-green-400" />;
+                })()}
+              </motion.div>
               <h2 className="text-2xl md:text-3xl font-bold text-green-50 mb-2">
                 {steps[step].title}
               </h2>
@@ -105,95 +279,220 @@ export function SetupForm() {
             </div>
 
             <div className="bg-[#142A1E] rounded-2xl border border-green-900/40 p-8">
+              {/* Welcome step */}
               {step === 0 && (
+                <div className="text-center space-y-6">
+                  {/* Gardener character SVG */}
+                  <motion.div
+                    animate={{ y: [0, -5, 0] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                    className="flex justify-center"
+                  >
+                    <svg width="100" height="130" viewBox="0 0 120 160" className="drop-shadow-lg">
+                      <ellipse cx="60" cy="155" rx="30" ry="5" fill="rgba(0,0,0,0.15)" />
+                      <rect x="36" y="132" width="16" height="12" rx="3" fill="#5C3D1E" />
+                      <rect x="68" y="132" width="16" height="12" rx="3" fill="#5C3D1E" />
+                      <rect x="40" y="115" width="12" height="20" rx="4" fill="#5B8C5A" />
+                      <rect x="68" y="115" width="12" height="20" rx="4" fill="#5B8C5A" />
+                      <rect x="33" y="72" width="54" height="48" rx="8" fill="#4ADE80" />
+                      <rect x="40" y="62" width="8" height="18" rx="3" fill="#2D9B52" />
+                      <rect x="72" y="62" width="8" height="18" rx="3" fill="#2D9B52" />
+                      <rect x="48" y="92" width="24" height="14" rx="4" fill="#2D9B52" />
+                      <circle cx="42" cy="76" r="3" fill="#FFD700" />
+                      <circle cx="78" cy="76" r="3" fill="#FFD700" />
+                      <rect x="18" y="72" width="16" height="35" rx="6" fill="#4ADE80" />
+                      <circle cx="26" cy="110" r="7" fill="#FFD5B8" />
+                      <rect x="86" y="72" width="16" height="35" rx="6" fill="#4ADE80" />
+                      <circle cx="94" cy="110" r="7" fill="#FFD5B8" />
+                      <circle cx="60" cy="45" r="24" fill="#FFD5B8" />
+                      <ellipse cx="60" cy="32" rx="20" ry="10" fill="#8B5E3C" />
+                      <circle cx="52" cy="44" r="3.5" fill="#1a1a1a" />
+                      <circle cx="68" cy="44" r="3.5" fill="#1a1a1a" />
+                      <circle cx="53.5" cy="42.5" r="1.2" fill="#fff" />
+                      <circle cx="69.5" cy="42.5" r="1.2" fill="#fff" />
+                      <circle cx="44" cy="50" r="4" fill="#FCA5A5" opacity="0.5" />
+                      <circle cx="76" cy="50" r="4" fill="#FCA5A5" opacity="0.5" />
+                      <path d="M 53 53 Q 60 60 67 53" stroke="#E11D48" strokeWidth="2" fill="none" strokeLinecap="round" />
+                      <circle cx="60" cy="48" r="1.5" fill="#F0C0A0" />
+                      <ellipse cx="60" cy="28" rx="30" ry="6" fill="#A0724A" />
+                      <rect x="44" y="10" width="32" height="18" rx="6" fill="#A0724A" />
+                      <rect x="44" y="22" width="32" height="6" rx="2" fill="#DC2626" />
+                      <circle cx="78" cy="18" r="5" fill="#FFB7D5" />
+                      <circle cx="78" cy="18" r="2.5" fill="#FFEB3B" />
+                    </svg>
+                  </motion.div>
+
+                  <div className="bg-white rounded-2xl px-5 py-4 text-[#1a1a1a] text-sm max-w-xs mx-auto border-3 border-green-400 shadow-lg relative"
+                    style={{ fontFamily: '"Nunito", "Comic Sans MS", cursive, sans-serif' }}
+                  >
+                    <div className="text-green-600 font-bold text-xs mb-1">Sprout</div>
+                    Hi there! I&apos;m Sprout, your gardening companion! Let&apos;s set up your garden together.
+                    I&apos;ll help you every step of the way!
+                  </div>
+
+                  <div className="flex flex-wrap justify-center gap-3 mt-4">
+                    {[
+                      { icon: '\u{1F3AE}', text: 'Earn XP' },
+                      { icon: '\u{1F3C6}', text: 'Get Badges' },
+                      { icon: '\u{1F331}', text: 'Grow Plants' },
+                      { icon: '\u{1F4AC}', text: 'Get Tips' },
+                    ].map((item) => (
+                      <span key={item.text} className="px-3 py-1.5 rounded-full bg-green-900/30 border border-green-800/30 text-xs text-green-300">
+                        <span className="mr-1">{item.icon}</span> {item.text}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Garden size step */}
+              {step === 1 && (
                 <div className="space-y-6">
-                  <Input
-                    id="length"
-                    label="Length (meters)"
-                    type="number"
-                    min="0.5"
-                    max="50"
-                    step="0.5"
-                    value={length}
-                    onChange={(e) => setLength(e.target.value)}
-                    placeholder="e.g. 4"
-                  />
-                  <Input
-                    id="width"
-                    label="Width (meters)"
-                    type="number"
-                    min="0.5"
-                    max="50"
-                    step="0.5"
-                    value={width}
-                    onChange={(e) => setWidth(e.target.value)}
-                    placeholder="e.g. 3"
-                  />
+                  {/* Presets grid */}
+                  <div>
+                    <p className="text-sm text-green-300/60 mb-3">Quick select:</p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {GARDEN_SIZE_PRESETS.map((preset) => {
+                        const isSelected = length === preset.length.toString() && width === preset.width.toString();
+                        return (
+                          <motion.button
+                            key={preset.label}
+                            type="button"
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.97 }}
+                            onClick={() => selectPreset(preset)}
+                            className={`p-3 rounded-xl border text-center transition-all cursor-pointer ${
+                              isSelected
+                                ? 'border-green-500 bg-green-900/30 text-green-50 shadow-lg shadow-green-900/20'
+                                : 'border-green-900/40 bg-[#0D1F17] text-green-300/70 hover:border-green-700/50'
+                            }`}
+                          >
+                            <span className="text-2xl block mb-1">{preset.emoji}</span>
+                            <span className="font-medium text-sm block">{preset.label}</span>
+                            <span className="text-xs text-green-500/50">{preset.length}m x {preset.width}m</span>
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="border-t border-green-800/30 pt-4">
+                    <p className="text-sm text-green-300/60 mb-3">Or enter custom size:</p>
+                    <div className="grid grid-cols-2 gap-4">
+                      <Input
+                        id="length"
+                        label="Length (m)"
+                        type="number"
+                        min="0.5"
+                        max="50"
+                        step="0.5"
+                        value={length}
+                        onChange={(e) => setLength(e.target.value)}
+                        placeholder="e.g. 4"
+                      />
+                      <Input
+                        id="width"
+                        label="Width (m)"
+                        type="number"
+                        min="0.5"
+                        max="50"
+                        step="0.5"
+                        value={width}
+                        onChange={(e) => setWidth(e.target.value)}
+                        placeholder="e.g. 3"
+                      />
+                    </div>
+                  </div>
+
                   {parseFloat(length) > 0 && parseFloat(width) > 0 && (
-                    <motion.p
+                    <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
-                      className="text-center text-green-300/70 text-sm"
+                      className="text-center p-3 rounded-xl bg-green-900/20 border border-green-800/30"
                     >
-                      Total area: {(parseFloat(length) * parseFloat(width)).toFixed(1)} m2
-                    </motion.p>
+                      <span className="text-green-300/70 text-sm">
+                        Total area: <span className="text-green-200 font-bold">{(parseFloat(length) * parseFloat(width)).toFixed(1)} m&sup2;</span>
+                      </span>
+                      <span className="text-green-500/50 text-xs block mt-1">
+                        Room for ~{Math.floor(parseFloat(length) * parseFloat(width) * 4)} plants
+                      </span>
+                    </motion.div>
                   )}
                 </div>
               )}
 
-              {step === 1 && (
+              {/* Soil step */}
+              {step === 2 && (
                 <div className="grid grid-cols-2 gap-3">
                   {soilOptions.map((opt) => (
-                    <button
+                    <motion.button
                       key={opt.value}
                       type="button"
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
                       onClick={() => updateConfig({ soilType: opt.value as SoilType })}
                       className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${
                         config.soilType === opt.value
-                          ? 'border-green-500 bg-green-900/30 text-green-50'
+                          ? 'border-green-500 bg-green-900/30 text-green-50 shadow-lg shadow-green-900/20'
                           : 'border-green-900/40 bg-[#0D1F17] text-green-300/70 hover:border-green-700/50'
                       }`}
                     >
-                      <span className="font-medium">{opt.label}</span>
-                    </button>
+                      <span className="text-2xl block mb-1">{SOIL_EMOJIS[opt.value]}</span>
+                      <span className="font-medium block">{opt.label}</span>
+                      <span className="text-xs text-green-500/50 block mt-1">{SOIL_DESCRIPTIONS[opt.value]}</span>
+                    </motion.button>
                   ))}
                 </div>
               )}
 
-              {step === 2 && (
+              {/* Climate step */}
+              {step === 3 && (
                 <div className="grid grid-cols-2 gap-3">
                   {climateOptions.map((opt) => (
-                    <button
+                    <motion.button
                       key={opt.value}
                       type="button"
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
                       onClick={() => updateConfig({ climateZone: opt.value as ClimateZone })}
                       className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${
                         config.climateZone === opt.value
-                          ? 'border-green-500 bg-green-900/30 text-green-50'
+                          ? 'border-green-500 bg-green-900/30 text-green-50 shadow-lg shadow-green-900/20'
                           : 'border-green-900/40 bg-[#0D1F17] text-green-300/70 hover:border-green-700/50'
                       }`}
                     >
-                      <span className="font-medium">{opt.label}</span>
-                    </button>
+                      <span className="text-2xl block mb-1">{CLIMATE_EMOJIS[opt.value]}</span>
+                      <span className="font-medium block">{opt.label}</span>
+                      <span className="text-xs text-green-500/50 block mt-1">{CLIMATE_DESCRIPTIONS[opt.value]}</span>
+                    </motion.button>
                   ))}
                 </div>
               )}
 
-              {step === 3 && (
+              {/* Sun step */}
+              {step === 4 && (
                 <div className="space-y-3">
                   {sunOptions.map((opt) => (
-                    <button
+                    <motion.button
                       key={opt.value}
                       type="button"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
                       onClick={() => updateConfig({ sunExposure: opt.value as SunExposure })}
-                      className={`w-full p-4 rounded-xl border text-left transition-all cursor-pointer ${
+                      className={`w-full p-5 rounded-xl border text-left transition-all cursor-pointer ${
                         config.sunExposure === opt.value
-                          ? 'border-green-500 bg-green-900/30 text-green-50'
+                          ? 'border-green-500 bg-green-900/30 text-green-50 shadow-lg shadow-green-900/20'
                           : 'border-green-900/40 bg-[#0D1F17] text-green-300/70 hover:border-green-700/50'
                       }`}
                     >
-                      <span className="font-medium">{opt.label}</span>
-                    </button>
+                      <div className="flex items-center gap-4">
+                        <span className="text-3xl">{SUN_EMOJIS[opt.value]}</span>
+                        <div>
+                          <span className="font-medium block text-lg">{opt.label}</span>
+                          <span className="text-xs text-green-500/50 block mt-1">{SUN_DESCRIPTIONS[opt.value]}</span>
+                        </div>
+                      </div>
+                    </motion.button>
                   ))}
                 </div>
               )}
@@ -212,18 +511,30 @@ export function SetupForm() {
             <ArrowLeft className="w-4 h-4" />
             Back
           </Button>
-          <Button
-            onClick={handleNext}
-            disabled={!canProceed()}
-            className="gap-2"
-          >
-            {step === steps.length - 1 ? 'Finish Setup' : 'Next'}
-            {step === steps.length - 1 ? (
-              <Check className="w-4 h-4" />
-            ) : (
-              <ArrowRight className="w-4 h-4" />
-            )}
-          </Button>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button
+              onClick={handleNext}
+              disabled={!canProceed()}
+              className="gap-2 bg-gradient-to-r from-green-600 to-emerald-500 px-8"
+            >
+              {step === steps.length - 1 ? (
+                <>
+                  <Trophy className="w-4 h-4" />
+                  Complete Quest!
+                </>
+              ) : step === 0 ? (
+                <>
+                  Begin Adventure
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              ) : (
+                <>
+                  Next Quest
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </Button>
+          </motion.div>
         </div>
       </div>
     </div>
