@@ -1,0 +1,542 @@
+{
+  "soilPreparation": {
+    "doubleDigging": {
+      "name": { "en": "Double Digging", "fr": "Double bechage" },
+      "description": {
+        "en": "A deep soil preparation technique that loosens soil to 24 inches (60 cm), improving drainage, aeration, and root penetration. The top layer is removed, the subsoil is loosened with a fork, and the topsoil is replaced with compost mixed in.",
+        "fr": "Technique de preparation profonde du sol qui ameublit la terre sur 60 cm, ameliorant le drainage, l'aeration et la penetration des racines. La couche superieure est retiree, le sous-sol est ameubli a la fourche, puis la terre de surface est replacee avec du compost."
+      },
+      "steps": [
+        { "en": "Mark out a bed 1.5m wide (optimal for reaching the center from both sides)", "fr": "Delimitez un lit de 1,5m de large (optimal pour atteindre le centre des deux cotes)" },
+        { "en": "Dig a trench 30cm deep and 30cm wide across the bed width, set soil aside", "fr": "Creusez une tranchee de 30cm de profondeur et 30cm de large, mettez la terre de cote" },
+        { "en": "Loosen the subsoil in the trench another 30cm deep with a garden fork", "fr": "Ameublissez le sous-sol de la tranchee sur 30cm supplementaires a la fourche-beche" },
+        { "en": "Add a 5cm layer of compost to the loosened subsoil", "fr": "Ajoutez une couche de 5cm de compost sur le sous-sol ameubli" },
+        { "en": "Dig the next trench, flipping topsoil into the first trench", "fr": "Creusez la tranchee suivante en retournant la terre dans la premiere tranchee" },
+        { "en": "Continue until the entire bed is done, filling the last trench with the first trench's soil", "fr": "Continuez jusqu'a la fin du lit, remplissez la derniere tranchee avec la terre de la premiere" },
+        { "en": "Top with 2-5cm of compost and gently rake level", "fr": "Recouvrez de 2-5cm de compost et ratissez doucement" }
+      ],
+      "benefits": [
+        { "en": "Roots can grow 2-3x deeper than in conventional beds", "fr": "Les racines peuvent pousser 2-3x plus profondement que dans les plates-bandes conventionnelles" },
+        { "en": "Yields can increase by 200-400% per unit area", "fr": "Les rendements peuvent augmenter de 200-400% par unite de surface" },
+        { "en": "Water retention improves dramatically", "fr": "La retention d'eau s'ameliore considerablement" },
+        { "en": "Only needs to be done once, then maintained with compost", "fr": "N'a besoin d'etre fait qu'une seule fois, puis entretenu avec du compost" }
+      ],
+      "bestSeason": { "en": "Autumn or early spring", "fr": "Automne ou debut du printemps" }
+    },
+    "composting": {
+      "name": { "en": "Composting", "fr": "Compostage" },
+      "description": {
+        "en": "The foundation of bio-intensive gardening. A well-managed compost pile transforms kitchen scraps, garden waste, and manure into rich humus that feeds soil life.",
+        "fr": "La base du jardinage bio-intensif. Un compost bien gere transforme les dechets de cuisine, les dechets de jardin et le fumier en humus riche qui nourrit la vie du sol."
+      },
+      "methods": [
+        {
+          "name": { "en": "Hot Composting (Berkeley Method)", "fr": "Compostage chaud (Methode Berkeley)" },
+          "ratio": "25-30:1 Carbon to Nitrogen",
+          "temperature": "55-65°C",
+          "duration": "18-21 days",
+          "steps": [
+            { "en": "Layer brown materials (carbon) and green materials (nitrogen) in a 3:1 ratio by volume", "fr": "Alternez des couches de materiaux bruns (carbone) et verts (azote) dans un ratio 3:1 en volume" },
+            { "en": "Keep the pile moist like a wrung-out sponge (50-60% moisture)", "fr": "Gardez le tas humide comme une eponge essoree (50-60% d'humidite)" },
+            { "en": "Turn every 2-3 days to maintain heat and aeration", "fr": "Retournez tous les 2-3 jours pour maintenir la chaleur et l'aeration" },
+            { "en": "Finished when dark, crumbly, and earthy-smelling", "fr": "Termine quand il est sombre, friable et sent la terre" }
+          ]
+        },
+        {
+          "name": { "en": "Vermicomposting", "fr": "Lombricompostage" },
+          "description": {
+            "en": "Uses red wiggler worms (Eisenia fetida) to break down organic matter. Produces nutrient-rich castings and liquid fertilizer.",
+            "fr": "Utilise des vers rouges (Eisenia fetida) pour decomposer la matiere organique. Produit des turricules riches en nutriments et un engrais liquide."
+          },
+          "wormDensity": "500g of worms per 0.5 m² of surface area",
+          "temperature": "15-25°C optimal"
+        },
+        {
+          "name": { "en": "Bokashi", "fr": "Bokashi" },
+          "description": {
+            "en": "Anaerobic fermentation method using effective microorganisms (EM). Can handle meat and dairy scraps that regular composting cannot.",
+            "fr": "Methode de fermentation anaerobie utilisant des micro-organismes efficaces (EM). Peut traiter les dechets de viande et de produits laitiers que le compostage classique ne peut pas."
+          },
+          "duration": "2 weeks fermentation + 2 weeks soil burial"
+        }
+      ],
+      "carbonSources": ["Straw / Paille", "Dry leaves / Feuilles seches", "Cardboard / Carton", "Wood chips / Copeaux de bois", "Sawdust / Sciure"],
+      "nitrogenSources": ["Fresh grass / Herbe fraiche", "Kitchen scraps / Dechets de cuisine", "Coffee grounds / Marc de cafe", "Manure / Fumier", "Seaweed / Algues"]
+    },
+    "mulching": {
+      "name": { "en": "Mulching", "fr": "Paillage" },
+      "description": {
+        "en": "Covering the soil surface with organic or inorganic materials to suppress weeds, retain moisture, regulate temperature, and feed soil organisms.",
+        "fr": "Recouvrir la surface du sol avec des materiaux organiques ou inorganiques pour supprimer les mauvaises herbes, retenir l'humidite, reguler la temperature et nourrir les organismes du sol."
+      },
+      "types": [
+        { "name": { "en": "Straw", "fr": "Paille" }, "depth": "10-15cm", "bestFor": { "en": "Vegetable beds, tomatoes, strawberries", "fr": "Plates-bandes potageres, tomates, fraises" } },
+        { "name": { "en": "Wood chips (BRF)", "fr": "Bois Rameal Fragmente (BRF)" }, "depth": "5-10cm", "bestFor": { "en": "Paths, perennial beds, fruit trees", "fr": "Allees, plates-bandes vivaces, arbres fruitiers" } },
+        { "name": { "en": "Compost", "fr": "Compost" }, "depth": "3-5cm", "bestFor": { "en": "All beds, especially seedlings", "fr": "Toutes les plates-bandes, surtout les semis" } },
+        { "name": { "en": "Dry leaves", "fr": "Feuilles mortes" }, "depth": "10-15cm", "bestFor": { "en": "Overwintering beds, perennials", "fr": "Plates-bandes hivernales, vivaces" } },
+        { "name": { "en": "Living mulch (clover, vetch)", "fr": "Paillis vivant (trefle, vesce)" }, "depth": "N/A", "bestFor": { "en": "Between rows, orchards", "fr": "Entre les rangs, vergers" } }
+      ],
+      "tips": [
+        { "en": "Never mulch right up against plant stems - leave 5cm gap to prevent rot", "fr": "Ne jamais pailler contre les tiges - laisser 5cm pour eviter la pourriture" },
+        { "en": "Apply after soil has warmed in spring, not too early", "fr": "Appliquer apres que le sol s'est rechauffe au printemps, pas trop tot" },
+        { "en": "Thicken mulch before winter for frost protection", "fr": "Epaissir le paillis avant l'hiver pour la protection contre le gel" }
+      ]
+    },
+    "greenManure": [
+      { "name": { "en": "Crimson Clover", "fr": "Trefle incarnat" }, "family": "Leguminosae", "nitrogen": true, "sowMonths": [8, 9, 10], "benefits": { "en": "Fixes nitrogen, attracts pollinators, beautiful crimson flowers", "fr": "Fixe l'azote, attire les pollinisateurs, belles fleurs cramoisies" } },
+      { "name": { "en": "Winter Rye", "fr": "Seigle d'hiver" }, "family": "Poaceae", "nitrogen": false, "sowMonths": [9, 10, 11], "benefits": { "en": "Excellent weed suppression, deep roots break up compaction", "fr": "Excellente suppression des mauvaises herbes, racines profondes decompactent le sol" } },
+      { "name": { "en": "Phacelia", "fr": "Phacelie" }, "family": "Boraginaceae", "nitrogen": false, "sowMonths": [3, 4, 5, 8, 9], "benefits": { "en": "Attracts beneficial insects, breaks down quickly, not related to any vegetable family", "fr": "Attire les insectes benefiques, se decompose rapidement, non apparentee aux familles potageres" } },
+      { "name": { "en": "Field Beans", "fr": "Feves" }, "family": "Leguminosae", "nitrogen": true, "sowMonths": [10, 11], "benefits": { "en": "Hardy nitrogen fixer, edible beans, strong roots improve drainage", "fr": "Fixateur d'azote rustique, feves comestibles, racines solides ameliorent le drainage" } },
+      { "name": { "en": "Buckwheat", "fr": "Sarrasin" }, "family": "Polygonaceae", "nitrogen": false, "sowMonths": [5, 6, 7], "benefits": { "en": "Fast growing summer cover, attracts hoverflies, accumulates phosphorus", "fr": "Couverture estivale a croissance rapide, attire les syrphes, accumule le phosphore" } },
+      { "name": { "en": "White Mustard", "fr": "Moutarde blanche" }, "family": "Brassicaceae", "nitrogen": false, "sowMonths": [3, 4, 8, 9], "benefits": { "en": "Fast growing, biofumigant properties suppress soil-borne diseases", "fr": "Croissance rapide, proprietes biofumigantes suppriment les maladies du sol" } }
+    ],
+    "coverCrops": [
+      { "name": { "en": "White Clover", "fr": "Trefle blanc" }, "type": "perennial", "purpose": { "en": "Living mulch between rows, fixes 100-150 kg N/ha/year", "fr": "Paillis vivant entre les rangs, fixe 100-150 kg N/ha/an" } },
+      { "name": { "en": "Winter Vetch", "fr": "Vesce d'hiver" }, "type": "annual", "purpose": { "en": "Overwinter nitrogen fixer, biomass producer", "fr": "Fixateur d'azote hivernal, producteur de biomasse" } },
+      { "name": { "en": "Oats", "fr": "Avoine" }, "type": "annual", "purpose": { "en": "Fast biomass, weed suppression, winter-kills in cold climates", "fr": "Biomasse rapide, suppression des adventices, gel hivernal en climat froid" } },
+      { "name": { "en": "Daikon Radish", "fr": "Radis daikon" }, "type": "annual", "purpose": { "en": "Deep taproot breaks compaction (bio-drill), winter-kills and decomposes", "fr": "Racine pivotante profonde qui decompacte (bio-percage), gele en hiver et se decompose" } }
+    ]
+  },
+  "companionPlanting": {
+    "threeSisters": {
+      "name": { "en": "Three Sisters", "fr": "Les Trois Soeurs" },
+      "description": {
+        "en": "An ancient Indigenous American polyculture of corn, beans, and squash that work synergistically. Corn provides structure for beans, beans fix nitrogen for all three, and squash shades the soil to retain moisture and suppress weeds.",
+        "fr": "Une polyculture ancestrale amerindienne de mais, haricots et courge qui fonctionnent en synergie. Le mais sert de tuteur aux haricots, les haricots fixent l'azote pour les trois, et la courge ombre le sol pour retenir l'humidite et supprimer les adventices."
+      },
+      "plants": [
+        { "role": { "en": "Corn - vertical structure", "fr": "Mais - structure verticale" }, "spacing": "45cm apart in blocks" },
+        { "role": { "en": "Climbing beans - nitrogen fixer", "fr": "Haricots grimpants - fixateur d'azote" }, "spacing": "Plant 2-3 seeds at base of each corn stalk" },
+        { "role": { "en": "Squash - living mulch", "fr": "Courge - paillis vivant" }, "spacing": "1 plant per 1.5m between corn blocks" }
+      ],
+      "timing": { "en": "Plant corn first, beans 2 weeks later when corn is 15cm tall, squash 1 week after beans", "fr": "Plantez le mais en premier, les haricots 2 semaines plus tard quand le mais fait 15cm, la courge 1 semaine apres les haricots" }
+    },
+    "guilds": [
+      {
+        "name": { "en": "Tomato Guild", "fr": "Guilde de la Tomate" },
+        "center": "tomato",
+        "companions": [
+          { "plant": "basil", "role": { "en": "Repels aphids and whiteflies, improves flavor", "fr": "Repousse les pucerons et les mouches blanches, ameliore la saveur" } },
+          { "plant": "marigold", "role": { "en": "Repels nematodes and whiteflies", "fr": "Repousse les nematodes et les mouches blanches" } },
+          { "plant": "carrot", "role": { "en": "Loosens soil around tomato roots", "fr": "Ameublit le sol autour des racines de tomate" } },
+          { "plant": "parsley", "role": { "en": "Attracts hoverflies that eat aphids", "fr": "Attire les syrphes qui mangent les pucerons" } },
+          { "plant": "borage", "role": { "en": "Attracts pollinators, deters tomato hornworm", "fr": "Attire les pollinisateurs, repousse le sphinx de la tomate" } }
+        ]
+      },
+      {
+        "name": { "en": "Apple Tree Guild", "fr": "Guilde du Pommier" },
+        "center": "apple tree",
+        "companions": [
+          { "plant": "comfrey", "role": { "en": "Dynamic accumulator, deep roots mine minerals, chop-and-drop mulch", "fr": "Accumulateur dynamique, racines profondes extraient les mineraux, paillis coupe-et-depose" } },
+          { "plant": "nasturtium", "role": { "en": "Trap crop for aphids, edible flowers", "fr": "Culture piege pour les pucerons, fleurs comestibles" } },
+          { "plant": "chives", "role": { "en": "Repels apple scab, deters borers", "fr": "Repousse la tavelure du pommier, dissuade les foreurs" } },
+          { "plant": "daffodil", "role": { "en": "Deters voles and gophers with toxic bulbs", "fr": "Dissuade les campagnols avec ses bulbes toxiques" } },
+          { "plant": "white clover", "role": { "en": "Living mulch, nitrogen fixation", "fr": "Paillis vivant, fixation d'azote" } }
+        ]
+      },
+      {
+        "name": { "en": "Cabbage Guild", "fr": "Guilde du Chou" },
+        "center": "cabbage",
+        "companions": [
+          { "plant": "dill", "role": { "en": "Attracts beneficial wasps that parasitize cabbage worms", "fr": "Attire les guepes benefiques qui parasitent les chenilles du chou" } },
+          { "plant": "thyme", "role": { "en": "Repels cabbage moths with strong scent", "fr": "Repousse les pierides du chou avec son odeur forte" } },
+          { "plant": "lettuce", "role": { "en": "Living mulch, harvested before cabbage needs the space", "fr": "Paillis vivant, recolte avant que le chou ait besoin de l'espace" } },
+          { "plant": "onion", "role": { "en": "Strong scent confuses cabbage pests", "fr": "L'odeur forte deroute les ravageurs du chou" } }
+        ]
+      }
+    ],
+    "trapCrops": [
+      { "trap": { "en": "Nasturtium", "fr": "Capucine" }, "attracts": { "en": "Aphids, whiteflies, cabbage moths", "fr": "Pucerons, mouches blanches, pierides" }, "protects": { "en": "Brassicas, beans, tomatoes", "fr": "Brassicacees, haricots, tomates" } },
+      { "trap": { "en": "Blue Hubbard Squash", "fr": "Courge Blue Hubbard" }, "attracts": { "en": "Squash bugs, cucumber beetles", "fr": "Punaises de la courge, chrysomeles du concombre" }, "protects": { "en": "Zucchini, cucumber, melons", "fr": "Courgette, concombre, melons" } },
+      { "trap": { "en": "Radish (bolting)", "fr": "Radis (monte en graines)" }, "attracts": { "en": "Flea beetles", "fr": "Altises" }, "protects": { "en": "Eggplant, peppers, leafy greens", "fr": "Aubergine, poivrons, feuilles vertes" } },
+      { "trap": { "en": "Sunflower", "fr": "Tournesol" }, "attracts": { "en": "Stink bugs, aphids", "fr": "Punaises, pucerons" }, "protects": { "en": "Tomatoes, peppers, beans", "fr": "Tomates, poivrons, haricots" } },
+      { "trap": { "en": "Chervil", "fr": "Cerfeuil" }, "attracts": { "en": "Slugs", "fr": "Limaces" }, "protects": { "en": "Lettuce, strawberries", "fr": "Laitue, fraises" } }
+    ],
+    "beneficialInsects": [
+      { "insect": { "en": "Ladybug", "fr": "Coccinelle" }, "eats": { "en": "Aphids (up to 5000 in lifetime), scale insects", "fr": "Pucerons (jusqu'a 5000 dans sa vie), cochenilles" }, "attract": { "en": "Dill, fennel, yarrow, dandelion", "fr": "Aneth, fenouil, achillee, pissenlit" } },
+      { "insect": { "en": "Lacewing", "fr": "Chrysope" }, "eats": { "en": "Aphids, thrips, mealybugs, small caterpillars", "fr": "Pucerons, thrips, cochenilles farineuses, petites chenilles" }, "attract": { "en": "Cosmos, sweet alyssum, coreopsis", "fr": "Cosmos, alysse odorante, coreopsis" } },
+      { "insect": { "en": "Hoverfly", "fr": "Syrphe" }, "eats": { "en": "Aphids (larvae eat 400+ each), small caterpillars", "fr": "Pucerons (les larves en mangent 400+), petites chenilles" }, "attract": { "en": "Parsley, dill, fennel, marigold, phacelia", "fr": "Persil, aneth, fenouil, souci, phacelie" } },
+      { "insect": { "en": "Ground Beetle", "fr": "Carabe" }, "eats": { "en": "Slugs, snails, caterpillars, larvae", "fr": "Limaces, escargots, chenilles, larves" }, "attract": { "en": "Provide ground cover, logs, stone piles", "fr": "Fournir couverture au sol, buches, tas de pierres" } },
+      { "insect": { "en": "Parasitic Wasp", "fr": "Guepe parasitoide" }, "eats": { "en": "Caterpillars, aphids, whiteflies (parasitizes them)", "fr": "Chenilles, pucerons, mouches blanches (les parasite)" }, "attract": { "en": "Dill, fennel, yarrow, Queen Anne's lace", "fr": "Aneth, fenouil, achillee, carotte sauvage" } },
+      { "insect": { "en": "Solitary Bee", "fr": "Abeille solitaire" }, "eats": { "en": "Pollinates flowers (essential for fruiting crops)", "fr": "Pollinise les fleurs (essentiel pour les cultures fruitieres)" }, "attract": { "en": "Insect hotels, borage, lavender, phacelia", "fr": "Hotels a insectes, bourrache, lavande, phacelie" } }
+    ]
+  },
+  "cropRotation": {
+    "familyGroups": {
+      "solanaceae": { "name": { "en": "Nightshades", "fr": "Solanacees" }, "members": ["tomato", "pepper", "eggplant", "potato"], "notes": { "en": "Heavy feeders, susceptible to blight and root-knot nematodes. Wait 3-4 years before replanting in same spot.", "fr": "Gros consommateurs, sensibles au mildiou et aux nematodes. Attendre 3-4 ans avant de replanter au meme endroit." } },
+      "brassicaceae": { "name": { "en": "Brassicas", "fr": "Brassicacees" }, "members": ["cabbage", "broccoli", "kale", "cauliflower", "radish", "turnip"], "notes": { "en": "Susceptible to clubroot. Lime soil before planting if pH is below 6.5.", "fr": "Sensibles a la hernie du chou. Chauler le sol avant la plantation si le pH est inferieur a 6,5." } },
+      "cucurbitaceae": { "name": { "en": "Cucurbits", "fr": "Cucurbitacees" }, "members": ["cucumber", "zucchini", "squash", "melon", "pumpkin"], "notes": { "en": "Heavy feeders needing rich soil. Watch for powdery mildew.", "fr": "Gros consommateurs ayant besoin d'un sol riche. Attention a l'oidium." } },
+      "fabaceae": { "name": { "en": "Legumes", "fr": "Legumineuses" }, "members": ["bean", "pea", "lentil", "fava bean"], "notes": { "en": "Nitrogen fixers - always leave roots in soil after harvest to release fixed nitrogen.", "fr": "Fixateurs d'azote - toujours laisser les racines dans le sol apres la recolte pour liberer l'azote fixe." } },
+      "apiaceae": { "name": { "en": "Umbellifers", "fr": "Apiacees" }, "members": ["carrot", "parsley", "celery", "fennel", "dill"], "notes": { "en": "Deep rooted, good for breaking compaction. Attract many beneficial insects when flowering.", "fr": "Racines profondes, bons pour casser le compactage. Attirent de nombreux insectes benefiques en floraison." } },
+      "allium": { "name": { "en": "Alliums", "fr": "Alliacees" }, "members": ["onion", "garlic", "leek", "shallot", "chives"], "notes": { "en": "Natural pest repellents. Light feeders that benefit from sulfur-rich soil.", "fr": "Repulsifs naturels contre les ravageurs. Faibles consommateurs qui beneficient d'un sol riche en soufre." } },
+      "asteraceae": { "name": { "en": "Composites", "fr": "Asteracees" }, "members": ["lettuce", "sunflower", "artichoke", "endive"], "notes": { "en": "Generally light feeders. Good as break crops between heavy feeders.", "fr": "Generalement faibles consommateurs. Bons comme cultures de rupture entre gros consommateurs." } },
+      "chenopodiaceae": { "name": { "en": "Goosefoot family", "fr": "Chenopodiacees" }, "members": ["beet", "spinach", "chard", "quinoa"], "notes": { "en": "Moderate feeders that tolerate slightly alkaline soil.", "fr": "Consommateurs moderes qui tolerent un sol legerement alcalin." } }
+    },
+    "rotationPlan4Year": [
+      {
+        "year": 1,
+        "name": { "en": "Legumes & Soil Builders", "fr": "Legumineuses & Constructeurs de sol" },
+        "families": ["fabaceae"],
+        "action": { "en": "Plant peas, beans, fava beans. They fix nitrogen and improve soil structure. Add compost at planting.", "fr": "Plantez pois, haricots, feves. Ils fixent l'azote et ameliorent la structure du sol. Ajoutez du compost a la plantation." }
+      },
+      {
+        "year": 2,
+        "name": { "en": "Brassicas (Leaf Crops)", "fr": "Brassicacees (Cultures feuillues)" },
+        "families": ["brassicaceae"],
+        "action": { "en": "Follow legumes with nitrogen-hungry brassicas: cabbage, broccoli, kale. They benefit from the nitrogen left by legumes.", "fr": "Faites suivre les legumineuses par les brassicacees gourmandes en azote : chou, brocoli, chou frise. Elles beneficient de l'azote laisse par les legumineuses." }
+      },
+      {
+        "year": 3,
+        "name": { "en": "Solanaceae & Cucurbits (Fruit Crops)", "fr": "Solanacees & Cucurbitacees (Cultures fruitieres)" },
+        "families": ["solanaceae", "cucurbitaceae"],
+        "action": { "en": "Plant tomatoes, peppers, squash, cucumbers. Heavy feeders that use remaining fertility. Add compost and potassium-rich amendments.", "fr": "Plantez tomates, poivrons, courges, concombres. Gros consommateurs qui utilisent la fertilite restante. Ajoutez compost et amendements riches en potassium." }
+      },
+      {
+        "year": 4,
+        "name": { "en": "Roots & Alliums (Root Crops)", "fr": "Racines & Alliacees (Cultures racines)" },
+        "families": ["apiaceae", "allium", "chenopodiaceae"],
+        "action": { "en": "Plant carrots, onions, garlic, beets. Light feeders that clean up the soil. Their roots break up compaction left by previous crops.", "fr": "Plantez carottes, oignons, ail, betteraves. Faibles consommateurs qui nettoient le sol. Leurs racines cassent le compactage laisse par les cultures precedentes." }
+      }
+    ],
+    "heavyFeeders": [
+      { "en": "Tomato", "fr": "Tomate" },
+      { "en": "Corn", "fr": "Mais" },
+      { "en": "Cabbage", "fr": "Chou" },
+      { "en": "Broccoli", "fr": "Brocoli" },
+      { "en": "Squash", "fr": "Courge" },
+      { "en": "Cucumber", "fr": "Concombre" },
+      { "en": "Pepper", "fr": "Poivron" },
+      { "en": "Eggplant", "fr": "Aubergine" },
+      { "en": "Celery", "fr": "Celeri" },
+      { "en": "Melon", "fr": "Melon" }
+    ],
+    "lightFeeders": [
+      { "en": "Carrot", "fr": "Carotte" },
+      { "en": "Onion", "fr": "Oignon" },
+      { "en": "Garlic", "fr": "Ail" },
+      { "en": "Radish", "fr": "Radis" },
+      { "en": "Turnip", "fr": "Navet" },
+      { "en": "Lettuce", "fr": "Laitue" },
+      { "en": "Herbs", "fr": "Herbes aromatiques" },
+      { "en": "Beet", "fr": "Betterave" },
+      { "en": "Spinach", "fr": "Epinard" },
+      { "en": "Swiss Chard", "fr": "Bette a carde" }
+    ],
+    "soilBuilders": [
+      { "en": "Peas", "fr": "Pois" },
+      { "en": "Beans", "fr": "Haricots" },
+      { "en": "Fava Beans", "fr": "Feves" },
+      { "en": "Clover", "fr": "Trefle" },
+      { "en": "Vetch", "fr": "Vesce" },
+      { "en": "Alfalfa", "fr": "Luzerne" },
+      { "en": "Lupins", "fr": "Lupins" },
+      { "en": "Comfrey (chop & drop)", "fr": "Consoude (coupe et depose)" }
+    ]
+  },
+  "waterManagement": {
+    "drip": {
+      "name": { "en": "Drip Irrigation", "fr": "Irrigation goutte-a-goutte" },
+      "description": {
+        "en": "The most water-efficient irrigation method, delivering water directly to plant roots through emitters. Uses 30-50% less water than overhead sprinklers.",
+        "fr": "La methode d'irrigation la plus econome en eau, delivrant l'eau directement aux racines par des goutteurs. Utilise 30-50% moins d'eau que l'aspersion."
+      },
+      "setup": [
+        { "en": "Connect to water source with a pressure regulator (10-30 PSI)", "fr": "Connectez a la source d'eau avec un regulateur de pression (0.7-2 bar)" },
+        { "en": "Lay main line along bed edges", "fr": "Posez la ligne principale le long des bords des plates-bandes" },
+        { "en": "Run drip tape or tubing along plant rows, spacing emitters 30cm apart for vegetables", "fr": "Posez le tuyau goutte-a-goutte le long des rangs, espacez les goutteurs de 30cm pour les legumes" },
+        { "en": "Cover drip lines with mulch to reduce evaporation and UV damage", "fr": "Couvrez les lignes de paillis pour reduire l'evaporation et les dommages UV" },
+        { "en": "Use a timer for consistent watering (early morning is best)", "fr": "Utilisez un programmateur pour un arrosage regulier (tot le matin est ideal)" }
+      ],
+      "waterSavings": "30-50%"
+    },
+    "mulchRetention": {
+      "name": { "en": "Mulch for Water Retention", "fr": "Paillage pour la retention d'eau" },
+      "description": {
+        "en": "A 10cm layer of organic mulch can reduce water evaporation by up to 70% and keep soil temperatures 5-10°C cooler in summer.",
+        "fr": "Une couche de 10cm de paillis organique peut reduire l'evaporation de l'eau jusqu'a 70% et garder la temperature du sol 5-10°C plus fraiche en ete."
+      },
+      "effectiveness": {
+        "straw": { "en": "Excellent - reduces evaporation by 60-70%", "fr": "Excellent - reduit l'evaporation de 60-70%" },
+        "woodChips": { "en": "Very good - reduces evaporation by 50-60%", "fr": "Tres bon - reduit l'evaporation de 50-60%" },
+        "leaves": { "en": "Good - reduces evaporation by 40-50%", "fr": "Bon - reduit l'evaporation de 40-50%" },
+        "compost": { "en": "Moderate - reduces evaporation by 30-40%, but adds nutrients", "fr": "Modere - reduit l'evaporation de 30-40%, mais apporte des nutriments" }
+      }
+    },
+    "ollas": {
+      "name": { "en": "Ollas (Clay Pot Irrigation)", "fr": "Ollas (Irrigation par pots en terre cuite)" },
+      "description": {
+        "en": "Unglazed clay pots buried in the soil that slowly release water through their porous walls. An ancient technique that is incredibly water-efficient - uses up to 70% less water than surface watering.",
+        "fr": "Pots en terre cuite non emaillees enterres dans le sol qui liberent lentement l'eau a travers leurs parois poreuses. Technique ancienne incroyablement econome en eau - utilise jusqu'a 70% moins d'eau que l'arrosage de surface."
+      },
+      "setup": [
+        { "en": "Bury unglazed clay pot up to its neck in the soil", "fr": "Enterrez le pot en terre cuite non emaillee jusqu'au col dans le sol" },
+        { "en": "Fill with water and cover the opening (use a saucer or stone)", "fr": "Remplissez d'eau et couvrez l'ouverture (avec une soucoupe ou une pierre)" },
+        { "en": "Water seeps through the clay walls only when surrounding soil is dry", "fr": "L'eau s'infiltre a travers les parois d'argile seulement quand le sol environnant est sec" },
+        { "en": "Refill every 2-5 days depending on heat and soil type", "fr": "Reremplissez tous les 2-5 jours selon la chaleur et le type de sol" },
+        { "en": "Each olla irrigates a 45-60cm radius around it", "fr": "Chaque olla irrigue un rayon de 45-60cm autour d'elle" }
+      ],
+      "waterSavings": "50-70%"
+    },
+    "rainwaterHarvesting": {
+      "name": { "en": "Rainwater Harvesting", "fr": "Recuperation d'eau de pluie" },
+      "description": {
+        "en": "Collecting and storing rainwater from roof surfaces for garden irrigation. A 100m² roof in an area with 800mm annual rainfall can collect approximately 64,000 liters per year.",
+        "fr": "Collecte et stockage de l'eau de pluie des toitures pour l'irrigation du jardin. Un toit de 100m² dans une zone avec 800mm de precipitations annuelles peut collecter environ 64 000 litres par an."
+      },
+      "components": [
+        { "en": "Gutters and downspouts to channel water", "fr": "Gouttieres pour canaliser l'eau" },
+        { "en": "First-flush diverter to discard the first dirty water", "fr": "Deviateur de premiere pluie pour ecarter la premiere eau sale" },
+        { "en": "Filter screen to remove debris", "fr": "Filtre pour retirer les debris" },
+        { "en": "Storage tank (IBC containers, barrels, or underground cistern)", "fr": "Cuve de stockage (conteneurs IBC, barils, ou citerne enterree)" },
+        { "en": "Overflow outlet connected to garden swale or drain", "fr": "Trop-plein connecte a une noue de jardin ou un drain" }
+      ],
+      "tips": [
+        { "en": "Use opaque containers to prevent algae growth", "fr": "Utilisez des conteneurs opaques pour empecher la croissance d'algues" },
+        { "en": "Elevate the tank for gravity-fed drip irrigation", "fr": "Surelevez la cuve pour une irrigation gravitaire goutte-a-goutte" },
+        { "en": "1mm of rain on 1m² of roof = 1 liter of water", "fr": "1mm de pluie sur 1m² de toit = 1 litre d'eau" }
+      ]
+    }
+  },
+  "pestControl": {
+    "biologicalControl": [
+      { "pest": { "en": "Aphids", "fr": "Pucerons" }, "solution": { "en": "Release ladybugs (20-30 per plant), attract lacewings with cosmos flowers, spray with diluted soapy water", "fr": "Lachez des coccinelles (20-30 par plante), attirez les chrysopes avec des cosmos, pulverisez de l'eau savonneuse diluee" } },
+      { "pest": { "en": "Slugs & Snails", "fr": "Limaces & Escargots" }, "solution": { "en": "Beer traps, copper tape barriers, encourage ground beetles and hedgehogs, apply ferric phosphate pellets", "fr": "Pieges a biere, barrieres de bande de cuivre, favoriser les carabes et herissons, appliquer des granules de phosphate ferrique" } },
+      { "pest": { "en": "Cabbage White Butterfly", "fr": "Pieride du chou" }, "solution": { "en": "Fine mesh netting (Environmesh), plant nasturtiums as trap crop, encourage parasitic wasps with dill and fennel", "fr": "Filet a mailles fines (Environmesh), plantez des capucines comme culture piege, favorisez les guepes parasitoides avec de l'aneth et du fenouil" } },
+      { "pest": { "en": "Carrot Fly", "fr": "Mouche de la carotte" }, "solution": { "en": "60cm high barriers (they fly low), interplant with onions or leeks, sow after mid-May to avoid first generation", "fr": "Barrieres de 60cm de haut (elles volent bas), intercaler avec des oignons ou poireaux, semer apres mi-mai pour eviter la premiere generation" } },
+      { "pest": { "en": "Whiteflies", "fr": "Mouches blanches" }, "solution": { "en": "Yellow sticky traps, introduce Encarsia formosa wasps in greenhouses, spray neem oil", "fr": "Pieges jaunes englues, introduire des guepes Encarsia formosa en serre, pulveriser de l'huile de neem" } },
+      { "pest": { "en": "Colorado Potato Beetle", "fr": "Doryphore" }, "solution": { "en": "Hand pick adults and egg clusters (orange on leaf undersides), apply Bacillus thuringiensis var. tenebrionis (Btt), mulch heavily with straw", "fr": "Ramassez a la main les adultes et les pontes (orange sous les feuilles), appliquez Bacillus thuringiensis var. tenebrionis (Btt), paillez abondamment avec de la paille" } }
+    ],
+    "companionPlanting": [
+      { "plant": { "en": "Basil", "fr": "Basilic" }, "repels": { "en": "Aphids, mosquitoes, whiteflies", "fr": "Pucerons, moustiques, mouches blanches" }, "plantNear": { "en": "Tomatoes, peppers", "fr": "Tomates, poivrons" } },
+      { "plant": { "en": "Marigold (Tagetes)", "fr": "Oeillet d'Inde (Tagetes)" }, "repels": { "en": "Nematodes, whiteflies, aphids", "fr": "Nematodes, mouches blanches, pucerons" }, "plantNear": { "en": "Tomatoes, beans, most vegetables", "fr": "Tomates, haricots, la plupart des legumes" } },
+      { "plant": { "en": "Garlic", "fr": "Ail" }, "repels": { "en": "Aphids, spider mites, Japanese beetles", "fr": "Pucerons, acariens, scarabees japonais" }, "plantNear": { "en": "Roses, fruit trees, brassicas", "fr": "Rosiers, arbres fruitiers, brassicacees" } },
+      { "plant": { "en": "Lavender", "fr": "Lavande" }, "repels": { "en": "Moths, fleas, flies, mosquitoes", "fr": "Mites, puces, mouches, moustiques" }, "plantNear": { "en": "Borders, pathways, near doorways", "fr": "Bordures, allees, pres des entrees" } },
+      { "plant": { "en": "Rosemary", "fr": "Romarin" }, "repels": { "en": "Cabbage moths, carrot flies, bean beetles", "fr": "Pierides du chou, mouche de la carotte, chrysomeles du haricot" }, "plantNear": { "en": "Cabbage, beans, carrots", "fr": "Chou, haricots, carottes" } },
+      { "plant": { "en": "Mint", "fr": "Menthe" }, "repels": { "en": "Ants, aphids, flea beetles, cabbage moths", "fr": "Fourmis, pucerons, altises, pierides du chou" }, "plantNear": { "en": "Cabbage (in pots to control spread!)", "fr": "Chou (en pot pour controler la propagation !)" } }
+    ],
+    "naturalSprays": [
+      {
+        "name": { "en": "Nettle Fertilizer Tea", "fr": "Purin d'ortie" },
+        "recipe": { "en": "1kg fresh nettles in 10L water, ferment 10-14 days stirring daily, strain and dilute 1:10 for foliar spray or 1:5 for soil drench", "fr": "1kg d'orties fraiches dans 10L d'eau, fermenter 10-14 jours en remuant chaque jour, filtrer et diluer 1:10 en pulverisation foliaire ou 1:5 en arrosage au sol" },
+        "uses": { "en": "General fertilizer rich in nitrogen, iron, and minerals. Also repels aphids.", "fr": "Engrais general riche en azote, fer et mineraux. Repousse aussi les pucerons." }
+      },
+      {
+        "name": { "en": "Comfrey Tea", "fr": "Purin de consoude" },
+        "recipe": { "en": "1kg comfrey leaves in 10L water, ferment 4-6 weeks, dilute 1:10 before use", "fr": "1kg de feuilles de consoude dans 10L d'eau, fermenter 4-6 semaines, diluer 1:10 avant utilisation" },
+        "uses": { "en": "High potassium liquid feed, ideal for tomatoes, peppers, and fruiting crops during flowering and fruiting.", "fr": "Engrais liquide riche en potassium, ideal pour tomates, poivrons et cultures fruitieres pendant la floraison et la fructification." }
+      },
+      {
+        "name": { "en": "Garlic & Chili Spray", "fr": "Spray ail & piment" },
+        "recipe": { "en": "Blend 4 garlic cloves + 2 hot chilies in 1L water, steep overnight, strain and add 1 tsp liquid soap, spray on plants", "fr": "Mixez 4 gousses d'ail + 2 piments forts dans 1L d'eau, laissez reposer une nuit, filtrez et ajoutez 1 cc de savon liquide, pulverisez sur les plantes" },
+        "uses": { "en": "Repels aphids, caterpillars, whiteflies. Reapply after rain.", "fr": "Repousse pucerons, chenilles, mouches blanches. Reappliquer apres la pluie." }
+      },
+      {
+        "name": { "en": "Baking Soda Fungicide", "fr": "Fongicide au bicarbonate" },
+        "recipe": { "en": "1 tbsp baking soda + 1 tsp liquid soap + 1 tbsp vegetable oil in 4L water. Spray weekly on susceptible plants.", "fr": "1 cs de bicarbonate + 1 cc de savon liquide + 1 cs d'huile vegetale dans 4L d'eau. Pulverisez chaque semaine sur les plantes sensibles." },
+        "uses": { "en": "Prevents and treats powdery mildew, black spot on roses", "fr": "Previent et traite l'oidium, les taches noires sur les rosiers" }
+      },
+      {
+        "name": { "en": "Horsetail Decoction", "fr": "Decoction de prele" },
+        "recipe": { "en": "100g dried horsetail in 1L water, soak 24h, then simmer 30 min. Dilute 1:5 and spray on plants.", "fr": "100g de prele sechee dans 1L d'eau, tremper 24h, puis mijoter 30 min. Diluer 1:5 et pulveriser sur les plantes." },
+        "uses": { "en": "Rich in silica, strengthens cell walls against fungal diseases. Prevents mildew and rust.", "fr": "Riche en silice, renforce les parois cellulaires contre les maladies fongiques. Previent le mildiou et la rouille." }
+      }
+    ],
+    "preventiveMeasures": [
+      { "en": "Rotate crops every year - never plant the same family in the same spot twice in a row", "fr": "Rotation des cultures chaque annee - ne jamais planter la meme famille au meme endroit deux annees de suite" },
+      { "en": "Encourage biodiversity - plant flowers among vegetables to attract natural predators", "fr": "Favoriser la biodiversite - planter des fleurs parmi les legumes pour attirer les predateurs naturels" },
+      { "en": "Keep garden clean - remove dead plants and fallen fruit that harbor diseases", "fr": "Garder le jardin propre - retirer les plantes mortes et les fruits tombes qui abritent des maladies" },
+      { "en": "Water at the base of plants, not overhead, to prevent fungal diseases", "fr": "Arroser a la base des plantes, pas par-dessus, pour prevenir les maladies fongiques" },
+      { "en": "Space plants properly for air circulation", "fr": "Espacer correctement les plantes pour la circulation de l'air" },
+      { "en": "Build healthy soil - healthy plants resist pests and diseases better", "fr": "Construire un sol sain - les plantes en bonne sante resistent mieux aux ravageurs et aux maladies" },
+      { "en": "Use row covers (voile de forcage) for vulnerable young plants", "fr": "Utiliser des voiles de forcage pour les jeunes plants vulnerables" },
+      { "en": "Inspect plants regularly - catch problems early before they spread", "fr": "Inspecter les plantes regulierement - detecter les problemes tot avant qu'ils ne se propagent" }
+    ]
+  },
+  "seedSaving": {
+    "basics": {
+      "description": {
+        "en": "Seed saving is the practice of collecting and storing seeds from your best plants for future planting. It preserves genetic diversity, adapts varieties to your local conditions, and saves money.",
+        "fr": "La conservation des semences consiste a collecter et stocker les graines de vos meilleures plantes pour les plantations futures. Cela preserve la diversite genetique, adapte les varietes a vos conditions locales et fait economiser de l'argent."
+      },
+      "rules": [
+        { "en": "Only save seeds from open-pollinated (OP) or heirloom varieties, never F1 hybrids", "fr": "Ne conservez que les graines de varietes a pollinisation libre ou anciennes, jamais les hybrides F1" },
+        { "en": "Choose the healthiest, most vigorous plants for seed saving", "fr": "Choisissez les plantes les plus saines et vigoureuses pour la conservation des graines" },
+        { "en": "Maintain isolation distances to prevent cross-pollination between varieties", "fr": "Maintenez des distances d'isolement pour eviter la pollinisation croisee entre varietes" },
+        { "en": "Dry seeds thoroughly before storage (7-14 days in a well-ventilated area)", "fr": "Sechez bien les graines avant le stockage (7-14 jours dans un endroit bien ventile)" },
+        { "en": "Store in cool, dry, dark conditions. Paper envelopes in glass jars with silica gel work well.", "fr": "Stockez au frais, au sec et a l'obscurite. Des enveloppes en papier dans des bocaux en verre avec du gel de silice fonctionnent bien." },
+        { "en": "Label everything: variety name, date harvested, any notes", "fr": "Etiquetez tout : nom de la variete, date de recolte, notes eventuelles" }
+      ],
+      "viability": {
+        "1-2 years": ["Onion / Oignon", "Parsley / Persil", "Parsnip / Panais", "Corn / Mais"],
+        "3-4 years": ["Bean / Haricot", "Carrot / Carotte", "Pea / Pois", "Pepper / Poivron", "Leek / Poireau"],
+        "4-6 years": ["Tomato / Tomate", "Eggplant / Aubergine", "Lettuce / Laitue", "Brassicas / Brassicacees", "Beet / Betterave", "Cucumber / Concombre", "Melon / Melon", "Squash / Courge", "Radish / Radis"]
+      }
+    },
+    "byPlant": {
+      "tomato": {
+        "method": { "en": "Fermentation method: Squeeze seeds and gel into a jar, add water, leave 2-3 days until a mold forms on top. Rinse clean and dry on a plate.", "fr": "Methode de fermentation : Pressez les graines et le gel dans un bocal, ajoutez de l'eau, laissez 2-3 jours jusqu'a ce qu'une moisissure se forme. Rincez et sechez sur une assiette." },
+        "isolation": "3m minimum (self-pollinating but bees can cross)",
+        "type": "self-pollinating"
+      },
+      "pepper": {
+        "method": { "en": "Let fruits fully ripen on the plant (until red/orange). Scrape seeds out, rinse and dry for 1-2 weeks.", "fr": "Laissez les fruits murir completement sur la plante (jusqu'au rouge/orange). Grattez les graines, rincez et sechez pendant 1-2 semaines." },
+        "isolation": "50m (cross-pollinated by insects)",
+        "type": "cross-pollinating"
+      },
+      "bean": {
+        "method": { "en": "Leave pods on the plant until they are dry and brown. Pick and shell. If weather is wet, pull entire plants and hang upside down indoors to finish drying.", "fr": "Laissez les gousses sur la plante jusqu'a ce qu'elles soient seches et brunes. Cueillez et ecossez. Si le temps est humide, arrachez les plantes entieres et suspendez-les tete en bas a l'interieur pour finir le sechage." },
+        "isolation": "3m (self-pollinating)",
+        "type": "self-pollinating"
+      },
+      "lettuce": {
+        "method": { "en": "Let one plant bolt and flower. When seed heads turn fluffy (like small dandelions), cut the stalk and shake seeds into a bag. Dry and winnow.", "fr": "Laissez une plante monter en graines et fleurir. Quand les tetes de graines deviennent duveteuses (comme de petits pissenlits), coupez la tige et secouez les graines dans un sac. Sechez et vannez." },
+        "isolation": "3m (mostly self-pollinating)",
+        "type": "self-pollinating"
+      },
+      "squash": {
+        "method": { "en": "Let fruit fully mature on the vine. Scoop seeds, wash off pulp, and dry on screens for 1-2 weeks. Different species can cross (C. pepo, C. maxima, C. moschata do not cross with each other).", "fr": "Laissez le fruit murir completement sur la plante. Prelevez les graines, lavez la pulpe et sechez sur des grilles pendant 1-2 semaines. Les differentes especes peuvent se croiser (C. pepo, C. maxima, C. moschata ne se croisent pas entre elles)." },
+        "isolation": "400m (insect pollinated, same species crosses)",
+        "type": "cross-pollinating"
+      },
+      "carrot": {
+        "method": { "en": "Biennial - leave roots in ground over winter (or replant stored roots in spring). Harvest seed heads when they turn brown and curl inward. Dry in paper bags.", "fr": "Bisannuelle - laissez les racines en terre pendant l'hiver (ou replantez les racines stockees au printemps). Recoltez les tetes de graines quand elles brunissent et se recroquevillent. Sechez dans des sacs en papier." },
+        "isolation": "500m (cross-pollinates with wild carrot/Queen Anne's lace)",
+        "type": "cross-pollinating"
+      }
+    }
+  },
+  "tips": {
+    "monthly": {
+      "1": [
+        { "en": "Order seeds from catalogs - plan your garden layout on paper", "fr": "Commandez vos graines sur catalogue - planifiez l'agencement de votre jardin sur papier" },
+        { "en": "Check stored vegetables and remove any that are rotting", "fr": "Verifiez les legumes stockes et retirez ceux qui pourrissent" },
+        { "en": "Clean and sharpen garden tools, oil wooden handles", "fr": "Nettoyez et aiguisez les outils de jardin, huilez les manches en bois" },
+        { "en": "Start chitting seed potatoes in egg cartons on a cool windowsill", "fr": "Commencez la germination des pommes de terre dans des boites a oeufs sur un rebord de fenetre frais" },
+        { "en": "Build or repair cold frames for early sowing", "fr": "Construisez ou reparez les chassis froids pour les semis precoces" },
+        { "en": "Plan your crop rotation for the coming year", "fr": "Planifiez votre rotation des cultures pour l'annee a venir" }
+      ],
+      "2": [
+        { "en": "Sow early seeds indoors: peppers, eggplant, celery (need long growing season)", "fr": "Semez les graines precoces a l'interieur : poivrons, aubergines, celeri (besoin d'une longue saison)" },
+        { "en": "Prepare compost bins - turn existing piles to accelerate decomposition", "fr": "Preparez les bacs a compost - retournez les tas existants pour accelerer la decomposition" },
+        { "en": "Prune fruit trees and berry bushes while still dormant", "fr": "Taillez les arbres fruitiers et les arbustes a baies pendant qu'ils sont encore en dormance" },
+        { "en": "Top-dress beds with compost if soil is workable", "fr": "Amendez les plates-bandes avec du compost si le sol est travaillable" },
+        { "en": "Direct sow broad beans outdoors if soil is not frozen", "fr": "Semez les feves directement en pleine terre si le sol n'est pas gele" },
+        { "en": "Force rhubarb by covering crowns with an upturned bucket", "fr": "Forcez la rhubarbe en couvrant les souches d'un seau retourne" }
+      ],
+      "3": [
+        { "en": "Sow tomatoes, lettuce, and brassicas indoors under grow lights or on windowsill", "fr": "Semez tomates, laitues et brassicacees a l'interieur sous lampes ou en rebord de fenetre" },
+        { "en": "Direct sow peas, spinach, radishes, and spring onions outdoors", "fr": "Semez directement pois, epinards, radis et oignons de printemps en pleine terre" },
+        { "en": "Plant garlic cloves if not done in autumn (autumn planting gives bigger bulbs)", "fr": "Plantez les gousses d'ail si pas fait en automne (la plantation d'automne donne de plus gros bulbes)" },
+        { "en": "Begin double-digging or forking new beds as soil warms", "fr": "Commencez le double bechage ou ameublissement des nouvelles plates-bandes quand le sol se rechauffe" },
+        { "en": "Set up water butts and check rainwater collection systems", "fr": "Installez les recuperateurs d'eau et verifiez les systemes de collecte d'eau de pluie" },
+        { "en": "Plant early potatoes (first earlies) in trenches with compost", "fr": "Plantez les pommes de terre hatives (premieres hatives) en tranchees avec du compost" }
+      ],
+      "4": [
+        { "en": "Harden off seedlings started indoors - gradually expose to outdoor conditions over 7-10 days", "fr": "Endurcissez les plants demarres a l'interieur - exposez progressivement aux conditions exterieures sur 7-10 jours" },
+        { "en": "Direct sow carrots, beets, Swiss chard, and salad mixes", "fr": "Semez directement carottes, betteraves, bettes et mesclun" },
+        { "en": "Plant out leeks, onion sets, and shallots", "fr": "Plantez les poireaux, bulbilles d'oignon et echalotes" },
+        { "en": "Watch for late frosts - keep fleece handy to protect tender plants", "fr": "Surveillez les gelees tardives - gardez du voile de forcage a portee de main pour proteger les plants fragiles" },
+        { "en": "Start making nettle fertilizer tea for the growing season", "fr": "Commencez a preparer le purin d'ortie pour la saison de croissance" },
+        { "en": "Sow French and runner beans in pots indoors for planting out after last frost", "fr": "Semez haricots nains et a rames en pots a l'interieur pour planter apres les derniers gels" }
+      ],
+      "5": [
+        { "en": "Plant out tomatoes, peppers, and courgettes after last frost date", "fr": "Plantez les tomates, poivrons et courgettes apres la derniere date de gel" },
+        { "en": "Direct sow beans, squash, sweetcorn, and cucumbers", "fr": "Semez directement haricots, courges, mais doux et concombres" },
+        { "en": "Earth up potatoes as shoots appear above soil", "fr": "Buttez les pommes de terre quand les pousses apparaissent au-dessus du sol" },
+        { "en": "Install drip irrigation or soaker hoses before plants get too large", "fr": "Installez l'irrigation goutte-a-goutte ou les tuyaux suintants avant que les plantes ne deviennent trop grandes" },
+        { "en": "Mulch all beds with 10cm of straw or compost to conserve moisture", "fr": "Paillez toutes les plates-bandes avec 10cm de paille ou compost pour conserver l'humidite" },
+        { "en": "Begin succession sowing lettuce and radish every 2-3 weeks", "fr": "Commencez les semis echelonnes de laitue et radis toutes les 2-3 semaines" }
+      ],
+      "6": [
+        { "en": "Stake and tie tomato plants as they grow. Remove side shoots for cordon varieties.", "fr": "Tuteurez et attachez les plants de tomates. Supprimez les gourmands pour les varietes a tige unique." },
+        { "en": "Keep on top of watering - deep watering less often is better than little and often", "fr": "Maintenez l'arrosage - un arrosage profond moins frequent est meilleur qu'un arrosage leger et frequent" },
+        { "en": "Watch for aphids and caterpillars - act quickly with biological controls", "fr": "Surveillez pucerons et chenilles - agissez vite avec des controles biologiques" },
+        { "en": "Harvest early crops: peas, lettuce, radish, spring onions, broad beans", "fr": "Recoltez les cultures precoces : pois, laitue, radis, oignons de printemps, feves" },
+        { "en": "Sow quick crops in gaps: lettuce, radish, turnips, spring onions", "fr": "Semez des cultures rapides dans les espaces : laitue, radis, navets, oignons de printemps" },
+        { "en": "Feed tomatoes with comfrey tea every 2 weeks once flowering begins", "fr": "Nourrissez les tomates au purin de consoude toutes les 2 semaines des le debut de la floraison" }
+      ],
+      "7": [
+        { "en": "Harvest daily - pick beans, courgettes, and tomatoes regularly to encourage more production", "fr": "Recoltez quotidiennement - cueillez haricots, courgettes et tomates regulierement pour encourager plus de production" },
+        { "en": "Sow autumn crops: winter cabbages, kale, Brussels sprouts, leeks", "fr": "Semez les cultures d'automne : choux d'hiver, chou frise, choux de Bruxelles, poireaux" },
+        { "en": "Water deeply in the evening to reduce evaporation losses", "fr": "Arrosez en profondeur le soir pour reduire les pertes par evaporation" },
+        { "en": "Pinch out tomato growing tips after 4-5 trusses to focus energy on ripening", "fr": "Etandez les pointes de croissance des tomates apres 4-5 grappes pour concentrer l'energie sur la maturation" },
+        { "en": "Dry herbs for winter use: hang bunches upside down in a cool, airy place", "fr": "Sechez les herbes pour l'hiver : suspendez les bouquets tete en bas dans un endroit frais et aere" },
+        { "en": "Check and maintain compost heaps - add water if too dry, turn if compacted", "fr": "Verifiez et entretenez les tas de compost - ajoutez de l'eau si trop sec, retournez si compacte" }
+      ],
+      "8": [
+        { "en": "Sow green manures (phacelia, mustard, buckwheat) in cleared beds", "fr": "Semez des engrais verts (phacelie, moutarde, sarrasin) dans les plates-bandes liberees" },
+        { "en": "Plant out winter brassicas, leeks, and autumn lettuce", "fr": "Plantez les brassicacees d'hiver, poireaux et laitues d'automne" },
+        { "en": "Begin saving seeds from your best plants (tomatoes, beans, lettuce)", "fr": "Commencez a conserver les graines de vos meilleures plantes (tomates, haricots, laitues)" },
+        { "en": "Harvest onions and garlic when tops fall over - cure in sun for 2 weeks", "fr": "Recoltez oignons et ail quand les fanes tombent - sechez au soleil pendant 2 semaines" },
+        { "en": "Summer prune trained fruit trees (espaliers, cordons, fans)", "fr": "Taillez en vert les arbres fruitiers palissees (espaliers, cordons, eventails)" },
+        { "en": "Order spring-flowering bulbs for autumn planting", "fr": "Commandez les bulbes a floraison printaniere pour la plantation d'automne" }
+      ],
+      "9": [
+        { "en": "Plant garlic cloves (autumn planting gives the best results)", "fr": "Plantez les gousses d'ail (la plantation d'automne donne les meilleurs resultats)" },
+        { "en": "Sow overwintering crops: winter lettuce, spinach, broad beans, peas", "fr": "Semez les cultures hivernantes : laitue d'hiver, epinards, feves, pois" },
+        { "en": "Harvest and store winter squash - cure in sun for 10 days then store cool and dry", "fr": "Recoltez et stockez les courges d'hiver - sechez au soleil 10 jours puis stockez au frais et au sec" },
+        { "en": "Begin clearing and composting spent plants", "fr": "Commencez a nettoyer et composter les plantes epuisees" },
+        { "en": "Plant green manure cover crops (crimson clover, field beans, winter rye)", "fr": "Plantez des engrais verts (trefle incarnat, feves, seigle d'hiver)" },
+        { "en": "Take hardwood cuttings of fruit bushes (blackcurrant, gooseberry)", "fr": "Faites des boutures de bois dur d'arbustes fruitiers (cassis, groseillier)" }
+      ],
+      "10": [
+        { "en": "Plant fruit trees and bushes while the ground is still warm", "fr": "Plantez les arbres et arbustes fruitiers tant que le sol est encore chaud" },
+        { "en": "Lift and store root vegetables: carrots, beetroot, parsnips", "fr": "Arrachez et stockez les legumes racines : carottes, betteraves, panais" },
+        { "en": "Protect late crops with fleece or cloches as temperatures drop", "fr": "Protegez les cultures tardives avec du voile ou des cloches quand les temperatures baissent" },
+        { "en": "Build leaf mold piles with fallen leaves (takes 1-2 years but worth it)", "fr": "Faites des tas de terreau de feuilles avec les feuilles mortes (prend 1-2 ans mais ca vaut le coup)" },
+        { "en": "Apply thick mulch to strawberry beds and perennial borders", "fr": "Appliquez un paillis epais sur les fraisiers et les bordures vivaces" },
+        { "en": "Clean and store bean and pea supports, repair if needed", "fr": "Nettoyez et rangez les tuteurs de haricots et pois, reparez si necessaire" }
+      ],
+      "11": [
+        { "en": "Dig over empty beds and incorporate compost or manure for spring", "fr": "Bechez les plates-bandes vides et incorporez compost ou fumier pour le printemps" },
+        { "en": "Plant bare-root fruit trees, roses, and hedging plants", "fr": "Plantez les arbres fruitiers, rosiers et haies a racines nues" },
+        { "en": "Protect tender plants from frost with fleece, straw, or bubble wrap", "fr": "Protegez les plantes fragiles du gel avec du voile, de la paille ou du papier bulle" },
+        { "en": "Harvest Brussels sprouts, leeks, kale, and parsnips (frost improves their flavor!)", "fr": "Recoltez choux de Bruxelles, poireaux, chou frise et panais (le gel ameliore leur saveur !)" },
+        { "en": "Clean out cold frames and greenhouses, wash glass for maximum light", "fr": "Nettoyez les chassis froids et serres, lavez les vitres pour un maximum de lumiere" },
+        { "en": "Continue composting - shred tough stalks to speed decomposition", "fr": "Continuez le compostage - broyez les tiges dures pour accelerer la decomposition" }
+      ],
+      "12": [
+        { "en": "Rest and plan! Review what worked this year and what to improve", "fr": "Reposez-vous et planifiez ! Passez en revue ce qui a fonctionne cette annee et ce qu'il faut ameliorer" },
+        { "en": "Browse seed catalogs and order early for best selection", "fr": "Parcourez les catalogues de graines et commandez tot pour le meilleur choix" },
+        { "en": "Harvest winter crops: leeks, parsnips, Brussels sprouts, kale", "fr": "Recoltez les cultures d'hiver : poireaux, panais, choux de Bruxelles, chou frise" },
+        { "en": "Check tree stakes and ties - adjust if too tight as trunks expand", "fr": "Verifiez les tuteurs et attaches des arbres - ajustez si trop serres car les troncs s'elargissent" },
+        { "en": "Spread well-rotted manure on beds for frost to break down over winter", "fr": "Epandez du fumier bien decompose sur les plates-bandes pour que le gel le decompose pendant l'hiver" },
+        { "en": "Make a wish list and dream about next year's garden!", "fr": "Faites une liste de souhaits et revez du jardin de l'annee prochaine !" }
+      ]
+    },
+    "seasonal": {
+      "spring": [
+        { "en": "Start seeds indoors 6-8 weeks before last frost date", "fr": "Demarrez les semis a l'interieur 6-8 semaines avant la derniere date de gel" },
+        { "en": "Prepare beds with compost - aim for 5cm layer worked into topsoil", "fr": "Preparez les plates-bandes avec du compost - visez une couche de 5cm incorporee a la couche arable" },
+        { "en": "Install supports for climbing plants before they need them", "fr": "Installez les supports pour plantes grimpantes avant qu'elles n'en aient besoin" },
+        { "en": "Divide and replant perennial herbs (chives, oregano, mint)", "fr": "Divisez et replantez les herbes vivaces (ciboulette, origan, menthe)" },
+        { "en": "Check soil pH and amend if needed - most vegetables prefer 6.0-7.0", "fr": "Verifiez le pH du sol et amendez si necessaire - la plupart des legumes preferent 6,0-7,0" },
+        { "en": "Create a watering schedule and set up irrigation systems", "fr": "Creez un calendrier d'arrosage et installez les systemes d'irrigation" }
+      ],
+      "summer": [
+        { "en": "Mulch everything to conserve water and suppress weeds", "fr": "Paillez tout pour conserver l'eau et supprimer les mauvaises herbes" },
+        { "en": "Water deeply 2-3 times per week rather than lightly every day", "fr": "Arrosez en profondeur 2-3 fois par semaine plutot que legerement chaque jour" },
+        { "en": "Harvest regularly to encourage continued production", "fr": "Recoltez regulierement pour encourager la production continue" },
+        { "en": "Succession sow fast crops every 2-3 weeks for continuous harvest", "fr": "Faites des semis echelonnes de cultures rapides toutes les 2-3 semaines pour une recolte continue" },
+        { "en": "Feed fruiting plants (tomatoes, peppers, squash) with high-potassium fertilizer", "fr": "Nourrissez les plantes a fruits (tomates, poivrons, courges) avec un engrais riche en potassium" },
+        { "en": "Monitor for pests daily and act at the first sign of trouble", "fr": "Surveillez les ravageurs quotidiennement et agissez au premier signe de probleme" }
+      ],
+      "autumn": [
+        { "en": "Plant garlic, overwintering onions, and green manure cover crops", "fr": "Plantez ail, oignons d'hiver et engrais verts de couverture" },
+        { "en": "Collect and compost fallen leaves - the best free soil amendment", "fr": "Collectez et compostez les feuilles mortes - le meilleur amendement gratuit du sol" },
+        { "en": "Save seeds from your best plants before clearing beds", "fr": "Conservez les graines de vos meilleures plantes avant de nettoyer les plates-bandes" },
+        { "en": "Apply 10-15cm mulch to protect soil from winter erosion", "fr": "Appliquez 10-15cm de paillis pour proteger le sol de l'erosion hivernale" },
+        { "en": "Test and improve soil - autumn amendments have all winter to integrate", "fr": "Testez et ameliorez le sol - les amendements d'automne ont tout l'hiver pour s'integrer" },
+        { "en": "Plant fruit trees and bushes while the soil is still warm", "fr": "Plantez les arbres et arbustes fruitiers tant que le sol est encore chaud" }
+      ],
+      "winter": [
+        { "en": "Plan your garden layout and crop rotation for the coming year", "fr": "Planifiez l'agencement de votre jardin et la rotation des cultures pour l'annee a venir" },
+        { "en": "Order seeds early - popular varieties sell out fast", "fr": "Commandez les graines tot - les varietes populaires s'epuisent vite" },
+        { "en": "Maintain tools - sharpen blades, oil joints, replace broken handles", "fr": "Entretenez les outils - aiguisez les lames, huilez les articulations, remplacez les manches casses" },
+        { "en": "Spread manure and compost on empty beds for frost to break down", "fr": "Epandez fumier et compost sur les plates-bandes vides pour que le gel les decompose" },
+        { "en": "Build or repair raised beds, cold frames, and garden structures", "fr": "Construisez ou reparez plates-bandes surelevees, chassis froids et structures de jardin" },
+        { "en": "Prune fruit trees during dormancy (except stone fruits - prune in summer)", "fr": "Taillez les arbres fruitiers pendant la dormance (sauf les fruits a noyau - taillez en ete)" }
+      ]
+    }
+  }
+}

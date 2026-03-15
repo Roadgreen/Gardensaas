@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import bioIntensive from '@/data/bio-intensive.json';
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 const RATE_LIMIT_MAP = new Map<string, { count: number; resetAt: number }>();
@@ -25,6 +26,68 @@ function checkRateLimit(userId: string): { allowed: boolean; remaining: number }
   return { allowed: true, remaining: PRO_DAILY_LIMIT - entry.count };
 }
 
+function getCurrentSeason(): { en: string; fr: string } {
+  const month = new Date().getMonth() + 1;
+  if (month >= 3 && month <= 5) return { en: 'spring', fr: 'printemps' };
+  if (month >= 6 && month <= 8) return { en: 'summer', fr: 'ete' };
+  if (month >= 9 && month <= 11) return { en: 'autumn', fr: 'automne' };
+  return { en: 'winter', fr: 'hiver' };
+}
+
+function getMonthlyTips(locale: string): string {
+  const month = String(new Date().getMonth() + 1) as keyof typeof bioIntensive.tips.monthly;
+  const tips = bioIntensive.tips.monthly[month];
+  if (!tips) return '';
+  const lang = locale === 'fr' ? 'fr' : 'en';
+  return tips.map((t) => `- ${(t as Record<string, string>)[lang]}`).join('\n');
+}
+
+function getSeasonalTips(locale: string): string {
+  const season = getCurrentSeason();
+  const key = season.en as keyof typeof bioIntensive.tips.seasonal;
+  const tips = bioIntensive.tips.seasonal[key];
+  if (!tips) return '';
+  const lang = locale === 'fr' ? 'fr' : 'en';
+  return tips.map((t) => `- ${(t as Record<string, string>)[lang]}`).join('\n');
+}
+
+function getCompanionPlantingContext(locale: string): string {
+  const lang = locale === 'fr' ? 'fr' : 'en';
+  const guilds = bioIntensive.companionPlanting.guilds
+    .map((g) => {
+      const name = (g.name as Record<string, string>)[lang];
+      const companions = g.companions
+        .map((c) => `${c.plant}: ${(c.role as Record<string, string>)[lang]}`)
+        .join('; ');
+      return `${name}: ${companions}`;
+    })
+    .join('\n');
+  return guilds;
+}
+
+function getPestControlContext(locale: string): string {
+  const lang = locale === 'fr' ? 'fr' : 'en';
+  const sprays = bioIntensive.pestControl.naturalSprays
+    .map((s) => {
+      const name = (s.name as Record<string, string>)[lang];
+      const uses = (s.uses as Record<string, string>)[lang];
+      return `${name}: ${uses}`;
+    })
+    .join('\n');
+  return sprays;
+}
+
+function getCropRotationContext(locale: string): string {
+  const lang = locale === 'fr' ? 'fr' : 'en';
+  return bioIntensive.cropRotation.rotationPlan4Year
+    .map((y) => {
+      const name = (y.name as Record<string, string>)[lang];
+      const action = (y.action as Record<string, string>)[lang];
+      return `Year ${y.year} - ${name}: ${action}`;
+    })
+    .join('\n');
+}
+
 function buildSystemPrompt(gardenContext: {
   soilType?: string;
   climateZone?: string;
@@ -32,43 +95,92 @@ function buildSystemPrompt(gardenContext: {
   plantedItems?: { plantId: string; plantedDate: string }[];
   locale?: string;
 }): string {
-  const lang = gardenContext.locale === 'fr' ? 'French' : 'English';
+  const locale = gardenContext.locale || 'en';
+  const isFr = locale === 'fr';
+  const lang = isFr ? 'French' : 'English';
+  const season = getCurrentSeason();
+  const currentMonth = new Date().getMonth() + 1;
+  const currentMonthName = isFr
+    ? ['Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet','Aout','Septembre','Octobre','Novembre','Decembre'][currentMonth - 1]
+    : ['January','February','March','April','May','June','July','August','September','October','November','December'][currentMonth - 1];
+
   const plantList =
     gardenContext.plantedItems && gardenContext.plantedItems.length > 0
-      ? gardenContext.plantedItems.map((p) => p.plantId).join(', ')
-      : 'none yet';
+      ? gardenContext.plantedItems
+          .map((p) => `${p.plantId} (planted: ${p.plantedDate})`)
+          .join(', ')
+      : isFr ? 'aucune plante pour le moment' : 'none yet';
 
-  return `You are a friendly, experienced garden advisor named Jardinier. You ONLY answer questions about gardening, plants, vegetables, herbs, fruits, soil, composting, and related gardening topics.
+  const monthlyTips = getMonthlyTips(locale);
+  const seasonalTips = getSeasonalTips(locale);
+  const companionInfo = getCompanionPlantingContext(locale);
+  const pestInfo = getPestControlContext(locale);
+  const rotationInfo = getCropRotationContext(locale);
+
+  return `${isFr
+    ? `Tu es Sprout, un expert passionné en jardinage bio-intensif et permaculture. Tu ne réponds QU'AUX questions liées au jardinage, aux plantes, au sol, à la permaculture, à l'agriculture biologique, au compostage, aux semences, à l'irrigation et à la lutte biologique contre les ravageurs.
+
+RÈGLES STRICTES :
+- Tu DOIS refuser TOUTE question qui n'est PAS liée au jardinage, aux plantes, à l'agriculture ou à l'horticulture.
+- Si l'utilisateur pose une question hors sujet (recettes de cuisine, politique, maths, code, météo générale, etc.), réponds UNIQUEMENT : "Je suis Sprout, votre conseiller jardin ! 🌱 Je ne peux répondre qu'aux questions sur le jardinage, les plantes et la permaculture. Posez-moi une question sur votre potager !"
+- Ne brise JAMAIS ton personnage. Tu es un jardinier expert, rien d'autre.
+- Tu donnes des conseils pratiques, saisonniers et adaptés au jardin de l'utilisateur.`
+    : `You are Sprout, a passionate expert in bio-intensive gardening and permaculture. You ONLY answer questions related to gardening, plants, soil, permaculture, organic farming, composting, seeds, irrigation, and biological pest control.
 
 STRICT RULES:
-- You MUST refuse ANY question that is not related to gardening, plants, agriculture, or horticulture.
-- If the user asks about anything else (cooking recipes, politics, math, coding, weather forecasts, etc.), respond ONLY with: "Je suis votre assistant jardinier ! Je ne peux répondre qu'aux questions sur le jardinage 🌱" (if French) or "I'm your garden assistant! I can only answer gardening questions 🌱" (if English).
-- NEVER break character. You are a gardener, nothing else.
+- You MUST refuse ANY question that is NOT related to gardening, plants, agriculture, or horticulture.
+- If the user asks about anything else (cooking recipes, politics, math, coding, general weather, etc.), respond ONLY with: "I'm Sprout, your garden advisor! 🌱 I can only answer questions about gardening, plants, and permaculture. Ask me something about your garden!"
+- NEVER break character. You are an expert gardener, nothing else.
+- Give practical, seasonal advice adapted to the user's garden.`}
 
-YOUR EXPERTISE:
-- Vegetable gardening, herbs, and fruit growing
-- Companion planting and crop rotation strategies
-- Soil science (pH, amendments, composting, drainage)
-- Seasonal planting advice for European climates
-- Plant disease diagnosis from descriptions
-- Organic pest control solutions
-- Seed starting and propagation
-- Watering and fertilization schedules
+${isFr ? 'TON EXPERTISE BIO-INTENSIVE' : 'YOUR BIO-INTENSIVE EXPERTISE'}:
+- ${isFr ? 'Double bêchage et préparation du sol en profondeur' : 'Double digging and deep soil preparation'}
+- ${isFr ? 'Compostage (chaud, lombricompostage, bokashi)' : 'Composting (hot, vermicomposting, bokashi)'}
+- ${isFr ? 'Paillage et couverture du sol' : 'Mulching and soil coverage'}
+- ${isFr ? 'Associations de plantes et guildes' : 'Companion planting and guilds'}
+- ${isFr ? 'Rotation des cultures sur 4 ans' : '4-year crop rotation'}
+- ${isFr ? 'Lutte biologique contre les ravageurs' : 'Biological pest control'}
+- ${isFr ? 'Purins et décoctions naturels (ortie, consoude, prêle)' : 'Natural fertilizer teas and sprays (nettle, comfrey, horsetail)'}
+- ${isFr ? 'Conservation des semences' : 'Seed saving'}
+- ${isFr ? 'Irrigation économe (goutte-à-goutte, ollas, récupération d\'eau de pluie)' : 'Water-efficient irrigation (drip, ollas, rainwater harvesting)'}
+- ${isFr ? 'Engrais verts et cultures de couverture' : 'Green manures and cover crops'}
 
-PERSONALITY:
-- Speak like a warm, experienced gardener who loves sharing knowledge
-- Use plant emojis naturally (🌱 🍅 🌿 🥕 🌻 🪴 🌾 🥬 💐 🌸)
-- Be encouraging and supportive
-- Give practical, actionable advice
-- Mention specific months and timing when relevant
+${isFr ? 'PERSONNALITÉ' : 'PERSONALITY'}:
+- ${isFr ? 'Parle comme un jardinier chaleureux et expérimenté qui adore partager ses connaissances' : 'Speak like a warm, experienced gardener who loves sharing knowledge'}
+- ${isFr ? 'Utilise des emojis de plantes naturellement' : 'Use plant emojis naturally'} (🌱 🍅 🌿 🥕 🌻 🪴 🌾 🥬 💐 🌸 🐛 🐝 💧 🪱)
+- ${isFr ? 'Sois encourageant et bienveillant' : 'Be encouraging and supportive'}
+- ${isFr ? 'Donne des conseils pratiques et actionnables' : 'Give practical, actionable advice'}
+- ${isFr ? 'Mentionne les mois et le calendrier quand c\'est pertinent' : 'Mention specific months and timing when relevant'}
+- ${isFr ? 'Privilégie toujours les solutions biologiques et naturelles' : 'Always favor organic and natural solutions'}
 
-USER'S GARDEN CONTEXT:
-- Soil type: ${gardenContext.soilType || 'unknown'}
-- Climate zone: ${gardenContext.climateZone || 'unknown'}
-- Sun exposure: ${gardenContext.sunExposure || 'unknown'}
-- Currently planted: ${plantList}
+${isFr ? 'CONTEXTE DU JARDIN DE L\'UTILISATEUR' : 'USER\'S GARDEN CONTEXT'}:
+- ${isFr ? 'Type de sol' : 'Soil type'}: ${gardenContext.soilType || (isFr ? 'inconnu' : 'unknown')}
+- ${isFr ? 'Zone climatique' : 'Climate zone'}: ${gardenContext.climateZone || (isFr ? 'inconnue' : 'unknown')}
+- ${isFr ? 'Exposition au soleil' : 'Sun exposure'}: ${gardenContext.sunExposure || (isFr ? 'inconnue' : 'unknown')}
+- ${isFr ? 'Plantes actuelles' : 'Currently planted'}: ${plantList}
 
-Respond in ${lang}. Keep answers concise but thorough (2-4 paragraphs max unless more detail is needed).`;
+${isFr ? 'CONTEXTE SAISONNIER' : 'SEASONAL CONTEXT'}:
+- ${isFr ? 'Mois actuel' : 'Current month'}: ${currentMonthName}
+- ${isFr ? 'Saison' : 'Season'}: ${isFr ? season.fr : season.en}
+
+${isFr ? 'CONSEILS DU MOIS' : 'THIS MONTH\'S TIPS'}:
+${monthlyTips}
+
+${isFr ? 'TÂCHES SAISONNIÈRES' : 'SEASONAL TASKS'}:
+${seasonalTips}
+
+${isFr ? 'ASSOCIATIONS DE PLANTES (guildes)' : 'COMPANION PLANTING (guilds)'}:
+${companionInfo}
+
+${isFr ? 'LUTTE NATURELLE CONTRE LES RAVAGEURS' : 'NATURAL PEST CONTROL'}:
+${pestInfo}
+
+${isFr ? 'ROTATION DES CULTURES (plan sur 4 ans)' : 'CROP ROTATION (4-year plan)'}:
+${rotationInfo}
+
+${isFr
+  ? 'Réponds en français. Sois concis mais complet (2-4 paragraphes max sauf si plus de détail est nécessaire). Adapte tes conseils à la saison actuelle et au jardin de l\'utilisateur.'
+  : `Respond in ${lang}. Keep answers concise but thorough (2-4 paragraphs max unless more detail is needed). Adapt your advice to the current season and the user's garden context.`}`;
 }
 
 export async function POST(request: Request) {
@@ -115,8 +227,8 @@ export async function POST(request: Request) {
           error: 'upgrade_required',
           message:
             gardenContext?.locale === 'fr'
-              ? 'Passez au plan PRO pour débloquer votre conseiller jardin personnel ! 🌱'
-              : 'Upgrade to PRO to unlock your personal garden advisor! 🌱',
+              ? 'Passez au plan PRO pour débloquer Sprout, votre conseiller jardin bio-intensif ! 🌱'
+              : 'Upgrade to PRO to unlock Sprout, your bio-intensive garden advisor! 🌱',
         },
         { status: 403 }
       );
@@ -160,7 +272,7 @@ export async function POST(request: Request) {
           messages,
           stream: true,
           temperature: 0.7,
-          max_tokens: 1000,
+          max_tokens: 1500,
         }),
       }
     );

@@ -70,10 +70,15 @@ model Garden {
   soilType     String
   climateZone  String
   sunExposure  String
+  latitude     Float?
+  longitude    Float?
+  city         String?
+  country      String?
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   gardenPlants GardenPlant[]
+  seasons      GardenSeason[]
 }
 
 model GardenPlant {
@@ -99,6 +104,30 @@ model Task {
   completedAt DateTime?
   createdAt   DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model GardenSeason {
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  gardenId  String        @db.ObjectId
+  garden    Garden        @relation(fields: [gardenId], references: [id], onDelete: Cascade)
+  year      Int
+  notes     String?
+  createdAt DateTime      @default(now())
+  plants    SeasonPlant[]
+}
+
+model SeasonPlant {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  seasonId      String       @db.ObjectId
+  season        GardenSeason @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  plantId       String
+  x             Float
+  z             Float
+  plantedDate   DateTime?
+  harvestedDate DateTime?
+  yield         Float?       // kg harvested
+  notes         String?
+  health        String?      // good, average, poor
 }
 
 model DailyTip {

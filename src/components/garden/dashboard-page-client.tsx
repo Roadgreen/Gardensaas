@@ -38,6 +38,7 @@ const sidebarLinks = [
   { href: '/garden/planner', label: 'Garden Planner', icon: Map },
   { href: '/garden/3d', label: '3D View', icon: Eye },
   { href: '/garden/advisor', label: 'AI Advisor', icon: Bot, pro: true },
+  { href: '/garden/tips', label: 'Garden Tips', icon: Lightbulb },
   { href: '/plants', label: 'Plant Encyclopedia', icon: BookOpen },
   { href: '/garden/settings', label: 'Billing & Settings', icon: CreditCard },
   { href: '/garden/setup', label: 'Garden Setup', icon: Settings },
