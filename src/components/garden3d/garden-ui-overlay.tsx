@@ -25,6 +25,7 @@ interface GardenUIOverlayProps {
   // Tool system
   activeTool?: string | null;
   onToolSelect?: (tool: string | null) => void;
+  gardenHealth?: number;
 }
 
 const SEASON_ICONS: Record<string, string> = {
@@ -115,6 +116,7 @@ export function GardenUIOverlay({
   selectedPlantIndex = null,
   activeTool = null,
   onToolSelect,
+  gardenHealth = 100,
 }: GardenUIOverlayProps) {
   const [weather, setWeather] = useState('Sunny');
   const [currentDate, setCurrentDate] = useState('');
@@ -210,6 +212,42 @@ export function GardenUIOverlay({
               <span>{harvestReadyCount} ready!</span>
             </div>
           )}
+          {/* Garden Health Bar */}
+          <div style={{ marginTop: '6px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3px' }}>
+              <span style={{ fontSize: '10px', color: '#9CA3AF' }}>
+                {gardenHealth >= 80 ? '\u{1F49A}' : gardenHealth >= 50 ? '\u{1F49B}' : '\u{2764}\u{FE0F}'} Health
+              </span>
+              <span style={{
+                fontSize: '10px',
+                fontWeight: 'bold',
+                color: gardenHealth >= 80 ? '#4ADE80' : gardenHealth >= 50 ? '#FBBF24' : '#F87171',
+              }}>
+                {gardenHealth}%
+              </span>
+            </div>
+            <div style={{
+              background: '#1F2937',
+              borderRadius: '4px',
+              height: '6px',
+              overflow: 'hidden',
+              width: '100%',
+              minWidth: '80px',
+            }}>
+              <div style={{
+                height: '100%',
+                width: `${Math.min(gardenHealth, 100)}%`,
+                borderRadius: '4px',
+                background: gardenHealth >= 80
+                  ? 'linear-gradient(90deg, #4ADE80, #22C55E)'
+                  : gardenHealth >= 50
+                    ? 'linear-gradient(90deg, #FBBF24, #F59E0B)'
+                    : 'linear-gradient(90deg, #F87171, #EF4444)',
+                transition: 'width 0.5s ease, background 0.5s ease',
+                boxShadow: gardenHealth >= 80 ? '0 0 6px rgba(74, 222, 128, 0.4)' : 'none',
+              }} />
+            </div>
+          </div>
         </div>
 
         {/* Camera toggle */}
