@@ -5508,5 +5508,2412 @@
       "Wear gloves when handling - extremely hot (100k-350k Scoville)",
       "Fruity flavor shines in hot sauces and tropical salsas"
     ]
+  },
+  {
+    "id": "lettuce-batavia",
+    "name": {
+      "en": "Batavia Lettuce",
+      "fr": "Laitue Batavia"
+    },
+    "description": {
+      "en": "A crisp, crunchy lettuce with wavy leaf edges. Excellent heat tolerance and bolt resistance compared to other lettuces.",
+      "fr": "Une laitue croquante aux bords de feuilles ondules. Excellente tolerance a la chaleur et resistance a la montaison."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty",
+      "peaty"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      8,
+      9
+    ],
+    "harvestDays": 50,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "carrot",
+      "radish",
+      "strawberry",
+      "chives"
+    ],
+    "enemyPlants": [
+      "celery",
+      "parsley"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#65A30D",
+    "spacingCm": 30,
+    "depthCm": 0.5,
+    "heightCm": 25,
+    "tips": [
+      "More heat-tolerant than classic butterhead lettuce",
+      "Leaves stay crisp even in warm weather",
+      "Harvest outer leaves for continuous production",
+      "Ideal for summer growing"
+    ]
+  },
+  {
+    "id": "lettuce-romaine",
+    "name": {
+      "en": "Romaine Lettuce",
+      "fr": "Laitue Romaine"
+    },
+    "description": {
+      "en": "Tall, upright lettuce with sturdy, crisp leaves and a prominent midrib. The classic Caesar salad lettuce.",
+      "fr": "Laitue haute et dressee aux feuilles robustes et croquantes avec une nervure centrale prononcee. La classique salade Cesar."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty",
+      "peaty"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      8,
+      9
+    ],
+    "harvestDays": 60,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "carrot",
+      "radish",
+      "strawberry",
+      "chives"
+    ],
+    "enemyPlants": [
+      "celery",
+      "parsley"
+    ],
+    "difficulty": "easy",
+    "shape3d": "cylinder",
+    "color": "#4D7C0F",
+    "spacingCm": 30,
+    "depthCm": 0.5,
+    "heightCm": 30,
+    "tips": [
+      "Tie outer leaves loosely to blanch the heart",
+      "More heat-tolerant than butterhead varieties",
+      "Can be harvested as baby leaves or full heads",
+      "Rich in vitamins A and K"
+    ]
+  },
+  {
+    "id": "lettuce-oak-leaf",
+    "name": {
+      "en": "Oak Leaf Lettuce",
+      "fr": "Laitue Feuille de chene"
+    },
+    "description": {
+      "en": "Loose-leaf lettuce with deeply lobed leaves resembling oak tree foliage. Tender and mildly nutty in flavor.",
+      "fr": "Laitue a feuilles laches profondement lobees ressemblant au feuillage du chene. Tendre et legerement noisettee."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty",
+      "peaty"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      8,
+      9
+    ],
+    "harvestDays": 45,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "carrot",
+      "radish",
+      "strawberry",
+      "chives"
+    ],
+    "enemyPlants": [
+      "celery",
+      "parsley"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#84CC16",
+    "spacingCm": 25,
+    "depthCm": 0.5,
+    "heightCm": 20,
+    "tips": [
+      "Available in green and red varieties",
+      "Harvest leaf by leaf for extended production",
+      "Bolts faster than romaine in hot weather",
+      "Excellent for mixed salads"
+    ]
+  },
+  {
+    "id": "lettuce-iceberg",
+    "name": {
+      "en": "Iceberg Lettuce",
+      "fr": "Laitue Iceberg"
+    },
+    "description": {
+      "en": "Dense, round head lettuce with extremely crisp, pale green leaves. Refreshing and mild in flavor with high water content.",
+      "fr": "Laitue pommee dense et ronde aux feuilles tres croquantes et vert pale. Rafraichissante et douce avec une forte teneur en eau."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      8,
+      9
+    ],
+    "harvestDays": 70,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "carrot",
+      "radish",
+      "strawberry",
+      "chives"
+    ],
+    "enemyPlants": [
+      "celery",
+      "parsley"
+    ],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#BEF264",
+    "spacingCm": 35,
+    "depthCm": 0.5,
+    "heightCm": 20,
+    "tips": [
+      "Needs consistent cool temperatures to form tight heads",
+      "More demanding than leaf lettuce varieties",
+      "Harvest when heads feel firm and solid",
+      "Sensitive to heat - avoid midsummer planting"
+    ]
+  },
+  {
+    "id": "lettuce-butterhead",
+    "name": {
+      "en": "Butterhead Lettuce",
+      "fr": "Laitue beurre"
+    },
+    "description": {
+      "en": "Soft, buttery-textured lettuce forming loose, round heads. Delicate flavor and melt-in-the-mouth leaves.",
+      "fr": "Laitue a texture beurrée formant des pommes laches et rondes. Saveur delicate et feuilles fondantes en bouche."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty",
+      "peaty"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      2,
+      3,
+      4,
+      8,
+      9
+    ],
+    "harvestDays": 55,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "carrot",
+      "radish",
+      "strawberry",
+      "chives"
+    ],
+    "enemyPlants": [
+      "celery",
+      "parsley"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#A3E635",
+    "spacingCm": 25,
+    "depthCm": 0.5,
+    "heightCm": 20,
+    "tips": [
+      "Handle gently as leaves bruise easily",
+      "Best harvested in the morning when crisp",
+      "Classic French garden lettuce",
+      "Sow in succession every 2-3 weeks"
+    ]
+  },
+  {
+    "id": "lettuce-little-gem",
+    "name": {
+      "en": "Little Gem Lettuce",
+      "fr": "Laitue Little Gem"
+    },
+    "description": {
+      "en": "A compact miniature romaine with sweet, crunchy leaves. Perfect for small gardens and single-serving salads.",
+      "fr": "Une romaine miniature compacte aux feuilles sucrees et croquantes. Parfaite pour les petits jardins et les salades individuelles."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty",
+      "peaty"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      8,
+      9
+    ],
+    "harvestDays": 50,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "carrot",
+      "radish",
+      "strawberry",
+      "chives"
+    ],
+    "enemyPlants": [
+      "celery",
+      "parsley"
+    ],
+    "difficulty": "easy",
+    "shape3d": "cylinder",
+    "color": "#65A30D",
+    "spacingCm": 20,
+    "depthCm": 0.5,
+    "heightCm": 15,
+    "tips": [
+      "Compact size ideal for container gardening",
+      "Sweet and crunchy, excellent grilled",
+      "Matures faster than full-size romaine",
+      "Good bolt resistance"
+    ]
+  },
+  {
+    "id": "carrot-nantaise",
+    "name": {
+      "en": "Nantes Carrot",
+      "fr": "Carotte Nantaise"
+    },
+    "description": {
+      "en": "The classic French carrot variety with a smooth, cylindrical shape and sweet, tender flesh. Almost coreless.",
+      "fr": "La variete de carotte francaise classique a la forme cylindrique lisse et a la chair sucree et tendre. Presque sans coeur."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "sandy",
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "harvestDays": 70,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "tomato",
+      "lettuce",
+      "onion",
+      "rosemary"
+    ],
+    "enemyPlants": [
+      "dill"
+    ],
+    "difficulty": "easy",
+    "shape3d": "cone",
+    "color": "#EA580C",
+    "spacingCm": 8,
+    "depthCm": 1,
+    "heightCm": 30,
+    "tips": [
+      "Best all-round carrot for French gardens",
+      "Sweet flavor excellent for eating raw",
+      "Grows well in heavier soils than other varieties",
+      "Stores well through winter"
+    ]
+  },
+  {
+    "id": "carrot-touchon",
+    "name": {
+      "en": "Touchon Carrot",
+      "fr": "Carotte Touchon"
+    },
+    "description": {
+      "en": "An improved Nantes-type carrot, exceptionally sweet and tender. Slim, cylindrical roots perfect for fresh eating.",
+      "fr": "Une carotte de type Nantaise amelioree, exceptionnellement sucree et tendre. Racines fines et cylindriques parfaites pour manger crues."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "sandy",
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "harvestDays": 65,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "tomato",
+      "lettuce",
+      "onion",
+      "rosemary"
+    ],
+    "enemyPlants": [
+      "dill"
+    ],
+    "difficulty": "easy",
+    "shape3d": "cone",
+    "color": "#F97316",
+    "spacingCm": 8,
+    "depthCm": 1,
+    "heightCm": 30,
+    "tips": [
+      "One of the sweetest carrot varieties",
+      "Harvest young for baby carrots",
+      "Virtually coreless flesh",
+      "Excellent for juicing"
+    ]
+  },
+  {
+    "id": "carrot-purple",
+    "name": {
+      "en": "Purple Carrot",
+      "fr": "Carotte Violette"
+    },
+    "description": {
+      "en": "A striking heritage variety with deep purple skin and orange core. Rich in anthocyanins with a slightly spicy flavor.",
+      "fr": "Une variete patrimoniale frappante a la peau violet profond et au coeur orange. Riche en anthocyanes avec une saveur legerement epicee."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "sandy",
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "harvestDays": 75,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "tomato",
+      "lettuce",
+      "onion",
+      "rosemary"
+    ],
+    "enemyPlants": [
+      "dill"
+    ],
+    "difficulty": "easy",
+    "shape3d": "cone",
+    "color": "#7C3AED",
+    "spacingCm": 8,
+    "depthCm": 1,
+    "heightCm": 30,
+    "tips": [
+      "Purple color intensifies when cooked",
+      "Rich in antioxidant anthocyanins",
+      "May stain hands and cutting boards",
+      "Beautiful in raw salads for color contrast"
+    ]
+  },
+  {
+    "id": "carrot-yellow",
+    "name": {
+      "en": "Yellow Carrot",
+      "fr": "Carotte Jaune"
+    },
+    "description": {
+      "en": "A mild, sweet carrot with sunny yellow flesh. Less earthy than orange varieties, excellent for soups and roasting.",
+      "fr": "Une carotte douce et sucree a chair jaune ensoleillée. Moins terreuse que les varietes orange, excellente pour les soupes et rotis."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "sandy",
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      6
+    ],
+    "harvestDays": 70,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "tomato",
+      "lettuce",
+      "onion",
+      "rosemary"
+    ],
+    "enemyPlants": [
+      "dill"
+    ],
+    "difficulty": "easy",
+    "shape3d": "cone",
+    "color": "#EAB308",
+    "spacingCm": 8,
+    "depthCm": 1,
+    "heightCm": 30,
+    "tips": [
+      "Rich in xanthophylls and lutein",
+      "Sweetest flavor when roasted",
+      "Great for rainbow carrot mixes",
+      "Mild flavor appealing to children"
+    ]
+  },
+  {
+    "id": "onion-yellow",
+    "name": {
+      "en": "Yellow Straw Onion",
+      "fr": "Oignon Jaune Paille des Vertus"
+    },
+    "description": {
+      "en": "The classic French storage onion with golden skin and pungent flavor. Excellent keeper lasting through winter.",
+      "fr": "L'oignon de conservation francais classique a la peau doree et au gout piquant. Excellente conservation tout l'hiver."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      2,
+      3,
+      4
+    ],
+    "harvestDays": 120,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "carrot",
+      "lettuce",
+      "strawberry",
+      "beet"
+    ],
+    "enemyPlants": [
+      "bean",
+      "pea"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#CA8A04",
+    "spacingCm": 15,
+    "depthCm": 2,
+    "heightCm": 40,
+    "tips": [
+      "Classic French heirloom variety",
+      "Stop watering when tops fall over",
+      "Cure in dry, airy location for 2 weeks before storing",
+      "Stores up to 6 months in cool, dry conditions"
+    ]
+  },
+  {
+    "id": "onion-red",
+    "name": {
+      "en": "Red Onion",
+      "fr": "Oignon Rouge"
+    },
+    "description": {
+      "en": "A beautiful deep purple-red onion, milder and sweeter than yellow varieties. Stunning in salads and pickling.",
+      "fr": "Un bel oignon rouge-violet profond, plus doux et sucre que les varietes jaunes. Magnifique en salades et en pickles."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      2,
+      3,
+      4
+    ],
+    "harvestDays": 110,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "carrot",
+      "lettuce",
+      "strawberry",
+      "beet"
+    ],
+    "enemyPlants": [
+      "bean",
+      "pea"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#9F1239",
+    "spacingCm": 15,
+    "depthCm": 2,
+    "heightCm": 40,
+    "tips": [
+      "Milder flavor makes it ideal for raw eating",
+      "Color fades when cooked at high heat",
+      "Does not store as long as yellow onions",
+      "Rich in anthocyanins and quercetin"
+    ]
+  },
+  {
+    "id": "onion-white",
+    "name": {
+      "en": "White Onion",
+      "fr": "Oignon Blanc"
+    },
+    "description": {
+      "en": "A mild, sweet onion with papery white skin. Quick to mature and perfect for fresh eating, though shorter storage life.",
+      "fr": "Un oignon doux et sucre a peau blanche papyracee. Rapide a maturite et parfait frais, mais conservation plus courte."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      2,
+      3,
+      4
+    ],
+    "harvestDays": 90,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "carrot",
+      "lettuce",
+      "strawberry",
+      "beet"
+    ],
+    "enemyPlants": [
+      "bean",
+      "pea"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#FEFCE8",
+    "spacingCm": 15,
+    "depthCm": 2,
+    "heightCm": 35,
+    "tips": [
+      "Mildest flavor of all onion types",
+      "Can be harvested young as spring onions",
+      "Use quickly after harvest - shorter storage life",
+      "Perfect for French onion soup"
+    ]
+  },
+  {
+    "id": "spring-onion",
+    "name": {
+      "en": "Spring Onion / Scallion",
+      "fr": "Cebette / Oignon nouveau"
+    },
+    "description": {
+      "en": "Slender, mild onions harvested young before bulb formation. Both green tops and white base are edible.",
+      "fr": "Oignons elances et doux recoltes jeunes avant la formation du bulbe. Les fanes vertes et la base blanche sont comestibles."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "harvestDays": 60,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "carrot",
+      "lettuce",
+      "strawberry",
+      "beet"
+    ],
+    "enemyPlants": [
+      "bean",
+      "pea"
+    ],
+    "difficulty": "easy",
+    "shape3d": "cylinder",
+    "color": "#22C55E",
+    "spacingCm": 5,
+    "depthCm": 1,
+    "heightCm": 30,
+    "tips": [
+      "Can be sown continuously from spring to late summer",
+      "Harvest by pulling or cut and come again",
+      "Very fast growing - ready in 8 weeks from seed",
+      "Excellent in stir-fries and as garnish"
+    ]
+  },
+  {
+    "id": "shallot",
+    "name": {
+      "en": "Shallot",
+      "fr": "Echalote"
+    },
+    "description": {
+      "en": "An elegant member of the onion family prized in French cuisine. Milder and more complex than onions with a hint of garlic.",
+      "fr": "Un membre elegant de la famille des oignons prise dans la cuisine francaise. Plus doux et plus complexe que l'oignon avec une note d'ail."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      2,
+      3,
+      10,
+      11
+    ],
+    "harvestDays": 90,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "carrot",
+      "lettuce",
+      "strawberry",
+      "beet"
+    ],
+    "enemyPlants": [
+      "bean",
+      "pea"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#92400E",
+    "spacingCm": 15,
+    "depthCm": 2,
+    "heightCm": 30,
+    "tips": [
+      "Plant sets with tip just showing above soil",
+      "Essential in classic French sauces",
+      "Each bulb multiplies into a cluster",
+      "Autumn planting gives larger bulbs"
+    ]
+  },
+  {
+    "id": "potato-charlotte",
+    "name": {
+      "en": "Charlotte Potato",
+      "fr": "Pomme de terre Charlotte"
+    },
+    "description": {
+      "en": "A waxy, firm-fleshed salad potato with excellent flavor. The most popular variety in French markets.",
+      "fr": "Une pomme de terre de salade a chair ferme et cireuse au gout excellent. La variete la plus populaire sur les marches francais."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 90,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "bean",
+      "cabbage",
+      "corn",
+      "spinach"
+    ],
+    "enemyPlants": [
+      "tomato",
+      "cucumber",
+      "pumpkin"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#FDE68A",
+    "spacingCm": 35,
+    "depthCm": 10,
+    "heightCm": 50,
+    "tips": [
+      "France's favourite salad potato",
+      "Holds its shape well when cooked",
+      "Excellent cold in potato salad",
+      "Earth up as stems grow to increase yield"
+    ]
+  },
+  {
+    "id": "potato-bintje",
+    "name": {
+      "en": "Bintje Potato",
+      "fr": "Pomme de terre Bintje"
+    },
+    "description": {
+      "en": "A classic floury potato ideal for frying and mashing. The traditional variety for Belgian and French frites.",
+      "fr": "Une pomme de terre farineuse classique ideale pour la friture et la puree. La variete traditionnelle des frites belges et francaises."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 110,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "bean",
+      "cabbage",
+      "corn",
+      "spinach"
+    ],
+    "enemyPlants": [
+      "tomato",
+      "cucumber",
+      "pumpkin"
+    ],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#FEF08A",
+    "spacingCm": 40,
+    "depthCm": 10,
+    "heightCm": 60,
+    "tips": [
+      "The gold standard for homemade frites",
+      "High starch content makes fluffy mash",
+      "Susceptible to blight - monitor closely",
+      "Store in cool, dark place to avoid greening"
+    ]
+  },
+  {
+    "id": "potato-ratte",
+    "name": {
+      "en": "Ratte Potato",
+      "fr": "Pomme de terre Ratte"
+    },
+    "description": {
+      "en": "A gourmet fingerling potato with a distinctive chestnut-like flavor. Small, elongated tubers prized by chefs.",
+      "fr": "Une pomme de terre gourmet a chair ferme au gout de chataigne distinctif. Petits tubercules allonges prises par les chefs."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4
+    ],
+    "harvestDays": 100,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "bean",
+      "cabbage",
+      "corn",
+      "spinach"
+    ],
+    "enemyPlants": [
+      "tomato",
+      "cucumber",
+      "pumpkin"
+    ],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#FDE68A",
+    "spacingCm": 30,
+    "depthCm": 10,
+    "heightCm": 45,
+    "tips": [
+      "Premium variety - small yield but exceptional taste",
+      "Best simply steamed with butter",
+      "Distinctive nutty, chestnut flavor",
+      "Lower yield than common varieties"
+    ]
+  },
+  {
+    "id": "potato-vitelotte",
+    "name": {
+      "en": "Vitelotte Purple Potato",
+      "fr": "Pomme de terre Vitelotte"
+    },
+    "description": {
+      "en": "An ancient French variety with striking deep purple flesh. Nutty, earthy flavor and dramatic color even after cooking.",
+      "fr": "Une ancienne variete francaise a la chair violet profond frappante. Saveur noisettee et terreuse, couleur spectaculaire meme apres cuisson."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 120,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "bean",
+      "cabbage",
+      "corn",
+      "spinach"
+    ],
+    "enemyPlants": [
+      "tomato",
+      "cucumber",
+      "pumpkin"
+    ],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#6D28D9",
+    "spacingCm": 35,
+    "depthCm": 10,
+    "heightCm": 50,
+    "tips": [
+      "Alexandre Dumas mentioned this variety in his writings",
+      "Purple color is retained after cooking",
+      "Makes stunning purple mashed potatoes",
+      "Late season variety - patience required"
+    ]
+  },
+  {
+    "id": "potato-belle-de-fontenay",
+    "name": {
+      "en": "Belle de Fontenay Potato",
+      "fr": "Pomme de terre Belle de Fontenay"
+    },
+    "description": {
+      "en": "A heritage French early potato with smooth yellow flesh and delicate flavor. Firm and waxy, perfect steamed.",
+      "fr": "Une pomme de terre primeur francaise patrimoniale a chair jaune lisse et saveur delicate. Ferme et cireuse, parfaite a la vapeur."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      2,
+      3,
+      4
+    ],
+    "harvestDays": 70,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "bean",
+      "cabbage",
+      "corn",
+      "spinach"
+    ],
+    "enemyPlants": [
+      "tomato",
+      "cucumber",
+      "pumpkin"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#FDE68A",
+    "spacingCm": 30,
+    "depthCm": 10,
+    "heightCm": 40,
+    "tips": [
+      "One of the earliest potato varieties",
+      "Harvest as new potatoes for best flavor",
+      "Does not store as long as maincrop varieties",
+      "Heritage French variety dating to 1885"
+    ]
+  },
+  {
+    "id": "potato-roseval",
+    "name": {
+      "en": "Roseval Potato",
+      "fr": "Pomme de terre Roseval"
+    },
+    "description": {
+      "en": "A distinctive red-skinned potato with yellow flesh. Firm and waxy with a slightly sweet flavor, great for roasting.",
+      "fr": "Une pomme de terre distinctive a peau rouge et chair jaune. Ferme et cireuse avec une saveur legerement sucree, excellente rotie."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 100,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "bean",
+      "cabbage",
+      "corn",
+      "spinach"
+    ],
+    "enemyPlants": [
+      "tomato",
+      "cucumber",
+      "pumpkin"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#E11D48",
+    "spacingCm": 35,
+    "depthCm": 10,
+    "heightCm": 50,
+    "tips": [
+      "Beautiful red skin makes for attractive dishes",
+      "Cross between Rosa and Vale varieties",
+      "Excellent roasted with herbs",
+      "Good disease resistance"
+    ]
+  },
+  {
+    "id": "radish-black",
+    "name": {
+      "en": "Black Radish",
+      "fr": "Radis Noir"
+    },
+    "description": {
+      "en": "A large winter radish with rough black skin and pungent white flesh. Traditional medicinal root vegetable.",
+      "fr": "Un gros radis d'hiver a peau noire rugueuse et chair blanche piquante. Legume-racine medicinal traditionnel."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "sandy",
+      "loamy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      6,
+      7,
+      8
+    ],
+    "harvestDays": 60,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "lettuce",
+      "pea",
+      "spinach",
+      "chervil"
+    ],
+    "enemyPlants": [
+      "hyssop"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#1C1917",
+    "spacingCm": 15,
+    "depthCm": 2,
+    "heightCm": 25,
+    "tips": [
+      "Sow in summer for winter harvest",
+      "Traditional French cold remedy",
+      "Peel before eating raw or grate finely",
+      "Stores well in cool cellar through winter"
+    ]
+  },
+  {
+    "id": "radish-18-days",
+    "name": {
+      "en": "18-Day Radish",
+      "fr": "Radis de 18 jours"
+    },
+    "description": {
+      "en": "The fastest radish variety, ready in just 18-21 days. Small, elongated, bright red roots with mild, crisp flesh.",
+      "fr": "La variete de radis la plus rapide, prete en seulement 18-21 jours. Petites racines allongees rouge vif a chair douce et croquante."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "sandy",
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "harvestDays": 20,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "lettuce",
+      "pea",
+      "spinach",
+      "chervil"
+    ],
+    "enemyPlants": [
+      "hyssop"
+    ],
+    "difficulty": "easy",
+    "shape3d": "cone",
+    "color": "#DC2626",
+    "spacingCm": 5,
+    "depthCm": 1,
+    "heightCm": 15,
+    "tips": [
+      "Fastest vegetable you can grow",
+      "Perfect for impatient gardeners and children",
+      "Sow every 2 weeks for continuous harvest",
+      "Don't leave in ground too long or they become pithy"
+    ]
+  },
+  {
+    "id": "radish-watermelon",
+    "name": {
+      "en": "Watermelon Radish",
+      "fr": "Radis Pasteque"
+    },
+    "description": {
+      "en": "A stunning Chinese heirloom with green and white exterior and vibrant pink-red interior. Mild and sweet.",
+      "fr": "Un superbe radis chinois traditionnel au vert et blanc exterieur et interieur rose-rouge vibrant. Doux et sucre."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "sandy",
+      "loamy"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      7,
+      8,
+      9
+    ],
+    "harvestDays": 60,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "lettuce",
+      "pea",
+      "spinach",
+      "chervil"
+    ],
+    "enemyPlants": [
+      "hyssop"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#FB7185",
+    "spacingCm": 10,
+    "depthCm": 1,
+    "heightCm": 20,
+    "tips": [
+      "Slice thinly to reveal the stunning interior",
+      "Best sown in late summer for autumn harvest",
+      "Milder and sweeter than spring radishes",
+      "Beautiful garnish for salads"
+    ]
+  },
+  {
+    "id": "radish-purple",
+    "name": {
+      "en": "Purple Radish",
+      "fr": "Radis Violet"
+    },
+    "description": {
+      "en": "A beautiful purple-skinned radish with crisp white flesh. Slightly milder than red radish with a peppery finish.",
+      "fr": "Un beau radis a peau violette et chair blanche croquante. Legerement plus doux que le radis rouge avec une finale poivree."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "sandy",
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      8,
+      9
+    ],
+    "harvestDays": 30,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "lettuce",
+      "pea",
+      "spinach",
+      "chervil"
+    ],
+    "enemyPlants": [
+      "hyssop"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#A855F7",
+    "spacingCm": 5,
+    "depthCm": 1,
+    "heightCm": 15,
+    "tips": [
+      "Eye-catching purple adds color to salads",
+      "Quick growing spring and autumn crop",
+      "Sow in succession for continuous supply",
+      "Milder flavor than classic red radish"
+    ]
+  },
+  {
+    "id": "zucchini-ronde-de-nice",
+    "name": {
+      "en": "Round Zucchini Ronde de Nice",
+      "fr": "Courgette Ronde de Nice"
+    },
+    "description": {
+      "en": "A classic French heirloom round zucchini. Perfect for stuffing and grilling, with tender, flavorful flesh.",
+      "fr": "Une courgette ronde francaise traditionnelle. Parfaite a farcir et griller, a chair tendre et savoureuse."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5,
+      6
+    ],
+    "harvestDays": 50,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "bean",
+      "corn",
+      "radish",
+      "nasturtium"
+    ],
+    "enemyPlants": [
+      "potato"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#65A30D",
+    "spacingCm": 80,
+    "depthCm": 3,
+    "heightCm": 50,
+    "tips": [
+      "Harvest when tennis-ball sized for stuffing",
+      "Classic Nicoise variety for petits farcis",
+      "Very productive - check daily in summer",
+      "Compact bush habit suits smaller gardens"
+    ]
+  },
+  {
+    "id": "zucchini-yellow",
+    "name": {
+      "en": "Yellow Zucchini",
+      "fr": "Courgette Jaune"
+    },
+    "description": {
+      "en": "A bright golden-yellow zucchini with slightly sweeter, nuttier flavor than green varieties. Beautiful in mixed dishes.",
+      "fr": "Une courgette jaune doree au gout legerement plus sucre et noisette que les varietes vertes. Magnifique en plats melanges."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5,
+      6
+    ],
+    "harvestDays": 50,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "bean",
+      "corn",
+      "radish",
+      "nasturtium"
+    ],
+    "enemyPlants": [
+      "potato"
+    ],
+    "difficulty": "easy",
+    "shape3d": "cylinder",
+    "color": "#FACC15",
+    "spacingCm": 80,
+    "depthCm": 3,
+    "heightCm": 50,
+    "tips": [
+      "Slightly sweeter flavor than green varieties",
+      "Beautiful mixed with green zucchini in ratatouille",
+      "Harvest at 15-20cm for best flavor",
+      "Equally productive as green varieties"
+    ]
+  },
+  {
+    "id": "zucchini-trompette",
+    "name": {
+      "en": "Tromboncino Zucchini",
+      "fr": "Courgette Trompette"
+    },
+    "description": {
+      "en": "An Italian climbing squash with a distinctive trumpet shape. Sweet, dense flesh with few seeds. Grows on vines.",
+      "fr": "Une courge grimpante italienne a la forme de trompette distinctive. Chair sucree et dense avec peu de graines. Pousse en lianes."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5,
+      6
+    ],
+    "harvestDays": 60,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "bean",
+      "corn",
+      "radish",
+      "nasturtium"
+    ],
+    "enemyPlants": [
+      "potato"
+    ],
+    "difficulty": "medium",
+    "shape3d": "cylinder",
+    "color": "#A3E635",
+    "spacingCm": 100,
+    "depthCm": 3,
+    "heightCm": 200,
+    "tips": [
+      "Climbing variety - provide sturdy trellis support",
+      "Seeds are concentrated in the bulbous end",
+      "Resistant to squash vine borers",
+      "Can grow over 1 meter long if left"
+    ]
+  },
+  {
+    "id": "eggplant-long-purple",
+    "name": {
+      "en": "Long Purple Eggplant",
+      "fr": "Aubergine Longue Violette"
+    },
+    "description": {
+      "en": "The classic long, slender dark purple eggplant. Tender flesh with fewer seeds than globe varieties.",
+      "fr": "L'aubergine classique longue et elancee violet fonce. Chair tendre avec moins de graines que les varietes rondes."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 75,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "bean",
+      "pepper",
+      "spinach",
+      "thyme"
+    ],
+    "enemyPlants": [
+      "fennel"
+    ],
+    "difficulty": "medium",
+    "shape3d": "cylinder",
+    "color": "#581C87",
+    "spacingCm": 50,
+    "depthCm": 1,
+    "heightCm": 70,
+    "tips": [
+      "Needs warm soil - don't plant out too early",
+      "Harvest when skin is glossy, not dull",
+      "Limit to 5-6 fruits per plant for best size",
+      "Classic variety for moussaka and ratatouille"
+    ]
+  },
+  {
+    "id": "eggplant-white",
+    "name": {
+      "en": "White Eggplant",
+      "fr": "Aubergine Blanche"
+    },
+    "description": {
+      "en": "An elegant white-skinned eggplant with creamy, mild flesh and fewer bitter compounds. Where the name 'eggplant' originated.",
+      "fr": "Une elegante aubergine a peau blanche a chair cremeuse et douce avec moins d'amertume. Origine du nom anglais 'eggplant'."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 70,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "bean",
+      "pepper",
+      "spinach",
+      "thyme"
+    ],
+    "enemyPlants": [
+      "fennel"
+    ],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#FAFAF9",
+    "spacingCm": 50,
+    "depthCm": 1,
+    "heightCm": 60,
+    "tips": [
+      "Less bitter than purple varieties - no salting needed",
+      "Creamy texture excellent for baba ganoush",
+      "The original 'egg' plant - egg-shaped and white",
+      "Harvest slightly smaller for best tenderness"
+    ]
+  },
+  {
+    "id": "eggplant-graffiti",
+    "name": {
+      "en": "Graffiti Eggplant",
+      "fr": "Aubergine Striee / Graffiti"
+    },
+    "description": {
+      "en": "A stunning striped eggplant with purple and white streaks. Slightly sweeter than solid purple varieties with tender skin.",
+      "fr": "Une aubergine rayee spectaculaire avec des stries violettes et blanches. Legerement plus sucree que les varietes violettes avec une peau tendre."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 70,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "bean",
+      "pepper",
+      "spinach",
+      "thyme"
+    ],
+    "enemyPlants": [
+      "fennel"
+    ],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#9333EA",
+    "spacingCm": 50,
+    "depthCm": 1,
+    "heightCm": 65,
+    "tips": [
+      "Stripes fade when cooked but flavor is excellent",
+      "Thinner skin than classic varieties",
+      "Beautiful addition to market displays",
+      "Slightly sweeter and less bitter"
+    ]
+  },
+  {
+    "id": "pea-dwarf",
+    "name": {
+      "en": "Dwarf Shelling Pea",
+      "fr": "Petit Pois Nain"
+    },
+    "description": {
+      "en": "A compact bush pea that doesn't need staking. Sweet, tender peas perfect for small gardens and containers.",
+      "fr": "Un petit pois buissonnant compact qui n'a pas besoin de tuteur. Pois sucres et tendres parfaits pour petits jardins et bacs."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      2,
+      3,
+      4,
+      9,
+      10
+    ],
+    "harvestDays": 60,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "carrot",
+      "radish",
+      "turnip",
+      "cucumber"
+    ],
+    "enemyPlants": [
+      "onion",
+      "garlic",
+      "shallot"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#22C55E",
+    "spacingCm": 5,
+    "depthCm": 4,
+    "heightCm": 45,
+    "tips": [
+      "No staking required - bushy habit",
+      "Pick regularly to encourage more pods",
+      "Sow autumn crop for spring harvest in mild areas",
+      "Fixes nitrogen in the soil for following crops"
+    ]
+  },
+  {
+    "id": "pea-sugar-snap",
+    "name": {
+      "en": "Sugar Snap Pea",
+      "fr": "Pois Gourmand / Sugar Snap"
+    },
+    "description": {
+      "en": "Edible-podded peas with sweet, crunchy pods eaten whole. A cross between snow peas and shelling peas.",
+      "fr": "Pois a cosses comestibles avec des gousses sucrees et croquantes mangees entieres. Un croisement entre le mangetout et le petit pois."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 65,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "carrot",
+      "radish",
+      "turnip",
+      "cucumber"
+    ],
+    "enemyPlants": [
+      "onion",
+      "garlic",
+      "shallot"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#4ADE80",
+    "spacingCm": 8,
+    "depthCm": 4,
+    "heightCm": 150,
+    "tips": [
+      "Provide trellis or netting for climbing",
+      "Eat pods whole when peas are just visible inside",
+      "Remove string from pod edge before eating",
+      "Best eaten raw, straight from the vine"
+    ]
+  },
+  {
+    "id": "pea-snow",
+    "name": {
+      "en": "Snow Pea / Mangetout",
+      "fr": "Pois Mangetout"
+    },
+    "description": {
+      "en": "Flat, edible-podded peas harvested before the peas develop fully. Essential in Asian stir-fry dishes.",
+      "fr": "Pois plats a cosses comestibles recoltes avant que les pois ne se developpent. Essentiels dans les sautes asiatiques."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 60,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "carrot",
+      "radish",
+      "turnip",
+      "cucumber"
+    ],
+    "enemyPlants": [
+      "onion",
+      "garlic",
+      "shallot"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#86EFAC",
+    "spacingCm": 8,
+    "depthCm": 4,
+    "heightCm": 150,
+    "tips": [
+      "Harvest when pods are flat and peas barely visible",
+      "Over-mature pods become stringy",
+      "Needs support - provide pea sticks or netting",
+      "Excellent raw in salads or briefly stir-fried"
+    ]
+  },
+  {
+    "id": "basil-purple",
+    "name": {
+      "en": "Purple Basil",
+      "fr": "Basilic Pourpre"
+    },
+    "description": {
+      "en": "A striking dark purple basil with a slightly spicier, more clove-like flavor than sweet basil. Beautiful ornamental herb.",
+      "fr": "Un basilic violet fonce frappant au gout legerement plus epice et plus proche du clou de girofle que le basilic doux. Belle herbe ornementale."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5,
+      6
+    ],
+    "harvestDays": 35,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "tomato",
+      "pepper",
+      "oregano"
+    ],
+    "enemyPlants": [
+      "sage"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#581C87",
+    "spacingCm": 20,
+    "depthCm": 0.5,
+    "heightCm": 45,
+    "tips": [
+      "Makes stunning purple pesto",
+      "Infuse in vinegar for beautiful color",
+      "Slightly slower to germinate than green basil",
+      "Pinch flowers to maintain leaf production"
+    ]
+  },
+  {
+    "id": "basil-thai",
+    "name": {
+      "en": "Thai Basil",
+      "fr": "Basilic Thai"
+    },
+    "description": {
+      "en": "An essential herb in Southeast Asian cuisine with anise and licorice notes. Purple stems and small leaves.",
+      "fr": "Une herbe essentielle de la cuisine asiatique du Sud-Est aux notes d'anis et de reglisse. Tiges violettes et petites feuilles."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5,
+      6
+    ],
+    "harvestDays": 40,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "tomato",
+      "pepper",
+      "oregano"
+    ],
+    "enemyPlants": [
+      "sage"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#16A34A",
+    "spacingCm": 20,
+    "depthCm": 0.5,
+    "heightCm": 40,
+    "tips": [
+      "More heat-tolerant than sweet basil",
+      "Essential for pad thai and Vietnamese pho",
+      "Flavor holds up better when cooked",
+      "Distinctive purple stems and flower buds"
+    ]
+  },
+  {
+    "id": "basil-lemon",
+    "name": {
+      "en": "Lemon Basil",
+      "fr": "Basilic Citron"
+    },
+    "description": {
+      "en": "A delightful basil variety with strong citrus aroma and flavor. Perfect for fish dishes, desserts, and teas.",
+      "fr": "Une delicieuse variete de basilic a l'arome et au gout d'agrumes prononces. Parfait pour les poissons, desserts et infusions."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5,
+      6
+    ],
+    "harvestDays": 30,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "tomato",
+      "pepper",
+      "oregano"
+    ],
+    "enemyPlants": [
+      "sage"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#84CC16",
+    "spacingCm": 20,
+    "depthCm": 0.5,
+    "heightCm": 35,
+    "tips": [
+      "Wonderful in herbal teas and infusions",
+      "Pairs beautifully with fish and seafood",
+      "Add to fruit salads and desserts",
+      "More delicate than sweet basil - use fresh"
+    ]
+  },
+  {
+    "id": "basil-greek",
+    "name": {
+      "en": "Greek Basil",
+      "fr": "Basilic Grec"
+    },
+    "description": {
+      "en": "A compact, bushy basil with tiny leaves forming a natural dome shape. Intense flavor concentrated in small leaves.",
+      "fr": "Un basilic compact et buissonnant aux feuilles minuscules formant un dome naturel. Saveur intense concentree dans les petites feuilles."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5,
+      6
+    ],
+    "harvestDays": 35,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "tomato",
+      "pepper",
+      "oregano"
+    ],
+    "enemyPlants": [
+      "sage"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#16A34A",
+    "spacingCm": 15,
+    "depthCm": 0.5,
+    "heightCm": 20,
+    "tips": [
+      "Perfect for pot growing - natural compact shape",
+      "Tiny leaves don't need chopping",
+      "More cold-tolerant than sweet basil",
+      "Natural globe shape is very ornamental"
+    ]
+  },
+  {
+    "id": "mint-peppermint",
+    "name": {
+      "en": "Peppermint",
+      "fr": "Menthe Poivree"
+    },
+    "description": {
+      "en": "A strongly flavored hybrid mint with high menthol content. Essential for teas, cocktails, and medicinal use.",
+      "fr": "Une menthe hybride au gout prononce et a forte teneur en menthol. Essentielle pour les infusions, cocktails et usages medicinaux."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "loamy",
+      "silty",
+      "peaty"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 30,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "cabbage",
+      "tomato",
+      "broccoli"
+    ],
+    "enemyPlants": [
+      "parsley",
+      "chamomile"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#15803D",
+    "spacingCm": 30,
+    "depthCm": 1,
+    "heightCm": 60,
+    "tips": [
+      "ALWAYS grow in a pot to prevent invasive spreading",
+      "Highest menthol content of all mints",
+      "Excellent for digestion and herbal tea",
+      "Cut back hard in autumn for fresh spring growth"
+    ]
+  },
+  {
+    "id": "mint-chocolate",
+    "name": {
+      "en": "Chocolate Mint",
+      "fr": "Menthe Chocolat"
+    },
+    "description": {
+      "en": "A fascinating mint variety with chocolate-brown stems and a subtle chocolate-mint aroma. Perfect for desserts.",
+      "fr": "Une variete de menthe fascinante aux tiges brun chocolat et un subtil arome chocolat-menthe. Parfaite pour les desserts."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "loamy",
+      "silty",
+      "peaty"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 30,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "cabbage",
+      "tomato",
+      "broccoli"
+    ],
+    "enemyPlants": [
+      "parsley",
+      "chamomile"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#166534",
+    "spacingCm": 30,
+    "depthCm": 1,
+    "heightCm": 50,
+    "tips": [
+      "Chocolate aroma is strongest in fresh leaves",
+      "Perfect garnish for chocolate desserts",
+      "Grow in a container to control spreading",
+      "Makes an unusual and delicious tea"
+    ]
+  },
+  {
+    "id": "mint-moroccan",
+    "name": {
+      "en": "Moroccan Mint",
+      "fr": "Menthe Marocaine"
+    },
+    "description": {
+      "en": "The traditional mint for Moroccan tea with a sweet, smooth flavor and less menthol bite. Compact growth habit.",
+      "fr": "La menthe traditionnelle du the marocain au gout doux et lisse et moins de menthol. Port compact."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "loamy",
+      "silty",
+      "peaty"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 30,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "cabbage",
+      "tomato",
+      "broccoli"
+    ],
+    "enemyPlants": [
+      "parsley",
+      "chamomile"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#22C55E",
+    "spacingCm": 25,
+    "depthCm": 1,
+    "heightCm": 40,
+    "tips": [
+      "The authentic mint for the a la menthe",
+      "Sweeter and smoother than peppermint",
+      "Grows more compactly than other mints",
+      "Brew with green tea and sugar for Moroccan tea"
+    ]
+  },
+  {
+    "id": "strawberry-gariguette",
+    "name": {
+      "en": "Gariguette Strawberry",
+      "fr": "Fraise Gariguette"
+    },
+    "description": {
+      "en": "France's most beloved early strawberry variety. Elongated, bright red fruits with an exquisite aromatic, tangy-sweet flavor.",
+      "fr": "La variete de fraise precoce la plus aimee de France. Fruits allonges rouge vif au gout aromatique exquis, acidule et sucre."
+    },
+    "category": "fruit",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      9,
+      10
+    ],
+    "harvestDays": 60,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "lettuce",
+      "spinach",
+      "onion",
+      "borage"
+    ],
+    "enemyPlants": [
+      "cabbage",
+      "fennel"
+    ],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#DC2626",
+    "spacingCm": 30,
+    "depthCm": 0,
+    "heightCm": 20,
+    "tips": [
+      "France's premium early-season strawberry",
+      "Short harvest season - enjoy while it lasts",
+      "Fragile fruit - handle with care",
+      "Mulch with straw to keep fruit clean"
+    ]
+  },
+  {
+    "id": "strawberry-mara-des-bois",
+    "name": {
+      "en": "Mara des Bois Strawberry",
+      "fr": "Fraise Mara des Bois"
+    },
+    "description": {
+      "en": "A remarkable everbearing variety combining the flavor of wild strawberries with the size of cultivated ones. Fruits from June to October.",
+      "fr": "Une variete remontante remarquable combinant le gout des fraises des bois avec la taille des cultivees. Fruits de juin a octobre."
+    },
+    "category": "fruit",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      9,
+      10
+    ],
+    "harvestDays": 45,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "lettuce",
+      "spinach",
+      "onion",
+      "borage"
+    ],
+    "enemyPlants": [
+      "cabbage",
+      "fennel"
+    ],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#EF4444",
+    "spacingCm": 30,
+    "depthCm": 0,
+    "heightCm": 20,
+    "tips": [
+      "Wild strawberry flavor in a larger fruit",
+      "Everbearing - produces all summer long",
+      "Best flavor when fully ripe and deep red",
+      "Feed regularly for continuous fruiting"
+    ]
+  },
+  {
+    "id": "strawberry-charlotte",
+    "name": {
+      "en": "Charlotte Strawberry",
+      "fr": "Fraise Charlotte"
+    },
+    "description": {
+      "en": "A productive everbearing variety with heart-shaped, sweet fruits. Good disease resistance and produces from June to frost.",
+      "fr": "Une variete remontante productive aux fruits sucres en forme de coeur. Bonne resistance aux maladies, produit de juin aux gelees."
+    },
+    "category": "fruit",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      9,
+      10
+    ],
+    "harvestDays": 50,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "lettuce",
+      "spinach",
+      "onion",
+      "borage"
+    ],
+    "enemyPlants": [
+      "cabbage",
+      "fennel"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#DC2626",
+    "spacingCm": 30,
+    "depthCm": 0,
+    "heightCm": 20,
+    "tips": [
+      "Very productive everbearing variety",
+      "Good resistance to powdery mildew",
+      "Heart-shaped fruits are sweet and fragrant",
+      "Reliable producer even in cooler summers"
+    ]
+  },
+  {
+    "id": "strawberry-wild",
+    "name": {
+      "en": "Wild Strawberry",
+      "fr": "Fraise des Bois"
+    },
+    "description": {
+      "en": "Tiny but intensely flavored wild strawberries. A woodland edge plant producing fragrant fruits all summer.",
+      "fr": "Petites fraises sauvages au gout intense. Plante de lisiere de bois produisant des fruits parfumes tout l'ete."
+    },
+    "category": "fruit",
+    "soilTypes": [
+      "loamy",
+      "peaty",
+      "silty"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      9,
+      10
+    ],
+    "harvestDays": 60,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "lettuce",
+      "spinach",
+      "onion",
+      "borage"
+    ],
+    "enemyPlants": [
+      "cabbage",
+      "fennel"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#B91C1C",
+    "spacingCm": 20,
+    "depthCm": 0,
+    "heightCm": 15,
+    "tips": [
+      "Tiny fruits with incredibly intense flavor",
+      "Excellent ground cover for shaded areas",
+      "Spreads by runners - can be used as edging",
+      "Perfect for forest garden and permaculture designs"
+    ]
+  },
+  {
+    "id": "corn-popcorn",
+    "name": {
+      "en": "Popcorn Corn",
+      "fr": "Mais Pop-corn"
+    },
+    "description": {
+      "en": "A special corn variety grown specifically for popping. Hard kernels with a soft starchy center that explodes when heated.",
+      "fr": "Une variete de mais speciale cultivee pour eclater. Grains durs avec un centre amylace mou qui explose a la chaleur."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      5,
+      6
+    ],
+    "harvestDays": 110,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "bean",
+      "pumpkin",
+      "cucumber"
+    ],
+    "enemyPlants": [
+      "tomato"
+    ],
+    "difficulty": "medium",
+    "shape3d": "cylinder",
+    "color": "#EAB308",
+    "spacingCm": 30,
+    "depthCm": 3,
+    "heightCm": 180,
+    "tips": [
+      "Leave on the stalk until fully dried",
+      "Plant in blocks of 4x4 minimum for pollination",
+      "Separate from sweet corn to avoid cross-pollination",
+      "Dry cobs for 4-6 weeks before popping"
+    ]
+  },
+  {
+    "id": "corn-multicolor",
+    "name": {
+      "en": "Rainbow Corn",
+      "fr": "Mais Multicolore"
+    },
+    "description": {
+      "en": "A stunning ornamental and edible corn with multicolored kernels in red, blue, purple, and gold. Can be ground into colorful cornmeal.",
+      "fr": "Un mais ornemental et comestible avec des grains multicolores en rouge, bleu, violet et or. Peut etre moulu en farine coloree."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      5,
+      6
+    ],
+    "harvestDays": 120,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "bean",
+      "pumpkin",
+      "cucumber"
+    ],
+    "enemyPlants": [
+      "tomato"
+    ],
+    "difficulty": "medium",
+    "shape3d": "cylinder",
+    "color": "#A855F7",
+    "spacingCm": 30,
+    "depthCm": 3,
+    "heightCm": 200,
+    "tips": [
+      "Each cob is unique - no two are alike",
+      "Plant in blocks, isolated from other corn",
+      "Beautiful for autumn decoration",
+      "Can be ground into colorful polenta or cornmeal"
+    ]
+  },
+  {
+    "id": "beet-chioggia",
+    "name": {
+      "en": "Chioggia Beet",
+      "fr": "Betterave Chioggia"
+    },
+    "description": {
+      "en": "A stunning Italian heirloom with concentric red and white rings when sliced. Milder and sweeter than standard beets.",
+      "fr": "Un superbe legume italien traditionnel avec des anneaux concentriques rouges et blancs a la coupe. Plus doux et sucre que la betterave standard."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "harvestDays": 55,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "onion",
+      "lettuce",
+      "cabbage",
+      "garlic"
+    ],
+    "enemyPlants": [
+      "bean",
+      "mustard"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#F87171",
+    "spacingCm": 10,
+    "depthCm": 2,
+    "heightCm": 30,
+    "tips": [
+      "Slice raw to see the spectacular candy-stripe pattern",
+      "Rings fade when cooked - best eaten raw or lightly pickled",
+      "Harvest at golf-ball size for best ring definition",
+      "Italian heirloom from the town of Chioggia"
+    ]
+  },
+  {
+    "id": "beet-golden",
+    "name": {
+      "en": "Golden Beet",
+      "fr": "Betterave Doree"
+    },
+    "description": {
+      "en": "A beautiful golden-yellow beet that doesn't stain like red varieties. Sweet, mild flavor excellent for roasting and salads.",
+      "fr": "Une belle betterave jaune doree qui ne tache pas comme les varietes rouges. Gout sucre et doux, excellent rotie et en salade."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "harvestDays": 55,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "onion",
+      "lettuce",
+      "cabbage",
+      "garlic"
+    ],
+    "enemyPlants": [
+      "bean",
+      "mustard"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#F59E0B",
+    "spacingCm": 10,
+    "depthCm": 2,
+    "heightCm": 30,
+    "tips": [
+      "Does not stain hands or cutting boards",
+      "Leaves are also edible and delicious",
+      "Sweeter and milder than red beets",
+      "Germination can be slower - be patient"
+    ]
   }
 ]
