@@ -1,19 +1,39 @@
 [
   {
     "id": "tomato",
-    "name": { "en": "Tomato", "fr": "Tomate" },
+    "name": {
+      "en": "Tomato",
+      "fr": "Tomate"
+    },
     "description": {
       "en": "A versatile fruit often used as a vegetable. Thrives in warm conditions with consistent watering.",
       "fr": "Un fruit polyvalent souvent utilise comme legume. Prospere dans des conditions chaudes avec un arrosage regulier."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "sandy", "silty"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [3, 4, 5],
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
     "harvestDays": 80,
     "wateringFrequency": "daily",
-    "companionPlants": ["basil", "carrot", "parsley"],
-    "enemyPlants": ["cabbage", "fennel"],
+    "companionPlants": [
+      "basil",
+      "carrot",
+      "parsley"
+    ],
+    "enemyPlants": [
+      "cabbage",
+      "fennel"
+    ],
     "difficulty": "medium",
     "shape3d": "sphere",
     "color": "#DC2626",
@@ -29,19 +49,42 @@
   },
   {
     "id": "carrot",
-    "name": { "en": "Carrot", "fr": "Carotte" },
+    "name": {
+      "en": "Carrot",
+      "fr": "Carotte"
+    },
     "description": {
       "en": "A root vegetable that grows best in loose, deep soil. Sweet and nutritious when freshly harvested.",
       "fr": "Un legume-racine qui pousse mieux dans un sol meuble et profond. Sucre et nutritif lorsqu'il est fraichement recolte."
     },
     "category": "vegetable",
-    "soilTypes": ["sandy", "loamy", "silty"],
-    "sunExposure": ["full-sun", "partial-shade"],
-    "plantingMonths": [3, 4, 5, 6, 7],
+    "soilTypes": [
+      "sandy",
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
     "harvestDays": 70,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["tomato", "lettuce", "onion", "rosemary"],
-    "enemyPlants": ["dill"],
+    "companionPlants": [
+      "tomato",
+      "lettuce",
+      "onion",
+      "rosemary"
+    ],
+    "enemyPlants": [
+      "dill"
+    ],
     "difficulty": "easy",
     "shape3d": "cone",
     "color": "#EA580C",
@@ -57,19 +100,43 @@
   },
   {
     "id": "lettuce",
-    "name": { "en": "Lettuce", "fr": "Laitue" },
+    "name": {
+      "en": "Lettuce",
+      "fr": "Laitue"
+    },
     "description": {
       "en": "A cool-season crop perfect for salads. Quick to grow and can be harvested multiple times.",
       "fr": "Une culture de saison fraiche parfaite pour les salades. Pousse rapidement et peut etre recoltee plusieurs fois."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "silty", "peaty"],
-    "sunExposure": ["partial-shade", "full-sun"],
-    "plantingMonths": [2, 3, 4, 8, 9],
+    "soilTypes": [
+      "loamy",
+      "silty",
+      "peaty"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      2,
+      3,
+      4,
+      8,
+      9
+    ],
     "harvestDays": 45,
     "wateringFrequency": "daily",
-    "companionPlants": ["carrot", "radish", "strawberry", "chives"],
-    "enemyPlants": ["celery", "parsley"],
+    "companionPlants": [
+      "carrot",
+      "radish",
+      "strawberry",
+      "chives"
+    ],
+    "enemyPlants": [
+      "celery",
+      "parsley"
+    ],
     "difficulty": "easy",
     "shape3d": "sphere",
     "color": "#65A30D",
@@ -85,19 +152,37 @@
   },
   {
     "id": "basil",
-    "name": { "en": "Basil", "fr": "Basilic" },
+    "name": {
+      "en": "Basil",
+      "fr": "Basilic"
+    },
     "description": {
       "en": "An aromatic herb essential in Mediterranean cuisine. Loves warmth and pairs perfectly with tomatoes.",
       "fr": "Une herbe aromatique essentielle dans la cuisine mediterraneenne. Aime la chaleur et se marie parfaitement avec les tomates."
     },
     "category": "herb",
-    "soilTypes": ["loamy", "sandy"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [4, 5, 6],
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5,
+      6
+    ],
     "harvestDays": 30,
     "wateringFrequency": "daily",
-    "companionPlants": ["tomato", "pepper", "oregano"],
-    "enemyPlants": ["sage"],
+    "companionPlants": [
+      "tomato",
+      "pepper",
+      "oregano"
+    ],
+    "enemyPlants": [
+      "sage"
+    ],
     "difficulty": "easy",
     "shape3d": "sphere",
     "color": "#16A34A",
@@ -113,19 +198,37 @@
   },
   {
     "id": "pepper",
-    "name": { "en": "Bell Pepper", "fr": "Poivron" },
+    "name": {
+      "en": "Bell Pepper",
+      "fr": "Poivron"
+    },
     "description": {
       "en": "Colorful sweet peppers that love heat. Start indoors and transplant after last frost.",
       "fr": "Des poivrons doux et colores qui aiment la chaleur. Commencer a l'interieur et transplanter apres les dernieres gelees."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "sandy"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [4, 5],
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
     "harvestDays": 90,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["basil", "tomato", "carrot", "onion"],
-    "enemyPlants": ["fennel"],
+    "companionPlants": [
+      "basil",
+      "tomato",
+      "carrot",
+      "onion"
+    ],
+    "enemyPlants": [
+      "fennel"
+    ],
     "difficulty": "medium",
     "shape3d": "box",
     "color": "#EAB308",
@@ -141,19 +244,38 @@
   },
   {
     "id": "zucchini",
-    "name": { "en": "Zucchini", "fr": "Courgette" },
+    "name": {
+      "en": "Zucchini",
+      "fr": "Courgette"
+    },
     "description": {
       "en": "A prolific summer squash that produces abundantly. One plant can feed a family.",
       "fr": "Une courge d'ete prolifique qui produit abondamment. Un seul plant peut nourrir une famille."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "silty", "peaty"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [4, 5, 6],
+    "soilTypes": [
+      "loamy",
+      "silty",
+      "peaty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5,
+      6
+    ],
     "harvestDays": 50,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["corn", "bean", "radish"],
-    "enemyPlants": ["potato"],
+    "companionPlants": [
+      "corn",
+      "bean",
+      "radish"
+    ],
+    "enemyPlants": [
+      "potato"
+    ],
     "difficulty": "easy",
     "shape3d": "cylinder",
     "color": "#15803D",
@@ -169,19 +291,40 @@
   },
   {
     "id": "cucumber",
-    "name": { "en": "Cucumber", "fr": "Concombre" },
+    "name": {
+      "en": "Cucumber",
+      "fr": "Concombre"
+    },
     "description": {
       "en": "A refreshing vine crop perfect for salads and pickling. Needs consistent moisture.",
       "fr": "Une culture grimpante rafraichissante parfaite pour les salades et les cornichons."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "sandy", "silty"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [4, 5, 6],
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5,
+      6
+    ],
     "harvestDays": 55,
     "wateringFrequency": "daily",
-    "companionPlants": ["bean", "corn", "pea", "radish", "sunflower"],
-    "enemyPlants": ["potato"],
+    "companionPlants": [
+      "bean",
+      "corn",
+      "pea",
+      "radish",
+      "sunflower"
+    ],
+    "enemyPlants": [
+      "potato"
+    ],
     "difficulty": "easy",
     "shape3d": "cylinder",
     "color": "#166534",
@@ -197,19 +340,40 @@
   },
   {
     "id": "onion",
-    "name": { "en": "Onion", "fr": "Oignon" },
+    "name": {
+      "en": "Onion",
+      "fr": "Oignon"
+    },
     "description": {
       "en": "A kitchen staple that stores well. Plant sets for easiest growing experience.",
       "fr": "Un incontournable de la cuisine qui se conserve bien. Planter des bulbilles pour une culture plus facile."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "sandy", "silty"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [2, 3, 4],
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      2,
+      3,
+      4
+    ],
     "harvestDays": 100,
     "wateringFrequency": "twice-weekly",
-    "companionPlants": ["carrot", "lettuce", "tomato", "strawberry"],
-    "enemyPlants": ["bean", "pea"],
+    "companionPlants": [
+      "carrot",
+      "lettuce",
+      "tomato",
+      "strawberry"
+    ],
+    "enemyPlants": [
+      "bean",
+      "pea"
+    ],
     "difficulty": "easy",
     "shape3d": "sphere",
     "color": "#A16207",
@@ -225,19 +389,40 @@
   },
   {
     "id": "garlic",
-    "name": { "en": "Garlic", "fr": "Ail" },
+    "name": {
+      "en": "Garlic",
+      "fr": "Ail"
+    },
     "description": {
       "en": "A flavorful bulb that is incredibly easy to grow. Plant in autumn for summer harvest.",
       "fr": "Un bulbe savoureux incroyablement facile a cultiver. Planter en automne pour une recolte en ete."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "sandy", "silty"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [9, 10, 11],
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      9,
+      10,
+      11
+    ],
     "harvestDays": 240,
     "wateringFrequency": "weekly",
-    "companionPlants": ["tomato", "pepper", "strawberry"],
-    "enemyPlants": ["bean", "pea", "sage"],
+    "companionPlants": [
+      "tomato",
+      "pepper",
+      "strawberry"
+    ],
+    "enemyPlants": [
+      "bean",
+      "pea",
+      "sage"
+    ],
     "difficulty": "easy",
     "shape3d": "sphere",
     "color": "#FAFAF9",
@@ -253,18 +438,38 @@
   },
   {
     "id": "radish",
-    "name": { "en": "Radish", "fr": "Radis" },
+    "name": {
+      "en": "Radish",
+      "fr": "Radis"
+    },
     "description": {
       "en": "One of the fastest vegetables to grow. Perfect for beginners and impatient gardeners.",
       "fr": "L'un des legumes les plus rapides a cultiver. Parfait pour les debutants et les jardiniers impatients."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "sandy", "silty"],
-    "sunExposure": ["full-sun", "partial-shade"],
-    "plantingMonths": [3, 4, 5, 8, 9],
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      8,
+      9
+    ],
     "harvestDays": 25,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["lettuce", "pea", "cucumber"],
+    "companionPlants": [
+      "lettuce",
+      "pea",
+      "cucumber"
+    ],
     "enemyPlants": [],
     "difficulty": "easy",
     "shape3d": "sphere",
@@ -281,18 +486,39 @@
   },
   {
     "id": "spinach",
-    "name": { "en": "Spinach", "fr": "Epinard" },
+    "name": {
+      "en": "Spinach",
+      "fr": "Epinard"
+    },
     "description": {
       "en": "A nutrient-rich leafy green that prefers cool weather. Bolts quickly in heat.",
       "fr": "Un legume vert riche en nutriments qui prefere le temps frais. Monte en graines rapidement par temps chaud."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "silty", "peaty"],
-    "sunExposure": ["partial-shade", "full-sun"],
-    "plantingMonths": [2, 3, 4, 9, 10],
+    "soilTypes": [
+      "loamy",
+      "silty",
+      "peaty"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      2,
+      3,
+      4,
+      9,
+      10
+    ],
     "harvestDays": 40,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["strawberry", "pea", "bean", "celery"],
+    "companionPlants": [
+      "strawberry",
+      "pea",
+      "bean",
+      "celery"
+    ],
     "enemyPlants": [],
     "difficulty": "easy",
     "shape3d": "sphere",
@@ -309,19 +535,42 @@
   },
   {
     "id": "pea",
-    "name": { "en": "Pea", "fr": "Petit pois" },
+    "name": {
+      "en": "Pea",
+      "fr": "Petit pois"
+    },
     "description": {
       "en": "A cool-weather climber that fixes nitrogen in soil. Sweet and delicious fresh from the vine.",
       "fr": "Une plante grimpante de saison fraiche qui fixe l'azote dans le sol. Doux et delicieux frais de la vigne."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "sandy", "silty"],
-    "sunExposure": ["full-sun", "partial-shade"],
-    "plantingMonths": [2, 3, 4],
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      2,
+      3,
+      4
+    ],
     "harvestDays": 60,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["carrot", "radish", "turnip", "cucumber", "corn"],
-    "enemyPlants": ["onion", "garlic"],
+    "companionPlants": [
+      "carrot",
+      "radish",
+      "turnip",
+      "cucumber",
+      "corn"
+    ],
+    "enemyPlants": [
+      "onion",
+      "garlic"
+    ],
     "difficulty": "easy",
     "shape3d": "sphere",
     "color": "#22C55E",
@@ -337,19 +586,41 @@
   },
   {
     "id": "bean",
-    "name": { "en": "Green Bean", "fr": "Haricot vert" },
+    "name": {
+      "en": "Green Bean",
+      "fr": "Haricot vert"
+    },
     "description": {
       "en": "A warm-season crop that fixes nitrogen. Both bush and pole varieties available.",
       "fr": "Une culture de saison chaude qui fixe l'azote. Varietes naines et a rames disponibles."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "sandy", "silty"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [5, 6, 7],
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      5,
+      6,
+      7
+    ],
     "harvestDays": 55,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["corn", "cucumber", "potato", "celery"],
-    "enemyPlants": ["onion", "garlic", "fennel"],
+    "companionPlants": [
+      "corn",
+      "cucumber",
+      "potato",
+      "celery"
+    ],
+    "enemyPlants": [
+      "onion",
+      "garlic",
+      "fennel"
+    ],
     "difficulty": "easy",
     "shape3d": "cylinder",
     "color": "#16A34A",
@@ -365,19 +636,39 @@
   },
   {
     "id": "potato",
-    "name": { "en": "Potato", "fr": "Pomme de terre" },
+    "name": {
+      "en": "Potato",
+      "fr": "Pomme de terre"
+    },
     "description": {
       "en": "A staple root crop that grows underground. Hill soil around plants as they grow.",
       "fr": "Un tubercule de base qui pousse sous terre. Butter la terre autour des plants au fur et a mesure de la croissance."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "sandy", "peaty"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [3, 4],
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "peaty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4
+    ],
     "harvestDays": 90,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["bean", "corn", "cabbage"],
-    "enemyPlants": ["tomato", "cucumber", "sunflower"],
+    "companionPlants": [
+      "bean",
+      "corn",
+      "cabbage"
+    ],
+    "enemyPlants": [
+      "tomato",
+      "cucumber",
+      "sunflower"
+    ],
     "difficulty": "easy",
     "shape3d": "sphere",
     "color": "#92400E",
@@ -393,19 +684,36 @@
   },
   {
     "id": "eggplant",
-    "name": { "en": "Eggplant", "fr": "Aubergine" },
+    "name": {
+      "en": "Eggplant",
+      "fr": "Aubergine"
+    },
     "description": {
       "en": "A heat-loving vegetable with beautiful purple fruits. Requires warm soil to thrive.",
       "fr": "Un legume qui aime la chaleur avec de beaux fruits violets. Necessite un sol chaud pour prosperer."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "sandy"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [4, 5],
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
     "harvestDays": 85,
     "wateringFrequency": "daily",
-    "companionPlants": ["pepper", "bean", "spinach"],
-    "enemyPlants": ["fennel"],
+    "companionPlants": [
+      "pepper",
+      "bean",
+      "spinach"
+    ],
+    "enemyPlants": [
+      "fennel"
+    ],
     "difficulty": "medium",
     "shape3d": "capsule",
     "color": "#7C3AED",
@@ -421,19 +729,42 @@
   },
   {
     "id": "cabbage",
-    "name": { "en": "Cabbage", "fr": "Chou" },
+    "name": {
+      "en": "Cabbage",
+      "fr": "Chou"
+    },
     "description": {
       "en": "A cool-season crop that forms tight heads. Great for coleslaw, sauerkraut, and stir-fries.",
       "fr": "Une culture de saison fraiche qui forme des tetes serrees. Ideal pour la salade de chou et la choucroute."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "silty", "clay"],
-    "sunExposure": ["full-sun", "partial-shade"],
-    "plantingMonths": [2, 3, 7, 8],
+    "soilTypes": [
+      "loamy",
+      "silty",
+      "clay"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      2,
+      3,
+      7,
+      8
+    ],
     "harvestDays": 80,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["onion", "celery", "dill", "potato"],
-    "enemyPlants": ["tomato", "strawberry"],
+    "companionPlants": [
+      "onion",
+      "celery",
+      "dill",
+      "potato"
+    ],
+    "enemyPlants": [
+      "tomato",
+      "strawberry"
+    ],
     "difficulty": "medium",
     "shape3d": "sphere",
     "color": "#86EFAC",
@@ -449,19 +780,41 @@
   },
   {
     "id": "broccoli",
-    "name": { "en": "Broccoli", "fr": "Brocoli" },
+    "name": {
+      "en": "Broccoli",
+      "fr": "Brocoli"
+    },
     "description": {
       "en": "A nutritious brassica with edible flower heads. Prefers cool growing conditions.",
       "fr": "Un brassica nutritif avec des tetes de fleurs comestibles. Prefere des conditions de culture fraiches."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "clay", "silty"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [2, 3, 7, 8],
+    "soilTypes": [
+      "loamy",
+      "clay",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      2,
+      3,
+      7,
+      8
+    ],
     "harvestDays": 85,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["onion", "celery", "potato", "dill"],
-    "enemyPlants": ["tomato", "strawberry"],
+    "companionPlants": [
+      "onion",
+      "celery",
+      "potato",
+      "dill"
+    ],
+    "enemyPlants": [
+      "tomato",
+      "strawberry"
+    ],
     "difficulty": "medium",
     "shape3d": "sphere",
     "color": "#15803D",
@@ -477,19 +830,37 @@
   },
   {
     "id": "corn",
-    "name": { "en": "Sweet Corn", "fr": "Mais doux" },
+    "name": {
+      "en": "Sweet Corn",
+      "fr": "Mais doux"
+    },
     "description": {
       "en": "A warm-season grass crop. Plant in blocks rather than rows for proper pollination.",
       "fr": "Une culture de graminee de saison chaude. Planter en blocs plutot qu'en rangs pour une pollinisation correcte."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "silty"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [5, 6],
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      5,
+      6
+    ],
     "harvestDays": 75,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["bean", "zucchini", "pea", "cucumber"],
-    "enemyPlants": ["tomato"],
+    "companionPlants": [
+      "bean",
+      "zucchini",
+      "pea",
+      "cucumber"
+    ],
+    "enemyPlants": [
+      "tomato"
+    ],
     "difficulty": "medium",
     "shape3d": "cylinder",
     "color": "#FACC15",
@@ -505,19 +876,40 @@
   },
   {
     "id": "strawberry",
-    "name": { "en": "Strawberry", "fr": "Fraise" },
+    "name": {
+      "en": "Strawberry",
+      "fr": "Fraise"
+    },
     "description": {
       "en": "A sweet perennial fruit that spreads by runners. Perfect for borders and containers.",
       "fr": "Un fruit vivace sucre qui se propage par stolons. Parfait pour les bordures et les conteneurs."
     },
     "category": "fruit",
-    "soilTypes": ["loamy", "sandy", "silty"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [3, 4, 9],
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      9
+    ],
     "harvestDays": 60,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["lettuce", "spinach", "onion", "thyme"],
-    "enemyPlants": ["cabbage", "broccoli"],
+    "companionPlants": [
+      "lettuce",
+      "spinach",
+      "onion",
+      "thyme"
+    ],
+    "enemyPlants": [
+      "cabbage",
+      "broccoli"
+    ],
     "difficulty": "easy",
     "shape3d": "cone",
     "color": "#DC2626",
@@ -533,18 +925,35 @@
   },
   {
     "id": "rosemary",
-    "name": { "en": "Rosemary", "fr": "Romarin" },
+    "name": {
+      "en": "Rosemary",
+      "fr": "Romarin"
+    },
     "description": {
       "en": "A woody Mediterranean herb with aromatic needle-like leaves. Drought tolerant once established.",
       "fr": "Une herbe mediterraneenne ligneuse avec des feuilles aromatiques en forme d'aiguilles. Tolerante a la secheresse une fois etablie."
     },
     "category": "herb",
-    "soilTypes": ["sandy", "loamy", "chalky"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [4, 5],
+    "soilTypes": [
+      "sandy",
+      "loamy",
+      "chalky"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
     "harvestDays": 90,
     "wateringFrequency": "weekly",
-    "companionPlants": ["carrot", "bean", "cabbage", "sage"],
+    "companionPlants": [
+      "carrot",
+      "bean",
+      "cabbage",
+      "sage"
+    ],
     "enemyPlants": [],
     "difficulty": "easy",
     "shape3d": "cone",
@@ -561,18 +970,35 @@
   },
   {
     "id": "thyme",
-    "name": { "en": "Thyme", "fr": "Thym" },
+    "name": {
+      "en": "Thyme",
+      "fr": "Thym"
+    },
     "description": {
       "en": "A low-growing herb with tiny aromatic leaves. Excellent ground cover for garden paths.",
       "fr": "Une herbe basse avec de petites feuilles aromatiques. Excellent couvre-sol pour les allees de jardin."
     },
     "category": "herb",
-    "soilTypes": ["sandy", "loamy", "chalky"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [4, 5],
+    "soilTypes": [
+      "sandy",
+      "loamy",
+      "chalky"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
     "harvestDays": 60,
     "wateringFrequency": "weekly",
-    "companionPlants": ["strawberry", "cabbage", "tomato", "eggplant"],
+    "companionPlants": [
+      "strawberry",
+      "cabbage",
+      "tomato",
+      "eggplant"
+    ],
     "enemyPlants": [],
     "difficulty": "easy",
     "shape3d": "sphere",
@@ -589,19 +1015,40 @@
   },
   {
     "id": "mint",
-    "name": { "en": "Mint", "fr": "Menthe" },
+    "name": {
+      "en": "Mint",
+      "fr": "Menthe"
+    },
     "description": {
       "en": "A vigorous spreading herb. Best grown in containers to prevent it from taking over the garden.",
       "fr": "Une herbe vigoureuse qui s'etend. Mieux cultivee en conteneurs pour l'empecher d'envahir le jardin."
     },
     "category": "herb",
-    "soilTypes": ["loamy", "silty", "peaty", "clay"],
-    "sunExposure": ["partial-shade", "full-sun"],
-    "plantingMonths": [3, 4, 5],
+    "soilTypes": [
+      "loamy",
+      "silty",
+      "peaty",
+      "clay"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
     "harvestDays": 30,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["tomato", "cabbage", "pea"],
-    "enemyPlants": ["parsley"],
+    "companionPlants": [
+      "tomato",
+      "cabbage",
+      "pea"
+    ],
+    "enemyPlants": [
+      "parsley"
+    ],
     "difficulty": "easy",
     "shape3d": "sphere",
     "color": "#22C55E",
@@ -617,19 +1064,38 @@
   },
   {
     "id": "parsley",
-    "name": { "en": "Parsley", "fr": "Persil" },
+    "name": {
+      "en": "Parsley",
+      "fr": "Persil"
+    },
     "description": {
       "en": "A biennial herb with flat or curly leaves. Rich in vitamins and used as garnish worldwide.",
       "fr": "Une herbe bisannuelle avec des feuilles plates ou frisees. Riche en vitamines et utilisee comme garniture."
     },
     "category": "herb",
-    "soilTypes": ["loamy", "silty"],
-    "sunExposure": ["full-sun", "partial-shade"],
-    "plantingMonths": [3, 4, 5],
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
     "harvestDays": 45,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["tomato", "corn"],
-    "enemyPlants": ["lettuce", "mint"],
+    "companionPlants": [
+      "tomato",
+      "corn"
+    ],
+    "enemyPlants": [
+      "lettuce",
+      "mint"
+    ],
     "difficulty": "easy",
     "shape3d": "sphere",
     "color": "#15803D",
@@ -645,19 +1111,41 @@
   },
   {
     "id": "chives",
-    "name": { "en": "Chives", "fr": "Ciboulette" },
+    "name": {
+      "en": "Chives",
+      "fr": "Ciboulette"
+    },
     "description": {
       "en": "A perennial herb with mild onion flavor. Beautiful purple flowers are also edible.",
       "fr": "Une herbe vivace avec une saveur douce d'oignon. Les belles fleurs violettes sont aussi comestibles."
     },
     "category": "herb",
-    "soilTypes": ["loamy", "silty", "clay"],
-    "sunExposure": ["full-sun", "partial-shade"],
-    "plantingMonths": [3, 4, 5],
+    "soilTypes": [
+      "loamy",
+      "silty",
+      "clay"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
     "harvestDays": 30,
     "wateringFrequency": "twice-weekly",
-    "companionPlants": ["carrot", "tomato", "lettuce", "strawberry"],
-    "enemyPlants": ["bean", "pea"],
+    "companionPlants": [
+      "carrot",
+      "tomato",
+      "lettuce",
+      "strawberry"
+    ],
+    "enemyPlants": [
+      "bean",
+      "pea"
+    ],
     "difficulty": "easy",
     "shape3d": "cylinder",
     "color": "#16A34A",
@@ -673,19 +1161,38 @@
   },
   {
     "id": "sage",
-    "name": { "en": "Sage", "fr": "Sauge" },
+    "name": {
+      "en": "Sage",
+      "fr": "Sauge"
+    },
     "description": {
       "en": "A woody perennial herb with soft gray-green leaves. Essential for stuffing and sausages.",
       "fr": "Une herbe vivace ligneuse avec des feuilles gris-vert douces. Essentielle pour les farces et les saucisses."
     },
     "category": "herb",
-    "soilTypes": ["sandy", "loamy", "chalky"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [4, 5],
+    "soilTypes": [
+      "sandy",
+      "loamy",
+      "chalky"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
     "harvestDays": 75,
     "wateringFrequency": "weekly",
-    "companionPlants": ["rosemary", "cabbage", "carrot"],
-    "enemyPlants": ["basil", "cucumber"],
+    "companionPlants": [
+      "rosemary",
+      "cabbage",
+      "carrot"
+    ],
+    "enemyPlants": [
+      "basil",
+      "cucumber"
+    ],
     "difficulty": "easy",
     "shape3d": "sphere",
     "color": "#6B7280",
@@ -701,18 +1208,34 @@
   },
   {
     "id": "oregano",
-    "name": { "en": "Oregano", "fr": "Origan" },
+    "name": {
+      "en": "Oregano",
+      "fr": "Origan"
+    },
     "description": {
       "en": "A robust Mediterranean herb with a warm peppery flavor. Essential in Italian and Greek cuisine.",
       "fr": "Une herbe mediterraneenne robuste avec une saveur poivree chaude. Essentielle dans la cuisine italienne et grecque."
     },
     "category": "herb",
-    "soilTypes": ["sandy", "loamy", "chalky"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [4, 5],
+    "soilTypes": [
+      "sandy",
+      "loamy",
+      "chalky"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
     "harvestDays": 45,
     "wateringFrequency": "weekly",
-    "companionPlants": ["basil", "pepper", "tomato"],
+    "companionPlants": [
+      "basil",
+      "pepper",
+      "tomato"
+    ],
     "enemyPlants": [],
     "difficulty": "easy",
     "shape3d": "sphere",
@@ -729,19 +1252,42 @@
   },
   {
     "id": "kale",
-    "name": { "en": "Kale", "fr": "Chou frise" },
+    "name": {
+      "en": "Kale",
+      "fr": "Chou frise"
+    },
     "description": {
       "en": "A superfood brassica that becomes sweeter after frost. Extremely hardy and nutritious.",
       "fr": "Un super-aliment de la famille des brassicas qui devient plus sucre apres le gel. Extremement rustique et nutritif."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "clay", "silty"],
-    "sunExposure": ["full-sun", "partial-shade"],
-    "plantingMonths": [3, 4, 7, 8],
+    "soilTypes": [
+      "loamy",
+      "clay",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      7,
+      8
+    ],
     "harvestDays": 55,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["onion", "garlic", "potato", "dill"],
-    "enemyPlants": ["strawberry", "tomato"],
+    "companionPlants": [
+      "onion",
+      "garlic",
+      "potato",
+      "dill"
+    ],
+    "enemyPlants": [
+      "strawberry",
+      "tomato"
+    ],
     "difficulty": "easy",
     "shape3d": "sphere",
     "color": "#166534",
@@ -757,19 +1303,41 @@
   },
   {
     "id": "beet",
-    "name": { "en": "Beetroot", "fr": "Betterave" },
+    "name": {
+      "en": "Beetroot",
+      "fr": "Betterave"
+    },
     "description": {
       "en": "A dual-purpose root crop - both roots and leaves are edible. Rich in folate and manganese.",
       "fr": "Un legume-racine a double usage - les racines et les feuilles sont comestibles. Riche en folate et manganese."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "sandy", "silty"],
-    "sunExposure": ["full-sun", "partial-shade"],
-    "plantingMonths": [3, 4, 5, 7],
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      7
+    ],
     "harvestDays": 60,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["onion", "lettuce", "cabbage", "garlic"],
-    "enemyPlants": ["bean"],
+    "companionPlants": [
+      "onion",
+      "lettuce",
+      "cabbage",
+      "garlic"
+    ],
+    "enemyPlants": [
+      "bean"
+    ],
     "difficulty": "easy",
     "shape3d": "sphere",
     "color": "#9F1239",
@@ -785,19 +1353,40 @@
   },
   {
     "id": "turnip",
-    "name": { "en": "Turnip", "fr": "Navet" },
+    "name": {
+      "en": "Turnip",
+      "fr": "Navet"
+    },
     "description": {
       "en": "A fast-growing root vegetable perfect for autumn planting. Mild peppery flavor.",
       "fr": "Un legume-racine a croissance rapide parfait pour la plantation d'automne. Saveur poivree douce."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "sandy", "silty"],
-    "sunExposure": ["full-sun", "partial-shade"],
-    "plantingMonths": [3, 4, 7, 8, 9],
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      7,
+      8,
+      9
+    ],
     "harvestDays": 50,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["pea", "onion"],
-    "enemyPlants": ["potato"],
+    "companionPlants": [
+      "pea",
+      "onion"
+    ],
+    "enemyPlants": [
+      "potato"
+    ],
     "difficulty": "easy",
     "shape3d": "sphere",
     "color": "#F5F0E8",
@@ -813,19 +1402,39 @@
   },
   {
     "id": "leek",
-    "name": { "en": "Leek", "fr": "Poireau" },
+    "name": {
+      "en": "Leek",
+      "fr": "Poireau"
+    },
     "description": {
       "en": "A mild-flavored allium that is hardy through winter. Essential for soups and gratins.",
       "fr": "Un allium a saveur douce qui est rustique tout l'hiver. Essentiel pour les soupes et les gratins."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "silty", "clay"],
-    "sunExposure": ["full-sun", "partial-shade"],
-    "plantingMonths": [3, 4],
+    "soilTypes": [
+      "loamy",
+      "silty",
+      "clay"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4
+    ],
     "harvestDays": 120,
     "wateringFrequency": "twice-weekly",
-    "companionPlants": ["carrot", "celery", "onion"],
-    "enemyPlants": ["bean", "pea"],
+    "companionPlants": [
+      "carrot",
+      "celery",
+      "onion"
+    ],
+    "enemyPlants": [
+      "bean",
+      "pea"
+    ],
     "difficulty": "medium",
     "shape3d": "cylinder",
     "color": "#D9F99D",
@@ -841,19 +1450,40 @@
   },
   {
     "id": "celery",
-    "name": { "en": "Celery", "fr": "Celeri" },
+    "name": {
+      "en": "Celery",
+      "fr": "Celeri"
+    },
     "description": {
       "en": "A demanding but rewarding crop. Needs consistent moisture and rich soil to develop crisp stalks.",
       "fr": "Une culture exigeante mais gratifiante. Necessite une humidite constante et un sol riche."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "peaty", "silty"],
-    "sunExposure": ["full-sun", "partial-shade"],
-    "plantingMonths": [3, 4],
+    "soilTypes": [
+      "loamy",
+      "peaty",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4
+    ],
     "harvestDays": 130,
     "wateringFrequency": "daily",
-    "companionPlants": ["bean", "cabbage", "leek", "tomato"],
-    "enemyPlants": ["lettuce", "parsley"],
+    "companionPlants": [
+      "bean",
+      "cabbage",
+      "leek",
+      "tomato"
+    ],
+    "enemyPlants": [
+      "lettuce",
+      "parsley"
+    ],
     "difficulty": "hard",
     "shape3d": "cylinder",
     "color": "#BEF264",
@@ -869,19 +1499,39 @@
   },
   {
     "id": "dill",
-    "name": { "en": "Dill", "fr": "Aneth" },
+    "name": {
+      "en": "Dill",
+      "fr": "Aneth"
+    },
     "description": {
       "en": "An annual herb with feathery leaves and aromatic seeds. Essential for pickles and fish dishes.",
       "fr": "Une herbe annuelle avec des feuilles plumeuses et des graines aromatiques. Essentielle pour les cornichons et les plats de poisson."
     },
     "category": "herb",
-    "soilTypes": ["sandy", "loamy"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [4, 5, 6],
+    "soilTypes": [
+      "sandy",
+      "loamy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5,
+      6
+    ],
     "harvestDays": 40,
     "wateringFrequency": "twice-weekly",
-    "companionPlants": ["cabbage", "onion", "lettuce", "cucumber"],
-    "enemyPlants": ["carrot", "tomato"],
+    "companionPlants": [
+      "cabbage",
+      "onion",
+      "lettuce",
+      "cucumber"
+    ],
+    "enemyPlants": [
+      "carrot",
+      "tomato"
+    ],
     "difficulty": "easy",
     "shape3d": "cylinder",
     "color": "#84CC16",
@@ -897,19 +1547,38 @@
   },
   {
     "id": "cilantro",
-    "name": { "en": "Cilantro", "fr": "Coriandre" },
+    "name": {
+      "en": "Cilantro",
+      "fr": "Coriandre"
+    },
     "description": {
       "en": "An herb where both leaves and seeds are used. Bolts quickly in hot weather.",
       "fr": "Une herbe dont les feuilles et les graines sont utilisees. Monte en graines rapidement par temps chaud."
     },
     "category": "herb",
-    "soilTypes": ["loamy", "sandy"],
-    "sunExposure": ["full-sun", "partial-shade"],
-    "plantingMonths": [3, 4, 9],
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      9
+    ],
     "harvestDays": 35,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["bean", "pea", "tomato"],
-    "enemyPlants": ["fennel"],
+    "companionPlants": [
+      "bean",
+      "pea",
+      "tomato"
+    ],
+    "enemyPlants": [
+      "fennel"
+    ],
     "difficulty": "easy",
     "shape3d": "sphere",
     "color": "#4ADE80",
@@ -925,19 +1594,37 @@
   },
   {
     "id": "sunflower",
-    "name": { "en": "Sunflower", "fr": "Tournesol" },
+    "name": {
+      "en": "Sunflower",
+      "fr": "Tournesol"
+    },
     "description": {
       "en": "A cheerful giant flower that follows the sun. Seeds are nutritious and attract birds.",
       "fr": "Une fleur geante joyeuse qui suit le soleil. Les graines sont nutritives et attirent les oiseaux."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "sandy", "silty"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [4, 5],
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
     "harvestDays": 80,
     "wateringFrequency": "twice-weekly",
-    "companionPlants": ["cucumber", "corn", "bean"],
-    "enemyPlants": ["potato"],
+    "companionPlants": [
+      "cucumber",
+      "corn",
+      "bean"
+    ],
+    "enemyPlants": [
+      "potato"
+    ],
     "difficulty": "easy",
     "shape3d": "cylinder",
     "color": "#F59E0B",
@@ -953,19 +1640,35 @@
   },
   {
     "id": "pumpkin",
-    "name": { "en": "Pumpkin", "fr": "Citrouille" },
+    "name": {
+      "en": "Pumpkin",
+      "fr": "Citrouille"
+    },
     "description": {
       "en": "A sprawling vine crop with large colorful fruits. Great for soups, pies, and decoration.",
       "fr": "Une culture rampante avec de grands fruits colores. Ideal pour les soupes, tartes et la decoration."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "silty"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [5, 6],
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      5,
+      6
+    ],
     "harvestDays": 100,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["corn", "bean"],
-    "enemyPlants": ["potato"],
+    "companionPlants": [
+      "corn",
+      "bean"
+    ],
+    "enemyPlants": [
+      "potato"
+    ],
     "difficulty": "easy",
     "shape3d": "sphere",
     "color": "#EA580C",
@@ -981,19 +1684,35 @@
   },
   {
     "id": "watermelon",
-    "name": { "en": "Watermelon", "fr": "Pasteque" },
+    "name": {
+      "en": "Watermelon",
+      "fr": "Pasteque"
+    },
     "description": {
       "en": "A heat-loving vine with sweet juicy fruits. Needs long warm summers to mature.",
       "fr": "Une plante grimpante qui aime la chaleur avec des fruits juteux et sucres. Besoin de longs etes chauds."
     },
     "category": "fruit",
-    "soilTypes": ["sandy", "loamy"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [5, 6],
+    "soilTypes": [
+      "sandy",
+      "loamy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      5,
+      6
+    ],
     "harvestDays": 90,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["corn", "sunflower"],
-    "enemyPlants": ["potato"],
+    "companionPlants": [
+      "corn",
+      "sunflower"
+    ],
+    "enemyPlants": [
+      "potato"
+    ],
     "difficulty": "medium",
     "shape3d": "sphere",
     "color": "#16A34A",
@@ -1009,19 +1728,40 @@
   },
   {
     "id": "raspberry",
-    "name": { "en": "Raspberry", "fr": "Framboise" },
+    "name": {
+      "en": "Raspberry",
+      "fr": "Framboise"
+    },
     "description": {
       "en": "A perennial berry bush that produces delicious summer and autumn fruits. Easy to grow in most climates.",
       "fr": "Un arbuste a baies vivace qui produit des fruits delicieux en ete et en automne. Facile a cultiver."
     },
     "category": "fruit",
-    "soilTypes": ["loamy", "sandy"],
-    "sunExposure": ["full-sun", "partial-shade"],
-    "plantingMonths": [11, 12, 1, 2, 3],
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      11,
+      12,
+      1,
+      2,
+      3
+    ],
     "harvestDays": 365,
     "wateringFrequency": "twice-weekly",
-    "companionPlants": ["garlic", "onion"],
-    "enemyPlants": ["potato", "tomato"],
+    "companionPlants": [
+      "garlic",
+      "onion"
+    ],
+    "enemyPlants": [
+      "potato",
+      "tomato"
+    ],
     "difficulty": "easy",
     "shape3d": "sphere",
     "color": "#BE185D",
@@ -1037,18 +1777,37 @@
   },
   {
     "id": "swiss-chard",
-    "name": { "en": "Swiss Chard", "fr": "Bette a carde" },
+    "name": {
+      "en": "Swiss Chard",
+      "fr": "Bette a carde"
+    },
     "description": {
       "en": "A colorful leafy green with thick edible stems. Both heat and cold tolerant, very productive.",
       "fr": "Un legume vert colore avec des tiges epaisses comestibles. Tolerant a la chaleur et au froid, tres productif."
     },
     "category": "vegetable",
-    "soilTypes": ["loamy", "silty", "clay"],
-    "sunExposure": ["full-sun", "partial-shade"],
-    "plantingMonths": [3, 4, 5, 8],
+    "soilTypes": [
+      "loamy",
+      "silty",
+      "clay"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      8
+    ],
     "harvestDays": 50,
     "wateringFrequency": "every-2-days",
-    "companionPlants": ["onion", "cabbage", "lettuce"],
+    "companionPlants": [
+      "onion",
+      "cabbage",
+      "lettuce"
+    ],
     "enemyPlants": [],
     "difficulty": "easy",
     "shape3d": "cylinder",
@@ -1065,18 +1824,34 @@
   },
   {
     "id": "lavender",
-    "name": { "en": "Lavender", "fr": "Lavande" },
+    "name": {
+      "en": "Lavender",
+      "fr": "Lavande"
+    },
     "description": {
       "en": "A fragrant perennial herb with beautiful purple flowers. Attracts pollinators and repels pests.",
       "fr": "Une herbe vivace parfumee avec de belles fleurs violettes. Attire les pollinisateurs et repousse les nuisibles."
     },
     "category": "herb",
-    "soilTypes": ["sandy", "loamy", "chalky"],
-    "sunExposure": ["full-sun"],
-    "plantingMonths": [4, 5],
+    "soilTypes": [
+      "sandy",
+      "loamy",
+      "chalky"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
     "harvestDays": 90,
     "wateringFrequency": "weekly",
-    "companionPlants": ["rosemary", "sage", "thyme"],
+    "companionPlants": [
+      "rosemary",
+      "sage",
+      "thyme"
+    ],
     "enemyPlants": [],
     "difficulty": "easy",
     "shape3d": "sphere",
@@ -1089,6 +1864,3649 @@
       "Prune after flowering to maintain shape",
       "Flowers can be dried for sachets",
       "Do not over-water or over-fertilize"
+    ]
+  },
+  {
+    "id": "parsnip",
+    "name": {
+      "en": "Parsnip",
+      "fr": "Panais"
+    },
+    "description": {
+      "en": "A sweet root vegetable that improves in flavor after frost. A forgotten gem of traditional European gardens.",
+      "fr": "Un legume-racine sucre dont la saveur s'ameliore apres le gel. Un tresor oublie des jardins traditionnels europeens."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      2,
+      3,
+      4
+    ],
+    "harvestDays": 120,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "onion",
+      "garlic",
+      "radish"
+    ],
+    "enemyPlants": [
+      "carrot",
+      "celery"
+    ],
+    "difficulty": "medium",
+    "shape3d": "cone",
+    "color": "#FDE68A",
+    "spacingCm": 15,
+    "depthCm": 2,
+    "heightCm": 35,
+    "tips": [
+      "Use fresh seed each year as viability drops quickly",
+      "Frost converts starch to sugar for sweeter roots",
+      "Needs deep loose soil to avoid forking"
+    ]
+  },
+  {
+    "id": "jerusalem-artichoke",
+    "name": {
+      "en": "Jerusalem Artichoke",
+      "fr": "Topinambour"
+    },
+    "description": {
+      "en": "A tall sunflower relative producing knobby edible tubers with a nutty flavor. Extremely vigorous grower.",
+      "fr": "Un parent du tournesol produisant des tubercules comestibles a saveur de noisette. Croissance extremement vigoureuse."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty",
+      "clay"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      2,
+      3,
+      4
+    ],
+    "harvestDays": 150,
+    "wateringFrequency": "weekly",
+    "companionPlants": [
+      "corn",
+      "bean"
+    ],
+    "enemyPlants": [
+      "tomato",
+      "potato"
+    ],
+    "difficulty": "easy",
+    "shape3d": "cylinder",
+    "color": "#D4A76A",
+    "spacingCm": 40,
+    "depthCm": 10,
+    "heightCm": 250,
+    "tips": [
+      "Can become invasive - harvest all tubers or contain",
+      "Leave some tubers in ground for next year's crop",
+      "Harvest after first frost for best flavor"
+    ]
+  },
+  {
+    "id": "crosne",
+    "name": {
+      "en": "Chinese Artichoke",
+      "fr": "Crosne"
+    },
+    "description": {
+      "en": "A rare heritage vegetable producing small spiral-shaped tubers with a delicate artichoke-like flavor.",
+      "fr": "Un legume ancien rare produisant de petits tubercules en spirale avec une saveur delicate proche de l'artichaut."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4
+    ],
+    "harvestDays": 180,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "bean",
+      "lettuce"
+    ],
+    "enemyPlants": [],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#F5F0DC",
+    "spacingCm": 30,
+    "depthCm": 8,
+    "heightCm": 40,
+    "tips": [
+      "Plant tubers in spring and harvest after leaves die back",
+      "Leave some in ground for next year's crop",
+      "Best eaten fresh as they dry out quickly"
+    ]
+  },
+  {
+    "id": "rutabaga",
+    "name": {
+      "en": "Rutabaga",
+      "fr": "Rutabaga"
+    },
+    "description": {
+      "en": "A cross between cabbage and turnip with sweet yellow flesh. Hardy and stores exceptionally well.",
+      "fr": "Un croisement entre le chou et le navet a chair jaune sucree. Rustique et se conserve exceptionnellement bien."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      5,
+      6,
+      7
+    ],
+    "harvestDays": 90,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "pea",
+      "onion"
+    ],
+    "enemyPlants": [
+      "potato",
+      "tomato"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#D4A030",
+    "spacingCm": 20,
+    "depthCm": 1,
+    "heightCm": 35,
+    "tips": [
+      "Sow in early summer for autumn harvest",
+      "Flavor improves after light frost",
+      "Stores for months in cool dark conditions"
+    ]
+  },
+  {
+    "id": "salsify",
+    "name": {
+      "en": "Salsify",
+      "fr": "Salsifis"
+    },
+    "description": {
+      "en": "Known as the oyster plant for its subtle seafood flavor. A rare heritage root vegetable deserving rediscovery.",
+      "fr": "Connu comme la plante-huitre pour sa subtile saveur de fruits de mer. Un legume-racine ancien meritant d'etre redecouvert."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4
+    ],
+    "harvestDays": 120,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "carrot",
+      "lettuce",
+      "onion"
+    ],
+    "enemyPlants": [],
+    "difficulty": "medium",
+    "shape3d": "cone",
+    "color": "#E8DCC8",
+    "spacingCm": 10,
+    "depthCm": 1,
+    "heightCm": 30,
+    "tips": [
+      "Needs deep, stone-free soil for straight roots",
+      "Use fresh seed as germination drops after one year",
+      "Can overwinter in the ground under mulch"
+    ]
+  },
+  {
+    "id": "scorzonera",
+    "name": {
+      "en": "Black Salsify",
+      "fr": "Scorsonere"
+    },
+    "description": {
+      "en": "A perennial root vegetable with black skin and white flesh. Richer flavor than regular salsify.",
+      "fr": "Un legume-racine vivace a peau noire et chair blanche. Saveur plus riche que le salsifis ordinaire."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4
+    ],
+    "harvestDays": 150,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "carrot",
+      "onion"
+    ],
+    "enemyPlants": [],
+    "difficulty": "medium",
+    "shape3d": "cone",
+    "color": "#3D2B1F",
+    "spacingCm": 10,
+    "depthCm": 1,
+    "heightCm": 35,
+    "tips": [
+      "Can be left in ground for a second year for larger roots",
+      "Peel under water to avoid staining hands",
+      "Flowers are edible and attract pollinators"
+    ]
+  },
+  {
+    "id": "tuberous-chervil",
+    "name": {
+      "en": "Tuberous Chervil",
+      "fr": "Cerfeuil tubereux"
+    },
+    "description": {
+      "en": "An extremely rare heritage root with chestnut-like flavor. One of the most prized forgotten vegetables.",
+      "fr": "Un legume-racine ancien extremement rare au gout de chataigne. L'un des legumes oublies les plus prises."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      9,
+      10,
+      11
+    ],
+    "harvestDays": 200,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "lettuce",
+      "radish"
+    ],
+    "enemyPlants": [],
+    "difficulty": "hard",
+    "shape3d": "cone",
+    "color": "#C4A76C",
+    "spacingCm": 15,
+    "depthCm": 1,
+    "heightCm": 25,
+    "tips": [
+      "Seeds need a cold period to germinate - sow in autumn",
+      "Very slow growing but worth the wait",
+      "Harvest when foliage dies back in summer"
+    ]
+  },
+  {
+    "id": "oca",
+    "name": {
+      "en": "Oca",
+      "fr": "Oca du Perou"
+    },
+    "description": {
+      "en": "A colorful Andean tuber with a tangy lemon flavor. Beautiful clover-like foliage and vibrant tubers.",
+      "fr": "Un tubercule andin colore avec une saveur acidulee de citron. Beau feuillage en trefle et tubercules vibrants."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 180,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "bean",
+      "corn"
+    ],
+    "enemyPlants": [
+      "potato"
+    ],
+    "difficulty": "hard",
+    "shape3d": "capsule",
+    "color": "#E85D75",
+    "spacingCm": 30,
+    "depthCm": 8,
+    "heightCm": 30,
+    "tips": [
+      "Tubers form late - protect from early frost",
+      "Sun-cure tubers for a few days to reduce acidity",
+      "Hill soil around plants like potatoes"
+    ]
+  },
+  {
+    "id": "cardoon",
+    "name": {
+      "en": "Cardoon",
+      "fr": "Cardon"
+    },
+    "description": {
+      "en": "A dramatic thistle-like plant related to artichoke. Blanched stems are the edible prize.",
+      "fr": "Une plante spectaculaire apparentee a l'artichaut. Les tiges blanchies sont le tresor comestible."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "clay",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4
+    ],
+    "harvestDays": 150,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "bean",
+      "pea"
+    ],
+    "enemyPlants": [],
+    "difficulty": "medium",
+    "shape3d": "cylinder",
+    "color": "#9CA3AF",
+    "spacingCm": 90,
+    "depthCm": 2,
+    "heightCm": 150,
+    "tips": [
+      "Blanch stems by wrapping in cardboard 3-4 weeks before harvest",
+      "Needs lots of space - a dramatic garden statement",
+      "Wear gloves when handling spiny varieties"
+    ]
+  },
+  {
+    "id": "orache",
+    "name": {
+      "en": "Orache",
+      "fr": "Arroche"
+    },
+    "description": {
+      "en": "An ancient spinach alternative in red, green, or gold. Heat-tolerant and ornamental.",
+      "fr": "Un ancien substitut de l'epinard en rouge, vert ou dore. Tolerant a la chaleur et ornemental."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 40,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "lettuce",
+      "strawberry"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "cylinder",
+    "color": "#991B1B",
+    "spacingCm": 30,
+    "depthCm": 1,
+    "heightCm": 120,
+    "tips": [
+      "Pinch out growing tips to delay bolting",
+      "Red varieties add stunning color to salads",
+      "Self-seeds readily if allowed to flower"
+    ]
+  },
+  {
+    "id": "new-zealand-spinach",
+    "name": {
+      "en": "New Zealand Spinach",
+      "fr": "Tetragone"
+    },
+    "description": {
+      "en": "A heat-loving spinach substitute that thrives in summer when true spinach bolts. Sprawling ground cover habit.",
+      "fr": "Un substitut d'epinard qui aime la chaleur et prospere en ete quand le vrai epinard monte. Port rampant couvre-sol."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5,
+      6
+    ],
+    "harvestDays": 55,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "tomato",
+      "pepper",
+      "eggplant"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#166534",
+    "spacingCm": 40,
+    "depthCm": 2,
+    "heightCm": 20,
+    "tips": [
+      "Soak seeds overnight before planting for better germination",
+      "Harvest shoot tips regularly to encourage bushy growth",
+      "Will not bolt in hot weather unlike true spinach"
+    ]
+  },
+  {
+    "id": "purslane",
+    "name": {
+      "en": "Purslane",
+      "fr": "Pourpier"
+    },
+    "description": {
+      "en": "A succulent edible weed rich in omega-3 fatty acids. Crunchy texture and slightly lemony taste.",
+      "fr": "Une plante succulente comestible riche en omega-3. Texture croquante et gout legerement citrone."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "sandy",
+      "loamy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      5,
+      6,
+      7
+    ],
+    "harvestDays": 30,
+    "wateringFrequency": "weekly",
+    "companionPlants": [
+      "tomato",
+      "corn",
+      "pepper"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#4ADE80",
+    "spacingCm": 15,
+    "depthCm": 0.5,
+    "heightCm": 10,
+    "tips": [
+      "One of the richest plant sources of omega-3 fatty acids",
+      "Thrives in hot dry conditions where other greens fail",
+      "Cut-and-come-again harvesting works well"
+    ]
+  },
+  {
+    "id": "corn-salad",
+    "name": {
+      "en": "Corn Salad",
+      "fr": "Mache"
+    },
+    "description": {
+      "en": "A delicate winter salad green with a mild nutty flavor. One of the hardiest salad crops available.",
+      "fr": "Une salade d'hiver delicate avec une saveur douce de noisette. L'une des salades les plus rustiques."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty",
+      "clay"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      8,
+      9,
+      10
+    ],
+    "harvestDays": 60,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "onion",
+      "leek",
+      "garlic"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#86EFAC",
+    "spacingCm": 10,
+    "depthCm": 0.5,
+    "heightCm": 10,
+    "tips": [
+      "Perfect winter salad crop - very cold hardy",
+      "Sow in late summer for autumn and winter harvest",
+      "Harvest whole rosettes or pick individual leaves"
+    ]
+  },
+  {
+    "id": "watercress",
+    "name": {
+      "en": "Watercress",
+      "fr": "Cresson"
+    },
+    "description": {
+      "en": "A peppery aquatic green packed with vitamins. Can be grown in wet soil or shallow water.",
+      "fr": "Un vert aquatique poivre regorgeant de vitamines. Peut etre cultive en sol humide ou en eau peu profonde."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "peaty",
+      "silty",
+      "clay"
+    ],
+    "sunExposure": [
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      8,
+      9
+    ],
+    "harvestDays": 30,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "mint",
+      "lettuce"
+    ],
+    "enemyPlants": [],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#22C55E",
+    "spacingCm": 15,
+    "depthCm": 0.5,
+    "heightCm": 15,
+    "tips": [
+      "Keep roots constantly wet - grow in trays of water",
+      "One of the most nutrient-dense vegetables known",
+      "Harvest before flowering for mildest flavor"
+    ]
+  },
+  {
+    "id": "pattypan-squash",
+    "name": {
+      "en": "Pattypan Squash",
+      "fr": "Patisson"
+    },
+    "description": {
+      "en": "A charming UFO-shaped summer squash in white, yellow, or green. Best harvested small and tender.",
+      "fr": "Une courge d'ete charmante en forme de soucoupe, blanche, jaune ou verte. Meilleure recoltee petite et tendre."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5,
+      6
+    ],
+    "harvestDays": 55,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "corn",
+      "bean",
+      "radish"
+    ],
+    "enemyPlants": [
+      "potato"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#FEF9C3",
+    "spacingCm": 90,
+    "depthCm": 2,
+    "heightCm": 40,
+    "tips": [
+      "Harvest when 5-8cm across for best texture",
+      "Highly productive - check plants every other day",
+      "Stuff larger fruits for a delicious baked dish"
+    ]
+  },
+  {
+    "id": "chayote",
+    "name": {
+      "en": "Chayote",
+      "fr": "Christophine"
+    },
+    "description": {
+      "en": "A vigorous tropical vine producing pear-shaped fruits. The whole plant is edible including tubers and shoots.",
+      "fr": "Une liane tropicale vigoureuse produisant des fruits en forme de poire. Toute la plante est comestible."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 150,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "corn",
+      "bean"
+    ],
+    "enemyPlants": [],
+    "difficulty": "medium",
+    "shape3d": "capsule",
+    "color": "#A3E635",
+    "spacingCm": 200,
+    "depthCm": 5,
+    "heightCm": 300,
+    "tips": [
+      "Plant the whole fruit on its side with the narrow end exposed",
+      "Needs a strong trellis - very vigorous climber",
+      "Protect from frost - not cold hardy"
+    ]
+  },
+  {
+    "id": "butternut-squash",
+    "name": {
+      "en": "Butternut Squash",
+      "fr": "Courge butternut"
+    },
+    "description": {
+      "en": "A winter squash with sweet orange flesh and excellent storage life. Versatile in soups and roasts.",
+      "fr": "Une courge d'hiver a chair orange sucree et excellente conservation. Polyvalente en soupes et rotis."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 110,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "corn",
+      "bean",
+      "radish"
+    ],
+    "enemyPlants": [
+      "potato"
+    ],
+    "difficulty": "medium",
+    "shape3d": "capsule",
+    "color": "#D4A060",
+    "spacingCm": 120,
+    "depthCm": 3,
+    "heightCm": 35,
+    "tips": [
+      "Cure in sun for 10 days after harvest for better storage",
+      "Stores for up to 6 months in cool conditions",
+      "Leave 5cm of stem attached when harvesting"
+    ]
+  },
+  {
+    "id": "spaghetti-squash",
+    "name": {
+      "en": "Spaghetti Squash",
+      "fr": "Courge spaghetti"
+    },
+    "description": {
+      "en": "A unique winter squash whose flesh separates into spaghetti-like strands when cooked.",
+      "fr": "Une courge d'hiver unique dont la chair se separe en filaments comme des spaghetti a la cuisson."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 100,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "corn",
+      "bean"
+    ],
+    "enemyPlants": [
+      "potato"
+    ],
+    "difficulty": "easy",
+    "shape3d": "capsule",
+    "color": "#FACC15",
+    "spacingCm": 120,
+    "depthCm": 3,
+    "heightCm": 30,
+    "tips": [
+      "Ripe when skin cannot be dented with a fingernail",
+      "Great low-carb pasta alternative",
+      "Stores well for several months in a cool place"
+    ]
+  },
+  {
+    "id": "muscat-squash",
+    "name": {
+      "en": "Muscat Squash",
+      "fr": "Courge musquee"
+    },
+    "description": {
+      "en": "A large ribbed squash with deep orange flesh and musky sweet flavor. A French heirloom favorite.",
+      "fr": "Une grosse courge cotelee a chair orange profond et saveur musquee sucree. Une favorite du patrimoine francais."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 120,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "corn",
+      "bean"
+    ],
+    "enemyPlants": [
+      "potato"
+    ],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#B45309",
+    "spacingCm": 150,
+    "depthCm": 3,
+    "heightCm": 40,
+    "tips": [
+      "Needs a long growing season - start indoors",
+      "Can reach 10kg or more with good feeding",
+      "Perfect for gratins and the classic soupe au potiron"
+    ]
+  },
+  {
+    "id": "red-kuri-squash",
+    "name": {
+      "en": "Red Kuri Squash",
+      "fr": "Potimarron"
+    },
+    "description": {
+      "en": "A teardrop-shaped squash with chestnut flavor. The skin is edible when cooked, making prep easy.",
+      "fr": "Une courge en forme de goutte au gout de chataigne. La peau est comestible cuite, facilitant la preparation."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 100,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "corn",
+      "bean",
+      "radish"
+    ],
+    "enemyPlants": [
+      "potato"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#DC2626",
+    "spacingCm": 100,
+    "depthCm": 3,
+    "heightCm": 35,
+    "tips": [
+      "No need to peel - skin softens when cooked",
+      "Chestnut-like flavor makes it perfect for soups",
+      "Stores 3-4 months in cool dry conditions"
+    ]
+  },
+  {
+    "id": "artichoke",
+    "name": {
+      "en": "Artichoke",
+      "fr": "Artichaut"
+    },
+    "description": {
+      "en": "A spectacular thistle producing large edible flower buds. A perennial that rewards patience.",
+      "fr": "Un chardon spectaculaire produisant de gros boutons floraux comestibles. Une vivace qui recompense la patience."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4
+    ],
+    "harvestDays": 180,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "pea",
+      "bean",
+      "cabbage"
+    ],
+    "enemyPlants": [],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#6B8E23",
+    "spacingCm": 90,
+    "depthCm": 5,
+    "heightCm": 120,
+    "tips": [
+      "Protect crowns with mulch in cold winters",
+      "Harvest buds before scales start opening",
+      "Divide plants every 3-4 years for vigor"
+    ]
+  },
+  {
+    "id": "asparagus",
+    "name": {
+      "en": "Asparagus",
+      "fr": "Asperge"
+    },
+    "description": {
+      "en": "A long-lived perennial that produces spears for 20+ years. Worth the 2-year wait before first harvest.",
+      "fr": "Une vivace a longue duree de vie qui produit des turions pendant plus de 20 ans. Vaut l'attente de 2 ans."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "sandy",
+      "loamy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4
+    ],
+    "harvestDays": 730,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "tomato",
+      "parsley",
+      "basil"
+    ],
+    "enemyPlants": [
+      "onion",
+      "garlic"
+    ],
+    "difficulty": "medium",
+    "shape3d": "cylinder",
+    "color": "#4D7C0F",
+    "spacingCm": 45,
+    "depthCm": 20,
+    "heightCm": 150,
+    "tips": [
+      "Do not harvest for the first 2 years to establish crowns",
+      "Stop harvesting when spears become pencil-thin",
+      "Let fern grow after harvest to feed the roots"
+    ]
+  },
+  {
+    "id": "fennel",
+    "name": {
+      "en": "Fennel",
+      "fr": "Fenouil"
+    },
+    "description": {
+      "en": "An anise-flavored bulb vegetable with feathery fronds. Both bulb and fronds are culinary treasures.",
+      "fr": "Un legume-bulbe a saveur anisee avec des frondes plumeuses. Le bulbe et les frondes sont des tresors culinaires."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5,
+      7,
+      8
+    ],
+    "harvestDays": 80,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "sage",
+      "mint"
+    ],
+    "enemyPlants": [
+      "tomato",
+      "bean",
+      "pepper",
+      "carrot"
+    ],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#D9F99D",
+    "spacingCm": 30,
+    "depthCm": 1,
+    "heightCm": 60,
+    "tips": [
+      "Hill soil around bulb as it swells for blanching",
+      "Bolts easily in hot weather - sow in late summer",
+      "Keep away from most other vegetables as it inhibits growth"
+    ]
+  },
+  {
+    "id": "cauliflower",
+    "name": {
+      "en": "Cauliflower",
+      "fr": "Chou-fleur"
+    },
+    "description": {
+      "en": "A demanding brassica producing tight white curds. Needs consistent conditions and rich soil.",
+      "fr": "Un brassica exigeant produisant des pommes blanches serrees. Necessite des conditions regulieres et un sol riche."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "clay",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      2,
+      3,
+      7,
+      8
+    ],
+    "harvestDays": 85,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "onion",
+      "celery",
+      "bean"
+    ],
+    "enemyPlants": [
+      "tomato",
+      "strawberry"
+    ],
+    "difficulty": "hard",
+    "shape3d": "sphere",
+    "color": "#FAFAF9",
+    "spacingCm": 60,
+    "depthCm": 1,
+    "heightCm": 40,
+    "tips": [
+      "Tie leaves over curd to keep it white (blanching)",
+      "Very sensitive to temperature fluctuations",
+      "Harvest before curds start to separate"
+    ]
+  },
+  {
+    "id": "brussels-sprouts",
+    "name": {
+      "en": "Brussels Sprouts",
+      "fr": "Chou de Bruxelles"
+    },
+    "description": {
+      "en": "Mini cabbages that grow on a tall stalk. Flavor sweetens dramatically after frost.",
+      "fr": "Des mini choux qui poussent sur une haute tige. La saveur s'adoucit considerablement apres le gel."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "clay",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4
+    ],
+    "harvestDays": 150,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "onion",
+      "garlic",
+      "sage"
+    ],
+    "enemyPlants": [
+      "tomato",
+      "strawberry"
+    ],
+    "difficulty": "medium",
+    "shape3d": "cylinder",
+    "color": "#86EFAC",
+    "spacingCm": 60,
+    "depthCm": 1,
+    "heightCm": 80,
+    "tips": [
+      "Remove top of plant in late summer to encourage sprout growth",
+      "Harvest from bottom up as sprouts mature",
+      "Flavor improves after a hard frost"
+    ]
+  },
+  {
+    "id": "red-cabbage",
+    "name": {
+      "en": "Red Cabbage",
+      "fr": "Chou rouge"
+    },
+    "description": {
+      "en": "A vibrant purple-red cabbage rich in anthocyanins. Excellent pickled, braised, or in coleslaw.",
+      "fr": "Un chou pourpre-rouge vibrant riche en anthocyanines. Excellent en pickles, braise ou en salade."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "clay",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      2,
+      3,
+      7,
+      8
+    ],
+    "harvestDays": 90,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "onion",
+      "celery",
+      "dill"
+    ],
+    "enemyPlants": [
+      "tomato",
+      "strawberry"
+    ],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#7E22CE",
+    "spacingCm": 50,
+    "depthCm": 1,
+    "heightCm": 35,
+    "tips": [
+      "Color deepens in acidic soil, turns blue in alkaline",
+      "Stores well for months in cool conditions",
+      "Add vinegar when cooking to keep the red color"
+    ]
+  },
+  {
+    "id": "kohlrabi",
+    "name": {
+      "en": "Kohlrabi",
+      "fr": "Chou-rave"
+    },
+    "description": {
+      "en": "An unusual-looking brassica with a swollen stem that tastes like mild sweet turnip. Fast growing.",
+      "fr": "Un brassica a l'aspect inhabituel avec une tige renflee au gout de navet doux. Croissance rapide."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      7,
+      8
+    ],
+    "harvestDays": 55,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "onion",
+      "beet",
+      "cucumber"
+    ],
+    "enemyPlants": [
+      "tomato",
+      "strawberry"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#D8B4FE",
+    "spacingCm": 20,
+    "depthCm": 1,
+    "heightCm": 25,
+    "tips": [
+      "Harvest when tennis-ball sized for best tenderness",
+      "Can be eaten raw like an apple",
+      "One of the quickest brassicas to mature"
+    ]
+  },
+  {
+    "id": "endive",
+    "name": {
+      "en": "Endive / Chicory",
+      "fr": "Endive / Chicoree"
+    },
+    "description": {
+      "en": "A bitter salad green that can be forced for white chicons in winter. Versatile raw or cooked.",
+      "fr": "Une salade amere qui peut etre forcee pour des chicons blancs en hiver. Polyvalente crue ou cuite."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      5,
+      6
+    ],
+    "harvestDays": 90,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "lettuce",
+      "carrot",
+      "radish"
+    ],
+    "enemyPlants": [],
+    "difficulty": "medium",
+    "shape3d": "cylinder",
+    "color": "#FEF9C3",
+    "spacingCm": 30,
+    "depthCm": 1,
+    "heightCm": 30,
+    "tips": [
+      "Force roots in dark for white chicons in winter",
+      "Bitterness reduces when blanched or cooked",
+      "Hardy enough for late autumn harvesting"
+    ]
+  },
+  {
+    "id": "escarole",
+    "name": {
+      "en": "Escarole",
+      "fr": "Scarole"
+    },
+    "description": {
+      "en": "A broad-leaved endive with a mild, slightly bitter flavor. The blanched heart is the prize.",
+      "fr": "Une endive a larges feuilles avec une saveur douce legerement amere. Le coeur blanchi est le tresor."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      7,
+      8,
+      9
+    ],
+    "harvestDays": 80,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "lettuce",
+      "radish",
+      "carrot"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#BEF264",
+    "spacingCm": 30,
+    "depthCm": 0.5,
+    "heightCm": 25,
+    "tips": [
+      "Tie outer leaves to blanch the heart 2 weeks before harvest",
+      "Very good cold tolerance for late autumn salads",
+      "Excellent braised in Italian-style dishes"
+    ]
+  },
+  {
+    "id": "frisee",
+    "name": {
+      "en": "Frisee",
+      "fr": "Frisee"
+    },
+    "description": {
+      "en": "A curly-leaved endive with a pleasantly bitter taste. The pale center is the most tender part.",
+      "fr": "Une chicoree frisee avec un gout agreablement amer. Le centre pale est la partie la plus tendre."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      7,
+      8,
+      9
+    ],
+    "harvestDays": 75,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "lettuce",
+      "radish"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#ECFCCB",
+    "spacingCm": 30,
+    "depthCm": 0.5,
+    "heightCm": 20,
+    "tips": [
+      "Cover center with a plate to blanch for milder flavor",
+      "Classic in French salade lyonnaise with bacon and egg",
+      "Harvest in morning when leaves are crispest"
+    ]
+  },
+  {
+    "id": "arugula",
+    "name": {
+      "en": "Arugula",
+      "fr": "Roquette"
+    },
+    "description": {
+      "en": "A peppery salad green that grows incredibly fast. One of the quickest seeds-to-plate crops.",
+      "fr": "Une salade poivree qui pousse incroyablement vite. L'une des cultures les plus rapides du semis a l'assiette."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      8,
+      9
+    ],
+    "harvestDays": 25,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "lettuce",
+      "carrot",
+      "onion"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#4ADE80",
+    "spacingCm": 15,
+    "depthCm": 0.5,
+    "heightCm": 20,
+    "tips": [
+      "Sow every 2-3 weeks for continuous harvest",
+      "Becomes very peppery in hot weather",
+      "Wild arugula is more pungent and slower-bolting"
+    ]
+  },
+  {
+    "id": "mesclun",
+    "name": {
+      "en": "Mesclun Mix",
+      "fr": "Mesclun"
+    },
+    "description": {
+      "en": "A traditional Provencal salad mix of young greens. Usually includes lettuces, arugula, endive, and herbs.",
+      "fr": "Un melange de salade provencal traditionnel de jeunes pousses. Inclut laitues, roquette, endive et herbes."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      8,
+      9
+    ],
+    "harvestDays": 25,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "radish",
+      "carrot",
+      "chives"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#65A30D",
+    "spacingCm": 5,
+    "depthCm": 0.5,
+    "heightCm": 15,
+    "tips": [
+      "Cut when leaves are 8-10cm tall",
+      "Will regrow 2-3 times if cut above growing point",
+      "Sow thickly in a broad band rather than rows"
+    ]
+  },
+  {
+    "id": "white-bean",
+    "name": {
+      "en": "White Bean",
+      "fr": "Haricot blanc"
+    },
+    "description": {
+      "en": "A shell bean grown for its dried seeds. Essential for cassoulet and other hearty dishes.",
+      "fr": "Un haricot a ecosser cultive pour ses graines sechees. Essentiel pour le cassoulet et autres plats copieux."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      5,
+      6
+    ],
+    "harvestDays": 90,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "corn",
+      "zucchini",
+      "potato"
+    ],
+    "enemyPlants": [
+      "onion",
+      "garlic",
+      "fennel"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#FAFAF9",
+    "spacingCm": 15,
+    "depthCm": 3,
+    "heightCm": 50,
+    "tips": [
+      "Let pods dry on the plant before harvesting",
+      "Soak dried beans overnight before cooking",
+      "Fixes nitrogen in the soil for following crops"
+    ]
+  },
+  {
+    "id": "red-bean",
+    "name": {
+      "en": "Red Kidney Bean",
+      "fr": "Haricot rouge"
+    },
+    "description": {
+      "en": "A protein-rich shell bean essential for chili and stews. Must be thoroughly cooked before eating.",
+      "fr": "Un haricot a ecosser riche en proteines essentiel pour le chili et les ragouts. Doit etre bien cuit."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      5,
+      6
+    ],
+    "harvestDays": 100,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "corn",
+      "zucchini",
+      "potato"
+    ],
+    "enemyPlants": [
+      "onion",
+      "garlic",
+      "fennel"
+    ],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#991B1B",
+    "spacingCm": 15,
+    "depthCm": 3,
+    "heightCm": 50,
+    "tips": [
+      "Must be boiled vigorously for 10 minutes before eating",
+      "Let pods dry completely on the vine",
+      "Needs a long warm season to mature seeds"
+    ]
+  },
+  {
+    "id": "lentil",
+    "name": {
+      "en": "Lentil",
+      "fr": "Lentille"
+    },
+    "description": {
+      "en": "An ancient pulse crop that is easy to grow and highly nutritious. Fixes nitrogen like other legumes.",
+      "fr": "Une legumineuse ancienne facile a cultiver et tres nutritive. Fixe l'azote comme les autres legumineuses."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4
+    ],
+    "harvestDays": 100,
+    "wateringFrequency": "weekly",
+    "companionPlants": [
+      "potato",
+      "cucumber"
+    ],
+    "enemyPlants": [
+      "onion",
+      "garlic"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#92400E",
+    "spacingCm": 5,
+    "depthCm": 2,
+    "heightCm": 40,
+    "tips": [
+      "Drought tolerant once established",
+      "Pull whole plants when pods rattle",
+      "Green lentils (Lentilles du Puy) are a French specialty"
+    ]
+  },
+  {
+    "id": "chickpea",
+    "name": {
+      "en": "Chickpea",
+      "fr": "Pois chiche"
+    },
+    "description": {
+      "en": "A drought-tolerant legume producing round nutty-flavored seeds. Base of hummus and falafel worldwide.",
+      "fr": "Une legumineuse tolerante a la secheresse produisant des graines rondes. Base du houmous et des falafels."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "sandy",
+      "loamy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 100,
+    "wateringFrequency": "weekly",
+    "companionPlants": [
+      "corn",
+      "cucumber"
+    ],
+    "enemyPlants": [
+      "onion",
+      "garlic"
+    ],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#D4A76A",
+    "spacingCm": 15,
+    "depthCm": 3,
+    "heightCm": 50,
+    "tips": [
+      "Needs warm soil to germinate well",
+      "Do not overwater - prefers drier conditions",
+      "Harvest when pods turn brown and rattle"
+    ]
+  },
+  {
+    "id": "broad-bean",
+    "name": {
+      "en": "Broad Bean",
+      "fr": "Feve"
+    },
+    "description": {
+      "en": "One of the oldest cultivated crops. Hardy enough for autumn sowing in mild climates.",
+      "fr": "L'une des plus anciennes cultures. Assez rustique pour un semis d'automne en climat doux."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "clay",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      2,
+      3,
+      10,
+      11
+    ],
+    "harvestDays": 90,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "potato",
+      "corn",
+      "lettuce"
+    ],
+    "enemyPlants": [
+      "onion",
+      "garlic",
+      "fennel"
+    ],
+    "difficulty": "easy",
+    "shape3d": "cylinder",
+    "color": "#65A30D",
+    "spacingCm": 20,
+    "depthCm": 5,
+    "heightCm": 90,
+    "tips": [
+      "Pinch out tops when first pods set to deter blackfly",
+      "Autumn-sown crops give earlier harvests",
+      "Double-peel beans for the most tender texture"
+    ]
+  },
+  {
+    "id": "sweet-potato",
+    "name": {
+      "en": "Sweet Potato",
+      "fr": "Patate douce"
+    },
+    "description": {
+      "en": "A tropical root crop that can be grown in warm temperate climates. Ornamental trailing vines.",
+      "fr": "Un tubercule tropical cultivable en climat tempere chaud. Lianes retombantes ornementales."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "sandy",
+      "loamy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      5,
+      6
+    ],
+    "harvestDays": 120,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "bean",
+      "corn"
+    ],
+    "enemyPlants": [
+      "tomato"
+    ],
+    "difficulty": "medium",
+    "shape3d": "capsule",
+    "color": "#EA580C",
+    "spacingCm": 35,
+    "depthCm": 8,
+    "heightCm": 30,
+    "tips": [
+      "Grow slips from a sprouted tuber in water",
+      "Needs warm soil above 15C to grow well",
+      "Cure after harvest in warm humid conditions for 10 days"
+    ]
+  },
+  {
+    "id": "ginger",
+    "name": {
+      "en": "Ginger",
+      "fr": "Gingembre"
+    },
+    "description": {
+      "en": "A tropical rhizome that can be grown in pots in temperate climates. Fresh ginger has unbeatable flavor.",
+      "fr": "Un rhizome tropical cultivable en pot en climat tempere. Le gingembre frais a une saveur incomparable."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "peaty"
+    ],
+    "sunExposure": [
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4
+    ],
+    "harvestDays": 240,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "bean",
+      "pepper"
+    ],
+    "enemyPlants": [],
+    "difficulty": "medium",
+    "shape3d": "capsule",
+    "color": "#D4A76A",
+    "spacingCm": 20,
+    "depthCm": 3,
+    "heightCm": 60,
+    "tips": [
+      "Start indoors in late winter for temperate climates",
+      "Needs warmth, humidity, and filtered light",
+      "Harvest young ginger after 4 months or mature after 8 months"
+    ]
+  },
+  {
+    "id": "rhubarb",
+    "name": {
+      "en": "Rhubarb",
+      "fr": "Rhubarbe"
+    },
+    "description": {
+      "en": "A long-lived perennial with tart edible stalks. Only the stalks are edible - leaves are toxic.",
+      "fr": "Une vivace a longue duree de vie aux tiges comestibles acides. Seules les tiges sont comestibles - les feuilles sont toxiques."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "clay",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      11
+    ],
+    "harvestDays": 365,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "garlic",
+      "onion",
+      "cabbage"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "cylinder",
+    "color": "#DC2626",
+    "spacingCm": 90,
+    "depthCm": 5,
+    "heightCm": 60,
+    "tips": [
+      "Do not harvest in the first year to let plants establish",
+      "Never eat the leaves - they contain oxalic acid",
+      "Pull stalks rather than cutting for better regrowth"
+    ]
+  },
+  {
+    "id": "gherkin",
+    "name": {
+      "en": "Gherkin",
+      "fr": "Cornichon"
+    },
+    "description": {
+      "en": "Small pickling cucumbers harvested young and preserved in vinegar. A French condiment staple.",
+      "fr": "Petits concombres a confire recoltes jeunes et conserves dans le vinaigre. Un incontournable de la cuisine francaise."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      5,
+      6
+    ],
+    "harvestDays": 50,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "bean",
+      "pea",
+      "radish"
+    ],
+    "enemyPlants": [
+      "potato"
+    ],
+    "difficulty": "easy",
+    "shape3d": "cylinder",
+    "color": "#166534",
+    "spacingCm": 40,
+    "depthCm": 2,
+    "heightCm": 25,
+    "tips": [
+      "Harvest daily at 3-5cm for traditional cornichons",
+      "Provide a trellis to keep fruits clean",
+      "Pickle within hours of harvesting for best crunch"
+    ]
+  },
+  {
+    "id": "melon",
+    "name": {
+      "en": "Melon",
+      "fr": "Melon"
+    },
+    "description": {
+      "en": "A heat-loving vine producing sweet fragrant fruits. The Charentais melon is a French garden treasure.",
+      "fr": "Une liane qui aime la chaleur produisant des fruits sucres et parfumes. Le melon charentais est un tresor du jardin francais."
+    },
+    "category": "fruit",
+    "soilTypes": [
+      "sandy",
+      "loamy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 85,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "corn",
+      "sunflower",
+      "lettuce"
+    ],
+    "enemyPlants": [
+      "potato",
+      "cucumber"
+    ],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#FDE68A",
+    "spacingCm": 100,
+    "depthCm": 2,
+    "heightCm": 25,
+    "tips": [
+      "Slip from vine when ripe - stem separates easily",
+      "Limit to 3-4 fruits per plant for best size and sweetness",
+      "Use black plastic mulch to warm soil"
+    ]
+  },
+  {
+    "id": "long-cucumber",
+    "name": {
+      "en": "Long Cucumber",
+      "fr": "Concombre long"
+    },
+    "description": {
+      "en": "A greenhouse or warm-climate cucumber producing long smooth fruits. Thin skin requires no peeling.",
+      "fr": "Un concombre de serre ou climat chaud produisant de longs fruits lisses. Peau fine ne necessite pas d'epluchage."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 60,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "bean",
+      "pea",
+      "lettuce"
+    ],
+    "enemyPlants": [
+      "potato",
+      "tomato"
+    ],
+    "difficulty": "medium",
+    "shape3d": "cylinder",
+    "color": "#166534",
+    "spacingCm": 50,
+    "depthCm": 2,
+    "heightCm": 200,
+    "tips": [
+      "Train vertically for straight fruits",
+      "Remove male flowers on all-female varieties",
+      "Keep humidity high but ventilate to prevent mildew"
+    ]
+  },
+  {
+    "id": "chinese-chives",
+    "name": {
+      "en": "Chinese Chives",
+      "fr": "Ciboulette chinoise"
+    },
+    "description": {
+      "en": "Flat-leaved chives with a distinct garlic flavor. Popular in Asian dumplings and stir-fries.",
+      "fr": "Ciboulette a feuilles plates avec une saveur d'ail distincte. Populaire dans les raviolis et sautes asiatiques."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 30,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "carrot",
+      "tomato",
+      "strawberry"
+    ],
+    "enemyPlants": [
+      "bean",
+      "pea"
+    ],
+    "difficulty": "easy",
+    "shape3d": "cylinder",
+    "color": "#16A34A",
+    "spacingCm": 15,
+    "depthCm": 1,
+    "heightCm": 35,
+    "tips": [
+      "Cut regularly to prevent flowering and promote tender leaves",
+      "Blanch under a pot for yellow garlic chives (Chinese delicacy)",
+      "Divide clumps every 2-3 years"
+    ]
+  },
+  {
+    "id": "tarragon",
+    "name": {
+      "en": "French Tarragon",
+      "fr": "Estragon"
+    },
+    "description": {
+      "en": "An essential herb of French cuisine with subtle anise flavor. Must be grown from divisions, not seed.",
+      "fr": "Une herbe essentielle de la cuisine francaise avec une subtile saveur anisee. Doit etre multiplie par division."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "sandy",
+      "loamy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 60,
+    "wateringFrequency": "weekly",
+    "companionPlants": [
+      "pepper",
+      "eggplant"
+    ],
+    "enemyPlants": [],
+    "difficulty": "medium",
+    "shape3d": "cylinder",
+    "color": "#4D7C0F",
+    "spacingCm": 40,
+    "depthCm": 0,
+    "heightCm": 60,
+    "tips": [
+      "French tarragon cannot be grown from seed - buy plants",
+      "Protect crowns with mulch in cold winters",
+      "Best used fresh as flavor fades when dried"
+    ]
+  },
+  {
+    "id": "chervil",
+    "name": {
+      "en": "Chervil",
+      "fr": "Cerfeuil"
+    },
+    "description": {
+      "en": "A delicate herb with subtle anise-parsley flavor. One of the classic French fines herbes.",
+      "fr": "Une herbe delicate avec une subtile saveur d'anis-persil. L'une des fines herbes classiques francaises."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      8,
+      9
+    ],
+    "harvestDays": 35,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "lettuce",
+      "radish",
+      "carrot"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#86EFAC",
+    "spacingCm": 15,
+    "depthCm": 0.5,
+    "heightCm": 30,
+    "tips": [
+      "Prefers cool shade - bolts quickly in heat and sun",
+      "Add at the end of cooking to preserve delicate flavor",
+      "Sow in autumn for winter windowsill harvest"
+    ]
+  },
+  {
+    "id": "savory",
+    "name": {
+      "en": "Summer Savory",
+      "fr": "Sarriette"
+    },
+    "description": {
+      "en": "A peppery herb traditionally paired with beans. Nicknamed the bean herb in many European cultures.",
+      "fr": "Une herbe poivree traditionnellement associee aux haricots. Surnommee l'herbe aux haricots dans de nombreuses cultures."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "sandy",
+      "loamy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 45,
+    "wateringFrequency": "weekly",
+    "companionPlants": [
+      "bean",
+      "onion"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#4D7C0F",
+    "spacingCm": 25,
+    "depthCm": 0.5,
+    "heightCm": 35,
+    "tips": [
+      "Add to bean dishes to improve flavor and reduce flatulence",
+      "Harvest before flowering for strongest flavor",
+      "Winter savory is a perennial alternative"
+    ]
+  },
+  {
+    "id": "lemon-balm",
+    "name": {
+      "en": "Lemon Balm",
+      "fr": "Melisse"
+    },
+    "description": {
+      "en": "A lemon-scented herb in the mint family. Calming herbal tea and excellent in desserts.",
+      "fr": "Une herbe au parfum de citron de la famille de la menthe. Tisane apaisante et excellente dans les desserts."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 40,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "tomato",
+      "cabbage"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#86EFAC",
+    "spacingCm": 30,
+    "depthCm": 0,
+    "heightCm": 50,
+    "tips": [
+      "Spreads vigorously like mint - contain in pots",
+      "Makes a soothing bedtime herbal tea",
+      "Cut back hard in midsummer for fresh new growth"
+    ]
+  },
+  {
+    "id": "lemon-verbena",
+    "name": {
+      "en": "Lemon Verbena",
+      "fr": "Verveine citronnelle"
+    },
+    "description": {
+      "en": "The most intensely lemon-scented herb available. A deciduous shrub prized for tisanes in France.",
+      "fr": "L'herbe au parfum de citron le plus intense. Un arbuste a feuilles caduques prise pour les tisanes en France."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "sandy",
+      "loamy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 90,
+    "wateringFrequency": "weekly",
+    "companionPlants": [
+      "tomato",
+      "pepper"
+    ],
+    "enemyPlants": [],
+    "difficulty": "medium",
+    "shape3d": "cone",
+    "color": "#A3E635",
+    "spacingCm": 60,
+    "depthCm": 0,
+    "heightCm": 150,
+    "tips": [
+      "Loses leaves in winter but returns in spring",
+      "Protect from frost - not fully hardy",
+      "Dried leaves retain their intense lemon scent"
+    ]
+  },
+  {
+    "id": "hyssop",
+    "name": {
+      "en": "Hyssop",
+      "fr": "Hysope"
+    },
+    "description": {
+      "en": "An ancient medicinal herb with bright blue flowers. Attracts bees and butterflies profusely.",
+      "fr": "Une herbe medicinale ancienne avec des fleurs bleu vif. Attire abondamment les abeilles et papillons."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "sandy",
+      "loamy",
+      "chalky"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 60,
+    "wateringFrequency": "weekly",
+    "companionPlants": [
+      "cabbage",
+      "garlic"
+    ],
+    "enemyPlants": [
+      "radish"
+    ],
+    "difficulty": "easy",
+    "shape3d": "cylinder",
+    "color": "#3B82F6",
+    "spacingCm": 30,
+    "depthCm": 0.5,
+    "heightCm": 50,
+    "tips": [
+      "Excellent companion plant attracting pollinators",
+      "Trim after flowering to keep compact",
+      "Used in liqueurs like Chartreuse"
+    ]
+  },
+  {
+    "id": "borage",
+    "name": {
+      "en": "Borage",
+      "fr": "Bourrache"
+    },
+    "description": {
+      "en": "A beautiful blue-flowered herb that tastes like cucumber. Beloved by bees and an excellent companion plant.",
+      "fr": "Une belle herbe a fleurs bleues au gout de concombre. Adoree des abeilles et excellente plante compagne."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 50,
+    "wateringFrequency": "weekly",
+    "companionPlants": [
+      "tomato",
+      "strawberry",
+      "zucchini"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#3B82F6",
+    "spacingCm": 30,
+    "depthCm": 1,
+    "heightCm": 60,
+    "tips": [
+      "Freeze flowers in ice cubes for drinks",
+      "Self-seeds prolifically once established",
+      "Attracts pollinators and repels tomato hornworm"
+    ]
+  },
+  {
+    "id": "chamomile",
+    "name": {
+      "en": "Chamomile",
+      "fr": "Camomille"
+    },
+    "description": {
+      "en": "A cheerful daisy-like herb famous for its soothing tea. The doctor of the garden, improving neighboring plants.",
+      "fr": "Une herbe joyeuse ressemblant a une marguerite celebre pour sa tisane apaisante. Le medecin du jardin."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "sandy",
+      "loamy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 60,
+    "wateringFrequency": "weekly",
+    "companionPlants": [
+      "cabbage",
+      "onion",
+      "cucumber"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#FDE68A",
+    "spacingCm": 20,
+    "depthCm": 0,
+    "heightCm": 30,
+    "tips": [
+      "Harvest flowers when petals reflex back from the center",
+      "Dry flowers quickly in a warm airy place",
+      "Improves the health and flavor of neighboring plants"
+    ]
+  },
+  {
+    "id": "bay-laurel",
+    "name": {
+      "en": "Bay Laurel",
+      "fr": "Laurier"
+    },
+    "description": {
+      "en": "An evergreen tree or large shrub with aromatic culinary leaves. Essential in bouquet garni.",
+      "fr": "Un arbre persistant ou grand arbuste aux feuilles aromatiques culinaires. Essentiel dans le bouquet garni."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 365,
+    "wateringFrequency": "weekly",
+    "companionPlants": [
+      "rosemary",
+      "thyme"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "cone",
+    "color": "#166534",
+    "spacingCm": 200,
+    "depthCm": 0,
+    "heightCm": 300,
+    "tips": [
+      "Can be grown in a large container and shaped",
+      "Pick leaves year-round - dried leaves have stronger flavor",
+      "Protect from cold winds in harsh winters"
+    ]
+  },
+  {
+    "id": "creeping-rosemary",
+    "name": {
+      "en": "Creeping Rosemary",
+      "fr": "Romarin rampant"
+    },
+    "description": {
+      "en": "A prostrate variety of rosemary perfect for trailing over walls and containers. Same great flavor.",
+      "fr": "Une variete prostrée de romarin parfaite pour retomber sur les murs et les conteneurs. Meme excellente saveur."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "sandy",
+      "loamy",
+      "chalky"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 90,
+    "wateringFrequency": "weekly",
+    "companionPlants": [
+      "carrot",
+      "bean",
+      "sage"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#166534",
+    "spacingCm": 60,
+    "depthCm": 0,
+    "heightCm": 20,
+    "tips": [
+      "Excellent trailing over raised bed edges",
+      "Needs excellent drainage - add gravel if needed",
+      "Same culinary uses as upright rosemary"
+    ]
+  },
+  {
+    "id": "marjoram",
+    "name": {
+      "en": "Sweet Marjoram",
+      "fr": "Marjolaine"
+    },
+    "description": {
+      "en": "A sweeter, more delicate cousin of oregano. Essential in Mediterranean and Middle Eastern cooking.",
+      "fr": "Un cousin plus doux et delicat de l'origan. Essentiel dans la cuisine mediterraneenne et moyen-orientale."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "sandy",
+      "loamy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 50,
+    "wateringFrequency": "weekly",
+    "companionPlants": [
+      "pepper",
+      "bean",
+      "tomato"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#65A30D",
+    "spacingCm": 20,
+    "depthCm": 0,
+    "heightCm": 30,
+    "tips": [
+      "More frost-sensitive than oregano - grow as annual in cold climates",
+      "Add at end of cooking to preserve delicate flavor",
+      "Excellent in herb butter and salad dressings"
+    ]
+  },
+  {
+    "id": "lovage",
+    "name": {
+      "en": "Lovage",
+      "fr": "Liveche"
+    },
+    "description": {
+      "en": "A towering perennial herb tasting like intense celery. A single plant provides for the whole season.",
+      "fr": "Une herbe vivace imposante au gout de celeri intense. Un seul plant suffit pour toute la saison."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "loamy",
+      "clay",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      3,
+      4
+    ],
+    "harvestDays": 60,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "bean",
+      "potato"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "cylinder",
+    "color": "#4D7C0F",
+    "spacingCm": 60,
+    "depthCm": 1,
+    "heightCm": 180,
+    "tips": [
+      "One plant is enough for most households",
+      "Use young leaves sparingly - very strong flavor",
+      "Hollow stems make natural drinking straws for Bloody Marys"
+    ]
+  },
+  {
+    "id": "gooseberry",
+    "name": {
+      "en": "Gooseberry",
+      "fr": "Groseille a maquereau"
+    },
+    "description": {
+      "en": "A thorny bush producing tart green berries perfect for jams and fool. Very productive and long-lived.",
+      "fr": "Un arbuste epineux produisant des baies vertes acidulees parfaites pour les confitures. Tres productif et durable."
+    },
+    "category": "fruit",
+    "soilTypes": [
+      "loamy",
+      "clay",
+      "silty"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      11,
+      12,
+      1,
+      2,
+      3
+    ],
+    "harvestDays": 365,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "chives",
+      "garlic"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#A3E635",
+    "spacingCm": 120,
+    "depthCm": 5,
+    "heightCm": 120,
+    "tips": [
+      "Prune to open center for air circulation and easy picking",
+      "Pick green for cooking or wait until soft and sweet for eating fresh",
+      "Tolerates more shade than most fruit bushes"
+    ]
+  },
+  {
+    "id": "redcurrant",
+    "name": {
+      "en": "Redcurrant",
+      "fr": "Groseille"
+    },
+    "description": {
+      "en": "A productive shrub bearing translucent red berries in clusters. Makes stunning jellies and sauces.",
+      "fr": "Un arbuste productif portant des baies rouges translucides en grappes. Fait de magnifiques gelees et sauces."
+    },
+    "category": "fruit",
+    "soilTypes": [
+      "loamy",
+      "clay",
+      "silty"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      11,
+      12,
+      1,
+      2,
+      3
+    ],
+    "harvestDays": 365,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "chives",
+      "garlic",
+      "onion"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#DC2626",
+    "spacingCm": 120,
+    "depthCm": 5,
+    "heightCm": 120,
+    "tips": [
+      "Fruit on old wood - prune to maintain framework",
+      "Net against birds as fruit ripens",
+      "Makes the classic French Bar-le-duc jelly"
+    ]
+  },
+  {
+    "id": "blackcurrant",
+    "name": {
+      "en": "Blackcurrant",
+      "fr": "Cassis"
+    },
+    "description": {
+      "en": "A richly flavored berry bush essential for cassis liqueur and jams. Extremely high in vitamin C.",
+      "fr": "Un arbuste a baies richement parfumees essentiel pour la liqueur de cassis et les confitures. Tres riche en vitamine C."
+    },
+    "category": "fruit",
+    "soilTypes": [
+      "loamy",
+      "clay",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      11,
+      12,
+      1,
+      2,
+      3
+    ],
+    "harvestDays": 365,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "garlic",
+      "chives"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#1E1B4B",
+    "spacingCm": 150,
+    "depthCm": 5,
+    "heightCm": 150,
+    "tips": [
+      "Prune out one-third of old wood each winter",
+      "Essential for creme de cassis and kir",
+      "Four times more vitamin C than oranges"
+    ]
+  },
+  {
+    "id": "blueberry",
+    "name": {
+      "en": "Blueberry",
+      "fr": "Myrtille"
+    },
+    "description": {
+      "en": "An acid-loving shrub producing antioxidant-rich berries. Needs acidic soil to thrive.",
+      "fr": "Un arbuste acidophile produisant des baies riches en antioxydants. Necessite un sol acide pour prosperer."
+    },
+    "category": "fruit",
+    "soilTypes": [
+      "peaty",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      11,
+      12,
+      1,
+      2,
+      3
+    ],
+    "harvestDays": 365,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "strawberry",
+      "raspberry"
+    ],
+    "enemyPlants": [],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#3730A3",
+    "spacingCm": 150,
+    "depthCm": 5,
+    "heightCm": 150,
+    "tips": [
+      "Must have acidic soil (pH 4.5-5.5) - use ericaceous compost",
+      "Water with rainwater, not tap water",
+      "Plant two varieties for better cross-pollination"
+    ]
+  },
+  {
+    "id": "blackberry",
+    "name": {
+      "en": "Blackberry",
+      "fr": "Mure"
+    },
+    "description": {
+      "en": "A vigorous bramble producing abundant dark berries in late summer. Thornless varieties now available.",
+      "fr": "Une ronce vigoureuse produisant d'abondantes baies noires en fin d'ete. Varietes sans epines disponibles."
+    },
+    "category": "fruit",
+    "soilTypes": [
+      "loamy",
+      "clay",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      11,
+      12,
+      1,
+      2,
+      3
+    ],
+    "harvestDays": 365,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "garlic",
+      "chives"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#1E1B4B",
+    "spacingCm": 200,
+    "depthCm": 5,
+    "heightCm": 200,
+    "tips": [
+      "Train on wires for easy management",
+      "Cut out fruited canes after harvest",
+      "Thornless varieties are much easier to manage"
+    ]
+  },
+  {
+    "id": "physalis",
+    "name": {
+      "en": "Cape Gooseberry",
+      "fr": "Physalis"
+    },
+    "description": {
+      "en": "A tropical relative of the tomato producing sweet berries in papery husks. Ornamental and delicious.",
+      "fr": "Un parent tropical de la tomate produisant des baies sucrees dans des enveloppes en papier. Ornemental et delicieux."
+    },
+    "category": "fruit",
+    "soilTypes": [
+      "sandy",
+      "loamy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4
+    ],
+    "harvestDays": 100,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "basil",
+      "parsley"
+    ],
+    "enemyPlants": [
+      "fennel"
+    ],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#F59E0B",
+    "spacingCm": 60,
+    "depthCm": 1,
+    "heightCm": 80,
+    "tips": [
+      "Start indoors early like tomatoes",
+      "Fruits are ripe when husks turn papery and brown",
+      "Store in husks for several weeks"
+    ]
+  },
+  {
+    "id": "nasturtium",
+    "name": {
+      "en": "Nasturtium",
+      "fr": "Capucine"
+    },
+    "description": {
+      "en": "A cheerful edible flower with peppery leaves. Trap crop for aphids, protecting vegetables nearby.",
+      "fr": "Une fleur comestible joyeuse avec des feuilles poivrees. Plante-piege pour les pucerons, protegeant les legumes."
+    },
+    "category": "flower",
+    "soilTypes": [
+      "sandy",
+      "loamy"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 50,
+    "wateringFrequency": "weekly",
+    "companionPlants": [
+      "tomato",
+      "cabbage",
+      "bean",
+      "cucumber"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#EA580C",
+    "spacingCm": 25,
+    "depthCm": 2,
+    "heightCm": 30,
+    "tips": [
+      "Poor soil produces more flowers, rich soil more leaves",
+      "Flowers, leaves, and seeds are all edible",
+      "Excellent trap crop drawing aphids away from vegetables"
+    ]
+  },
+  {
+    "id": "calendula",
+    "name": {
+      "en": "Calendula",
+      "fr": "Souci"
+    },
+    "description": {
+      "en": "A bright orange medicinal flower used in salves and salads. Repels pests and attracts beneficial insects.",
+      "fr": "Une fleur medicinale orange vif utilisee en baumes et salades. Repousse les nuisibles et attire les insectes utiles."
+    },
+    "category": "flower",
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      9
+    ],
+    "harvestDays": 45,
+    "wateringFrequency": "weekly",
+    "companionPlants": [
+      "tomato",
+      "pepper",
+      "bean"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#F59E0B",
+    "spacingCm": 25,
+    "depthCm": 1,
+    "heightCm": 45,
+    "tips": [
+      "Deadhead regularly for continuous blooming",
+      "Petals can be used as poor man's saffron",
+      "Self-seeds freely for next year"
+    ]
+  },
+  {
+    "id": "marigold",
+    "name": {
+      "en": "French Marigold",
+      "fr": "Oeillet d'Inde"
+    },
+    "description": {
+      "en": "A powerful pest-repelling companion plant with a strong scent. Roots kill soil nematodes.",
+      "fr": "Une puissante plante compagne repulsive avec un parfum fort. Les racines tuent les nematodes du sol."
+    },
+    "category": "flower",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 50,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "tomato",
+      "pepper",
+      "eggplant",
+      "potato"
+    ],
+    "enemyPlants": [
+      "bean"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#EAB308",
+    "spacingCm": 20,
+    "depthCm": 1,
+    "heightCm": 30,
+    "tips": [
+      "Plant around tomatoes to repel whitefly",
+      "Roots release compounds that kill soil nematodes",
+      "Deadhead regularly for continuous flowering"
+    ]
+  },
+  {
+    "id": "cosmos",
+    "name": {
+      "en": "Cosmos",
+      "fr": "Cosmos"
+    },
+    "description": {
+      "en": "An elegant daisy-like flower that attracts pollinators and beneficial insects. Easy and graceful.",
+      "fr": "Une fleur elegante ressemblant a une marguerite qui attire pollinisateurs et insectes utiles. Facile et gracieuse."
+    },
+    "category": "flower",
+    "soilTypes": [
+      "sandy",
+      "loamy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 60,
+    "wateringFrequency": "weekly",
+    "companionPlants": [
+      "tomato",
+      "bean",
+      "cucumber"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "cylinder",
+    "color": "#EC4899",
+    "spacingCm": 30,
+    "depthCm": 0.5,
+    "heightCm": 120,
+    "tips": [
+      "Thrives in poor soil - too much fertilizer reduces flowering",
+      "Attracts hoverflies which eat aphids",
+      "Deadhead for months of continuous bloom"
+    ]
+  },
+  {
+    "id": "dwarf-sunflower",
+    "name": {
+      "en": "Dwarf Sunflower",
+      "fr": "Tournesol nain"
+    },
+    "description": {
+      "en": "A compact sunflower variety perfect for borders and containers. Same cheerful flowers in a smaller package.",
+      "fr": "Une variete compacte de tournesol parfaite pour bordures et conteneurs. Memes fleurs joyeuses en format reduit."
+    },
+    "category": "flower",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 60,
+    "wateringFrequency": "twice-weekly",
+    "companionPlants": [
+      "cucumber",
+      "bean",
+      "zucchini"
+    ],
+    "enemyPlants": [
+      "potato"
+    ],
+    "difficulty": "easy",
+    "shape3d": "cylinder",
+    "color": "#F59E0B",
+    "spacingCm": 25,
+    "depthCm": 2,
+    "heightCm": 50,
+    "tips": [
+      "No staking required unlike tall sunflowers",
+      "Great for children's gardens",
+      "Attracts pollinators throughout summer"
+    ]
+  },
+  {
+    "id": "pak-choi",
+    "name": {
+      "en": "Pak Choi",
+      "fr": "Pak choi"
+    },
+    "description": {
+      "en": "A fast-growing Chinese cabbage with crisp white stems and tender green leaves. Ready in just weeks.",
+      "fr": "Un chou chinois a croissance rapide avec des tiges blanches croquantes et des feuilles vertes tendres."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5,
+      8,
+      9
+    ],
+    "harvestDays": 30,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "onion",
+      "garlic",
+      "chives"
+    ],
+    "enemyPlants": [
+      "strawberry"
+    ],
+    "difficulty": "easy",
+    "shape3d": "cylinder",
+    "color": "#86EFAC",
+    "spacingCm": 20,
+    "depthCm": 0.5,
+    "heightCm": 25,
+    "tips": [
+      "Sow in late summer to avoid bolting",
+      "Baby pak choi can be harvested in 3 weeks",
+      "Protect from flea beetles with fleece"
+    ]
+  },
+  {
+    "id": "chinese-cabbage",
+    "name": {
+      "en": "Chinese Cabbage",
+      "fr": "Chou chinois"
+    },
+    "description": {
+      "en": "A tall barrel-shaped cabbage with a mild sweet flavor. Essential for kimchi and stir-fries.",
+      "fr": "Un chou en forme de tonneau avec une saveur douce. Essentiel pour le kimchi et les sautes."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      7,
+      8
+    ],
+    "harvestDays": 70,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "onion",
+      "garlic"
+    ],
+    "enemyPlants": [
+      "strawberry",
+      "tomato"
+    ],
+    "difficulty": "medium",
+    "shape3d": "cylinder",
+    "color": "#BEF264",
+    "spacingCm": 35,
+    "depthCm": 1,
+    "heightCm": 35,
+    "tips": [
+      "Sow after midsummer to prevent bolting",
+      "Needs consistent moisture for tight heads",
+      "Use fleece to protect from flea beetles"
+    ]
+  },
+  {
+    "id": "mizuna",
+    "name": {
+      "en": "Mizuna",
+      "fr": "Mizuna"
+    },
+    "description": {
+      "en": "A feathery Japanese mustard green with a mild peppery bite. Fast growing and cold hardy.",
+      "fr": "Une moutarde japonaise plumeuse avec une touche poivree douce. Croissance rapide et rustique au froid."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "partial-shade",
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5,
+      8,
+      9
+    ],
+    "harvestDays": 25,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "lettuce",
+      "radish",
+      "onion"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#4ADE80",
+    "spacingCm": 15,
+    "depthCm": 0.5,
+    "heightCm": 20,
+    "tips": [
+      "Cut-and-come-again for multiple harvests",
+      "Excellent in salad mixes and stir-fries",
+      "Survives light frost for extended autumn harvest"
+    ]
+  },
+  {
+    "id": "edamame",
+    "name": {
+      "en": "Edamame",
+      "fr": "Edamame"
+    },
+    "description": {
+      "en": "Fresh green soybeans harvested young in the pod. Rich in protein and fun to grow.",
+      "fr": "Feves de soja vertes fraiches recoltees jeunes en gousse. Riches en proteines et amusantes a cultiver."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      5,
+      6
+    ],
+    "harvestDays": 80,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "corn",
+      "potato"
+    ],
+    "enemyPlants": [
+      "onion",
+      "garlic"
+    ],
+    "difficulty": "medium",
+    "shape3d": "cylinder",
+    "color": "#65A30D",
+    "spacingCm": 15,
+    "depthCm": 3,
+    "heightCm": 60,
+    "tips": [
+      "Harvest when pods are plump but still green",
+      "Needs warm soil above 15C to germinate",
+      "Blanch pods in boiling water and eat with salt"
+    ]
+  },
+  {
+    "id": "daikon",
+    "name": {
+      "en": "Daikon Radish",
+      "fr": "Daikon"
+    },
+    "description": {
+      "en": "A giant Japanese radish that can grow 30cm or more. Mild flavor and excellent for breaking compacted soil.",
+      "fr": "Un radis japonais geant pouvant atteindre 30cm ou plus. Saveur douce et excellent pour decompacter le sol."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      7,
+      8,
+      9
+    ],
+    "harvestDays": 60,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "lettuce",
+      "pea",
+      "carrot"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "cone",
+    "color": "#FAFAF9",
+    "spacingCm": 15,
+    "depthCm": 1,
+    "heightCm": 30,
+    "tips": [
+      "Sow late summer for best results - bolts in spring",
+      "Deep roots break up compacted soil like a bio-drill",
+      "Grate fresh for a mild peppery condiment"
+    ]
+  },
+  {
+    "id": "shiso",
+    "name": {
+      "en": "Shiso / Perilla",
+      "fr": "Shiso"
+    },
+    "description": {
+      "en": "A distinctive Japanese herb with cinnamon-basil flavor. Red and green varieties used in sushi and pickles.",
+      "fr": "Une herbe japonaise distinctive avec une saveur de cannelle-basilic. Varietes rouges et vertes pour sushi et pickles."
+    },
+    "category": "herb",
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun",
+      "partial-shade"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 50,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "tomato",
+      "pepper"
+    ],
+    "enemyPlants": [],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#7C3AED",
+    "spacingCm": 25,
+    "depthCm": 0.5,
+    "heightCm": 50,
+    "tips": [
+      "Red shiso is used to color umeboshi (pickled plums)",
+      "Pinch tips regularly for bushy growth",
+      "Self-seeds readily in warm climates"
+    ]
+  },
+  {
+    "id": "artichoke-violet",
+    "name": {
+      "en": "Purple Artichoke",
+      "fr": "Artichaut violet"
+    },
+    "description": {
+      "en": "A stunning purple-tinged artichoke variety popular in Mediterranean gardens. Tender enough to eat raw.",
+      "fr": "Une variete d'artichaut aux teintes violettes populaire dans les jardins mediterraneens. Assez tendre pour etre mange cru."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4
+    ],
+    "harvestDays": 180,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "pea",
+      "bean",
+      "lettuce"
+    ],
+    "enemyPlants": [],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#7C3AED",
+    "spacingCm": 90,
+    "depthCm": 5,
+    "heightCm": 100,
+    "tips": [
+      "Young buds can be sliced thin and eaten raw with lemon",
+      "Protect crowns in cold climates with straw mulch",
+      "Let a few heads bloom for spectacular purple thistle flowers"
+    ]
+  },
+  {
+    "id": "padron-pepper",
+    "name": {
+      "en": "Padron Pepper",
+      "fr": "Poivron de Padron"
+    },
+    "description": {
+      "en": "Small Spanish peppers typically mild but occasionally hot - eating them is Russian roulette for the palate.",
+      "fr": "Petits poivrons espagnols generalement doux mais parfois piquants - les manger est une roulette russe pour le palais."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      4,
+      5
+    ],
+    "harvestDays": 70,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "basil",
+      "tomato",
+      "carrot"
+    ],
+    "enemyPlants": [
+      "fennel"
+    ],
+    "difficulty": "easy",
+    "shape3d": "capsule",
+    "color": "#16A34A",
+    "spacingCm": 40,
+    "depthCm": 1,
+    "heightCm": 50,
+    "tips": [
+      "Pick small (2-3cm) for mildest flavor",
+      "Blister in hot oil with coarse salt for classic tapas",
+      "Roughly 1 in 10 will be unexpectedly hot"
+    ]
+  },
+  {
+    "id": "cherry-tomato",
+    "name": {
+      "en": "Cherry Tomato",
+      "fr": "Tomate cerise"
+    },
+    "description": {
+      "en": "Prolific bite-sized tomatoes bursting with concentrated sweetness. Perfect for snacking and salads.",
+      "fr": "Tomates bouchees prolifiques eclatantes de douceur concentree. Parfaites pour le grignotage et les salades."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 65,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "basil",
+      "carrot",
+      "parsley",
+      "marigold"
+    ],
+    "enemyPlants": [
+      "cabbage",
+      "fennel"
+    ],
+    "difficulty": "easy",
+    "shape3d": "sphere",
+    "color": "#DC2626",
+    "spacingCm": 50,
+    "depthCm": 1,
+    "heightCm": 150,
+    "tips": [
+      "Most forgiving tomato for beginners",
+      "Will often self-seed from dropped fruit",
+      "Extremely prolific - one plant can yield hundreds of fruits"
+    ]
+  },
+  {
+    "id": "beefsteak-tomato",
+    "name": {
+      "en": "Beefsteak Tomato",
+      "fr": "Tomate coeur de boeuf"
+    },
+    "description": {
+      "en": "A large ribbed tomato with meaty flesh and few seeds. The classic slicing tomato for sandwiches.",
+      "fr": "Une grosse tomate cotelee a chair charnue et peu de graines. La classique tomate a trancher pour les sandwiches."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "silty"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 85,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "basil",
+      "carrot",
+      "marigold"
+    ],
+    "enemyPlants": [
+      "cabbage",
+      "fennel"
+    ],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#DC2626",
+    "spacingCm": 60,
+    "depthCm": 1,
+    "heightCm": 180,
+    "tips": [
+      "Support heavy fruits with slings or nets",
+      "Limit to 4-5 trusses for largest individual fruits",
+      "Water consistently to prevent cracking"
+    ]
+  },
+  {
+    "id": "black-crimea-tomato",
+    "name": {
+      "en": "Black Crimea Tomato",
+      "fr": "Tomate noire de Crimee"
+    },
+    "description": {
+      "en": "A striking dark-skinned heirloom with complex smoky sweet flavor. One of the finest-tasting tomatoes.",
+      "fr": "Un heirloom a peau sombre frappant avec une saveur complexe fumee et sucree. L'une des tomates au meilleur gout."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 80,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "basil",
+      "carrot",
+      "parsley"
+    ],
+    "enemyPlants": [
+      "cabbage",
+      "fennel"
+    ],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#581C87",
+    "spacingCm": 60,
+    "depthCm": 1,
+    "heightCm": 150,
+    "tips": [
+      "Skin darkens with more sun exposure",
+      "Harvest when shoulders are still slightly green",
+      "Complex flavor - best eaten raw at room temperature"
+    ]
+  },
+  {
+    "id": "green-zebra-tomato",
+    "name": {
+      "en": "Green Zebra Tomato",
+      "fr": "Tomate Green Zebra"
+    },
+    "description": {
+      "en": "A unique green-striped tomato with tangy citrus flavor. Ripe when stripes turn yellow-green.",
+      "fr": "Une tomate unique a rayures vertes avec une saveur d'agrumes piquante. Mure quand les rayures deviennent jaune-vert."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 75,
+    "wateringFrequency": "daily",
+    "companionPlants": [
+      "basil",
+      "carrot",
+      "marigold"
+    ],
+    "enemyPlants": [
+      "cabbage",
+      "fennel"
+    ],
+    "difficulty": "medium",
+    "shape3d": "sphere",
+    "color": "#65A30D",
+    "spacingCm": 50,
+    "depthCm": 1,
+    "heightCm": 120,
+    "tips": [
+      "Ripe when the green lightens and yellow stripes appear",
+      "Tangy flavor is exceptional in salads and fried green tomatoes",
+      "Slightly softer when ripe compared to red varieties"
+    ]
+  },
+  {
+    "id": "espelette-pepper",
+    "name": {
+      "en": "Espelette Pepper",
+      "fr": "Piment d'Espelette"
+    },
+    "description": {
+      "en": "The famous Basque pepper with gentle warmth. Traditionally dried on house facades in the Pays Basque.",
+      "fr": "Le celebre piment basque a la chaleur douce. Traditionnellement seche sur les facades des maisons au Pays Basque."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 100,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "basil",
+      "tomato",
+      "carrot"
+    ],
+    "enemyPlants": [
+      "fennel"
+    ],
+    "difficulty": "medium",
+    "shape3d": "cone",
+    "color": "#DC2626",
+    "spacingCm": 50,
+    "depthCm": 1,
+    "heightCm": 60,
+    "tips": [
+      "Mild heat (1000-4000 Scoville) - more flavor than fire",
+      "Dry by stringing and hanging in an airy spot",
+      "AOC protected - a true French terroir product"
+    ]
+  },
+  {
+    "id": "jalapeno",
+    "name": {
+      "en": "Jalapeno Pepper",
+      "fr": "Piment jalapeno"
+    },
+    "description": {
+      "en": "The world's most popular hot pepper with moderate heat and thick walls. Perfect for salsas and nachos.",
+      "fr": "Le piment le plus populaire au monde avec une chaleur moderee et des parois epaisses. Parfait pour salsas et nachos."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4,
+      5
+    ],
+    "harvestDays": 80,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "basil",
+      "tomato",
+      "carrot"
+    ],
+    "enemyPlants": [
+      "fennel"
+    ],
+    "difficulty": "medium",
+    "shape3d": "capsule",
+    "color": "#16A34A",
+    "spacingCm": 40,
+    "depthCm": 1,
+    "heightCm": 60,
+    "tips": [
+      "Pick green for classic jalapeno or red for more heat",
+      "Smoked jalapenos become chipotle peppers",
+      "Stress (less water) increases heat level"
+    ]
+  },
+  {
+    "id": "habanero",
+    "name": {
+      "en": "Habanero Pepper",
+      "fr": "Habanero"
+    },
+    "description": {
+      "en": "An intensely hot pepper with fruity tropical aroma. One of the hottest commonly grown peppers.",
+      "fr": "Un piment intensement piquant avec un arome tropical fruite. L'un des piments les plus forts couramment cultives."
+    },
+    "category": "vegetable",
+    "soilTypes": [
+      "loamy",
+      "sandy"
+    ],
+    "sunExposure": [
+      "full-sun"
+    ],
+    "plantingMonths": [
+      3,
+      4
+    ],
+    "harvestDays": 100,
+    "wateringFrequency": "every-2-days",
+    "companionPlants": [
+      "basil",
+      "tomato",
+      "carrot"
+    ],
+    "enemyPlants": [
+      "fennel"
+    ],
+    "difficulty": "hard",
+    "shape3d": "sphere",
+    "color": "#EA580C",
+    "spacingCm": 45,
+    "depthCm": 1,
+    "heightCm": 70,
+    "tips": [
+      "Needs a long hot season - start indoors very early",
+      "Wear gloves when handling - extremely hot (100k-350k Scoville)",
+      "Fruity flavor shines in hot sauces and tropical salsas"
     ]
   }
 ]
