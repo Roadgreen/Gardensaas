@@ -113,7 +113,8 @@ model GardenSeason {
   year      Int
   notes     String?
   createdAt DateTime      @default(now())
-  plants    SeasonPlant[]
+  plants      SeasonPlant[]
+  plotHistory  PlotHistory[]
 }
 
 model SeasonPlant {
@@ -128,6 +129,23 @@ model SeasonPlant {
   yield         Float?       // kg harvested
   notes         String?
   health        String?      // good, average, poor
+}
+
+model PlotHistory {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  seasonId      String       @db.ObjectId
+  season        GardenSeason @relation(fields: [seasonId], references: [id], onDelete: Cascade)
+  plotName      String       // e.g. "Bed A", "Row 1", "Zone North"
+  plantId       String       // references plant from plants.json
+  plantName     String       // denormalized for easy display
+  x             Float
+  z             Float
+  plantedDate   DateTime?
+  harvestedDate DateTime?
+  yield         Float?       // kg harvested
+  notes         String?
+  health        String?      // "good" | "average" | "poor"
+  success       Boolean      @default(true) // whether the crop was successful
 }
 
 model DailyTip {
