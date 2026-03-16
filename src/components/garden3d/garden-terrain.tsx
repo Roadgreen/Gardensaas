@@ -34,22 +34,31 @@ const SOIL_COLORS: Record<string, string> = {
 
 // Warmer, more inviting greens -- Animal Crossing / Stardew Valley palette
 const SEASON_GRASS: Record<string, string> = {
-  spring: '#88D860',
-  summer: '#68C040',
-  autumn: '#C8B048',
-  winter: '#D8DCC8',
+  spring: '#7ED856',
+  summer: '#5CB838',
+  autumn: '#C4A840',
+  winter: '#CDD8C0',
 };
 
 const SEASON_GRASS_DARK: Record<string, string> = {
-  spring: '#60C038',
-  summer: '#50A030',
-  autumn: '#A89838',
-  winter: '#C0C4B0',
+  spring: '#58B838',
+  summer: '#489828',
+  autumn: '#A09030',
+  winter: '#B0B8A0',
+};
+
+// Additional accent colors for grass variation
+const SEASON_GRASS_ACCENT: Record<string, string> = {
+  spring: '#A0E878',
+  summer: '#78D050',
+  autumn: '#D8C060',
+  winter: '#E0E4D8',
 };
 
 export function GardenTerrain({ length, width, soilType, plantPositions, season, onGroundClick, showGrid, gridSpacingCm }: GardenTerrainProps) {
   const grassColor = SEASON_GRASS[season];
   const grassDark = SEASON_GRASS_DARK[season];
+  const grassAccent = SEASON_GRASS_ACCENT[season];
   const soilColor = SOIL_COLORS[soilType] || SOIL_COLORS.loamy;
 
   const halfL = length / 2;
@@ -251,31 +260,51 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
         />
       </mesh>
 
-      {/* Grass texture variation patches for natural look */}
-      {Array.from({ length: 8 }).map((_, i) => {
+      {/* Grass texture variation patches for natural look -- more layers */}
+      {Array.from({ length: 16 }).map((_, i) => {
         const rng = (seed: number) => {
           const x = Math.sin(seed * 127.1 + 311.7) * 43758.5453123;
           return x - Math.floor(x);
         };
-        const px = (rng(i * 3.7) - 0.5) * (length + 3);
-        const pz = (rng(i * 5.1 + 10) - 0.5) * (width + 3);
+        const px = (rng(i * 3.7) - 0.5) * (length + 5);
+        const pz = (rng(i * 5.1 + 10) - 0.5) * (width + 5);
         const isInside = Math.abs(px) < halfL - 0.2 && Math.abs(pz) < halfW - 0.2;
         if (isInside) return null;
+        const colorPick = rng(i * 9.3);
+        const patchColor = colorPick > 0.66 ? grassAccent : colorPick > 0.33 ? grassDark : grassColor;
         return (
-          <mesh key={`gpatch-${i}`} rotation={[-Math.PI / 2, 0, rng(i * 8) * Math.PI]} position={[px, -0.005, pz]} receiveShadow>
-            <circleGeometry args={[0.3 + rng(i * 2) * 0.5, 8]} />
-            <meshStandardMaterial color={rng(i) > 0.5 ? grassDark : grassColor} transparent opacity={0.5} />
+          <mesh key={`gpatch-${i}`} rotation={[-Math.PI / 2, 0, rng(i * 8) * Math.PI]} position={[px, -0.004, pz]} receiveShadow>
+            <circleGeometry args={[0.25 + rng(i * 2) * 0.6, 10]} />
+            <meshStandardMaterial color={patchColor} transparent opacity={0.35 + rng(i * 4) * 0.2} />
           </mesh>
         );
       })}
 
-      {/* Dirt path leading to garden */}
-      {Array.from({ length: 8 }).map((_, i) => (
-        <mesh key={`path-${i}`} rotation={[-Math.PI / 2, 0, 0]} position={[(Math.sin(i * 0.3) * 0.1), -0.008, halfW + 0.3 + i * 0.4]} receiveShadow>
-          <planeGeometry args={[0.35, 0.35]} />
-          <meshStandardMaterial color="#B8A88A" transparent opacity={0.6} />
-        </mesh>
-      ))}
+      {/* Cobblestone-style path leading to garden */}
+      {Array.from({ length: 10 }).map((_, i) => {
+        const rng = (seed: number) => {
+          const x = Math.sin(seed * 127.1 + 311.7) * 43758.5453123;
+          return x - Math.floor(x);
+        };
+        const wobbleX = Math.sin(i * 0.5) * 0.08 + (rng(i * 13.7) - 0.5) * 0.06;
+        const stoneSize = 0.12 + rng(i * 7.3) * 0.06;
+        return (
+          <group key={`path-${i}`}>
+            {/* Main path stone */}
+            <mesh rotation={[-Math.PI / 2, rng(i * 3.1) * 0.5, 0]} position={[wobbleX, -0.003, halfW + 0.25 + i * 0.32]} receiveShadow castShadow>
+              <circleGeometry args={[stoneSize, 7]} />
+              <meshStandardMaterial color={rng(i * 2) > 0.5 ? '#C4B8A0' : '#B0A890'} map={texReady ? stoneTexRef.current : null} roughness={0.85} />
+            </mesh>
+            {/* Small gap stones beside */}
+            {rng(i * 5.9) > 0.4 && (
+              <mesh rotation={[-Math.PI / 2, rng(i * 9) * 1.0, 0]} position={[wobbleX + (rng(i * 4) > 0.5 ? 0.14 : -0.14), -0.004, halfW + 0.28 + i * 0.32]} receiveShadow>
+                <circleGeometry args={[0.04 + rng(i * 6) * 0.03, 6]} />
+                <meshStandardMaterial color="#A8A090" map={texReady ? stoneTexRef.current : null} roughness={0.9} />
+              </mesh>
+            )}
+          </group>
+        );
+      })}
 
       {/* Garden soil bed - slightly raised with richer texture */}
       <mesh position={[0, 0.015, 0]} receiveShadow castShadow>

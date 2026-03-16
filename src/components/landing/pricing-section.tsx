@@ -90,14 +90,14 @@ export function PricingSection() {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className={`relative rounded-2xl border p-8 transition-all duration-300 ${
                   plan.popular
-                    ? 'border-green-400 dark:border-green-500/50 bg-white dark:bg-gradient-to-br dark:from-green-900/40 dark:to-emerald-900/20 shadow-xl shadow-green-100 dark:shadow-green-900/20 scale-[1.02]'
-                    : 'border-gray-200 dark:border-green-900/40 bg-white dark:bg-[#142A1E]'
+                    ? 'border-green-400 dark:border-green-500/50 bg-gradient-to-br from-white to-green-50/50 dark:from-green-900/40 dark:to-emerald-900/20 shadow-2xl shadow-green-200/40 dark:shadow-green-900/30 scale-[1.03] ring-1 ring-green-200/50 dark:ring-green-600/20'
+                    : 'border-gray-200 dark:border-green-900/40 bg-white dark:bg-[#142A1E] hover:border-gray-300 dark:hover:border-green-800/50'
                 }`}
               >
                 {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span className="px-4 py-1.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-semibold rounded-full flex items-center gap-1 shadow-lg shadow-green-500/25">
-                      <Sparkles className="w-3 h-3" />
+                  <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                    <span className="px-5 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-sm font-bold rounded-full flex items-center gap-1.5 shadow-lg shadow-green-500/30 animate-pulse-glow">
+                      <Sparkles className="w-4 h-4" />
                       {t('mostPopular')}
                     </span>
                   </div>
@@ -135,10 +135,10 @@ export function PricingSection() {
                   ))}
                 </ul>
                 <Link href={plan.href}>
-                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <motion.div whileHover={{ scale: 1.02, y: -1 }} whileTap={{ scale: 0.98 }}>
                     <Button
                       variant={plan.popular ? 'primary' : 'outline'}
-                      className="w-full py-3"
+                      className={`w-full py-3.5 text-base ${plan.popular ? 'shadow-lg shadow-green-600/20' : ''}`}
                     >
                       {t(`${plan.key}.cta`)}
                     </Button>

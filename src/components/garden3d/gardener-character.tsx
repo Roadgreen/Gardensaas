@@ -336,238 +336,290 @@ function IdleZzzParticles({ active }: { active: boolean }) {
 }
 
 // ===== ANIMAL CROSSING CHIBI HEAD =====
-// Large round head with big sparkly eyes, rosy cheeks, tiny nose and mouth
+// Extra-large round head with big sparkly eyes, prominent rosy cheeks, tiny nose and mouth
 function ChibiHead() {
   return (
     <group>
-      {/* Main head - large sphere (radius 0.30, center at y=1.10) */}
-      <mesh position={[0, 1.10, 0]} castShadow>
-        <sphereGeometry args={[0.30, 20, 16]} />
+      {/* Main head - extra large sphere for AC proportions (radius 0.38, center at y=1.05) */}
+      <mesh position={[0, 1.05, 0]} castShadow>
+        <sphereGeometry args={[0.38, 24, 20]} />
+        <meshStandardMaterial color={PALETTE.skin} roughness={0.55} />
+      </mesh>
+
+      {/* Slight chin bump for roundness */}
+      <mesh position={[0, 0.82, 0.12]} scale={[0.8, 0.5, 0.6]}>
+        <sphereGeometry args={[0.18, 12, 10]} />
         <meshStandardMaterial color={PALETTE.skin} roughness={0.55} />
       </mesh>
 
       {/* Hair back - bowl-cut hemisphere */}
-      <mesh position={[0, 1.18, -0.06]} scale={[1.02, 1, 0.95]}>
-        <sphereGeometry args={[0.28, 14, 12, 0, Math.PI * 2, 0, Math.PI * 0.52]} />
+      <mesh position={[0, 1.15, -0.08]} scale={[1.02, 1, 0.95]}>
+        <sphereGeometry args={[0.35, 16, 14, 0, Math.PI * 2, 0, Math.PI * 0.52]} />
         <meshStandardMaterial color={PALETTE.hair} roughness={0.8} />
       </mesh>
 
       {/* Hair bangs - soft fringe across forehead */}
-      <mesh position={[0, 1.30, 0.14]} scale={[1.2, 0.32, 0.55]}>
-        <sphereGeometry args={[0.14, 12, 8]} />
+      <mesh position={[0, 1.30, 0.18]} scale={[1.3, 0.35, 0.55]}>
+        <sphereGeometry args={[0.17, 12, 8]} />
         <meshStandardMaterial color={PALETTE.hair} roughness={0.8} />
       </mesh>
 
       {/* Side hair tufts */}
-      <mesh position={[-0.25, 1.12, 0.02]} scale={[0.55, 0.75, 0.55]}>
-        <sphereGeometry args={[0.1, 8, 6]} />
+      <mesh position={[-0.32, 1.08, 0.02]} scale={[0.55, 0.75, 0.55]}>
+        <sphereGeometry args={[0.12, 8, 6]} />
         <meshStandardMaterial color={PALETTE.hair} roughness={0.8} />
       </mesh>
-      <mesh position={[0.25, 1.12, 0.02]} scale={[0.55, 0.75, 0.55]}>
-        <sphereGeometry args={[0.1, 8, 6]} />
+      <mesh position={[0.32, 1.08, 0.02]} scale={[0.55, 0.75, 0.55]}>
+        <sphereGeometry args={[0.12, 8, 6]} />
         <meshStandardMaterial color={PALETTE.hair} roughness={0.8} />
       </mesh>
 
-      {/* ===== EYES (Animal Crossing: big oval whites, large pupils, double highlight) ===== */}
+      {/* ===== EYES (Animal Crossing: bigger oval whites, larger pupils, triple highlights) ===== */}
 
       {/* Left eye white */}
-      <mesh position={[-0.10, 1.12, 0.25]} scale={[1, 1.15, 0.5]}>
-        <sphereGeometry args={[0.065, 14, 12]} />
+      <mesh position={[-0.13, 1.08, 0.30]} scale={[1.1, 1.3, 0.5]}>
+        <sphereGeometry args={[0.08, 16, 14]} />
         <meshBasicMaterial color="#FFFFFF" />
       </mesh>
       {/* Right eye white */}
-      <mesh position={[0.10, 1.12, 0.25]} scale={[1, 1.15, 0.5]}>
-        <sphereGeometry args={[0.065, 14, 12]} />
+      <mesh position={[0.13, 1.08, 0.30]} scale={[1.1, 1.3, 0.5]}>
+        <sphereGeometry args={[0.08, 16, 14]} />
         <meshBasicMaterial color="#FFFFFF" />
       </mesh>
 
-      {/* Left pupil */}
-      <mesh position={[-0.10, 1.12, 0.29]}>
-        <sphereGeometry args={[0.045, 12, 10]} />
+      {/* Left pupil - larger for AC look */}
+      <mesh position={[-0.13, 1.08, 0.35]}>
+        <sphereGeometry args={[0.058, 14, 12]} />
         <meshStandardMaterial color={PALETTE.eyeBlack} />
       </mesh>
       {/* Right pupil */}
-      <mesh position={[0.10, 1.12, 0.29]}>
-        <sphereGeometry args={[0.045, 12, 10]} />
+      <mesh position={[0.13, 1.08, 0.35]}>
+        <sphereGeometry args={[0.058, 14, 12]} />
         <meshStandardMaterial color={PALETTE.eyeBlack} />
       </mesh>
 
       {/* Left eye large highlight (top-right) */}
-      <mesh position={[-0.082, 1.14, 0.32]}>
-        <sphereGeometry args={[0.017, 6, 6]} />
+      <mesh position={[-0.105, 1.11, 0.39]}>
+        <sphereGeometry args={[0.022, 8, 8]} />
         <meshBasicMaterial color="#FFFFFF" />
       </mesh>
       {/* Right eye large highlight */}
-      <mesh position={[0.118, 1.14, 0.32]}>
-        <sphereGeometry args={[0.017, 6, 6]} />
+      <mesh position={[0.155, 1.11, 0.39]}>
+        <sphereGeometry args={[0.022, 8, 8]} />
         <meshBasicMaterial color="#FFFFFF" />
       </mesh>
       {/* Left eye small highlight (bottom-left) */}
-      <mesh position={[-0.115, 1.10, 0.32]}>
-        <sphereGeometry args={[0.008, 4, 4]} />
+      <mesh position={[-0.148, 1.06, 0.39]}>
+        <sphereGeometry args={[0.011, 6, 6]} />
         <meshBasicMaterial color="#FFFFFF" />
       </mesh>
       {/* Right eye small highlight */}
-      <mesh position={[0.085, 1.10, 0.32]}>
-        <sphereGeometry args={[0.008, 4, 4]} />
+      <mesh position={[0.112, 1.06, 0.39]}>
+        <sphereGeometry args={[0.011, 6, 6]} />
+        <meshBasicMaterial color="#FFFFFF" />
+      </mesh>
+      {/* Left eye tiny sparkle (middle) */}
+      <mesh position={[-0.12, 1.095, 0.395]}>
+        <sphereGeometry args={[0.006, 4, 4]} />
+        <meshBasicMaterial color="#FFFFFF" />
+      </mesh>
+      {/* Right eye tiny sparkle */}
+      <mesh position={[0.14, 1.095, 0.395]}>
+        <sphereGeometry args={[0.006, 4, 4]} />
         <meshBasicMaterial color="#FFFFFF" />
       </mesh>
 
-      {/* Soft eyebrows */}
-      <mesh position={[-0.10, 1.19, 0.26]} rotation={[0, 0, 0.12]} scale={[1, 0.28, 0.28]}>
-        <boxGeometry args={[0.07, 0.016, 0.01]} />
+      {/* Soft eyebrows - slightly arched for friendly look */}
+      <mesh position={[-0.13, 1.18, 0.30]} rotation={[0, 0, 0.15]} scale={[1, 0.28, 0.28]}>
+        <boxGeometry args={[0.08, 0.016, 0.01]} />
         <meshStandardMaterial color={PALETTE.hair} />
       </mesh>
-      <mesh position={[0.10, 1.19, 0.26]} rotation={[0, 0, -0.12]} scale={[1, 0.28, 0.28]}>
-        <boxGeometry args={[0.07, 0.016, 0.01]} />
+      <mesh position={[0.13, 1.18, 0.30]} rotation={[0, 0, -0.15]} scale={[1, 0.28, 0.28]}>
+        <boxGeometry args={[0.08, 0.016, 0.01]} />
         <meshStandardMaterial color={PALETTE.hair} />
       </mesh>
 
-      {/* Rosy cheeks (big and soft, Animal Crossing signature) */}
-      <mesh position={[-0.18, 1.06, 0.18]}>
-        <sphereGeometry args={[0.05, 10, 10]} />
-        <meshStandardMaterial color={PALETTE.cheek} transparent opacity={0.4} roughness={0.9} />
+      {/* Rosy cheeks - bigger and more prominent, AC signature blush */}
+      <mesh position={[-0.23, 0.98, 0.22]}>
+        <sphereGeometry args={[0.07, 12, 12]} />
+        <meshStandardMaterial color={PALETTE.cheek} transparent opacity={0.5} roughness={0.9} />
       </mesh>
-      <mesh position={[0.18, 1.06, 0.18]}>
-        <sphereGeometry args={[0.05, 10, 10]} />
-        <meshStandardMaterial color={PALETTE.cheek} transparent opacity={0.4} roughness={0.9} />
+      <mesh position={[0.23, 0.98, 0.22]}>
+        <sphereGeometry args={[0.07, 12, 12]} />
+        <meshStandardMaterial color={PALETTE.cheek} transparent opacity={0.5} roughness={0.9} />
+      </mesh>
+      {/* Inner cheek glow for extra cuteness */}
+      <mesh position={[-0.22, 0.98, 0.25]}>
+        <sphereGeometry args={[0.04, 8, 8]} />
+        <meshStandardMaterial color="#FF9999" transparent opacity={0.3} roughness={0.9} />
+      </mesh>
+      <mesh position={[0.22, 0.98, 0.25]}>
+        <sphereGeometry args={[0.04, 8, 8]} />
+        <meshStandardMaterial color="#FF9999" transparent opacity={0.3} roughness={0.9} />
       </mesh>
 
       {/* Tiny button nose */}
-      <mesh position={[0, 1.07, 0.29]}>
-        <sphereGeometry args={[0.018, 8, 6]} />
+      <mesh position={[0, 1.01, 0.36]}>
+        <sphereGeometry args={[0.02, 8, 6]} />
         <meshStandardMaterial color={PALETTE.skinDark} roughness={0.7} />
       </mesh>
 
-      {/* Small happy mouth (curved torus arc) */}
-      <mesh position={[0, 1.01, 0.27]} rotation={[0.15, 0, 0]}>
-        <torusGeometry args={[0.032, 0.006, 6, 12, Math.PI]} />
+      {/* Small happy mouth (curved torus arc) - wider smile */}
+      <mesh position={[0, 0.94, 0.33]} rotation={[0.15, 0, 0]}>
+        <torusGeometry args={[0.04, 0.007, 6, 14, Math.PI]} />
         <meshStandardMaterial color={PALETTE.mouth} />
       </mesh>
 
-      {/* ===== STRAW HAT (wide brim, dome top, ribbon + flower) ===== */}
+      {/* ===== STRAW HAT (wider brim, taller dome, ribbon + flower) ===== */}
 
-      {/* Brim - wide disc */}
+      {/* Brim - extra wide disc for AC look */}
       <mesh position={[0, 1.34, 0]} rotation={[0.04, 0, 0]} castShadow>
-        <cylinderGeometry args={[0.40, 0.42, 0.03, 18]} />
+        <cylinderGeometry args={[0.50, 0.53, 0.035, 22]} />
         <meshStandardMaterial color={PALETTE.hat} roughness={0.85} />
       </mesh>
-      {/* Crown dome */}
+      {/* Brim underside shadow ring */}
+      <mesh position={[0, 1.33, 0]} rotation={[0.04, 0, 0]}>
+        <cylinderGeometry args={[0.49, 0.52, 0.01, 22]} />
+        <meshStandardMaterial color="#D4B460" roughness={0.9} />
+      </mesh>
+      {/* Crown dome - taller */}
+      <mesh position={[0, 1.48, 0]} castShadow>
+        <sphereGeometry args={[0.22, 16, 12, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        <meshStandardMaterial color={PALETTE.hat} roughness={0.85} />
+      </mesh>
+      {/* Crown cylinder - taller */}
       <mesh position={[0, 1.42, 0]} castShadow>
-        <sphereGeometry args={[0.19, 14, 10, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        <cylinderGeometry args={[0.21, 0.24, 0.12, 16]} />
         <meshStandardMaterial color={PALETTE.hat} roughness={0.85} />
       </mesh>
-      {/* Crown cylinder */}
-      <mesh position={[0, 1.38, 0]} castShadow>
-        <cylinderGeometry args={[0.18, 0.20, 0.08, 14]} />
-        <meshStandardMaterial color={PALETTE.hat} roughness={0.85} />
-      </mesh>
-      {/* Ribbon band */}
-      <mesh position={[0, 1.365, 0]}>
-        <cylinderGeometry args={[0.205, 0.205, 0.035, 14]} />
+      {/* Ribbon band - wider */}
+      <mesh position={[0, 1.395, 0]}>
+        <cylinderGeometry args={[0.245, 0.245, 0.045, 16]} />
         <meshStandardMaterial color={PALETTE.hatBand} roughness={0.5} />
       </mesh>
-      {/* Ribbon bow (side) */}
-      <mesh position={[0.20, 1.365, 0.06]} rotation={[0, 0.3, 0]}>
-        <sphereGeometry args={[0.03, 6, 6]} />
+      {/* Ribbon bow (side) - bigger */}
+      <mesh position={[0.24, 1.395, 0.07]} rotation={[0, 0.3, 0]}>
+        <sphereGeometry args={[0.038, 8, 8]} />
         <meshStandardMaterial color={PALETTE.hatBand} roughness={0.5} />
       </mesh>
-      <mesh position={[0.235, 1.365, 0.07]} rotation={[0, 0.3, 0]}>
-        <sphereGeometry args={[0.024, 6, 6]} />
+      <mesh position={[0.28, 1.395, 0.08]} rotation={[0, 0.3, 0]}>
+        <sphereGeometry args={[0.03, 8, 8]} />
         <meshStandardMaterial color={PALETTE.hatBand} roughness={0.5} />
+      </mesh>
+      {/* Ribbon bow knot center */}
+      <mesh position={[0.225, 1.395, 0.065]}>
+        <sphereGeometry args={[0.015, 6, 6]} />
+        <meshStandardMaterial color="#D45858" roughness={0.5} />
       </mesh>
 
-      {/* Flower on hat */}
-      <mesh position={[-0.18, 1.40, 0.12]}>
-        <sphereGeometry args={[0.03, 8, 6]} />
+      {/* Flower on hat - bigger */}
+      <mesh position={[-0.22, 1.43, 0.14]}>
+        <sphereGeometry args={[0.038, 10, 8]} />
         <meshStandardMaterial color={PALETTE.flower} roughness={0.7} />
       </mesh>
-      <mesh position={[-0.18, 1.40, 0.14]}>
-        <sphereGeometry args={[0.012, 6, 4]} />
+      <mesh position={[-0.22, 1.43, 0.165]}>
+        <sphereGeometry args={[0.015, 6, 4]} />
         <meshStandardMaterial color={PALETTE.flowerCenter} />
       </mesh>
       {/* Petals ring */}
-      {[0, 1, 2, 3, 4].map((i) => (
+      {[0, 1, 2, 3, 4, 5].map((i) => (
         <mesh
           key={`petal-${i}`}
           position={[
-            -0.18 + Math.cos((i / 5) * Math.PI * 2) * 0.022,
-            1.40 + Math.sin((i / 5) * Math.PI * 2) * 0.022,
-            0.13,
+            -0.22 + Math.cos((i / 6) * Math.PI * 2) * 0.028,
+            1.43 + Math.sin((i / 6) * Math.PI * 2) * 0.028,
+            0.155,
           ]}
         >
-          <sphereGeometry args={[0.012, 5, 4]} />
+          <sphereGeometry args={[0.014, 6, 5]} />
           <meshStandardMaterial color="#FFD0E8" />
         </mesh>
       ))}
 
       {/* Tiny leaf on flower */}
-      <mesh position={[-0.20, 1.385, 0.13]} rotation={[0, 0, -0.4]} scale={[1, 0.5, 0.3]}>
-        <sphereGeometry args={[0.018, 5, 4]} />
+      <mesh position={[-0.245, 1.41, 0.15]} rotation={[0, 0, -0.4]} scale={[1, 0.5, 0.3]}>
+        <sphereGeometry args={[0.022, 6, 5]} />
         <meshStandardMaterial color="#88D498" />
+      </mesh>
+      {/* Second tiny leaf */}
+      <mesh position={[-0.20, 1.41, 0.15]} rotation={[0, 0, 0.3]} scale={[1, 0.5, 0.3]}>
+        <sphereGeometry args={[0.018, 5, 4]} />
+        <meshStandardMaterial color="#7BC67E" />
       </mesh>
     </group>
   );
 }
 
-// ===== CHIBI BODY (short, round, chubby) =====
+// ===== CHIBI BODY (extra round, chubby, Animal Crossing proportions) =====
 function ChibiBody() {
   return (
     <group>
-      {/* Main torso - squished sphere (chubby belly, short) */}
-      <mesh position={[0, 0.52, 0]} castShadow scale={[1.1, 0.85, 0.95]}>
-        <sphereGeometry args={[0.24, 16, 14]} />
+      {/* Main torso - big round sphere (very chubby belly, wider) */}
+      <mesh position={[0, 0.48, 0]} castShadow scale={[1.3, 0.9, 1.1]}>
+        <sphereGeometry args={[0.28, 18, 16]} />
+        <meshStandardMaterial color={PALETTE.overalls} roughness={0.7} />
+      </mesh>
+
+      {/* Extra belly roundness - front bulge */}
+      <mesh position={[0, 0.44, 0.1]} castShadow scale={[1.1, 0.85, 0.7]}>
+        <sphereGeometry args={[0.22, 14, 12]} />
         <meshStandardMaterial color={PALETTE.overalls} roughness={0.7} />
       </mesh>
 
       {/* Belly pocket patch (darker green) */}
-      <mesh position={[0, 0.48, 0.19]} scale={[0.7, 0.55, 0.3]}>
-        <sphereGeometry args={[0.16, 10, 8]} />
+      <mesh position={[0, 0.44, 0.24]} scale={[0.75, 0.55, 0.3]}>
+        <sphereGeometry args={[0.18, 12, 10]} />
         <meshStandardMaterial color={PALETTE.overallsDark} roughness={0.7} />
       </mesh>
 
       {/* Front pocket detail */}
-      <mesh position={[0, 0.44, 0.21]}>
-        <boxGeometry args={[0.12, 0.06, 0.01]} />
+      <mesh position={[0, 0.40, 0.27]}>
+        <boxGeometry args={[0.14, 0.07, 0.01]} />
         <meshStandardMaterial color={PALETTE.overallsDark} />
       </mesh>
       {/* Pocket stitching line */}
-      <mesh position={[0, 0.42, 0.215]}>
-        <boxGeometry args={[0.10, 0.004, 0.005]} />
+      <mesh position={[0, 0.375, 0.275]}>
+        <boxGeometry args={[0.12, 0.004, 0.005]} />
         <meshStandardMaterial color="#4DA85D" />
       </mesh>
 
       {/* Overall straps (left) */}
-      <mesh position={[-0.07, 0.65, 0.13]} scale={[1, 1, 0.3]}>
-        <boxGeometry args={[0.04, 0.14, 0.04]} />
+      <mesh position={[-0.09, 0.62, 0.13]} scale={[1, 1, 0.3]}>
+        <boxGeometry args={[0.05, 0.16, 0.04]} />
         <meshStandardMaterial color={PALETTE.overallsDark} />
       </mesh>
       {/* Overall straps (right) */}
-      <mesh position={[0.07, 0.65, 0.13]} scale={[1, 1, 0.3]}>
-        <boxGeometry args={[0.04, 0.14, 0.04]} />
+      <mesh position={[0.09, 0.62, 0.13]} scale={[1, 1, 0.3]}>
+        <boxGeometry args={[0.05, 0.16, 0.04]} />
         <meshStandardMaterial color={PALETTE.overallsDark} />
       </mesh>
 
-      {/* Gold buttons on straps */}
-      <mesh position={[-0.07, 0.60, 0.16]}>
-        <sphereGeometry args={[0.015, 6, 6]} />
+      {/* Gold buttons on straps - bigger */}
+      <mesh position={[-0.09, 0.56, 0.19]}>
+        <sphereGeometry args={[0.018, 8, 8]} />
         <meshStandardMaterial color={PALETTE.button} metalness={0.6} roughness={0.3} />
       </mesh>
-      <mesh position={[0.07, 0.60, 0.16]}>
-        <sphereGeometry args={[0.015, 6, 6]} />
+      <mesh position={[0.09, 0.56, 0.19]}>
+        <sphereGeometry args={[0.018, 8, 8]} />
         <meshStandardMaterial color={PALETTE.button} metalness={0.6} roughness={0.3} />
       </mesh>
 
-      {/* Undershirt visible at collar */}
-      <mesh position={[0, 0.68, 0.07]} scale={[1.15, 0.6, 0.85]}>
-        <sphereGeometry args={[0.12, 10, 8, 0, Math.PI * 2, 0, Math.PI / 2]} />
+      {/* Undershirt visible at collar - wider */}
+      <mesh position={[0, 0.65, 0.07]} scale={[1.3, 0.6, 0.85]}>
+        <sphereGeometry args={[0.14, 12, 10, 0, Math.PI * 2, 0, Math.PI / 2]} />
         <meshStandardMaterial color={PALETTE.shirt} roughness={0.8} />
       </mesh>
 
       {/* Small back collar detail */}
-      <mesh position={[0, 0.68, -0.08]} scale={[0.9, 0.5, 0.6]}>
-        <sphereGeometry args={[0.1, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2]} />
+      <mesh position={[0, 0.65, -0.10]} scale={[1.0, 0.5, 0.6]}>
+        <sphereGeometry args={[0.12, 10, 8, 0, Math.PI * 2, 0, Math.PI / 2]} />
         <meshStandardMaterial color={PALETTE.shirt} roughness={0.8} />
+      </mesh>
+
+      {/* Back of overalls - rounder */}
+      <mesh position={[0, 0.48, -0.08]} castShadow scale={[1.15, 0.85, 0.6]}>
+        <sphereGeometry args={[0.22, 12, 10]} />
+        <meshStandardMaterial color={PALETTE.overalls} roughness={0.7} />
       </mesh>
     </group>
   );

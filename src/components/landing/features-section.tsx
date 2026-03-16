@@ -109,21 +109,21 @@ export function FeaturesSection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
         >
           {features.map((feature) => (
             <motion.div key={feature.titleKey} variants={itemVariants}>
-              <div className="relative h-full p-6 rounded-2xl border border-gray-100 dark:border-green-900/40 bg-white dark:bg-[#142A1E] transition-all duration-300 hover:border-green-200 dark:hover:border-green-700/60 hover:shadow-lg hover:shadow-green-100/50 dark:hover:shadow-green-900/20 hover:-translate-y-1 group">
+              <div className="relative h-full p-7 rounded-2xl border border-gray-100 dark:border-green-900/40 bg-white dark:bg-[#142A1E] transition-all duration-300 hover:border-green-300 dark:hover:border-green-700/60 hover:shadow-xl hover:shadow-green-100/60 dark:hover:shadow-green-900/30 hover:-translate-y-1.5 group">
                 {feature.pro && (
-                  <span className="absolute top-4 right-4 px-2.5 py-1 bg-amber-50 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-semibold rounded-full flex items-center gap-1">
-                    <Crown className="w-3 h-3" />
+                  <span className="absolute top-5 right-5 px-3 py-1.5 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-500/20 dark:to-yellow-500/15 text-amber-600 dark:text-amber-400 text-xs font-bold rounded-full flex items-center gap-1.5 border border-amber-200/50 dark:border-amber-500/30">
+                    <Crown className="w-3.5 h-3.5" />
                     PRO
                   </span>
                 )}
-                <div className={`w-14 h-14 rounded-2xl ${feature.iconBg} flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110`}>
-                  <span className="text-2xl">{feature.emoji}</span>
+                <div className={`w-16 h-16 rounded-2xl ${feature.iconBg} flex items-center justify-center mb-6 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-green-200/30 dark:group-hover:shadow-green-900/30`}>
+                  <feature.icon className={`w-7 h-7 ${feature.iconColor}`} />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-green-50 mb-2">{t(feature.titleKey)}</h3>
+                <h3 className="text-lg font-bold text-gray-900 dark:text-green-50 mb-3">{t(feature.titleKey)}</h3>
                 <p className="text-gray-500 dark:text-green-200/60 text-sm leading-relaxed">{t(feature.descKey)}</p>
               </div>
             </motion.div>

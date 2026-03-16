@@ -25,9 +25,10 @@ const SOIL_COLORS: Record<string, string> = {
   'clay-mix': '#886038',
 };
 
-// Warmer, more cartoon-like wood tones
-const WOOD_COLORS = ['#A87830', '#B88850', '#987038', '#886028'];
-const WOOD_DARK = '#584020';
+// Warmer, more cartoon-like wood tones with more grain variation
+const WOOD_COLORS = ['#A07028', '#B88848', '#946830', '#8A5E28', '#C09858'];
+const WOOD_DARK = '#503818';
+const WOOD_HIGHLIGHT = '#C8A868';
 
 export function RaisedBed3D({ bed, gardenLength, gardenWidth, isSelected, onSelect }: RaisedBed3DProps) {
   const groupRef = useRef<THREE.Group>(null);

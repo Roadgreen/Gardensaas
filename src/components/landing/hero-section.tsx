@@ -35,11 +35,12 @@ const floatingElements = [
 export function HeroSection() {
   const t = useTranslations('hero');
   return (
-    <section className="relative min-h-[calc(100svh-72px)] flex items-center justify-center overflow-hidden bg-gradient-to-b from-green-50 via-white to-white dark:from-[#071510] dark:via-[#0D1F17] dark:to-[#0D1F17]">
+    <section className="relative min-h-[calc(100svh-72px)] flex items-center justify-center overflow-hidden bg-gradient-to-br from-green-50 via-emerald-50/50 to-lime-50/30 dark:from-[#071510] dark:via-[#0D1F17] dark:to-[#0D1F17]">
       {/* Subtle background pattern - light mode */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none dark:hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[600px] rounded-full bg-gradient-to-br from-green-100/60 via-emerald-50/40 to-transparent blur-3xl" />
-        <div className="absolute bottom-0 right-0 w-[600px] h-[400px] rounded-full bg-gradient-to-tl from-lime-100/40 to-transparent blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-[900px] h-[500px] rounded-full bg-gradient-to-br from-green-200/50 via-emerald-100/40 to-transparent blur-3xl" />
+        <div className="absolute top-1/3 right-0 w-[700px] h-[500px] rounded-full bg-gradient-to-tl from-lime-100/50 via-green-50/30 to-transparent blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[300px] rounded-full bg-gradient-to-tr from-emerald-100/40 to-transparent blur-3xl" />
       </div>
 
       {/* Starfield dots - dark mode */}
@@ -100,24 +101,24 @@ export function HeroSection() {
               </span>
             </motion.div>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 leading-[1.1] tracking-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-bold mb-5 sm:mb-7 leading-[1.08] tracking-tight">
               <span className="text-gray-900 dark:text-green-50">{t('title1')}</span>
-              <span className="block text-gradient animate-gradient-flow" style={{ backgroundSize: '200% 200%' }}>
+              <span className="block text-gradient animate-gradient-flow mt-1" style={{ backgroundSize: '200% 200%' }}>
                 {t('title2')}
               </span>
             </h1>
 
-            <p className="text-base sm:text-lg md:text-xl text-gray-500 dark:text-green-200/60 mb-8 sm:mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-green-200/60 mb-10 sm:mb-12 max-w-xl mx-auto lg:mx-0 leading-relaxed">
               {t('description')}
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start mb-8 sm:mb-10">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center lg:justify-start mb-10 sm:mb-12">
               <Link href="/garden/setup">
                 <motion.div
-                  whileHover={{ scale: 1.03 }}
+                  whileHover={{ scale: 1.04, y: -2 }}
                   whileTap={{ scale: 0.97 }}
                 >
-                  <Button size="lg" className="w-full sm:w-auto text-lg gap-2 px-8 py-4">
+                  <Button size="lg" className="w-full sm:w-auto text-lg gap-2.5 px-10 py-5 shadow-xl shadow-green-600/25">
                     <Sprout className="w-5 h-5" />
                     {t('cta')}
                     <ArrowRight className="w-4 h-4" />
@@ -129,7 +130,7 @@ export function HeroSection() {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
                 >
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg gap-2 px-8 py-4">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg gap-2 px-8 py-5">
                     {t('seeFeatures')}
                   </Button>
                 </motion.div>

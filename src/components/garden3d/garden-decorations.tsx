@@ -256,6 +256,99 @@ function Bee({ startPosition, speed }: { startPosition: [number, number, number]
   );
 }
 
+// Garden rake / tools leaning on something
+function GardenTools({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position} rotation={[0, 0.6, 0]}>
+      {/* Rake handle */}
+      <mesh position={[0, 0.18, 0]} rotation={[0, 0, 0.15]} castShadow>
+        <cylinderGeometry args={[0.008, 0.01, 0.36, 5]} />
+        <meshStandardMaterial color="#C49A60" roughness={0.85} />
+      </mesh>
+      {/* Rake head */}
+      <mesh position={[0.03, 0.005, 0]} rotation={[0, 0, 0.15]} castShadow>
+        <boxGeometry args={[0.08, 0.005, 0.01]} />
+        <meshStandardMaterial color="#777" metalness={0.5} roughness={0.4} />
+      </mesh>
+      {/* Rake tines */}
+      {[-0.03, -0.015, 0, 0.015, 0.03].map((offset, i) => (
+        <mesh key={`tine-${i}`} position={[0.03 + offset, -0.01, 0]} castShadow>
+          <cylinderGeometry args={[0.002, 0.002, 0.025, 3]} />
+          <meshStandardMaterial color="#666" metalness={0.5} />
+        </mesh>
+      ))}
+
+      {/* Trowel next to rake */}
+      <mesh position={[0.12, 0.1, 0.05]} rotation={[0, 0.3, -0.3]} castShadow>
+        <cylinderGeometry args={[0.006, 0.008, 0.15, 5]} />
+        <meshStandardMaterial color="#B88A50" roughness={0.8} />
+      </mesh>
+      <mesh position={[0.14, 0.02, 0.06]} rotation={[0, 0.3, -0.3]} castShadow>
+        <boxGeometry args={[0.03, 0.002, 0.02]} />
+        <meshStandardMaterial color="#888" metalness={0.5} roughness={0.35} />
+      </mesh>
+    </group>
+  );
+}
+
+// Stacked terracotta pots
+function PotStack({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position} rotation={[0, 1.2, 0]}>
+      {/* Bottom pot (upright) */}
+      <mesh position={[0, 0.04, 0]} castShadow>
+        <cylinderGeometry args={[0.055, 0.04, 0.08, 8]} />
+        <meshStandardMaterial color="#C0664F" roughness={0.8} />
+      </mesh>
+      <mesh position={[0, 0.08, 0]}>
+        <cylinderGeometry args={[0.06, 0.055, 0.012, 8]} />
+        <meshStandardMaterial color="#B05A45" roughness={0.8} />
+      </mesh>
+      {/* Sideways pot on top */}
+      <mesh position={[0.02, 0.12, 0]} rotation={[0, 0, Math.PI / 2 + 0.2]} castShadow>
+        <cylinderGeometry args={[0.04, 0.03, 0.06, 8]} />
+        <meshStandardMaterial color="#D0775E" roughness={0.8} />
+      </mesh>
+      {/* Small pot beside */}
+      <mesh position={[-0.06, 0.025, 0.02]} castShadow>
+        <cylinderGeometry args={[0.03, 0.02, 0.05, 8]} />
+        <meshStandardMaterial color="#B86B55" roughness={0.8} />
+      </mesh>
+      <mesh position={[-0.06, 0.05, 0.02]}>
+        <cylinderGeometry args={[0.033, 0.03, 0.008, 8]} />
+        <meshStandardMaterial color="#A85E48" roughness={0.8} />
+      </mesh>
+    </group>
+  );
+}
+
+// Wooden barrel / rain collector
+function WoodenBarrel({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position}>
+      {/* Barrel body */}
+      <mesh position={[0, 0.1, 0]} castShadow>
+        <cylinderGeometry args={[0.08, 0.07, 0.2, 10]} />
+        <meshStandardMaterial color="#8B6838" roughness={0.85} />
+      </mesh>
+      {/* Metal bands */}
+      <mesh position={[0, 0.05, 0]}>
+        <torusGeometry args={[0.075, 0.004, 4, 12]} />
+        <meshStandardMaterial color="#5A5A5A" metalness={0.6} roughness={0.3} />
+      </mesh>
+      <mesh position={[0, 0.15, 0]}>
+        <torusGeometry args={[0.082, 0.004, 4, 12]} />
+        <meshStandardMaterial color="#5A5A5A" metalness={0.6} roughness={0.3} />
+      </mesh>
+      {/* Water surface inside */}
+      <mesh position={[0, 0.19, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.07, 10]} />
+        <meshStandardMaterial color="#4A90B0" metalness={0.3} roughness={0.1} transparent opacity={0.8} />
+      </mesh>
+    </group>
+  );
+}
+
 // Garden sign
 function GardenSign({ position }: { position: [number, number, number] }) {
   return (
@@ -803,6 +896,16 @@ export function GardenDecorations({ gardenLength, gardenWidth, season }: GardenD
       {/* Flower pots */}
       <FlowerPot position={[halfL + 0.4, 0, 0]} season={season} />
       <FlowerPot position={[-halfL - 0.4, 0, halfW - 0.5]} season={season} />
+      <FlowerPot position={[halfL + 0.3, 0, -halfW + 0.2]} season={season} />
+
+      {/* Garden tools leaning near fence */}
+      <GardenTools position={[halfL + 0.6, 0, -halfW + 0.8]} />
+
+      {/* Stacked terracotta pots */}
+      <PotStack position={[-halfL - 0.5, 0, -halfW - 0.3]} />
+
+      {/* Wooden rain barrel */}
+      <WoodenBarrel position={[halfL + 0.8, 0, -halfW - 0.5]} />
 
       {/* Rock cluster */}
       <group position={[-halfL - 0.6, 0, halfW + 0.4]}>
