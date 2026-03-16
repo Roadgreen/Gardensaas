@@ -1,8 +1,9 @@
 'use client';
 
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import { createWaterTexture, createWoodTexture, createStoneTexture, createAOGroundTexture, getCachedTexture } from './procedural-textures';
 
 interface GardenDecorationsProps {
   gardenLength: number;
@@ -288,6 +289,24 @@ function SmallTree({ position, season }: { position: [number, number, number]; s
     }
   }, [season]);
 
+  // Darker leaf color for depth
+  const leafDark = useMemo(() => {
+    switch (season) {
+      case 'spring': return '#4CA84E';
+      case 'summer': return '#1B5E20';
+      case 'autumn': return '#BF360C';
+      case 'winter': return '#78909C';
+      default: return '#388E3C';
+    }
+  }, [season]);
+
+  const [aoTex, setAoTex] = useState<THREE.CanvasTexture | null>(null);
+  const [woodTex, setWoodTex] = useState<THREE.CanvasTexture | null>(null);
+  useEffect(() => {
+    setAoTex(getCachedTexture('ao-ground', () => createAOGroundTexture()));
+    setWoodTex(getCachedTexture('wood', () => createWoodTexture()));
+  }, []);
+
   const ref = useRef<THREE.Group>(null);
   useFrame(() => {
     if (!ref.current) return;
@@ -297,21 +316,23 @@ function SmallTree({ position, season }: { position: [number, number, number]; s
 
   return (
     <group ref={ref} position={position}>
+      {/* Trunk with wood texture */}
       <mesh position={[0, 0.15, 0]} castShadow>
         <cylinderGeometry args={[0.04, 0.06, 0.3, 6]} />
-        <meshStandardMaterial color="#795548" />
+        <meshStandardMaterial color="#795548" map={woodTex} roughness={0.9} />
       </mesh>
+      {/* Tree crown layers with two-tone for depth */}
       <mesh position={[0, 0.35, 0]} castShadow>
         <coneGeometry args={[0.22, 0.25, 7]} />
-        <meshStandardMaterial color={leafColor} />
+        <meshStandardMaterial color={leafColor} roughness={0.8} />
       </mesh>
       <mesh position={[0, 0.5, 0]} castShadow>
         <coneGeometry args={[0.17, 0.22, 7]} />
-        <meshStandardMaterial color={leafColor} />
+        <meshStandardMaterial color={leafDark} roughness={0.8} />
       </mesh>
       <mesh position={[0, 0.62, 0]} castShadow>
         <coneGeometry args={[0.11, 0.16, 7]} />
-        <meshStandardMaterial color={leafColor} />
+        <meshStandardMaterial color={leafColor} roughness={0.8} />
       </mesh>
       {season === 'winter' && (
         <>
@@ -338,10 +359,15 @@ function SmallTree({ position, season }: { position: [number, number, number]; s
           </mesh>
         </>
       )}
-      {/* Shadow blob */}
-      <mesh position={[0, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[0.15, 6]} />
-        <meshBasicMaterial color="#000000" transparent opacity={0.1} />
+      {/* Shadow blob with AO texture */}
+      <mesh position={[0, 0.003, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[0.5, 0.5]} />
+        <meshBasicMaterial
+          map={aoTex}
+          transparent
+          opacity={0.35}
+          depthWrite={false}
+        />
       </mesh>
     </group>
   );
@@ -494,6 +520,13 @@ function AmbientParticles({ gardenLength, gardenWidth, season }: { gardenLength:
 function GardenPond({ position, season }: { position: [number, number, number]; season: string }) {
   const waterRef = useRef<THREE.Mesh>(null);
   const rippleRef = useRef<THREE.Group>(null);
+  const [waterTex, setWaterTex] = useState<THREE.CanvasTexture | null>(null);
+  const [stoneTex, setStoneTex] = useState<THREE.CanvasTexture | null>(null);
+
+  useEffect(() => {
+    setWaterTex(getCachedTexture('water', () => createWaterTexture()));
+    setStoneTex(getCachedTexture('stone', () => createStoneTexture()));
+  }, []);
 
   useFrame(() => {
     if (!waterRef.current) return;
@@ -501,6 +534,12 @@ function GardenPond({ position, season }: { position: [number, number, number]; 
     // Subtle water surface undulation
     (waterRef.current.material as THREE.MeshStandardMaterial).opacity = 0.65 + Math.sin(t * 1.5) * 0.05;
     waterRef.current.position.y = position[1] + 0.005 + Math.sin(t * 0.8) * 0.003;
+
+    // Animate UV offset for water movement
+    if (waterTex) {
+      waterTex.offset.x = Math.sin(t * 0.15) * 0.05;
+      waterTex.offset.y = Math.cos(t * 0.12) * 0.05;
+    }
 
     // Animate ripples
     if (rippleRef.current) {
@@ -528,7 +567,7 @@ function GardenPond({ position, season }: { position: [number, number, number]; 
         return (
           <mesh key={`ps-${i}`} position={[Math.cos(angle) * 0.42, 0.02, Math.sin(angle) * 0.42]} castShadow>
             <sphereGeometry args={[0.04 + (i % 3) * 0.01, 5, 4]} />
-            <meshStandardMaterial color={i % 2 === 0 ? '#9E9E9E' : '#BDBDBD'} roughness={0.9} />
+            <meshStandardMaterial color={i % 2 === 0 ? '#9E9E9E' : '#BDBDBD'} map={stoneTex} roughness={0.9} />
           </mesh>
         );
       })}
@@ -537,16 +576,17 @@ function GardenPond({ position, season }: { position: [number, number, number]; 
         <circleGeometry args={[0.38, 12]} />
         <meshStandardMaterial
           color={waterColor}
+          map={waterTex}
           transparent
           opacity={0.7}
-          metalness={0.3}
-          roughness={0.1}
+          metalness={0.35}
+          roughness={0.08}
         />
       </mesh>
       {/* Water highlight shimmer */}
       <mesh position={[0.08, 0.015, -0.05]} rotation={[-Math.PI / 2, 0, 0]}>
         <circleGeometry args={[0.08, 6]} />
-        <meshBasicMaterial color="#FFFFFF" transparent opacity={0.12} />
+        <meshBasicMaterial color="#FFFFFF" transparent opacity={0.15} />
       </mesh>
       {/* Ripple rings */}
       <group ref={rippleRef} position={[0, 0.016, 0]}>

@@ -445,25 +445,27 @@ function CameraController({
   return null;
 }
 
-// Lighting setup with time-based transitions
+// Lighting setup with warm Animal Crossing-style tones
 function SceneLighting({ timeOfDay, season }: { timeOfDay: string; season: string }) {
   const ambientIntensity = useMemo(() => {
-    if (timeOfDay === 'evening') return 0.3;
-    if (timeOfDay === 'morning') return 0.5;
-    return 0.6;
+    if (timeOfDay === 'evening') return 0.35;
+    if (timeOfDay === 'morning') return 0.55;
+    return 0.65;
   }, [timeOfDay]);
 
   const directionalIntensity = useMemo(() => {
-    if (timeOfDay === 'evening') return 0.4;
-    if (season === 'winter') return 0.6;
-    return 1.0;
+    if (timeOfDay === 'evening') return 0.5;
+    if (season === 'winter') return 0.7;
+    return 1.1;
   }, [timeOfDay, season]);
 
+  // Warmer light colors for a cozy Animal Crossing feel
   const lightColor = useMemo(() => {
-    if (timeOfDay === 'evening') return '#FF8C69';
-    if (timeOfDay === 'morning') return '#FFE4B5';
-    if (season === 'winter') return '#E0E0E0';
-    return '#FFFFFF';
+    if (timeOfDay === 'evening') return '#FF9E70';
+    if (timeOfDay === 'morning') return '#FFE8C0';
+    if (season === 'winter') return '#E8E4E0';
+    if (season === 'autumn') return '#FFDDB0';
+    return '#FFF8E8'; // Warm white instead of pure white
   }, [timeOfDay, season]);
 
   const hour = new Date().getHours();
@@ -472,33 +474,54 @@ function SceneLighting({ timeOfDay, season }: { timeOfDay: string; season: strin
   return (
     <>
       <ambientLight intensity={ambientIntensity} color={lightColor} />
+      {/* Main directional light (sun) - softer shadows */}
       <directionalLight
         position={[Math.cos(sunAngle) * 8, Math.sin(sunAngle) * 6 + 3, -5]}
         intensity={directionalIntensity}
         color={lightColor}
         castShadow
-        shadow-mapSize={[1024, 1024]}
+        shadow-mapSize={[2048, 2048]}
         shadow-camera-far={30}
         shadow-camera-left={-10}
         shadow-camera-right={10}
         shadow-camera-top={10}
         shadow-camera-bottom={-10}
+        shadow-bias={-0.001}
+        shadow-radius={3}
       />
+      {/* Fill light from opposite side for softer look */}
       <directionalLight
         position={[-3, 2, 3]}
-        intensity={0.2}
-        color="#B3E5FC"
+        intensity={0.25}
+        color="#C8E8FF"
       />
+      {/* Warm bounce light from below (simulates ground bounce) */}
+      <directionalLight
+        position={[0, -1, 0]}
+        intensity={0.08}
+        color="#9ED88A"
+      />
+      {/* Hemisphere light: sky color top, ground color bottom */}
       <hemisphereLight
         args={[
-          season === 'winter' ? '#B0BEC5' : '#87CEEB',
-          season === 'winter' ? '#E0E0E0' : '#4CAF50',
-          0.3,
+          season === 'winter' ? '#B8C8D5' : season === 'autumn' ? '#D4B896' : '#A8D8F0',
+          season === 'winter' ? '#E0E0E0' : '#6EB86E',
+          0.35,
         ]}
       />
+      {/* Evening warm lantern glow */}
       {timeOfDay === 'evening' && (
-        <pointLight position={[0, 1, 0]} intensity={0.3} color="#FFA726" distance={8} />
+        <>
+          <pointLight position={[0, 0.8, 0]} intensity={0.4} color="#FFB060" distance={6} decay={2} />
+          <pointLight position={[0, 1.5, 0]} intensity={0.15} color="#FF9040" distance={10} decay={2} />
+        </>
       )}
+      {/* Subtle rim light for cartoon outline feel */}
+      <directionalLight
+        position={[-5, 3, -5]}
+        intensity={0.12}
+        color="#E0E8FF"
+      />
     </>
   );
 }
@@ -1237,17 +1260,17 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
   return (
     <div ref={canvasRef} style={{ width: '100%', height: '100%', position: 'relative' }}>
       <Canvas
-        shadows
+        shadows="soft"
         camera={{
           position: [3, 4, 5],
-          fov: 45,
+          fov: 42,
           near: 0.1,
           far: 100,
         }}
         gl={{
           antialias: true,
           toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 1.2,
+          toneMappingExposure: 1.3,
         }}
         style={{ background: 'transparent' }}
       >

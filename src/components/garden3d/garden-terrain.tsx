@@ -1,8 +1,16 @@
 'use client';
 
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
+import {
+  createGrassTexture,
+  createSoilTexture,
+  createWoodTexture,
+  createStoneTexture,
+  createAOGroundTexture,
+  getCachedTexture,
+} from './procedural-textures';
 
 interface GardenTerrainProps {
   length: number;
@@ -45,6 +53,26 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
 
   const halfL = length / 2;
   const halfW = width / 2;
+
+  // Procedural textures (created once, cached)
+  const [texReady, setTexReady] = useState(false);
+  const grassTexRef = useRef<THREE.CanvasTexture | null>(null);
+  const soilTexRef = useRef<THREE.CanvasTexture | null>(null);
+  const woodTexRef = useRef<THREE.CanvasTexture | null>(null);
+  const stoneTexRef = useRef<THREE.CanvasTexture | null>(null);
+  const aoTexRef = useRef<THREE.CanvasTexture | null>(null);
+
+  useEffect(() => {
+    // Generate textures on the client only
+    grassTexRef.current = getCachedTexture(`grass-${season}`, () => createGrassTexture(grassColor, grassDark, season));
+    grassTexRef.current.repeat.set(Math.max(1, length / 2), Math.max(1, width / 2));
+    soilTexRef.current = getCachedTexture(`soil-${soilType}`, () => createSoilTexture(soilColor, '#3A2510'));
+    soilTexRef.current.repeat.set(Math.max(1, length), Math.max(1, width));
+    woodTexRef.current = getCachedTexture('wood', () => createWoodTexture());
+    stoneTexRef.current = getCachedTexture('stone', () => createStoneTexture());
+    aoTexRef.current = getCachedTexture('ao-ground', () => createAOGroundTexture());
+    setTexReady(true);
+  }, [season, soilType, grassColor, grassDark, soilColor, length, width]);
 
   // Create terrain geometry with subtle hills for the surrounding area
   const hillGeometry = useMemo(() => {
@@ -204,13 +232,22 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
     <group>
       {/* Surrounding grass terrain with hills */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]} receiveShadow geometry={hillGeometry}>
-        <meshStandardMaterial color={grassColor} flatShading />
+        <meshStandardMaterial
+          color={grassColor}
+          map={texReady ? grassTexRef.current : null}
+          flatShading
+          roughness={0.9}
+        />
       </mesh>
 
       {/* Flat grass layer right under garden (to ensure flat) */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
         <planeGeometry args={[length + 1.5, width + 1.5]} />
-        <meshStandardMaterial color={grassColor} />
+        <meshStandardMaterial
+          color={grassColor}
+          map={texReady ? grassTexRef.current : null}
+          roughness={0.85}
+        />
       </mesh>
 
       {/* Grass texture variation patches for natural look */}
@@ -242,7 +279,12 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
       {/* Garden soil bed - slightly raised with richer texture */}
       <mesh position={[0, 0.015, 0]} receiveShadow castShadow>
         <boxGeometry args={[length, 0.06, width]} />
-        <meshStandardMaterial color={soilColor} roughness={0.95} />
+        <meshStandardMaterial
+          color={soilColor}
+          map={texReady ? soilTexRef.current : null}
+          roughness={0.95}
+          bumpScale={0.02}
+        />
       </mesh>
 
       {/* Soil moisture variation patches */}
@@ -260,21 +302,21 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
       })}
 
       {/* Soil bed border trim (wooden frame) */}
-      <mesh position={[0, 0.03, -halfW - 0.03]}>
+      <mesh position={[0, 0.03, -halfW - 0.03]} castShadow>
         <boxGeometry args={[length + 0.1, 0.06, 0.05]} />
-        <meshStandardMaterial color="#6B4A2A" roughness={0.8} />
+        <meshStandardMaterial color="#6B4A2A" map={texReady ? woodTexRef.current : null} roughness={0.8} />
       </mesh>
-      <mesh position={[0, 0.03, halfW + 0.03]}>
+      <mesh position={[0, 0.03, halfW + 0.03]} castShadow>
         <boxGeometry args={[length + 0.1, 0.06, 0.05]} />
-        <meshStandardMaterial color="#6B4A2A" roughness={0.8} />
+        <meshStandardMaterial color="#6B4A2A" map={texReady ? woodTexRef.current : null} roughness={0.8} />
       </mesh>
-      <mesh position={[-halfL - 0.03, 0.03, 0]}>
+      <mesh position={[-halfL - 0.03, 0.03, 0]} castShadow>
         <boxGeometry args={[0.05, 0.06, width + 0.1]} />
-        <meshStandardMaterial color="#6B4A2A" roughness={0.8} />
+        <meshStandardMaterial color="#6B4A2A" map={texReady ? woodTexRef.current : null} roughness={0.8} />
       </mesh>
-      <mesh position={[halfL + 0.03, 0.03, 0]}>
+      <mesh position={[halfL + 0.03, 0.03, 0]} castShadow>
         <boxGeometry args={[0.05, 0.06, width + 0.1]} />
-        <meshStandardMaterial color="#6B4A2A" roughness={0.8} />
+        <meshStandardMaterial color="#6B4A2A" map={texReady ? woodTexRef.current : null} roughness={0.8} />
       </mesh>
 
       {/* Row lines on soil for visual structure */}
@@ -326,12 +368,22 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
           {/* Post body */}
           <mesh position={[post.x, 0.14, post.z]} castShadow>
             <boxGeometry args={[0.06, 0.32, 0.06]} />
-            <meshStandardMaterial color="#B8845C" />
+            <meshStandardMaterial color="#B8845C" map={texReady ? woodTexRef.current : null} roughness={0.85} />
           </mesh>
           {/* Post cap - pointed for cute look */}
           <mesh position={[post.x, 0.32, post.z]} castShadow>
             <coneGeometry args={[0.045, 0.06, 4]} />
-            <meshStandardMaterial color="#D4A06C" />
+            <meshStandardMaterial color="#D4A06C" map={texReady ? woodTexRef.current : null} roughness={0.8} />
+          </mesh>
+          {/* AO shadow at base of post */}
+          <mesh position={[post.x, 0.002, post.z]} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[0.12, 0.12]} />
+            <meshBasicMaterial
+              map={texReady ? aoTexRef.current : null}
+              transparent
+              opacity={0.4}
+              depthWrite={false}
+            />
           </mesh>
         </group>
       ))}
@@ -341,20 +393,24 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
         <group key={`fr-${i}`}>
           <mesh position={[rail.x, 0.22, rail.z]} rotation={[0, rail.rotY, 0]} castShadow>
             <boxGeometry args={[rail.len, 0.035, 0.025]} />
-            <meshStandardMaterial color="#D4A870" />
+            <meshStandardMaterial color="#D4A870" map={texReady ? woodTexRef.current : null} roughness={0.8} />
           </mesh>
           <mesh position={[rail.x, 0.1, rail.z]} rotation={[0, rail.rotY, 0]} castShadow>
             <boxGeometry args={[rail.len, 0.035, 0.025]} />
-            <meshStandardMaterial color="#D4A870" />
+            <meshStandardMaterial color="#D4A870" map={texReady ? woodTexRef.current : null} roughness={0.8} />
           </mesh>
         </group>
       ))}
 
       {/* Stepping stones path */}
       {steppingStones.map((stone, i) => (
-        <mesh key={`stone-${i}`} position={[stone.x, 0.005, stone.z]} rotation={[-Math.PI / 2, stone.rot, 0]} receiveShadow>
+        <mesh key={`stone-${i}`} position={[stone.x, 0.005, stone.z]} rotation={[-Math.PI / 2, stone.rot, 0]} receiveShadow castShadow>
           <circleGeometry args={[stone.scale, 7]} />
-          <meshStandardMaterial color="#B0AFA0" roughness={0.9} />
+          <meshStandardMaterial
+            color="#B0AFA0"
+            map={texReady ? stoneTexRef.current : null}
+            roughness={0.9}
+          />
         </mesh>
       ))}
 

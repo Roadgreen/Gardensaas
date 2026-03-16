@@ -1,11 +1,12 @@
 'use client';
 
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 import type { RaisedBed } from '@/types';
 import { RAISED_BED_SOIL_LABELS } from '@/types';
+import { createWoodTexture, createSoilTexture, createAOGroundTexture, getCachedTexture } from './procedural-textures';
 
 interface RaisedBed3DProps {
   bed: RaisedBed;
@@ -31,6 +32,16 @@ export function RaisedBed3D({ bed, gardenLength, gardenWidth, isSelected, onSele
   const groupRef = useRef<THREE.Group>(null);
   const halfGL = gardenLength / 2;
   const halfGW = gardenWidth / 2;
+
+  // Procedural textures
+  const [woodTex, setWoodTex] = useState<THREE.CanvasTexture | null>(null);
+  const [soilTex, setSoilTex] = useState<THREE.CanvasTexture | null>(null);
+  const [aoTex, setAoTex] = useState<THREE.CanvasTexture | null>(null);
+  useEffect(() => {
+    setWoodTex(getCachedTexture('wood', () => createWoodTexture()));
+    setSoilTex(getCachedTexture(`soil-${bed.soilType}`, () => createSoilTexture(SOIL_COLORS[bed.soilType] || SOIL_COLORS.loamy)));
+    setAoTex(getCachedTexture('ao-ground', () => createAOGroundTexture()));
+  }, [bed.soilType]);
 
   // Convert percent position to world coords
   const worldX = -halfGL + (bed.x / 100) * gardenLength;
@@ -115,17 +126,22 @@ export function RaisedBed3D({ bed, gardenLength, gardenWidth, isSelected, onSele
       onPointerOver={() => { document.body.style.cursor = 'pointer'; }}
       onPointerOut={() => { document.body.style.cursor = 'auto'; }}
     >
-      {/* Ground shadow/base */}
+      {/* Ground shadow/base with AO */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.001, 0]} receiveShadow>
-        <planeGeometry args={[l + 0.1, w + 0.1]} />
-        <meshStandardMaterial color="#1A0D05" transparent opacity={0.3} />
+        <planeGeometry args={[l + 0.2, w + 0.2]} />
+        <meshBasicMaterial
+          map={aoTex}
+          transparent
+          opacity={0.4}
+          depthWrite={false}
+        />
       </mesh>
 
       {/* Wooden walls - planks */}
       {planks.map((p, i) => (
         <mesh key={`plank-${i}`} position={[p.x, p.y, p.z]} castShadow>
           <boxGeometry args={[p.width, p.height * 0.93, p.depth]} />
-          <meshStandardMaterial color={p.color} roughness={0.85} />
+          <meshStandardMaterial color={p.color} map={woodTex} roughness={0.85} />
         </mesh>
       ))}
 
@@ -163,7 +179,7 @@ export function RaisedBed3D({ bed, gardenLength, gardenWidth, isSelected, onSele
       {/* Soil fill */}
       <mesh position={[0, h - 0.02, 0]} receiveShadow>
         <boxGeometry args={[l - wallThickness * 2, 0.04, w - wallThickness * 2]} />
-        <meshStandardMaterial color={soilColor} roughness={0.95} />
+        <meshStandardMaterial color={soilColor} map={soilTex} roughness={0.95} />
       </mesh>
 
       {/* Soil row lines */}

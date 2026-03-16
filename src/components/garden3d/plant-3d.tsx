@@ -5,6 +5,7 @@ import { useFrame } from '@react-three/fiber';
 import { Html, Billboard, Text } from '@react-three/drei';
 import * as THREE from 'three';
 import type { Plant, Shape3D } from '@/types';
+import { createAOGroundTexture, getCachedTexture } from './procedural-textures';
 
 interface Plant3DProps {
   plant: Plant;
@@ -329,22 +330,25 @@ function LeafPair({ y, scale, color, offset = 0 }: { y: number; scale: number; c
   useFrame(() => {
     const t = performance.now() * 0.001;
     if (leftRef.current) {
-      leftRef.current.rotation.z = -0.6 + Math.sin(t * 3 + offset) * 0.06;
+      leftRef.current.rotation.z = -0.6 + Math.sin(t * 3 + offset) * 0.08;
+      leftRef.current.rotation.x = Math.sin(t * 2.5 + offset * 2) * 0.04;
     }
     if (rightRef.current) {
-      rightRef.current.rotation.z = 0.6 + Math.sin(t * 3.2 + offset + 1) * 0.06;
+      rightRef.current.rotation.z = 0.6 + Math.sin(t * 3.2 + offset + 1) * 0.08;
+      rightRef.current.rotation.x = Math.sin(t * 2.3 + offset * 2 + 0.5) * 0.04;
     }
   });
 
+  // Use rounded ellipsoid shapes for cuter Animal Crossing style leaves
   return (
     <>
-      <mesh ref={leftRef} position={[-0.04 * scale, y, 0]} rotation={[offset, 0, -0.6]}>
-        <boxGeometry args={[0.06 * scale, 0.006, 0.03 * scale]} />
-        <meshStandardMaterial color={color} />
+      <mesh ref={leftRef} position={[-0.04 * scale, y, 0]} rotation={[offset, 0, -0.6]} castShadow>
+        <sphereGeometry args={[0.03 * scale, 6, 5, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        <meshStandardMaterial color={color} roughness={0.7} side={THREE.DoubleSide} />
       </mesh>
-      <mesh ref={rightRef} position={[0.04 * scale, y, 0.01]} rotation={[offset + 0.3, 0.5, 0.6]}>
-        <boxGeometry args={[0.06 * scale, 0.006, 0.03 * scale]} />
-        <meshStandardMaterial color={color} />
+      <mesh ref={rightRef} position={[0.04 * scale, y, 0.01]} rotation={[offset + 0.3, 0.5, 0.6]} castShadow>
+        <sphereGeometry args={[0.03 * scale, 6, 5, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        <meshStandardMaterial color={color} roughness={0.7} side={THREE.DoubleSide} />
       </mesh>
     </>
   );
@@ -679,6 +683,12 @@ export function Plant3D({ plant, position, plantedDate, onSelect, onContextMenu,
   const isThirsty = needsWater(plant.wateringFrequency);
   const isMature = stage === 'mature' || stage === 'harvest';
 
+  // AO ground texture for base shadow
+  const [aoTex, setAoTex] = useState<THREE.CanvasTexture | null>(null);
+  useEffect(() => {
+    setAoTex(getCachedTexture('ao-ground', () => createAOGroundTexture()));
+  }, []);
+
   const stageLabel = useMemo(() => {
     switch (stage) {
       case 'seed': return 'Seed';
@@ -779,6 +789,19 @@ export function Plant3D({ plant, position, plantedDate, onSelect, onContextMenu,
 
         {/* Watering effect */}
         <WateringEffect active={isWatering || false} />
+
+        {/* AO ground shadow for depth */}
+        {stage !== 'seed' && aoTex && (
+          <mesh position={[0, 0.003, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[0.2 + (stage === 'mature' || stage === 'harvest' ? 0.08 : 0), 0.2 + (stage === 'mature' || stage === 'harvest' ? 0.08 : 0)]} />
+            <meshBasicMaterial
+              map={aoTex}
+              transparent
+              opacity={0.3}
+              depthWrite={false}
+            />
+          </mesh>
+        )}
 
         {/* Floating name label above plant (always visible, small) */}
         {stage !== 'seed' && (
