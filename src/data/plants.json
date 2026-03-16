@@ -45,6 +45,86 @@
       "Water at the base, not the leaves",
       "Add calcium to prevent blossom end rot",
       "Stake or cage plants early for support"
+    ],
+    "varieties": [
+      {
+        "id": "tomato-coeur-de-boeuf",
+        "name": {
+          "en": "Coeur de Boeuf",
+          "fr": "Coeur de Boeuf"
+        },
+        "color": "#B91C1C",
+        "harvestDays": 85,
+        "description": {
+          "en": "Large, heart-shaped beefsteak tomato with sweet flesh. Classic French heirloom.",
+          "fr": "Grosse tomate en forme de coeur a chair douce. Classique variete ancienne francaise."
+        }
+      },
+      {
+        "id": "tomato-noire-de-crimee",
+        "name": {
+          "en": "Noire de Crimee",
+          "fr": "Noire de Crimee"
+        },
+        "color": "#4A1A2E",
+        "harvestDays": 80,
+        "description": {
+          "en": "Dark-skinned heirloom with rich, complex flavor. Stunning deep purple-brown color.",
+          "fr": "Variete ancienne a peau sombre avec une saveur riche et complexe. Couleur pourpre-brun profond."
+        }
+      },
+      {
+        "id": "tomato-cherry",
+        "name": {
+          "en": "Cherry Tomato",
+          "fr": "Tomate Cerise"
+        },
+        "color": "#EF4444",
+        "harvestDays": 65,
+        "description": {
+          "en": "Small, sweet tomatoes perfect for snacking and salads.",
+          "fr": "Petites tomates sucrees parfaites pour le grignotage et les salades."
+        }
+      },
+      {
+        "id": "tomato-roma",
+        "name": {
+          "en": "Roma",
+          "fr": "Roma"
+        },
+        "color": "#DC2626",
+        "harvestDays": 75,
+        "description": {
+          "en": "Plum-shaped, meaty tomato ideal for sauces and canning.",
+          "fr": "Tomate charnue en forme de prune, ideale pour les sauces et les conserves."
+        }
+      },
+      {
+        "id": "tomato-green-zebra",
+        "name": {
+          "en": "Green Zebra",
+          "fr": "Green Zebra"
+        },
+        "color": "#65A30D",
+        "harvestDays": 78,
+        "description": {
+          "en": "Striped green heirloom with tangy, complex flavor.",
+          "fr": "Variete ancienne rayee verte au gout acidule et complexe."
+        }
+      },
+      {
+        "id": "tomato-marmande",
+        "name": {
+          "en": "Marmande",
+          "fr": "Marmande"
+        },
+        "color": "#DC2626",
+        "harvestDays": 82,
+        "description": {
+          "en": "Flat, ribbed French variety with excellent flavor for slicing.",
+          "fr": "Variete francaise plate et cotelee au gout excellent pour les salades."
+        }
+      }
     ]
   },
   {
@@ -96,6 +176,60 @@
       "Thin seedlings to proper spacing",
       "Avoid rocky soil to prevent forking",
       "Harvest when tops are about 1cm in diameter"
+    ],
+    "varieties": [
+      {
+        "id": "carrot-nantaise",
+        "name": {
+          "en": "Nantaise",
+          "fr": "Nantaise"
+        },
+        "color": "#EA580C",
+        "harvestDays": 70,
+        "description": {
+          "en": "Classic cylindrical French carrot, sweet and crisp.",
+          "fr": "Carotte francaise classique cylindrique, sucree et croquante."
+        }
+      },
+      {
+        "id": "carrot-purple",
+        "name": {
+          "en": "Purple Haze",
+          "fr": "Purple Haze"
+        },
+        "color": "#7C3AED",
+        "harvestDays": 73,
+        "description": {
+          "en": "Stunning purple exterior with orange core. Sweet flavor.",
+          "fr": "Exterieur violet avec coeur orange. Saveur sucree."
+        }
+      },
+      {
+        "id": "carrot-chantenay",
+        "name": {
+          "en": "Chantenay",
+          "fr": "Chantenay"
+        },
+        "color": "#C2410C",
+        "harvestDays": 65,
+        "description": {
+          "en": "Short, stocky French heirloom good for heavy soils.",
+          "fr": "Courte et trapue, variete ancienne francaise adaptee aux sols lourds."
+        }
+      },
+      {
+        "id": "carrot-jaune-du-doubs",
+        "name": {
+          "en": "Jaune du Doubs",
+          "fr": "Jaune du Doubs"
+        },
+        "color": "#EAB308",
+        "harvestDays": 75,
+        "description": {
+          "en": "Yellow French heirloom carrot with mild, sweet flavor.",
+          "fr": "Carotte jaune ancienne du Doubs au gout doux et sucre."
+        }
+      }
     ]
   },
   {
@@ -148,6 +282,60 @@
       "Provide afternoon shade in hot weather",
       "Sow seeds every 2 weeks for continuous harvest",
       "Bolts quickly in hot weather"
+    ],
+    "varieties": [
+      {
+        "id": "lettuce-batavia",
+        "name": {
+          "en": "Batavia",
+          "fr": "Batavia"
+        },
+        "color": "#22C55E",
+        "harvestDays": 50,
+        "description": {
+          "en": "Crisp, crunchy lettuce popular in French gardens.",
+          "fr": "Laitue croustillante et croquante populaire dans les jardins francais."
+        }
+      },
+      {
+        "id": "lettuce-lollo-rossa",
+        "name": {
+          "en": "Lollo Rossa",
+          "fr": "Lollo Rossa"
+        },
+        "color": "#BE123C",
+        "harvestDays": 45,
+        "description": {
+          "en": "Red-tipped, frilly leaves. Beautiful and mild.",
+          "fr": "Feuilles frisees a pointes rouges. Belle et douce."
+        }
+      },
+      {
+        "id": "lettuce-romaine",
+        "name": {
+          "en": "Romaine",
+          "fr": "Romaine"
+        },
+        "color": "#16A34A",
+        "harvestDays": 55,
+        "description": {
+          "en": "Tall, crisp hearts ideal for Caesar salads.",
+          "fr": "Coeurs hauts et croquants ideaux pour les salades Caesar."
+        }
+      },
+      {
+        "id": "lettuce-feuille-de-chene",
+        "name": {
+          "en": "Oak Leaf",
+          "fr": "Feuille de Chene"
+        },
+        "color": "#65A30D",
+        "harvestDays": 48,
+        "description": {
+          "en": "Oak-shaped leaves with a tender, buttery texture.",
+          "fr": "Feuilles en forme de chene a la texture tendre et beurriere."
+        }
+      }
     ]
   },
   {
@@ -194,6 +382,60 @@
       "Harvest from the top down",
       "Bring indoors before first frost",
       "Never refrigerate fresh basil leaves"
+    ],
+    "varieties": [
+      {
+        "id": "basil-genovese",
+        "name": {
+          "en": "Genovese",
+          "fr": "Genovese"
+        },
+        "color": "#15803D",
+        "harvestDays": 60,
+        "description": {
+          "en": "Classic Italian basil for pesto. Large, aromatic leaves.",
+          "fr": "Basilic italien classique pour le pesto. Grandes feuilles aromatiques."
+        }
+      },
+      {
+        "id": "basil-purple",
+        "name": {
+          "en": "Purple Basil",
+          "fr": "Basilic Pourpre"
+        },
+        "color": "#7E22CE",
+        "harvestDays": 65,
+        "description": {
+          "en": "Stunning dark purple leaves with a slightly spicy flavor.",
+          "fr": "Feuilles violet fonce avec une saveur legerement epicee."
+        }
+      },
+      {
+        "id": "basil-thai",
+        "name": {
+          "en": "Thai Basil",
+          "fr": "Basilic Thai"
+        },
+        "color": "#166534",
+        "harvestDays": 55,
+        "description": {
+          "en": "Anise-flavored basil used in Asian cuisine.",
+          "fr": "Basilic au gout d'anis utilise dans la cuisine asiatique."
+        }
+      },
+      {
+        "id": "basil-citron",
+        "name": {
+          "en": "Lemon Basil",
+          "fr": "Basilic Citron"
+        },
+        "color": "#4ADE80",
+        "harvestDays": 58,
+        "description": {
+          "en": "Citrus-scented basil great for fish and desserts.",
+          "fr": "Basilic parfume au citron, ideal pour le poisson et les desserts."
+        }
+      }
     ]
   },
   {
@@ -240,6 +482,60 @@
       "Use black plastic mulch to warm soil",
       "Pick first fruits early to encourage more production",
       "Peppers change color as they ripen"
+    ],
+    "varieties": [
+      {
+        "id": "pepper-bell-red",
+        "name": {
+          "en": "Red Bell Pepper",
+          "fr": "Poivron Rouge"
+        },
+        "color": "#DC2626",
+        "harvestDays": 75,
+        "description": {
+          "en": "Sweet, thick-walled red pepper.",
+          "fr": "Poivron rouge sucre a paroi epaisse."
+        }
+      },
+      {
+        "id": "pepper-bell-yellow",
+        "name": {
+          "en": "Yellow Bell Pepper",
+          "fr": "Poivron Jaune"
+        },
+        "color": "#EAB308",
+        "harvestDays": 72,
+        "description": {
+          "en": "Sweet yellow pepper with mild flavor.",
+          "fr": "Poivron jaune sucre au gout doux."
+        }
+      },
+      {
+        "id": "pepper-piment-espelette",
+        "name": {
+          "en": "Piment d'Espelette",
+          "fr": "Piment d'Espelette"
+        },
+        "color": "#B91C1C",
+        "harvestDays": 90,
+        "description": {
+          "en": "Famous Basque chili pepper with moderate heat.",
+          "fr": "Celebre piment basque a la chaleur moderee."
+        }
+      },
+      {
+        "id": "pepper-padron",
+        "name": {
+          "en": "Padron",
+          "fr": "Padron"
+        },
+        "color": "#15803D",
+        "harvestDays": 65,
+        "description": {
+          "en": "Small Spanish pepper, usually mild but sometimes hot!",
+          "fr": "Petit piment espagnol, generalement doux mais parfois piquant !"
+        }
+      }
     ]
   },
   {
@@ -287,6 +583,47 @@
       "Check plants daily as they grow fast",
       "Hand-pollinate if fruit is not setting",
       "Mulch heavily to retain moisture"
+    ],
+    "varieties": [
+      {
+        "id": "zucchini-ronde-de-nice",
+        "name": {
+          "en": "Ronde de Nice",
+          "fr": "Ronde de Nice"
+        },
+        "color": "#4ADE80",
+        "harvestDays": 50,
+        "description": {
+          "en": "Round French heirloom, perfect for stuffing.",
+          "fr": "Variete francaise ronde, parfaite pour farcir."
+        }
+      },
+      {
+        "id": "zucchini-jaune",
+        "name": {
+          "en": "Yellow Zucchini",
+          "fr": "Courgette Jaune"
+        },
+        "color": "#EAB308",
+        "harvestDays": 48,
+        "description": {
+          "en": "Bright yellow variety with mild, sweet flavor.",
+          "fr": "Variete jaune vif au gout doux et sucre."
+        }
+      },
+      {
+        "id": "zucchini-black-beauty",
+        "name": {
+          "en": "Black Beauty",
+          "fr": "Black Beauty"
+        },
+        "color": "#14532D",
+        "harvestDays": 50,
+        "description": {
+          "en": "Dark green classic zucchini, very productive.",
+          "fr": "Courgette classique vert fonce, tres productive."
+        }
+      }
     ]
   },
   {
@@ -336,6 +673,47 @@
       "Pick regularly to encourage production",
       "Water consistently to prevent bitter taste",
       "Harvest in the morning for crispest fruit"
+    ],
+    "varieties": [
+      {
+        "id": "cucumber-long-anglais",
+        "name": {
+          "en": "English Cucumber",
+          "fr": "Concombre Anglais"
+        },
+        "color": "#15803D",
+        "harvestDays": 55,
+        "description": {
+          "en": "Long, seedless cucumber with thin skin.",
+          "fr": "Long concombre sans graines a peau fine."
+        }
+      },
+      {
+        "id": "cucumber-cornichon",
+        "name": {
+          "en": "Cornichon",
+          "fr": "Cornichon"
+        },
+        "color": "#4D7C0F",
+        "harvestDays": 50,
+        "description": {
+          "en": "Small French pickling cucumber.",
+          "fr": "Petit concombre francais pour cornichons."
+        }
+      },
+      {
+        "id": "cucumber-lemon",
+        "name": {
+          "en": "Lemon Cucumber",
+          "fr": "Concombre Citron"
+        },
+        "color": "#FDE047",
+        "harvestDays": 60,
+        "description": {
+          "en": "Round, yellow cucumber with mild, sweet taste.",
+          "fr": "Concombre rond et jaune au gout doux et sucre."
+        }
+      }
     ]
   },
   {
@@ -385,6 +763,47 @@
       "Cure in a dry, warm place for storage",
       "Choose long-day or short-day varieties for your region",
       "Mulch to suppress weeds and retain moisture"
+    ],
+    "varieties": [
+      {
+        "id": "onion-jaune-paille",
+        "name": {
+          "en": "Yellow Straw",
+          "fr": "Jaune Paille des Vertus"
+        },
+        "color": "#CA8A04",
+        "harvestDays": 120,
+        "description": {
+          "en": "Classic French yellow storage onion.",
+          "fr": "Classique oignon jaune francais de conservation."
+        }
+      },
+      {
+        "id": "onion-rouge-florence",
+        "name": {
+          "en": "Red Florence",
+          "fr": "Rouge de Florence"
+        },
+        "color": "#991B1B",
+        "harvestDays": 110,
+        "description": {
+          "en": "Elongated Italian red onion, sweet and mild.",
+          "fr": "Oignon rouge italien allonge, sucre et doux."
+        }
+      },
+      {
+        "id": "onion-blanc-paris",
+        "name": {
+          "en": "White Paris",
+          "fr": "Blanc de Paris"
+        },
+        "color": "#FAFAFA",
+        "harvestDays": 65,
+        "description": {
+          "en": "Small white French spring onion.",
+          "fr": "Petit oignon blanc francais de printemps."
+        }
+      }
     ]
   },
   {
@@ -434,6 +853,34 @@
       "Mulch heavily in cold climates",
       "Cut scapes in spring to direct energy to bulb",
       "Harvest when lower leaves start to brown"
+    ],
+    "varieties": [
+      {
+        "id": "garlic-rose-lautrec",
+        "name": {
+          "en": "Rose de Lautrec",
+          "fr": "Ail Rose de Lautrec"
+        },
+        "color": "#F9A8D4",
+        "harvestDays": 240,
+        "description": {
+          "en": "Famous French pink garlic with IGP label.",
+          "fr": "Celebre ail rose francais avec label IGP."
+        }
+      },
+      {
+        "id": "garlic-blanc-lomagne",
+        "name": {
+          "en": "Blanc de Lomagne",
+          "fr": "Ail Blanc de Lomagne"
+        },
+        "color": "#FAFAFA",
+        "harvestDays": 230,
+        "description": {
+          "en": "White garlic from southwest France.",
+          "fr": "Ail blanc du sud-ouest de la France."
+        }
+      }
     ]
   },
   {
@@ -482,6 +929,47 @@
       "Harvest promptly to avoid woodiness",
       "Thin seedlings to prevent crowding",
       "Great as row markers for slow-germinating crops"
+    ],
+    "varieties": [
+      {
+        "id": "radish-rond-rouge",
+        "name": {
+          "en": "Round Red",
+          "fr": "Rond Rouge"
+        },
+        "color": "#EF4444",
+        "harvestDays": 25,
+        "description": {
+          "en": "Classic small round red radish.",
+          "fr": "Classique petit radis rond rouge."
+        }
+      },
+      {
+        "id": "radish-noir",
+        "name": {
+          "en": "Black Radish",
+          "fr": "Radis Noir"
+        },
+        "color": "#1C1917",
+        "harvestDays": 55,
+        "description": {
+          "en": "Large winter radish with peppery flavor.",
+          "fr": "Gros radis d'hiver au gout poivre."
+        }
+      },
+      {
+        "id": "radish-daikon",
+        "name": {
+          "en": "Daikon",
+          "fr": "Daikon"
+        },
+        "color": "#FAFAFA",
+        "harvestDays": 50,
+        "description": {
+          "en": "Long white Japanese radish, mild flavor.",
+          "fr": "Long radis blanc japonais au gout doux."
+        }
+      }
     ]
   },
   {
@@ -531,6 +1019,34 @@
       "Use shade cloth in warm weather",
       "Harvest outer leaves for continuous production",
       "Rich in iron and vitamins A and C"
+    ],
+    "varieties": [
+      {
+        "id": "spinach-geant-hiver",
+        "name": {
+          "en": "Giant Winter",
+          "fr": "Geant d'Hiver"
+        },
+        "color": "#166534",
+        "harvestDays": 45,
+        "description": {
+          "en": "Hardy French winter spinach with large leaves.",
+          "fr": "Epinard d'hiver francais rustique aux grandes feuilles."
+        }
+      },
+      {
+        "id": "spinach-bloomsdale",
+        "name": {
+          "en": "Bloomsdale",
+          "fr": "Bloomsdale"
+        },
+        "color": "#15803D",
+        "harvestDays": 42,
+        "description": {
+          "en": "Savoy-type with crinkled, dark green leaves.",
+          "fr": "Type froise aux feuilles vert fonce et gaufrrees."
+        }
+      }
     ]
   },
   {
@@ -582,6 +1098,34 @@
       "Plant as soon as soil can be worked",
       "Inoculate seeds with rhizobia for better yields",
       "Pick frequently to encourage more pods"
+    ],
+    "varieties": [
+      {
+        "id": "pea-petit-provencal",
+        "name": {
+          "en": "Petit Provencal",
+          "fr": "Petit Provencal"
+        },
+        "color": "#4ADE80",
+        "harvestDays": 58,
+        "description": {
+          "en": "Sweet, early French garden pea.",
+          "fr": "Petit pois francais precoce et sucre."
+        }
+      },
+      {
+        "id": "pea-sugar-snap",
+        "name": {
+          "en": "Sugar Snap",
+          "fr": "Pois Mange-tout"
+        },
+        "color": "#22C55E",
+        "harvestDays": 60,
+        "description": {
+          "en": "Edible-pod pea, sweet and crunchy.",
+          "fr": "Pois a cosse comestible, sucre et croquant."
+        }
+      }
     ]
   },
   {
@@ -632,6 +1176,47 @@
       "Avoid working around wet plants to prevent disease",
       "Pick beans when pencil-thin for best flavor",
       "Pole beans yield more than bush varieties"
+    ],
+    "varieties": [
+      {
+        "id": "bean-haricot-vert",
+        "name": {
+          "en": "French Green Bean",
+          "fr": "Haricot Vert"
+        },
+        "color": "#16A34A",
+        "harvestDays": 55,
+        "description": {
+          "en": "Classic thin French green bean.",
+          "fr": "Classique haricot vert fin francais."
+        }
+      },
+      {
+        "id": "bean-coco-de-paimpol",
+        "name": {
+          "en": "Coco de Paimpol",
+          "fr": "Coco de Paimpol"
+        },
+        "color": "#FEF9C3",
+        "harvestDays": 75,
+        "description": {
+          "en": "Famous Breton shelling bean with AOC label.",
+          "fr": "Celebre haricot a ecosser breton avec label AOC."
+        }
+      },
+      {
+        "id": "bean-runner",
+        "name": {
+          "en": "Runner Bean",
+          "fr": "Haricot d'Espagne"
+        },
+        "color": "#15803D",
+        "harvestDays": 65,
+        "description": {
+          "en": "Climbing bean with beautiful red flowers.",
+          "fr": "Haricot grimpant avec de belles fleurs rouges."
+        }
+      }
     ]
   },
   {
@@ -680,6 +1265,47 @@
       "Do not eat green potatoes",
       "Cut seed potatoes to have 2-3 eyes each",
       "Cure harvested potatoes in a dark place"
+    ],
+    "varieties": [
+      {
+        "id": "potato-charlotte",
+        "name": {
+          "en": "Charlotte",
+          "fr": "Charlotte"
+        },
+        "color": "#EAB308",
+        "harvestDays": 90,
+        "description": {
+          "en": "Waxy French potato ideal for salads.",
+          "fr": "Pomme de terre francaise a chair ferme ideale pour les salades."
+        }
+      },
+      {
+        "id": "potato-ratte",
+        "name": {
+          "en": "Ratte",
+          "fr": "Ratte"
+        },
+        "color": "#CA8A04",
+        "harvestDays": 100,
+        "description": {
+          "en": "Gourmet fingerling potato with nutty flavor.",
+          "fr": "Pomme de terre gourmet allongee au gout de noisette."
+        }
+      },
+      {
+        "id": "potato-vitelotte",
+        "name": {
+          "en": "Vitelotte",
+          "fr": "Vitelotte"
+        },
+        "color": "#581C87",
+        "harvestDays": 110,
+        "description": {
+          "en": "Purple French heirloom with deep color throughout.",
+          "fr": "Variete ancienne francaise violette a chair violette."
+        }
+      }
     ]
   },
   {
@@ -725,6 +1351,47 @@
       "Use row covers to protect from flea beetles",
       "Mulch to keep roots cool and moist",
       "Start indoors 8-10 weeks before last frost"
+    ],
+    "varieties": [
+      {
+        "id": "eggplant-noire-de-barbentane",
+        "name": {
+          "en": "Noire de Barbentane",
+          "fr": "Noire de Barbentane"
+        },
+        "color": "#3B0764",
+        "harvestDays": 72,
+        "description": {
+          "en": "Long, dark French heirloom eggplant.",
+          "fr": "Longue aubergine ancienne francaise de couleur sombre."
+        }
+      },
+      {
+        "id": "eggplant-blanche",
+        "name": {
+          "en": "White Eggplant",
+          "fr": "Aubergine Blanche"
+        },
+        "color": "#FAFAFA",
+        "harvestDays": 70,
+        "description": {
+          "en": "Creamy white eggplant with mild flavor.",
+          "fr": "Aubergine blanche a la saveur douce."
+        }
+      },
+      {
+        "id": "eggplant-listada-de-gandia",
+        "name": {
+          "en": "Listada de Gandia",
+          "fr": "Listada de Gandia"
+        },
+        "color": "#7C3AED",
+        "harvestDays": 75,
+        "description": {
+          "en": "Striped purple and white Italian heirloom.",
+          "fr": "Variete italienne ancienne rayee violet et blanc."
+        }
+      }
     ]
   },
   {
@@ -776,6 +1443,47 @@
       "Net against butterflies and moths",
       "Water consistently for even head formation",
       "Harvest when heads feel firm and solid"
+    ],
+    "varieties": [
+      {
+        "id": "cabbage-chou-fleur",
+        "name": {
+          "en": "Cauliflower",
+          "fr": "Chou-fleur"
+        },
+        "color": "#FAFAFA",
+        "harvestDays": 80,
+        "description": {
+          "en": "White cauliflower head.",
+          "fr": "Tete de chou-fleur blanche."
+        }
+      },
+      {
+        "id": "cabbage-rouge",
+        "name": {
+          "en": "Red Cabbage",
+          "fr": "Chou Rouge"
+        },
+        "color": "#7C3AED",
+        "harvestDays": 85,
+        "description": {
+          "en": "Purple-red cabbage with dense head.",
+          "fr": "Chou rouge-violet a tete dense."
+        }
+      },
+      {
+        "id": "cabbage-kale",
+        "name": {
+          "en": "Kale",
+          "fr": "Chou Kale"
+        },
+        "color": "#166534",
+        "harvestDays": 60,
+        "description": {
+          "en": "Curly kale, superfood green.",
+          "fr": "Chou frise kale, super aliment vert."
+        }
+      }
     ]
   },
   {
@@ -921,6 +1629,60 @@
       "Mulch with straw to keep fruit clean",
       "Remove first year flowers for stronger plants",
       "Net against birds when berries ripen"
+    ],
+    "varieties": [
+      {
+        "id": "strawberry-gariguette",
+        "name": {
+          "en": "Gariguette",
+          "fr": "Gariguette"
+        },
+        "color": "#EF4444",
+        "harvestDays": 85,
+        "description": {
+          "en": "Famous French variety, elongated with intense flavor.",
+          "fr": "Celebre variete francaise, allongee avec une saveur intense."
+        }
+      },
+      {
+        "id": "strawberry-mara-des-bois",
+        "name": {
+          "en": "Mara des Bois",
+          "fr": "Mara des Bois"
+        },
+        "color": "#DC2626",
+        "harvestDays": 75,
+        "description": {
+          "en": "Wild strawberry flavor in a cultivated variety. Everbearing.",
+          "fr": "Saveur de fraise des bois dans une variete cultivee. Remontante."
+        }
+      },
+      {
+        "id": "strawberry-charlotte",
+        "name": {
+          "en": "Charlotte",
+          "fr": "Charlotte"
+        },
+        "color": "#F87171",
+        "harvestDays": 80,
+        "description": {
+          "en": "Sweet, aromatic French everbearing strawberry.",
+          "fr": "Fraise remontante francaise sucree et aromatique."
+        }
+      },
+      {
+        "id": "strawberry-ciflorette",
+        "name": {
+          "en": "Ciflorette",
+          "fr": "Ciflorette"
+        },
+        "color": "#B91C1C",
+        "harvestDays": 82,
+        "description": {
+          "en": "Elongated, very aromatic early-season variety.",
+          "fr": "Variete precoce allongee, tres aromatique."
+        }
+      }
     ]
   },
   {
@@ -966,6 +1728,34 @@
       "Prune after flowering to maintain shape",
       "Can be grown indoors in winter",
       "Deer and rabbit resistant"
+    ],
+    "varieties": [
+      {
+        "id": "rosemary-officinalis",
+        "name": {
+          "en": "Common Rosemary",
+          "fr": "Romarin Officinal"
+        },
+        "color": "#6D8B74",
+        "harvestDays": 85,
+        "description": {
+          "en": "Classic culinary rosemary.",
+          "fr": "Romarin culinaire classique."
+        }
+      },
+      {
+        "id": "rosemary-prostratus",
+        "name": {
+          "en": "Creeping Rosemary",
+          "fr": "Romarin Rampant"
+        },
+        "color": "#4D7C0F",
+        "harvestDays": 90,
+        "description": {
+          "en": "Low-growing trailing variety.",
+          "fr": "Variete rampante basse."
+        }
+      }
     ]
   },
   {

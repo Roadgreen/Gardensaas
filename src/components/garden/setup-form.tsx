@@ -15,7 +15,9 @@ import {
   type ClimateZone,
   type SunExposure,
 } from '@/types';
-import { ArrowLeft, ArrowRight, Check, Ruler, Mountain, Cloud, Sun, Sprout, Trophy, Star, MapPin, Locate, Search } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Ruler, Mountain, Cloud, Sun, Sprout, Trophy, Star, MapPin, Locate, Search, Plus, Trash2, Layers } from 'lucide-react';
+import type { GardenZone, RaisedBed, ZoneType } from '@/types';
+import { ZONE_COLORS, ZONE_TYPE_LABELS } from '@/types';
 
 const stepConfigs = [
   { id: 'welcome', icon: Sprout, titleKey: 'welcome.title', descKey: 'welcome.description', questKey: 'welcome.quest' },
@@ -24,6 +26,7 @@ const stepConfigs = [
   { id: 'soil', icon: Mountain, titleKey: 'soil.title', descKey: 'soil.description', questKey: 'soil.quest' },
   { id: 'climate', icon: Cloud, titleKey: 'climate.title', descKey: 'climate.description', questKey: 'climate.quest' },
   { id: 'sun', icon: Sun, titleKey: 'sun.title', descKey: 'sun.description', questKey: 'sun.quest' },
+  { id: 'zones', icon: Layers, titleKey: 'zones.title', descKey: 'zones.description', questKey: 'zones.quest' },
 ];
 
 const SOIL_KEYS = ['clay', 'sandy', 'loamy', 'silty', 'peaty', 'chalky'] as const;
@@ -69,9 +72,27 @@ const GARDEN_SIZE_PRESETS = [
   { labelKey: 'farmPlot', length: 12, width: 8, emoji: '\u{1F33E}' },
 ];
 
+// Sample plant spacing data for suggestions
+const SUGGESTION_PLANTS = [
+  { id: 'lettuce', nameEn: 'Lettuce', nameFr: 'Laitue', spacingCm: 25 },
+  { id: 'tomato', nameEn: 'Tomato', nameFr: 'Tomate', spacingCm: 60 },
+  { id: 'radish', nameEn: 'Radish', nameFr: 'Radis', spacingCm: 5 },
+  { id: 'carrot', nameEn: 'Carrot', nameFr: 'Carotte', spacingCm: 8 },
+  { id: 'basil', nameEn: 'Basil', nameFr: 'Basilic', spacingCm: 25 },
+  { id: 'zucchini', nameEn: 'Zucchini', nameFr: 'Courgette', spacingCm: 80 },
+];
+
+function getPlantingSuggestions(areaM2: number): Array<{ name: string; count: number }> {
+  return SUGGESTION_PLANTS.map((p) => {
+    const spacingM = p.spacingCm / 100;
+    const count = Math.floor(areaM2 / (spacingM * spacingM));
+    return { name: p.nameEn, count: Math.max(1, count) };
+  }).filter((s) => s.count > 0);
+}
+
 export function SetupForm() {
   const [step, setStep] = useState(0);
-  const { config, updateConfig } = useGarden();
+  const { config, updateConfig, addZone, removeZone, addRaisedBed, removeRaisedBed } = useGarden();
   const router = useRouter();
   const t = useTranslations('setup');
 
@@ -198,12 +219,14 @@ export function SetupForm() {
       gainXp(20);
     } else if (step === 5) {
       gainXp(35);
+    } else if (step === 6) {
+      gainXp(40);
     }
 
     if (step < steps.length - 1) {
       setStep(step + 1);
     } else {
-      router.push('/garden/dashboard');
+      router.push('/garden/3d');
     }
   };
 
@@ -684,6 +707,19 @@ export function SetupForm() {
                   ))}
                 </div>
               )}
+
+              {/* Zones step - add multiple planting areas */}
+              {step === 6 && (
+                <ZonesStep
+                  config={config}
+                  onAddZone={addZone}
+                  onRemoveZone={removeZone}
+                  onAddRaisedBed={addRaisedBed}
+                  onRemoveRaisedBed={removeRaisedBed}
+                  t={t}
+                  onXpGain={gainXp}
+                />
+              )}
             </div>
           </motion.div>
         </AnimatePresence>
@@ -725,6 +761,288 @@ export function SetupForm() {
           </motion.div>
         </div>
       </div>
+    </div>
+  );
+}
+
+// ===== Zones Step Component =====
+interface ZonesStepProps {
+  config: import('@/types').GardenConfig;
+  onAddZone: (zone: GardenZone) => void;
+  onRemoveZone: (zoneId: string) => void;
+  onAddRaisedBed: (bed: RaisedBed) => void;
+  onRemoveRaisedBed: (bedId: string) => void;
+  t: ReturnType<typeof useTranslations<'setup'>>;
+  onXpGain: (amount: number) => void;
+}
+
+function ZonesStep({ config, onAddZone, onRemoveZone, onAddRaisedBed, onRemoveRaisedBed, t, onXpGain }: ZonesStepProps) {
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [zoneType, setZoneType] = useState<ZoneType>('raised-bed');
+  const [zoneName, setZoneName] = useState('');
+  const [zoneLength, setZoneLength] = useState('1.2');
+  const [zoneWidth, setZoneWidth] = useState('0.8');
+  const [zoneHeight, setZoneHeight] = useState('0.35');
+  const [zoneSoil, setZoneSoil] = useState<SoilType>('loamy');
+
+  const totalGardenArea = config.length * config.width;
+  const zoneArea = (config.zones || []).reduce((s, z) => s + z.lengthM * z.widthM, 0);
+  const bedArea = (config.raisedBeds || []).reduce((s, b) => s + b.lengthM * b.widthM, 0);
+  const usedArea = zoneArea + bedArea;
+  const remainingArea = Math.max(0, totalGardenArea - usedArea);
+
+  const suggestions = getPlantingSuggestions(remainingArea);
+
+  const allZones = [
+    ...(config.zones || []).map((z) => ({ ...z, type: (z.zoneType || 'in-ground') as ZoneType })),
+    ...(config.raisedBeds || []).map((b) => ({ ...b, type: 'raised-bed' as ZoneType, soilType: b.soilType as SoilType, sunExposure: 'full-sun' as SunExposure, zoneType: 'raised-bed' as ZoneType, color: '#D4A06C' })),
+  ];
+
+  const handleAdd = () => {
+    const defaultNames: Record<ZoneType, string> = {
+      'raised-bed': t('zones.defaultBedName'),
+      'in-ground': t('zones.defaultPlotName'),
+      'pot': t('zones.defaultPotName'),
+      'greenhouse': t('zones.defaultGreenhouseName'),
+    };
+    const name = zoneName.trim() || defaultNames[zoneType] + ' ' + (allZones.length + 1);
+
+    if (zoneType === 'raised-bed') {
+      const bed: RaisedBed = {
+        id: 'bed-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7),
+        name,
+        x: 30 + (allZones.length * 15) % 40,
+        z: 30 + (allZones.length * 10) % 40,
+        widthM: parseFloat(zoneWidth) || 0.8,
+        lengthM: parseFloat(zoneLength) || 1.2,
+        heightM: parseFloat(zoneHeight) || 0.35,
+        soilType: zoneSoil === 'loamy' ? 'loamy' : zoneSoil === 'sandy' ? 'sandy' : zoneSoil === 'clay' ? 'clay-mix' : zoneSoil === 'peaty' ? 'peat-mix' : 'potting-mix',
+      };
+      onAddRaisedBed(bed);
+    } else {
+      const zone: GardenZone = {
+        id: 'zone-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7),
+        name,
+        x: 50 + (allZones.length * 10) % 30,
+        z: 50 + (allZones.length * 10) % 30,
+        widthM: parseFloat(zoneWidth) || 1.5,
+        lengthM: parseFloat(zoneLength) || 2,
+        soilType: zoneSoil,
+        sunExposure: config.sunExposure,
+        zoneType,
+        color: ZONE_COLORS[allZones.length % ZONE_COLORS.length],
+      };
+      onAddZone(zone);
+    }
+
+    onXpGain(15);
+    setShowAddForm(false);
+    setZoneName('');
+    setZoneLength(zoneType === 'raised-bed' ? '1.2' : '2');
+    setZoneWidth(zoneType === 'raised-bed' ? '0.8' : '1.5');
+  };
+
+  return (
+    <div className="space-y-5">
+      {/* Existing zones list */}
+      {allZones.length > 0 && (
+        <div className="space-y-2">
+          {allZones.map((zone) => (
+            <div key={zone.id} className="flex items-center justify-between p-3 rounded-xl bg-[#0D1F17] border border-green-900/40">
+              <div className="flex items-center gap-3">
+                <span className="text-lg">{zone.type === 'raised-bed' ? '\uD83E\uDDF1' : zone.type === 'pot' ? '\uD83E\uDEB4' : zone.type === 'greenhouse' ? '\uD83C\uDFE1' : '\uD83D\uDFE9'}</span>
+                <div>
+                  <div className="text-sm font-medium text-green-50">{zone.name}</div>
+                  <div className="text-xs text-green-500/50">
+                    {zone.type === 'raised-bed' ? t('zones.raisedBed') : zone.type === 'pot' ? t('zones.pot') : zone.type === 'greenhouse' ? t('zones.greenhouse') : t('zones.inGroundPlot')} - {zone.lengthM}m x {zone.widthM}m
+                    {zone.type === 'raised-bed' && 'heightM' in zone && ` (h: ${zone.heightM}m)`}
+                  </div>
+                </div>
+              </div>
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => {
+                  if (zone.type === 'raised-bed') {
+                    onRemoveRaisedBed(zone.id);
+                  } else {
+                    onRemoveZone(zone.id);
+                  }
+                }}
+                className="p-2 rounded-lg bg-red-900/20 border border-red-800/30 text-red-400 hover:bg-red-900/30 cursor-pointer"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </motion.button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Area summary */}
+      <div className="p-3 rounded-xl bg-green-900/20 border border-green-800/30 text-center">
+        <div className="text-sm text-green-300/70">
+          {t('zones.totalArea')} <span className="font-bold text-green-200">{usedArea.toFixed(1)} m&sup2;</span> / {totalGardenArea.toFixed(1)} m&sup2;
+        </div>
+        {remainingArea > 0.5 && (
+          <div className="mt-2 text-xs text-green-500/50">
+            <div className="mb-1">{t('zones.remainingArea', { area: remainingArea.toFixed(1) })}</div>
+            <div className="flex flex-wrap justify-center gap-1.5">
+              {suggestions.slice(0, 4).map((s) => (
+                <span key={s.name} className="px-2 py-0.5 rounded-full bg-green-800/20 border border-green-700/20 text-green-300/60">
+                  {s.count} {s.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Add zone form or button */}
+      {showAddForm ? (
+        <div className="space-y-4 p-4 rounded-xl bg-[#0D1F17] border border-green-800/40">
+          {/* Zone type toggle */}
+          <div className="grid grid-cols-2 gap-2">
+            {([
+              { type: 'raised-bed' as ZoneType, emoji: '\uD83E\uDDF1', labelKey: 'raisedBed', descKey: 'raisedBedDesc', color: 'amber', defaultL: '1.2', defaultW: '0.8' },
+              { type: 'in-ground' as ZoneType, emoji: '\uD83D\uDFE9', labelKey: 'inGroundPlot', descKey: 'inGroundDesc', color: 'green', defaultL: '2', defaultW: '1.5' },
+              { type: 'pot' as ZoneType, emoji: '\uD83E\uDEB4', labelKey: 'pot', descKey: 'potDesc', color: 'orange', defaultL: '0.4', defaultW: '0.4' },
+              { type: 'greenhouse' as ZoneType, emoji: '\uD83C\uDFE1', labelKey: 'greenhouse', descKey: 'greenhouseDesc', color: 'blue', defaultL: '3', defaultW: '2' },
+            ] as const).map((item) => (
+              <motion.button
+                key={item.type}
+                type="button"
+                whileTap={{ scale: 0.97 }}
+                onClick={() => { setZoneType(item.type); setZoneLength(item.defaultL); setZoneWidth(item.defaultW); }}
+                className={`p-3 rounded-xl border text-center transition-all cursor-pointer ${
+                  zoneType === item.type
+                    ? `border-${item.color}-500/50 bg-${item.color}-900/20 text-${item.color}-200`
+                    : 'border-green-900/40 text-green-300/60 hover:border-green-700/50'
+                }`}
+                style={zoneType === item.type ? {
+                  borderColor: item.color === 'amber' ? 'rgba(245, 158, 11, 0.5)' :
+                               item.color === 'green' ? 'rgba(34, 197, 94, 0.5)' :
+                               item.color === 'orange' ? 'rgba(249, 115, 22, 0.5)' :
+                               'rgba(59, 130, 246, 0.5)',
+                  backgroundColor: item.color === 'amber' ? 'rgba(120, 53, 15, 0.2)' :
+                                   item.color === 'green' ? 'rgba(20, 83, 45, 0.2)' :
+                                   item.color === 'orange' ? 'rgba(124, 45, 18, 0.2)' :
+                                   'rgba(30, 58, 138, 0.2)',
+                } : {}}
+              >
+                <span className="text-xl block mb-1">{item.emoji}</span>
+                <span className="text-xs font-medium block">{t(`zones.${item.labelKey}`)}</span>
+                <span className="text-[10px] text-green-500/40 block mt-0.5">{t(`zones.${item.descKey}`)}</span>
+              </motion.button>
+            ))}
+          </div>
+
+          {/* Name */}
+          <Input
+            id="zone-name"
+            label={t('zones.zoneName')}
+            type="text"
+            value={zoneName}
+            onChange={(e) => setZoneName(e.target.value)}
+            placeholder={zoneType === 'raised-bed' ? t('zones.defaultBedName') : t('zones.defaultPlotName')}
+          />
+
+          {/* Dimensions */}
+          <div className={`grid gap-3 ${zoneType === 'raised-bed' ? 'grid-cols-3' : 'grid-cols-2'}`}>
+            <Input
+              id="zone-length"
+              label={t('zones.length')}
+              type="number"
+              min="0.3"
+              max="10"
+              step="0.1"
+              value={zoneLength}
+              onChange={(e) => setZoneLength(e.target.value)}
+            />
+            <Input
+              id="zone-width"
+              label={t('zones.width')}
+              type="number"
+              min="0.3"
+              max="10"
+              step="0.1"
+              value={zoneWidth}
+              onChange={(e) => setZoneWidth(e.target.value)}
+            />
+            {zoneType === 'raised-bed' && (
+              <Input
+                id="zone-height"
+                label={t('zones.height')}
+                type="number"
+                min="0.15"
+                max="1"
+                step="0.05"
+                value={zoneHeight}
+                onChange={(e) => setZoneHeight(e.target.value)}
+              />
+            )}
+          </div>
+
+          {/* Soil type */}
+          <div>
+            <label className="text-sm text-green-300/60 block mb-2">{t('zones.soilType')}</label>
+            <div className="grid grid-cols-3 gap-2">
+              {SOIL_KEYS.map((s) => (
+                <motion.button
+                  key={s}
+                  type="button"
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setZoneSoil(s)}
+                  className={`p-2 rounded-lg border text-xs text-center cursor-pointer transition-all ${
+                    zoneSoil === s
+                      ? 'border-green-500 bg-green-900/30 text-green-200'
+                      : 'border-green-900/40 text-green-400/50 hover:border-green-700/50'
+                  }`}
+                >
+                  {SOIL_EMOJIS[s]} {t(`soil.${s}`)}
+                </motion.button>
+              ))}
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-3">
+            <Button variant="ghost" onClick={() => setShowAddForm(false)} className="flex-1">
+              {t('back')}
+            </Button>
+            <Button onClick={handleAdd} className="flex-1 bg-gradient-to-r from-green-600 to-emerald-500">
+              <Plus className="w-4 h-4 mr-1" />
+              {t('zones.addZone')}
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 gap-2">
+          {([
+            { type: 'raised-bed' as ZoneType, emoji: '\uD83E\uDDF1', labelKey: 'addRaisedBed', borderColor: 'rgba(180, 83, 9, 0.4)', textColor: 'rgba(252, 211, 77, 0.7)', hoverBorder: 'rgba(245, 158, 11, 0.5)' },
+            { type: 'in-ground' as ZoneType, emoji: '\uD83D\uDFE9', labelKey: 'addInGroundPlot', borderColor: 'rgba(21, 128, 61, 0.4)', textColor: 'rgba(134, 239, 172, 0.7)', hoverBorder: 'rgba(34, 197, 94, 0.5)' },
+            { type: 'pot' as ZoneType, emoji: '\uD83E\uDEB4', labelKey: 'addPot', borderColor: 'rgba(194, 65, 12, 0.4)', textColor: 'rgba(251, 146, 60, 0.7)', hoverBorder: 'rgba(249, 115, 22, 0.5)' },
+            { type: 'greenhouse' as ZoneType, emoji: '\uD83C\uDFE1', labelKey: 'addGreenhouse', borderColor: 'rgba(30, 64, 175, 0.4)', textColor: 'rgba(147, 197, 253, 0.7)', hoverBorder: 'rgba(59, 130, 246, 0.5)' },
+          ]).map((item) => (
+            <motion.button
+              key={item.type}
+              type="button"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => { setShowAddForm(true); setZoneType(item.type); }}
+              className="p-3 rounded-xl border-2 border-dashed transition-all cursor-pointer text-center"
+              style={{ borderColor: item.borderColor, color: item.textColor }}
+            >
+              <span className="text-xl block mb-1">{item.emoji}</span>
+              <span className="text-xs font-medium">{t(`zones.${item.labelKey}`)}</span>
+            </motion.button>
+          ))}
+        </div>
+      )}
+
+      {allZones.length === 0 && !showAddForm && (
+        <p className="text-xs text-green-500/40 text-center mt-2">{t('zones.noZonesYet')}</p>
+      )}
     </div>
   );
 }

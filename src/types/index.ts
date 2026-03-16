@@ -14,6 +14,14 @@ export type Difficulty = 'easy' | 'medium' | 'hard';
 
 export type Shape3D = 'cone' | 'sphere' | 'cylinder' | 'box' | 'capsule' | 'bush' | 'vine' | 'leafy' | 'root' | 'tall-stem';
 
+export interface PlantVariety {
+  id: string;
+  name: { en: string; fr: string };
+  color?: string; // override plant color if different
+  harvestDays?: number; // override if different from base plant
+  description?: { en: string; fr: string };
+}
+
 export interface Plant {
   id: string;
   name: {
@@ -40,6 +48,29 @@ export interface Plant {
   depthCm: number;
   heightCm: number;
   tips: string[];
+  varieties?: PlantVariety[];
+}
+
+export type ZoneType = 'in-ground' | 'raised-bed' | 'pot' | 'greenhouse';
+
+export const ZONE_TYPE_LABELS: Record<ZoneType, { en: string; fr: string }> = {
+  'in-ground': { en: 'In-Ground Plot', fr: 'Pleine terre' },
+  'raised-bed': { en: 'Raised Bed', fr: 'Bac sureleve' },
+  'pot': { en: 'Pot / Container', fr: 'Pot / Conteneur' },
+  'greenhouse': { en: 'Greenhouse', fr: 'Serre' },
+};
+
+export interface GardenZone {
+  id: string;
+  name: string;
+  x: number; // percent position in garden (0-100)
+  z: number;
+  widthM: number;
+  lengthM: number;
+  soilType: SoilType;
+  sunExposure: SunExposure;
+  zoneType: ZoneType;
+  color: string; // display color for the zone outline
 }
 
 export interface GardenConfig {
@@ -50,6 +81,7 @@ export interface GardenConfig {
   sunExposure: SunExposure;
   plantedItems: PlantedItem[];
   raisedBeds: RaisedBed[];
+  zones?: GardenZone[];
   latitude?: number;
   longitude?: number;
   city?: string;
@@ -67,10 +99,12 @@ export interface WateringTask {
 
 export interface PlantedItem {
   plantId: string;
+  varietyId?: string; // specific variety chosen
   x: number;
   z: number;
   plantedDate: string;
   raisedBedId?: string; // optional: placed inside a raised bed
+  zoneId?: string; // optional: placed inside a planting zone
 }
 
 export type RaisedBedSoilType = 'potting-mix' | 'compost' | 'loamy' | 'sandy' | 'peat-mix' | 'clay-mix';
@@ -134,3 +168,18 @@ export const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December',
 ];
+
+export const ZONE_COLORS = [
+  '#4ADE80', '#60A5FA', '#F97316', '#A78BFA',
+  '#FB923C', '#34D399', '#F472B6', '#FBBF24',
+];
+
+export interface PlantingSuggestion {
+  plantId: string;
+  plantName: string;
+  quantity: number;
+  reason: string;
+  score: number; // 0-100, how well it fits
+  companions: string[];
+  spacingNote: string;
+}

@@ -81,7 +81,23 @@ model Garden {
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   gardenPlants GardenPlant[]
   raisedBeds   GardenRaisedBed[]
+  gardenZones  GardenZone[]
   seasons      GardenSeason[]
+}
+
+model GardenZone {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  gardenId    String  @db.ObjectId
+  name        String  @default("Zone")
+  x           Float   // percent position in garden (0-100)
+  z           Float
+  widthM      Float   // meters
+  lengthM     Float   // meters
+  soilType    String  @default("loamy")
+  sunExposure String  @default("full-sun")
+  zoneType    String  @default("in-ground") // "in-ground" | "raised-bed" | "pot" | "greenhouse"
+  color       String  @default("#4ADE80")
+  garden      Garden  @relation(fields: [gardenId], references: [id], onDelete: Cascade)
 }
 
 model GardenRaisedBed {

@@ -66,7 +66,7 @@
     "q1": "When should I start my vegetable garden?",
     "a1": "The best time to start depends on your climate zone. Generally, you can start seedlings indoors from February-March, and plant outdoors after the last frost (April-May in temperate climates). Our planting calendar automatically adapts the dates to your region.",
     "q2": "How much time should I spend gardening each day?",
-    "a2": "For a small garden (10-20 m\u00b2), expect about 15-30 minutes per day for watering, weeding and maintenance. GardenSaas optimizes your time by giving you priority tasks each day.",
+    "a2": "For a small garden (10-20 m²), expect about 15-30 minutes per day for watering, weeding and maintenance. GardenSaas optimizes your time by giving you priority tasks each day.",
     "q3": "Does the app work for balconies and small spaces?",
     "a3": "Absolutely! GardenSaas supports gardens of all sizes, including balconies and terraces. We recommend the most suitable plants for your available space, with dwarf varieties and aromatic herbs ideal for pot growing.",
     "q4": "How does the 3D garden view work?",
@@ -88,7 +88,7 @@
     "yearly": "Yearly",
     "perMonth": "/month",
     "perMonthYearly": "/mo, billed yearly",
-    "savePerYear": "Save {amount}\u20ac per year",
+    "savePerYear": "Save {amount}€ per year",
     "mostPopular": "Most Popular",
     "free": {
       "name": "Free",
@@ -152,7 +152,7 @@
     "login": "Login",
     "register": "Register",
     "billing": "Billing",
-    "copyright": "\u00a9 {year} GardenSaas. All rights reserved.",
+    "copyright": "© {year} GardenSaas. All rights reserved.",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "contact": "Contact"
@@ -462,7 +462,41 @@
     "back": "Back",
     "nextQuest": "Next Quest",
     "beginAdventure": "Begin Adventure",
-    "completeQuest": "Complete Quest!"
+    "completeQuest": "Complete Quest!",
+    "zones": {
+      "title": "Your Garden Zones",
+      "description": "Add planting areas to your garden. You can have raised beds and in-ground plots.",
+      "quest": "Quest: Define Your Growing Areas",
+      "addZone": "Add Zone",
+      "addRaisedBed": "Add Raised Bed",
+      "addInGroundPlot": "Add In-Ground Plot",
+      "zoneName": "Zone Name",
+      "zoneType": "Type",
+      "raisedBed": "Raised Bed",
+      "inGroundPlot": "In-Ground Plot",
+      "length": "Length (m)",
+      "width": "Width (m)",
+      "height": "Height (m)",
+      "soilType": "Soil Type",
+      "noZonesYet": "No zones yet. Add your first planting area!",
+      "removeZone": "Remove",
+      "totalArea": "Total planting area:",
+      "remainingArea": "You have {area}m² remaining. You could plant:",
+      "plantSuggestion": "{count} {name}",
+      "raisedBedDesc": "Elevated wooden-framed bed (30-40cm above ground)",
+      "inGroundDesc": "Traditional in-ground planting area",
+      "potDesc": "Container or pot for balcony/terrace gardening",
+      "greenhouseDesc": "Protected growing space with controlled climate",
+      "pot": "Pot / Container",
+      "greenhouse": "Greenhouse",
+      "addPot": "Add Pot",
+      "addGreenhouse": "Add Greenhouse",
+      "zoneAdded": "Zone added!",
+      "defaultBedName": "Raised Bed",
+      "defaultPlotName": "Plot",
+      "defaultPotName": "Pot",
+      "defaultGreenhouseName": "Greenhouse"
+    }
   },
   "garden3d": {
     "dashboard": "Dashboard",
@@ -475,7 +509,7 @@
     "loading3d": "Loading 3D scene...",
     "dimensions": {
       "title": "Garden Dimensions",
-      "current": "Current: {length}m x {width}m ({area} m\u00b2)",
+      "current": "Current: {length}m x {width}m ({area} m²)",
       "quickPresets": "Quick presets",
       "length": "Length (m)",
       "width": "Width (m)",
@@ -503,11 +537,57 @@
       "widthM": "Width (m)",
       "heightM": "Height (m)",
       "defaultName": "Raised Bed"
-    }
+    },
+    "zones": {
+      "title": "Planting Zones",
+      "zonesPlaced": "{count} zone(s) placed",
+      "newZone": "New Planting Zone",
+      "name": "Name",
+      "lengthM": "Length (m)",
+      "widthM": "Width (m)",
+      "soilType": "Soil Type",
+      "sunExposure": "Sun Exposure",
+      "cancel": "Cancel",
+      "addZone": "Add Zone",
+      "addNewZone": "Add New Zone",
+      "positionInGarden": "Position in garden",
+      "up": "Up",
+      "down": "Down",
+      "left": "Left",
+      "right": "Right",
+      "tip": "Zones are placed in the center. Use controls to reposition. Plants can be assigned to zones.",
+      "defaultName": "Zone",
+      "plantsInZone": "plants"
+    },
+    "varietyPicker": {
+      "plantingTitle": "Plant {name}",
+      "selectVariety": "Select Variety",
+      "available": "available",
+      "standardVariety": "Standard (default)",
+      "days": "days",
+      "plantIn": "Plant in...",
+      "directGround": "Direct in ground",
+      "cancel": "Cancel",
+      "confirmPlanting": "Confirm Planting"
+    },
+    "suggestions": {
+      "title": "Planting Suggestions",
+      "subtitle": "Based on your garden's conditions",
+      "totalAreaM2": "Total m²",
+      "zonesBedsArea": "Zones/Beds m²",
+      "plantsPlaced": "Plants placed",
+      "noSuggestions": "No suggestions available. Try adjusting your garden setup.",
+      "suggestedQty": "Suggested: {count} plants",
+      "goodCompanions": "Good companions:",
+      "varietiesAvailable": "{count} varieties available",
+      "selectToPlant": "Select to plant"
+    },
+    "zones_label": "Zones",
+    "suggestions_label": "Suggestions"
   },
   "locale": {
     "en": "English",
-    "fr": "Fran\u00e7ais",
+    "fr": "Français",
     "switchLanguage": "Language"
   }
 }

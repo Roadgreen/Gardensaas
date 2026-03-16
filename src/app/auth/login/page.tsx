@@ -55,8 +55,25 @@ export default function LoginPage() {
         // Non-critical: locale sync failure should not block login
       }
 
-      const callbackUrl = searchParams.get('callbackUrl') || '/garden/dashboard';
-      router.push(callbackUrl);
+      const callbackUrl = searchParams.get('callbackUrl');
+      if (callbackUrl) {
+        router.push(callbackUrl);
+      } else {
+        // Check if garden is already configured (has data in localStorage)
+        try {
+          const stored = localStorage.getItem('garden-config');
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            if (parsed.length > 0 && parsed.width > 0 && (parsed.plantedItems?.length > 0 || (parsed.zones?.length > 0) || (parsed.raisedBeds?.length > 0))) {
+              router.push('/garden/dashboard');
+              return;
+            }
+          }
+        } catch {
+          // ignore parse errors
+        }
+        router.push('/garden/setup');
+      }
     } catch {
       setError(t('genericError'));
       setLoading(false);

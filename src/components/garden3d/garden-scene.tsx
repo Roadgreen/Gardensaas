@@ -12,6 +12,7 @@ import { GardenDecorations } from './garden-decorations';
 import { GardenUIOverlay } from './garden-ui-overlay';
 import { WeatherSystem } from './weather-effects';
 import { RaisedBed3D } from './raised-bed-3d';
+import { Zone3D } from './zone-3d';
 import { PlantSpacingRings } from './plant-spacing-rings';
 
 interface GardenSceneProps {
@@ -21,6 +22,8 @@ interface GardenSceneProps {
   showSpacing?: boolean;
   selectedBedId?: string | null;
   onSelectBed?: (bedId: string | null) => void;
+  selectedZoneId?: string | null;
+  onSelectZone?: (zoneId: string | null) => void;
 }
 
 // ===== Sound Effects Placeholder System =====
@@ -748,6 +751,8 @@ function SceneContent({
   showSpacing,
   selectedBedId,
   onSelectBed,
+  selectedZoneId,
+  onSelectZone,
   selectedPlantType,
 }: {
   config: GardenConfig;
@@ -772,6 +777,8 @@ function SceneContent({
   showSpacing: boolean;
   selectedBedId: string | null;
   onSelectBed: (bedId: string | null) => void;
+  selectedZoneId: string | null;
+  onSelectZone: (zoneId: string | null) => void;
   selectedPlantType: string | null;
 }) {
   const halfL = config.length / 2;
@@ -897,6 +904,19 @@ function SceneContent({
         />
       ))}
 
+      {/* Planting zones (in-ground) */}
+      {(config.zones || []).map((zone) => (
+        <Zone3D
+          key={zone.id}
+          zone={zone}
+          gardenLength={config.length}
+          gardenWidth={config.width}
+          isSelected={selectedZoneId === zone.id}
+          onSelect={() => onSelectZone(selectedZoneId === zone.id ? null : zone.id)}
+          plantCount={config.plantedItems.filter((p) => p.zoneId === zone.id).length}
+        />
+      ))}
+
       {/* Ground click handler for placement */}
       <GroundClickHandler
         config={config}
@@ -969,7 +989,7 @@ function getWeather(season: string): string {
   return states[hour % states.length];
 }
 
-export function GardenScene({ config, selectedPlantType: externalSelectedPlantType, showSpacing: externalShowSpacing = true, selectedBedId: externalSelectedBedId = null, onSelectBed: externalOnSelectBed }: GardenSceneProps) {
+export function GardenScene({ config, selectedPlantType: externalSelectedPlantType, showSpacing: externalShowSpacing = true, selectedBedId: externalSelectedBedId = null, onSelectBed: externalOnSelectBed, selectedZoneId: externalSelectedZoneId = null, onSelectZone: externalOnSelectZone }: GardenSceneProps) {
   const [selectedPlantIndex, setSelectedPlantIndex] = useState<number | null>(null);
   const [isIsometric, setIsIsometric] = useState(false);
   const [gardenerDialogue, setGardenerDialogue] = useState('');
@@ -1165,9 +1185,24 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
         }
       });
 
+      // Check if this click lands inside a planting zone
+      let zoneId: string | undefined;
+      (config.zones || []).forEach((zone) => {
+        const zoneWorldX = -halfL + (zone.x / 100) * config.length;
+        const zoneWorldZ = -halfW + (zone.z / 100) * config.width;
+        if (
+          worldX >= zoneWorldX - zone.lengthM / 2 &&
+          worldX <= zoneWorldX + zone.lengthM / 2 &&
+          worldZ >= zoneWorldZ - zone.widthM / 2 &&
+          worldZ <= zoneWorldZ + zone.widthM / 2
+        ) {
+          zoneId = zone.id;
+        }
+      });
+
       // Dispatch custom event for plant placement (will be handled by parent)
       const event = new CustomEvent('garden:plant', {
-        detail: { plantId: selectedPlantType, x: pctX, z: pctZ, raisedBedId },
+        detail: { plantId: selectedPlantType, x: pctX, z: pctZ, raisedBedId, zoneId },
       });
       window.dispatchEvent(event);
       SoundEffects.play('plant');
@@ -1297,6 +1332,8 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
           showSpacing={externalShowSpacing}
           selectedBedId={externalSelectedBedId}
           onSelectBed={externalOnSelectBed || (() => {})}
+          selectedZoneId={externalSelectedZoneId}
+          onSelectZone={externalOnSelectZone || (() => {})}
           selectedPlantType={selectedPlantType}
         />
       </Canvas>

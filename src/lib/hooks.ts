@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import type { GardenConfig, PlantedItem, RaisedBed } from '@/types';
+import type { GardenConfig, PlantedItem, RaisedBed, GardenZone } from '@/types';
 
 const GARDEN_STORAGE_KEY = 'garden-config';
 
@@ -13,6 +13,7 @@ const defaultConfig: GardenConfig = {
   sunExposure: 'full-sun',
   plantedItems: [],
   raisedBeds: [],
+  zones: [],
   latitude: undefined,
   longitude: undefined,
   city: undefined,
@@ -27,8 +28,14 @@ export function useGarden() {
       const stored = localStorage.getItem(GARDEN_STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored) as GardenConfig;
-        // Backward compat: ensure raisedBeds array exists
+        // Backward compat: ensure arrays exist
         if (!parsed.raisedBeds) parsed.raisedBeds = [];
+        if (!parsed.zones) parsed.zones = [];
+        // Ensure zoneType field exists on all zones (backward compat)
+        parsed.zones = parsed.zones.map((z: import('@/types').GardenZone) => ({
+          ...z,
+          zoneType: z.zoneType || 'in-ground',
+        }));
         setConfigState(parsed);
       }
     } catch {
@@ -62,13 +69,15 @@ export function useGarden() {
   );
 
   const addPlant = useCallback(
-    (plantId: string, x: number, z: number, raisedBedId?: string) => {
+    (plantId: string, x: number, z: number, raisedBedId?: string, varietyId?: string, zoneId?: string) => {
       const item: PlantedItem = {
         plantId,
         x,
         z,
         plantedDate: new Date().toISOString(),
         ...(raisedBedId ? { raisedBedId } : {}),
+        ...(varietyId ? { varietyId } : {}),
+        ...(zoneId ? { zoneId } : {}),
       };
       setConfigState((prev) => {
         const updated = {
@@ -174,6 +183,66 @@ export function useGarden() {
     []
   );
 
+  const addZone = useCallback(
+    (zone: GardenZone) => {
+      setConfigState((prev) => {
+        const updated = {
+          ...prev,
+          zones: [...(prev.zones || []), zone],
+        };
+        try {
+          localStorage.setItem(GARDEN_STORAGE_KEY, JSON.stringify(updated));
+        } catch {
+          // ignore
+        }
+        return updated;
+      });
+    },
+    []
+  );
+
+  const removeZone = useCallback(
+    (zoneId: string) => {
+      setConfigState((prev) => {
+        const updated = {
+          ...prev,
+          zones: (prev.zones || []).filter((z) => z.id !== zoneId),
+          // Clear zone reference from plants in that zone
+          plantedItems: prev.plantedItems.map((p) =>
+            p.zoneId === zoneId ? { ...p, zoneId: undefined } : p
+          ),
+        };
+        try {
+          localStorage.setItem(GARDEN_STORAGE_KEY, JSON.stringify(updated));
+        } catch {
+          // ignore
+        }
+        return updated;
+      });
+    },
+    []
+  );
+
+  const updateZone = useCallback(
+    (zoneId: string, partial: Partial<GardenZone>) => {
+      setConfigState((prev) => {
+        const updated = {
+          ...prev,
+          zones: (prev.zones || []).map((z) =>
+            z.id === zoneId ? { ...z, ...partial } : z
+          ),
+        };
+        try {
+          localStorage.setItem(GARDEN_STORAGE_KEY, JSON.stringify(updated));
+        } catch {
+          // ignore
+        }
+        return updated;
+      });
+    },
+    []
+  );
+
   const isSetupComplete = isLoaded && config.length > 0 && config.width > 0;
 
   return {
@@ -186,6 +255,9 @@ export function useGarden() {
     addRaisedBed,
     removeRaisedBed,
     updateRaisedBed,
+    addZone,
+    removeZone,
+    updateZone,
     isLoaded,
     isSetupComplete,
   };

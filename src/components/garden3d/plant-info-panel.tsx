@@ -1,8 +1,8 @@
 'use client';
 
 import { useMemo } from 'react';
-import type { Plant, PlantedItem, RaisedBed } from '@/types';
-import { RAISED_BED_SOIL_LABELS } from '@/types';
+import type { Plant, PlantedItem, RaisedBed, GardenZone } from '@/types';
+import { RAISED_BED_SOIL_LABELS, SOIL_LABELS } from '@/types';
 
 interface PlantInfoPanelProps {
   plant: Plant;
@@ -13,6 +13,9 @@ interface PlantInfoPanelProps {
   gardenWidth?: number;
   raisedBedId?: string;
   raisedBeds?: RaisedBed[];
+  varietyId?: string;
+  zoneId?: string;
+  zones?: GardenZone[];
   onClose: () => void;
   onRemove?: () => void;
 }
@@ -38,7 +41,7 @@ const WATER_LABELS: Record<string, string> = {
 
 const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, gardenLength, gardenWidth, raisedBedId, raisedBeds, onClose, onRemove }: PlantInfoPanelProps) {
+export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, gardenLength, gardenWidth, raisedBedId, raisedBeds, varietyId, zoneId, zones, onClose, onRemove }: PlantInfoPanelProps) {
   const daysPlanted = useMemo(() => {
     const now = new Date();
     const planted = new Date(plantedDate);
@@ -187,6 +190,68 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
       }}>
         {plant.description.en}
       </div>
+
+      {/* Variety indicator */}
+      {varietyId && plant.varieties && (() => {
+        const variety = plant.varieties.find(v => v.id === varietyId);
+        if (!variety) return null;
+        return (
+          <div style={{
+            marginBottom: '14px', padding: '10px', borderRadius: '10px',
+            background: 'rgba(168, 85, 247, 0.1)',
+            border: '1px solid rgba(168, 85, 247, 0.25)',
+            display: 'flex', alignItems: 'center', gap: '8px',
+          }}>
+            <div style={{
+              width: '24px', height: '24px', borderRadius: '6px',
+              background: variety.color || plant.color,
+              border: '1px solid rgba(255,255,255,0.15)',
+            }} />
+            <div>
+              <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#C084FC' }}>
+                Variety: {variety.name.en}
+              </div>
+              {variety.description && (
+                <div style={{ fontSize: '9px', color: '#9CA3AF' }}>
+                  {variety.description.en}
+                </div>
+              )}
+              {variety.harvestDays && variety.harvestDays !== plant.harvestDays && (
+                <div style={{ fontSize: '9px', color: '#A78BFA' }}>
+                  Harvest: {variety.harvestDays} days
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* Zone indicator */}
+      {zoneId && zones && (() => {
+        const zone = zones.find(z => z.id === zoneId);
+        if (!zone) return null;
+        return (
+          <div style={{
+            marginBottom: '14px', padding: '10px', borderRadius: '10px',
+            background: `${zone.color}15`,
+            border: `1px solid ${zone.color}40`,
+            display: 'flex', alignItems: 'center', gap: '8px',
+          }}>
+            <div style={{
+              width: '12px', height: '12px', borderRadius: '3px',
+              background: zone.color,
+            }} />
+            <div>
+              <div style={{ fontSize: '11px', fontWeight: 'bold', color: zone.color }}>
+                Zone: {zone.name}
+              </div>
+              <div style={{ fontSize: '9px', color: '#9CA3AF' }}>
+                {zone.lengthM}x{zone.widthM}m - {SOIL_LABELS[zone.soilType]}
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Raised bed indicator */}
       {raisedBedId && raisedBeds && (() => {

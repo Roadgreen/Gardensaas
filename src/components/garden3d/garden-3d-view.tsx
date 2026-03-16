@@ -11,6 +11,9 @@ import { PlantCatalogSidebar } from './plant-catalog-sidebar';
 import { DragDropOverlay } from './drag-drop-overlay';
 import { PlantInfoPanel } from './plant-info-panel';
 import { RaisedBedPanel } from './raised-bed-panel';
+import { ZonePanel } from './zone-panel';
+import { VarietyPicker } from './variety-picker';
+import { PlantingSuggestions } from './planting-suggestions';
 import { GardenSizeSelector } from './garden-size-selector';
 import { SpacingInfoOverlay } from './spacing-info-overlay';
 import type { RaisedBed } from '@/types';
@@ -25,7 +28,7 @@ const GardenScene = dynamic(() => import('./garden-scene').then(m => ({ default:
 });
 
 export function Garden3DView() {
-  const { config, isLoaded, addPlant, removePlant, addRaisedBed, removeRaisedBed, updateRaisedBed, updateConfig } = useGarden();
+  const { config, isLoaded, addPlant, removePlant, addRaisedBed, removeRaisedBed, updateRaisedBed, addZone, removeZone, updateZone, updateConfig } = useGarden();
   const { plants } = usePlants();
   const t = useTranslations('garden3d');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -34,9 +37,14 @@ export function Garden3DView() {
   const [selectedPlantType, setSelectedPlantType] = useState<string | null>(null);
   const [showSpacing, setShowSpacing] = useState(true);
   const [showRaisedBedPanel, setShowRaisedBedPanel] = useState(false);
+  const [showZonePanel, setShowZonePanel] = useState(false);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedBedId, setSelectedBedId] = useState<string | null>(null);
+  const [selectedZoneId, setSelectedZoneId] = useState<string | null>(null);
   const [infoPanelPlantIndex, setInfoPanelPlantIndex] = useState<number | null>(null);
   const [showSizeSelector, setShowSizeSelector] = useState(false);
+  // Variety picker state
+  const [varietyPickerPlant, setVarietyPickerPlant] = useState<{ plantId: string; x: number; z: number; raisedBedId?: string; zoneId?: string } | null>(null);
 
   // Get the selected plant data for spacing info
   const selectedPlantData = useMemo(() => {
@@ -54,7 +62,19 @@ export function Garden3DView() {
     const handlePlant = (e: Event) => {
       const detail = (e as CustomEvent).detail;
       if (detail?.plantId && detail?.x !== undefined && detail?.z !== undefined) {
-        addPlant(detail.plantId, detail.x, detail.z, detail.raisedBedId);
+        const plantData = plants.find(p => p.id === detail.plantId);
+        // If plant has varieties or there are zones/beds, show the picker
+        if (plantData && (plantData.varieties?.length || (config.zones || []).length > 0 || (config.raisedBeds || []).length > 0)) {
+          setVarietyPickerPlant({
+            plantId: detail.plantId,
+            x: detail.x,
+            z: detail.z,
+            raisedBedId: detail.raisedBedId,
+            zoneId: detail.zoneId,
+          });
+        } else {
+          addPlant(detail.plantId, detail.x, detail.z, detail.raisedBedId, undefined, detail.zoneId);
+        }
       }
     };
     const handleRemove = (e: Event) => {
@@ -78,7 +98,16 @@ export function Garden3DView() {
       window.removeEventListener('garden:remove', handleRemove);
       window.removeEventListener('garden:info', handleInfo);
     };
-  }, [addPlant, removePlant]);
+  }, [addPlant, removePlant, plants, config.zones, config.raisedBeds]);
+
+  // Handle variety picker confirm
+  const handleVarietyConfirm = useCallback((varietyId: string | undefined, targetZoneId: string | undefined, targetBedId: string | undefined) => {
+    if (!varietyPickerPlant) return;
+    const finalBedId = targetBedId || varietyPickerPlant.raisedBedId;
+    const finalZoneId = targetZoneId || varietyPickerPlant.zoneId;
+    addPlant(varietyPickerPlant.plantId, varietyPickerPlant.x, varietyPickerPlant.z, finalBedId, varietyId, finalZoneId);
+    setVarietyPickerPlant(null);
+  }, [varietyPickerPlant, addPlant]);
 
   const handleDragStart = useCallback((plantId: string) => {
     setIsDragging(true);
@@ -109,6 +138,9 @@ export function Garden3DView() {
   const infoPanelItem = infoPanelPlantIndex !== null ? config.plantedItems[infoPanelPlantIndex] : null;
   const infoPanelPlant = infoPanelItem ? plants.find(p => p.id === infoPanelItem.plantId) : null;
 
+  // Variety picker plant data
+  const varietyPickerPlantData = varietyPickerPlant ? plants.find(p => p.id === varietyPickerPlant.plantId) : null;
+
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-[#0D1F17] flex items-center justify-center">
@@ -131,6 +163,7 @@ export function Garden3DView() {
           <span className="text-xs sm:text-sm text-green-300/60 hidden sm:inline">
             {config.length}m x {config.width}m | {config.plantedItems.length} {t('plants')}
             {(config.raisedBeds || []).length > 0 && ` | ${(config.raisedBeds || []).length} ${t('beds')}`}
+            {(config.zones || []).length > 0 && ` | ${(config.zones || []).length} ${t('zones')}`}
           </span>
           <span className="text-xs text-green-300/60 sm:hidden">
             {config.plantedItems.length} {t('plants')}
@@ -161,6 +194,18 @@ export function Garden3DView() {
           >
             {'\uD83E\uDDF2'} <span className="hidden sm:inline">{t('spacing')}</span>
           </button>
+          {/* Zones */}
+          <button
+            onClick={() => setShowZonePanel(v => !v)}
+            className="px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
+            style={{
+              background: showZonePanel ? 'rgba(74, 222, 128, 0.15)' : 'transparent',
+              borderColor: showZonePanel ? 'rgba(74, 222, 128, 0.5)' : 'rgba(74, 222, 128, 0.2)',
+              color: showZonePanel ? '#4ADE80' : '#9CA3AF',
+            }}
+          >
+            {'\uD83D\uDFE9'} <span className="hidden sm:inline">{t('zones_label')}</span>
+          </button>
           {/* Raised beds */}
           <button
             onClick={() => setShowRaisedBedPanel(v => !v)}
@@ -172,6 +217,18 @@ export function Garden3DView() {
             }}
           >
             {'\uD83E\uDDF1'} <span className="hidden sm:inline">{t('beds')}</span>
+          </button>
+          {/* Suggestions */}
+          <button
+            onClick={() => setShowSuggestions(v => !v)}
+            className="px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
+            style={{
+              background: showSuggestions ? 'rgba(251, 191, 36, 0.15)' : 'transparent',
+              borderColor: showSuggestions ? 'rgba(251, 191, 36, 0.5)' : 'rgba(74, 222, 128, 0.2)',
+              color: showSuggestions ? '#FBBF24' : '#9CA3AF',
+            }}
+          >
+            {'\uD83D\uDCA1'} <span className="hidden sm:inline">{t('suggestions_label')}</span>
           </button>
           {/* Catalog */}
           <button
@@ -227,7 +284,7 @@ export function Garden3DView() {
         )}
 
         {/* Plant info panel */}
-        {infoPanelPlant && infoPanelItem && (
+        {infoPanelPlant && infoPanelItem && !showSuggestions && (
           <PlantInfoPanel
             plant={infoPanelPlant}
             plantedDate={infoPanelItem.plantedDate}
@@ -237,12 +294,29 @@ export function Garden3DView() {
             gardenWidth={config.width}
             raisedBedId={infoPanelItem.raisedBedId}
             raisedBeds={config.raisedBeds}
+            varietyId={infoPanelItem.varietyId}
+            zoneId={infoPanelItem.zoneId}
+            zones={config.zones || []}
             onClose={() => setInfoPanelPlantIndex(null)}
             onRemove={() => {
               if (infoPanelPlantIndex !== null) {
                 removePlant(infoPanelPlantIndex);
                 setInfoPanelPlantIndex(null);
               }
+            }}
+          />
+        )}
+
+        {/* Planting suggestions panel */}
+        {showSuggestions && (
+          <PlantingSuggestions
+            config={config}
+            plants={plants}
+            onClose={() => setShowSuggestions(false)}
+            onSelectPlant={(plantId) => {
+              setSelectedPlantType(plantId);
+              setShowSuggestions(false);
+              setIsSidebarOpen(true);
             }}
           />
         )}
@@ -260,6 +334,31 @@ export function Garden3DView() {
           />
         )}
 
+        {/* Zone panel */}
+        {showZonePanel && (
+          <ZonePanel
+            zones={config.zones || []}
+            selectedZoneId={selectedZoneId}
+            onAddZone={addZone}
+            onRemoveZone={removeZone}
+            onUpdateZone={updateZone}
+            onSelectZone={setSelectedZoneId}
+            onClose={() => setShowZonePanel(false)}
+            plantedItems={config.plantedItems}
+          />
+        )}
+
+        {/* Variety picker modal */}
+        {varietyPickerPlantData && varietyPickerPlant && (
+          <VarietyPicker
+            plant={varietyPickerPlantData}
+            zones={config.zones || []}
+            raisedBeds={config.raisedBeds || []}
+            onConfirm={handleVarietyConfirm}
+            onCancel={() => setVarietyPickerPlant(null)}
+          />
+        )}
+
         <Suspense fallback={
           <div className="w-full h-full flex items-center justify-center">
             <div className="animate-pulse text-green-400">Loading...</div>
@@ -271,6 +370,8 @@ export function Garden3DView() {
             showSpacing={showSpacing}
             selectedBedId={selectedBedId}
             onSelectBed={setSelectedBedId}
+            selectedZoneId={selectedZoneId}
+            onSelectZone={setSelectedZoneId}
             onPlantAdded={() => {
               // Plant was placed via click, handled through events
             }}

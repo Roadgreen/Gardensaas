@@ -60,7 +60,8 @@ export default function RegisterPage() {
         return;
       }
 
-      router.push('/garden/dashboard');
+      // New user always goes to setup
+      router.push('/garden/setup');
     } catch {
       setError(t('genericError'));
       setLoading(false);
