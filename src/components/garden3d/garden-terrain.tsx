@@ -24,26 +24,27 @@ interface GardenTerrainProps {
 }
 
 const SOIL_COLORS: Record<string, string> = {
-  clay: '#8B6914',
-  sandy: '#C2A66B',
-  loamy: '#5C3D1E',
-  silty: '#7A6548',
-  peaty: '#3B2F1B',
-  chalky: '#A89F8C',
+  clay: '#9A7020',
+  sandy: '#D0B878',
+  loamy: '#6B4828',
+  silty: '#887050',
+  peaty: '#483828',
+  chalky: '#B8AE98',
 };
 
+// Warmer, more inviting greens -- Animal Crossing / Stardew Valley palette
 const SEASON_GRASS: Record<string, string> = {
-  spring: '#7EC850',
-  summer: '#5DA832',
-  autumn: '#B8A040',
-  winter: '#D4D8C0',
+  spring: '#88D860',
+  summer: '#68C040',
+  autumn: '#C8B048',
+  winter: '#D8DCC8',
 };
 
 const SEASON_GRASS_DARK: Record<string, string> = {
-  spring: '#5AAE30',
-  summer: '#488A28',
-  autumn: '#9A8830',
-  winter: '#B8BCA8',
+  spring: '#60C038',
+  summer: '#50A030',
+  autumn: '#A89838',
+  winter: '#C0C4B0',
 };
 
 export function GardenTerrain({ length, width, soilType, plantPositions, season, onGroundClick, showGrid, gridSpacingCm }: GardenTerrainProps) {
@@ -301,22 +302,39 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
         );
       })}
 
-      {/* Soil bed border trim (wooden frame) */}
-      <mesh position={[0, 0.03, -halfW - 0.03]} castShadow>
-        <boxGeometry args={[length + 0.1, 0.06, 0.05]} />
-        <meshStandardMaterial color="#6B4A2A" map={texReady ? woodTexRef.current : null} roughness={0.8} />
+      {/* Soil bed border trim (warm wooden frame with slight rounded look) */}
+      <mesh position={[0, 0.035, -halfW - 0.03]} castShadow>
+        <boxGeometry args={[length + 0.12, 0.07, 0.055]} />
+        <meshStandardMaterial color="#8B6838" map={texReady ? woodTexRef.current : null} roughness={0.78} />
       </mesh>
-      <mesh position={[0, 0.03, halfW + 0.03]} castShadow>
-        <boxGeometry args={[length + 0.1, 0.06, 0.05]} />
-        <meshStandardMaterial color="#6B4A2A" map={texReady ? woodTexRef.current : null} roughness={0.8} />
+      <mesh position={[0, 0.035, halfW + 0.03]} castShadow>
+        <boxGeometry args={[length + 0.12, 0.07, 0.055]} />
+        <meshStandardMaterial color="#8B6838" map={texReady ? woodTexRef.current : null} roughness={0.78} />
       </mesh>
-      <mesh position={[-halfL - 0.03, 0.03, 0]} castShadow>
-        <boxGeometry args={[0.05, 0.06, width + 0.1]} />
-        <meshStandardMaterial color="#6B4A2A" map={texReady ? woodTexRef.current : null} roughness={0.8} />
+      <mesh position={[-halfL - 0.03, 0.035, 0]} castShadow>
+        <boxGeometry args={[0.055, 0.07, width + 0.12]} />
+        <meshStandardMaterial color="#8B6838" map={texReady ? woodTexRef.current : null} roughness={0.78} />
       </mesh>
-      <mesh position={[halfL + 0.03, 0.03, 0]} castShadow>
-        <boxGeometry args={[0.05, 0.06, width + 0.1]} />
-        <meshStandardMaterial color="#6B4A2A" map={texReady ? woodTexRef.current : null} roughness={0.8} />
+      <mesh position={[halfL + 0.03, 0.035, 0]} castShadow>
+        <boxGeometry args={[0.055, 0.07, width + 0.12]} />
+        <meshStandardMaterial color="#8B6838" map={texReady ? woodTexRef.current : null} roughness={0.78} />
+      </mesh>
+      {/* Top trim rail for polished border look */}
+      <mesh position={[0, 0.072, -halfW - 0.03]} castShadow>
+        <boxGeometry args={[length + 0.14, 0.015, 0.065]} />
+        <meshStandardMaterial color="#A08050" map={texReady ? woodTexRef.current : null} roughness={0.72} />
+      </mesh>
+      <mesh position={[0, 0.072, halfW + 0.03]} castShadow>
+        <boxGeometry args={[length + 0.14, 0.015, 0.065]} />
+        <meshStandardMaterial color="#A08050" map={texReady ? woodTexRef.current : null} roughness={0.72} />
+      </mesh>
+      <mesh position={[-halfL - 0.03, 0.072, 0]} castShadow>
+        <boxGeometry args={[0.065, 0.015, width + 0.14]} />
+        <meshStandardMaterial color="#A08050" map={texReady ? woodTexRef.current : null} roughness={0.72} />
+      </mesh>
+      <mesh position={[halfL + 0.03, 0.072, 0]} castShadow>
+        <boxGeometry args={[0.065, 0.015, width + 0.14]} />
+        <meshStandardMaterial color="#A08050" map={texReady ? woodTexRef.current : null} roughness={0.72} />
       </mesh>
 
       {/* Row lines on soil for visual structure */}
@@ -362,18 +380,18 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
         </mesh>
       ))}
 
-      {/* Fence posts */}
+      {/* Fence posts -- rounded for cozy cartoon look */}
       {fencePosts.map((post, i) => (
         <group key={`fp-${i}`}>
-          {/* Post body */}
-          <mesh position={[post.x, 0.14, post.z]} castShadow>
-            <boxGeometry args={[0.06, 0.32, 0.06]} />
-            <meshStandardMaterial color="#B8845C" map={texReady ? woodTexRef.current : null} roughness={0.85} />
+          {/* Post body -- slightly tapered cylinder for softer look */}
+          <mesh position={[post.x, 0.15, post.z]} castShadow>
+            <cylinderGeometry args={[0.025, 0.032, 0.34, 6]} />
+            <meshStandardMaterial color="#C49060" map={texReady ? woodTexRef.current : null} roughness={0.82} />
           </mesh>
-          {/* Post cap - pointed for cute look */}
-          <mesh position={[post.x, 0.32, post.z]} castShadow>
-            <coneGeometry args={[0.045, 0.06, 4]} />
-            <meshStandardMaterial color="#D4A06C" map={texReady ? woodTexRef.current : null} roughness={0.8} />
+          {/* Post cap - rounded dome for cute look */}
+          <mesh position={[post.x, 0.33, post.z]} castShadow>
+            <sphereGeometry args={[0.035, 6, 4, 0, Math.PI * 2, 0, Math.PI / 2]} />
+            <meshStandardMaterial color="#D8B080" map={texReady ? woodTexRef.current : null} roughness={0.75} />
           </mesh>
           {/* AO shadow at base of post */}
           <mesh position={[post.x, 0.002, post.z]} rotation={[-Math.PI / 2, 0, 0]}>
@@ -381,23 +399,23 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
             <meshBasicMaterial
               map={texReady ? aoTexRef.current : null}
               transparent
-              opacity={0.4}
+              opacity={0.35}
               depthWrite={false}
             />
           </mesh>
         </group>
       ))}
 
-      {/* Fence rails - two horizontal rails */}
+      {/* Fence rails - rounded cylinders for cozy cartoon look */}
       {fenceRails.map((rail, i) => (
         <group key={`fr-${i}`}>
-          <mesh position={[rail.x, 0.22, rail.z]} rotation={[0, rail.rotY, 0]} castShadow>
-            <boxGeometry args={[rail.len, 0.035, 0.025]} />
-            <meshStandardMaterial color="#D4A870" map={texReady ? woodTexRef.current : null} roughness={0.8} />
+          <mesh position={[rail.x, 0.24, rail.z]} rotation={[0, rail.rotY, Math.PI / 2]} castShadow>
+            <capsuleGeometry args={[0.014, rail.len - 0.04, 4, 6]} />
+            <meshStandardMaterial color="#D8B078" map={texReady ? woodTexRef.current : null} roughness={0.78} />
           </mesh>
-          <mesh position={[rail.x, 0.1, rail.z]} rotation={[0, rail.rotY, 0]} castShadow>
-            <boxGeometry args={[rail.len, 0.035, 0.025]} />
-            <meshStandardMaterial color="#D4A870" map={texReady ? woodTexRef.current : null} roughness={0.8} />
+          <mesh position={[rail.x, 0.12, rail.z]} rotation={[0, rail.rotY, Math.PI / 2]} castShadow>
+            <capsuleGeometry args={[0.014, rail.len - 0.04, 4, 6]} />
+            <meshStandardMaterial color="#D8B078" map={texReady ? woodTexRef.current : null} roughness={0.78} />
           </mesh>
         </group>
       ))}
@@ -428,65 +446,96 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
 }
 
 function GrassTuft({ x, z, scale, rotation, color }: { x: number; z: number; scale: number; rotation: number; color: string }) {
-  const ref = useRef<THREE.Mesh>(null);
+  const ref = useRef<THREE.Group>(null);
 
   useFrame(() => {
     if (!ref.current) return;
     const t = performance.now() * 0.001;
-    ref.current.rotation.z = Math.sin(t * 1.5 + x * 5) * 0.08;
+    ref.current.rotation.z = Math.sin(t * 1.5 + x * 5) * 0.1;
   });
 
+  // Rounder, more cartoon-like grass blades in a cluster
   return (
-    <mesh ref={ref} position={[x, scale * 0.5, z]} rotation={[0, rotation, 0]}>
-      <coneGeometry args={[scale * 0.35, scale * 2.2, 4]} />
-      <meshStandardMaterial color={color} transparent opacity={0.85} />
-    </mesh>
+    <group ref={ref} position={[x, 0, z]} rotation={[0, rotation, 0]}>
+      <mesh position={[0, scale * 0.6, 0]}>
+        <capsuleGeometry args={[scale * 0.15, scale * 1.2, 3, 5]} />
+        <meshStandardMaterial color={color} transparent opacity={0.9} />
+      </mesh>
+      <mesh position={[scale * 0.15, scale * 0.45, scale * 0.08]} rotation={[0, 0.4, 0.15]}>
+        <capsuleGeometry args={[scale * 0.12, scale * 0.9, 3, 5]} />
+        <meshStandardMaterial color={color} transparent opacity={0.85} />
+      </mesh>
+      <mesh position={[-scale * 0.12, scale * 0.4, -scale * 0.06]} rotation={[0, -0.3, -0.12]}>
+        <capsuleGeometry args={[scale * 0.1, scale * 0.8, 3, 5]} />
+        <meshStandardMaterial color={color} transparent opacity={0.8} />
+      </mesh>
+    </group>
   );
 }
 
 function SeasonalItem({ x, z, y, scale, variant, season }: { x: number; z: number; y: number; scale: number; variant: number; season: string }) {
   if (season === 'spring') {
-    const colors = ['#FFB7D5', '#DDA0DD', '#FFEB3B'];
+    // Cute little wildflowers with rounded petals
+    const colors = ['#FFB8D8', '#E0A8E0', '#FFEE60'];
+    const petalColor = colors[variant];
     return (
       <group position={[x, y, z]}>
-        <mesh>
-          <sphereGeometry args={[scale, 6, 4]} />
-          <meshStandardMaterial color={colors[variant]} />
+        {/* Petals -- small sphere cluster for round flower look */}
+        {[0, 1.26, 2.52, 3.78, 5.04].map((angle, i) => (
+          <mesh key={`petal-${i}`} position={[Math.cos(angle) * scale * 0.4, scale * 0.1, Math.sin(angle) * scale * 0.4]}>
+            <sphereGeometry args={[scale * 0.35, 5, 4]} />
+            <meshStandardMaterial color={petalColor} />
+          </mesh>
+        ))}
+        {/* Center */}
+        <mesh position={[0, scale * 0.15, 0]}>
+          <sphereGeometry args={[scale * 0.2, 5, 4]} />
+          <meshStandardMaterial color="#FFE040" />
         </mesh>
-        <mesh position={[0, -scale * 0.8, 0]}>
-          <cylinderGeometry args={[0.003, 0.003, scale * 1.5, 4]} />
-          <meshStandardMaterial color="#4CAF50" />
+        <mesh position={[0, -scale * 0.5, 0]}>
+          <cylinderGeometry args={[0.004, 0.004, scale * 1.2, 4]} />
+          <meshStandardMaterial color="#60B060" />
         </mesh>
       </group>
     );
   }
   if (season === 'autumn') {
-    const colors = ['#E06010', '#C04020', '#D4A020'];
+    // Rounded leaf shapes instead of flat boxes
+    const colors = ['#E87030', '#D05028', '#D8A828'];
     return (
-      <mesh position={[x, y, z]} rotation={[0.2, variant * 1.2, 0.1]}>
-        <boxGeometry args={[scale * 2, 0.005, scale * 1.5]} />
-        <meshStandardMaterial color={colors[variant]} side={THREE.DoubleSide} />
-      </mesh>
+      <group position={[x, y, z]} rotation={[0.2, variant * 1.2, 0.1]}>
+        <mesh>
+          <sphereGeometry args={[scale * 0.8, 5, 4, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          <meshStandardMaterial color={colors[variant]} side={THREE.DoubleSide} />
+        </mesh>
+      </group>
     );
   }
   if (season === 'winter') {
     return (
       <mesh position={[x, y, z]} rotation={[-Math.PI / 2, 0, variant * 0.5]}>
-        <circleGeometry args={[scale * 3, 6]} />
-        <meshStandardMaterial color="#F0F4FF" transparent opacity={0.6} />
+        <circleGeometry args={[scale * 3, 8]} />
+        <meshStandardMaterial color="#F0F4FF" transparent opacity={0.55} />
       </mesh>
     );
   }
-  // Summer - tiny flowers
+  // Summer - cute little wildflowers
   return (
     <group position={[x, 0, z]}>
-      <mesh position={[0, 0.06, 0]}>
-        <sphereGeometry args={[0.025, 6, 4]} />
+      {/* Daisy-like flower */}
+      {[0, 1.05, 2.1, 3.15, 4.2, 5.25].map((angle, i) => (
+        <mesh key={`dp-${i}`} position={[Math.cos(angle) * 0.015, 0.065, Math.sin(angle) * 0.015]}>
+          <sphereGeometry args={[0.008, 4, 3]} />
+          <meshStandardMaterial color="#FFFFFF" />
+        </mesh>
+      ))}
+      <mesh position={[0, 0.068, 0]}>
+        <sphereGeometry args={[0.01, 5, 4]} />
         <meshStandardMaterial color="#FFD700" />
       </mesh>
-      <mesh position={[0, 0.03, 0]}>
+      <mesh position={[0, 0.035, 0]}>
         <cylinderGeometry args={[0.004, 0.004, 0.06, 4]} />
-        <meshStandardMaterial color="#4CAF50" />
+        <meshStandardMaterial color="#58B858" />
       </mesh>
     </group>
   );

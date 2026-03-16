@@ -49,25 +49,25 @@ function SkyDome({ season, timeOfDay }: { season: string; timeOfDay: string }) {
   const colors = useMemo(() => {
     const palettes: Record<string, Record<string, [string, string]>> = {
       morning: {
-        spring: ['#87CEEB', '#FFE4B5'],
-        summer: ['#64B5F6', '#FFD54F'],
-        autumn: ['#90CAF9', '#FFCC80'],
-        winter: ['#B0BEC5', '#CFD8DC'],
+        spring: ['#9DD6F5', '#FFECD2'],
+        summer: ['#7EC8F2', '#FFE0A0'],
+        autumn: ['#A8C8E8', '#FFD8A0'],
+        winter: ['#C0CCD8', '#E0E4E8'],
       },
       afternoon: {
-        spring: ['#42A5F5', '#E3F2FD'],
-        summer: ['#1E88E5', '#BBDEFB'],
-        autumn: ['#5C6BC0', '#E8EAF6'],
-        winter: ['#78909C', '#ECEFF1'],
+        spring: ['#6BB8E8', '#E8F4FC'],
+        summer: ['#5AACE0', '#D0EAFF'],
+        autumn: ['#8090C0', '#F0E8F0'],
+        winter: ['#90A0B0', '#F0F2F4'],
       },
       evening: {
-        spring: ['#5C6BC0', '#FF8A65'],
-        summer: ['#3949AB', '#FF7043'],
-        autumn: ['#4527A0', '#FF6E40'],
-        winter: ['#263238', '#546E7A'],
+        spring: ['#7878C0', '#FF9878'],
+        summer: ['#5060B0', '#FF8860'],
+        autumn: ['#583CA0', '#FF7850'],
+        winter: ['#303848', '#607080'],
       },
     };
-    return palettes[timeOfDay]?.[season] || ['#87CEEB', '#FFE4B5'];
+    return palettes[timeOfDay]?.[season] || ['#9DD6F5', '#FFECD2'];
   }, [season, timeOfDay]);
 
   const topColor = useMemo(() => new THREE.Color(colors[0]), [colors]);
@@ -315,25 +315,30 @@ function Cloud({ position, scale }: { position: [number, number, number]; scale:
 
   return (
     <group ref={cloudRef} position={position} scale={scale}>
+      {/* Fluffier, rounder cloud blobs */}
       <mesh>
-        <sphereGeometry args={[1, 8, 6]} />
-        <meshStandardMaterial color="white" transparent opacity={0.82} />
+        <sphereGeometry args={[1, 10, 8]} />
+        <meshStandardMaterial color="#FFFFFF" transparent opacity={0.88} roughness={1} />
       </mesh>
-      <mesh position={[0.9, -0.1, 0]}>
-        <sphereGeometry args={[0.75, 7, 5]} />
-        <meshStandardMaterial color="white" transparent opacity={0.8} />
+      <mesh position={[0.85, -0.05, 0.1]}>
+        <sphereGeometry args={[0.8, 9, 7]} />
+        <meshStandardMaterial color="#FAFAFA" transparent opacity={0.85} roughness={1} />
       </mesh>
-      <mesh position={[-0.7, -0.15, 0.2]}>
-        <sphereGeometry args={[0.65, 7, 5]} />
-        <meshStandardMaterial color="white" transparent opacity={0.8} />
+      <mesh position={[-0.65, -0.1, 0.15]}>
+        <sphereGeometry args={[0.7, 9, 7]} />
+        <meshStandardMaterial color="#FAFAFA" transparent opacity={0.85} roughness={1} />
       </mesh>
-      <mesh position={[0.3, 0.35, -0.1]}>
-        <sphereGeometry args={[0.55, 6, 5]} />
-        <meshStandardMaterial color="white" transparent opacity={0.78} />
+      <mesh position={[0.25, 0.4, -0.05]}>
+        <sphereGeometry args={[0.6, 8, 6]} />
+        <meshStandardMaterial color="#FFFFFF" transparent opacity={0.82} roughness={1} />
       </mesh>
-      <mesh position={[1.5, -0.05, 0.15]}>
-        <sphereGeometry args={[0.5, 6, 4]} />
-        <meshStandardMaterial color="white" transparent opacity={0.75} />
+      <mesh position={[1.45, 0, 0.1]}>
+        <sphereGeometry args={[0.55, 8, 6]} />
+        <meshStandardMaterial color="#FAFAFA" transparent opacity={0.8} roughness={1} />
+      </mesh>
+      <mesh position={[-0.3, 0.2, -0.2]}>
+        <sphereGeometry args={[0.5, 7, 5]} />
+        <meshStandardMaterial color="#FFFFFF" transparent opacity={0.78} roughness={1} />
       </mesh>
     </group>
   );
@@ -412,9 +417,11 @@ function CameraController({
 
   useEffect(() => {
     if (isIsometric) {
-      targetRef.current = { x: 5, y: 5, z: 5 };
+      // Classic isometric-like angle: slightly tilted, warm cozy overview
+      targetRef.current = { x: 4.5, y: 5.5, z: 4.5 };
     } else {
-      targetRef.current = { x: 3, y: 4, z: 5 };
+      // Default: gentle elevated angle for a nice garden overview
+      targetRef.current = { x: 3.5, y: 4.5, z: 5.5 };
     }
   }, [isIsometric]);
 
@@ -448,27 +455,27 @@ function CameraController({
   return null;
 }
 
-// Lighting setup with warm Animal Crossing-style tones
+// Lighting setup with warm Animal Crossing / Stardew Valley cozy tones
 function SceneLighting({ timeOfDay, season }: { timeOfDay: string; season: string }) {
   const ambientIntensity = useMemo(() => {
-    if (timeOfDay === 'evening') return 0.35;
-    if (timeOfDay === 'morning') return 0.55;
-    return 0.65;
+    if (timeOfDay === 'evening') return 0.4;
+    if (timeOfDay === 'morning') return 0.6;
+    return 0.7;
   }, [timeOfDay]);
 
   const directionalIntensity = useMemo(() => {
-    if (timeOfDay === 'evening') return 0.5;
-    if (season === 'winter') return 0.7;
-    return 1.1;
+    if (timeOfDay === 'evening') return 0.6;
+    if (season === 'winter') return 0.8;
+    return 1.2;
   }, [timeOfDay, season]);
 
-  // Warmer light colors for a cozy Animal Crossing feel
+  // Warmer, cozier light colors -- golden hour feel
   const lightColor = useMemo(() => {
-    if (timeOfDay === 'evening') return '#FF9E70';
-    if (timeOfDay === 'morning') return '#FFE8C0';
-    if (season === 'winter') return '#E8E4E0';
-    if (season === 'autumn') return '#FFDDB0';
-    return '#FFF8E8'; // Warm white instead of pure white
+    if (timeOfDay === 'evening') return '#FFB080';
+    if (timeOfDay === 'morning') return '#FFEAC0';
+    if (season === 'winter') return '#EAE6E2';
+    if (season === 'autumn') return '#FFE0B8';
+    return '#FFF5E0'; // Warm golden white
   }, [timeOfDay, season]);
 
   const hour = new Date().getHours();
@@ -477,9 +484,9 @@ function SceneLighting({ timeOfDay, season }: { timeOfDay: string; season: strin
   return (
     <>
       <ambientLight intensity={ambientIntensity} color={lightColor} />
-      {/* Main directional light (sun) - softer shadows */}
+      {/* Main directional light (sun) - soft cartoon shadows */}
       <directionalLight
-        position={[Math.cos(sunAngle) * 8, Math.sin(sunAngle) * 6 + 3, -5]}
+        position={[Math.cos(sunAngle) * 8, Math.sin(sunAngle) * 6 + 4, -5]}
         intensity={directionalIntensity}
         color={lightColor}
         castShadow
@@ -489,41 +496,47 @@ function SceneLighting({ timeOfDay, season }: { timeOfDay: string; season: strin
         shadow-camera-right={10}
         shadow-camera-top={10}
         shadow-camera-bottom={-10}
-        shadow-bias={-0.001}
-        shadow-radius={3}
+        shadow-bias={-0.0005}
+        shadow-radius={4}
       />
-      {/* Fill light from opposite side for softer look */}
+      {/* Warm fill light from opposite side -- reduces harsh shadows */}
       <directionalLight
-        position={[-3, 2, 3]}
-        intensity={0.25}
-        color="#C8E8FF"
+        position={[-4, 3, 4]}
+        intensity={0.3}
+        color="#D8ECFF"
       />
-      {/* Warm bounce light from below (simulates ground bounce) */}
+      {/* Warm ground bounce light for cozy feel */}
       <directionalLight
         position={[0, -1, 0]}
-        intensity={0.08}
-        color="#9ED88A"
+        intensity={0.12}
+        color="#A8E090"
       />
-      {/* Hemisphere light: sky color top, ground color bottom */}
+      {/* Hemisphere light: soft sky + warm ground tones */}
       <hemisphereLight
         args={[
-          season === 'winter' ? '#B8C8D5' : season === 'autumn' ? '#D4B896' : '#A8D8F0',
-          season === 'winter' ? '#E0E0E0' : '#6EB86E',
-          0.35,
+          season === 'winter' ? '#C0D0E0' : season === 'autumn' ? '#E0C8A0' : '#B0E0F8',
+          season === 'winter' ? '#E8E8E0' : '#80C868',
+          0.4,
         ]}
       />
-      {/* Evening warm lantern glow */}
+      {/* Evening cozy lantern glow */}
       {timeOfDay === 'evening' && (
         <>
-          <pointLight position={[0, 0.8, 0]} intensity={0.4} color="#FFB060" distance={6} decay={2} />
-          <pointLight position={[0, 1.5, 0]} intensity={0.15} color="#FF9040" distance={10} decay={2} />
+          <pointLight position={[0, 0.8, 0]} intensity={0.5} color="#FFB868" distance={7} decay={2} />
+          <pointLight position={[0, 1.5, 0]} intensity={0.2} color="#FFA050" distance={12} decay={2} />
         </>
       )}
-      {/* Subtle rim light for cartoon outline feel */}
+      {/* Rim light for cartoon edge definition */}
       <directionalLight
-        position={[-5, 3, -5]}
-        intensity={0.12}
-        color="#E0E8FF"
+        position={[-5, 4, -5]}
+        intensity={0.15}
+        color="#E8F0FF"
+      />
+      {/* Subtle top-down fill for even illumination */}
+      <directionalLight
+        position={[0, 8, 0]}
+        intensity={0.1}
+        color="#FFF8F0"
       />
     </>
   );
@@ -829,11 +842,11 @@ function SceneContent({
         panSpeed={0.8}
       />
 
-      {/* Fog for depth */}
+      {/* Soft fog for depth -- warm tones */}
       <fog attach="fog" args={[
-        timeOfDay === 'evening' ? '#1a1a3e' : season === 'winter' ? '#D0D8E0' : '#C8E6C9',
-        10,
-        40,
+        timeOfDay === 'evening' ? '#1E2040' : season === 'winter' ? '#D8E0E8' : season === 'autumn' ? '#E0D8C8' : '#D0ECD0',
+        12,
+        45,
       ]} />
 
       {/* Terrain */}
@@ -1297,15 +1310,15 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
       <Canvas
         shadows="soft"
         camera={{
-          position: [3, 4, 5],
-          fov: 42,
+          position: [4, 5, 5.5],
+          fov: 38,
           near: 0.1,
           far: 100,
         }}
         gl={{
           antialias: true,
           toneMapping: THREE.ACESFilmicToneMapping,
-          toneMappingExposure: 1.3,
+          toneMappingExposure: 1.35,
         }}
         style={{ background: 'transparent' }}
       >

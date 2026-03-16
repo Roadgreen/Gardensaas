@@ -281,22 +281,22 @@ function GardenSign({ position }: { position: [number, number, number] }) {
 function SmallTree({ position, season }: { position: [number, number, number]; season: string }) {
   const leafColor = useMemo(() => {
     switch (season) {
-      case 'spring': return '#66BB6A';
-      case 'summer': return '#2E7D32';
-      case 'autumn': return '#E65100';
-      case 'winter': return '#90A4AE';
-      default: return '#4CAF50';
+      case 'spring': return '#78D068';
+      case 'summer': return '#38A038';
+      case 'autumn': return '#E07020';
+      case 'winter': return '#98B0B8';
+      default: return '#58C050';
     }
   }, [season]);
 
-  // Darker leaf color for depth
+  // Darker leaf color for depth and shading
   const leafDark = useMemo(() => {
     switch (season) {
-      case 'spring': return '#4CA84E';
-      case 'summer': return '#1B5E20';
-      case 'autumn': return '#BF360C';
-      case 'winter': return '#78909C';
-      default: return '#388E3C';
+      case 'spring': return '#58B848';
+      case 'summer': return '#207020';
+      case 'autumn': return '#C85010';
+      case 'winter': return '#808EA0';
+      default: return '#409838';
     }
   }, [season]);
 
@@ -316,47 +316,59 @@ function SmallTree({ position, season }: { position: [number, number, number]; s
 
   return (
     <group ref={ref} position={position}>
-      {/* Trunk with wood texture */}
+      {/* Trunk with wood texture -- slightly tapered */}
       <mesh position={[0, 0.15, 0]} castShadow>
-        <cylinderGeometry args={[0.04, 0.06, 0.3, 6]} />
-        <meshStandardMaterial color="#795548" map={woodTex} roughness={0.9} />
+        <cylinderGeometry args={[0.035, 0.055, 0.3, 6]} />
+        <meshStandardMaterial color="#806050" map={woodTex} roughness={0.88} />
       </mesh>
-      {/* Tree crown layers with two-tone for depth */}
-      <mesh position={[0, 0.35, 0]} castShadow>
-        <coneGeometry args={[0.22, 0.25, 7]} />
-        <meshStandardMaterial color={leafColor} roughness={0.8} />
+      {/* Tree crown -- rounded sphere clusters for Animal Crossing / cartoon style */}
+      <mesh position={[0, 0.42, 0]} castShadow>
+        <sphereGeometry args={[0.2, 8, 6]} />
+        <meshStandardMaterial color={leafColor} roughness={0.82} />
       </mesh>
-      <mesh position={[0, 0.5, 0]} castShadow>
-        <coneGeometry args={[0.17, 0.22, 7]} />
-        <meshStandardMaterial color={leafDark} roughness={0.8} />
+      <mesh position={[0.1, 0.38, 0.08]} castShadow>
+        <sphereGeometry args={[0.15, 7, 5]} />
+        <meshStandardMaterial color={leafDark} roughness={0.82} />
       </mesh>
-      <mesh position={[0, 0.62, 0]} castShadow>
-        <coneGeometry args={[0.11, 0.16, 7]} />
-        <meshStandardMaterial color={leafColor} roughness={0.8} />
+      <mesh position={[-0.08, 0.4, -0.06]} castShadow>
+        <sphereGeometry args={[0.14, 7, 5]} />
+        <meshStandardMaterial color={leafDark} roughness={0.82} />
+      </mesh>
+      <mesh position={[0, 0.55, 0]} castShadow>
+        <sphereGeometry args={[0.14, 7, 5]} />
+        <meshStandardMaterial color={leafColor} roughness={0.82} />
+      </mesh>
+      <mesh position={[0.06, 0.5, 0.05]} castShadow>
+        <sphereGeometry args={[0.1, 6, 5]} />
+        <meshStandardMaterial color={leafDark} roughness={0.82} />
       </mesh>
       {season === 'winter' && (
         <>
-          <mesh position={[0, 0.37, 0]}>
-            <coneGeometry args={[0.23, 0.05, 7]} />
-            <meshStandardMaterial color="#F5F5F5" transparent opacity={0.6} />
+          {/* Snow caps on top of rounded crown */}
+          <mesh position={[0, 0.58, 0]}>
+            <sphereGeometry args={[0.12, 7, 4, 0, Math.PI * 2, 0, Math.PI / 2]} />
+            <meshStandardMaterial color="#F5F5F5" transparent opacity={0.65} />
           </mesh>
-          <mesh position={[0, 0.52, 0]}>
-            <coneGeometry args={[0.18, 0.04, 7]} />
-            <meshStandardMaterial color="#F5F5F5" transparent opacity={0.6} />
+          <mesh position={[0.08, 0.48, 0.06]}>
+            <sphereGeometry args={[0.08, 6, 4, 0, Math.PI * 2, 0, Math.PI / 2]} />
+            <meshStandardMaterial color="#F0F0F0" transparent opacity={0.55} />
           </mesh>
         </>
       )}
       {season === 'spring' && (
         <>
-          {/* Cherry blossom spots */}
-          <mesh position={[0.15, 0.4, 0.05]}>
-            <sphereGeometry args={[0.02, 4, 3]} />
-            <meshStandardMaterial color="#FFB7D5" />
-          </mesh>
-          <mesh position={[-0.1, 0.5, 0.08]}>
-            <sphereGeometry args={[0.018, 4, 3]} />
-            <meshStandardMaterial color="#FFB7D5" />
-          </mesh>
+          {/* Cherry blossom spots scattered on crown */}
+          {[
+            [0.18, 0.42, 0.06],
+            [-0.12, 0.5, 0.1],
+            [0.05, 0.58, -0.1],
+            [-0.08, 0.38, -0.12],
+          ].map((pos, i) => (
+            <mesh key={`blossom-${i}`} position={pos as [number, number, number]}>
+              <sphereGeometry args={[0.018 + i * 0.002, 5, 4]} />
+              <meshStandardMaterial color={i % 2 === 0 ? '#FFB8D8' : '#FFC8E0'} />
+            </mesh>
+          ))}
         </>
       )}
       {/* Shadow blob with AO texture */}
@@ -470,20 +482,22 @@ function WaterDroplets({ position, active }: { position: [number, number, number
   );
 }
 
-// Ambient pollen/firefly particles
+// Floating pollen / dust motes -- more abundant and dreamy
 function AmbientParticles({ gardenLength, gardenWidth, season }: { gardenLength: number; gardenWidth: number; season: string }) {
   const ref = useRef<THREE.Group>(null);
   const isEvening = new Date().getHours() >= 18;
-  const count = season === 'winter' ? 8 : 16;
+  const count = season === 'winter' ? 12 : season === 'spring' ? 28 : 22;
 
   const particles = useMemo(() =>
     Array.from({ length: count }, (_, i) => ({
-      x: (Math.random() - 0.5) * (gardenLength + 4),
-      z: (Math.random() - 0.5) * (gardenWidth + 4),
-      y: 0.3 + Math.random() * 1.2,
-      speed: 0.2 + Math.random() * 0.4,
+      x: (Math.random() - 0.5) * (gardenLength + 6),
+      z: (Math.random() - 0.5) * (gardenWidth + 6),
+      y: 0.15 + Math.random() * 1.8,
+      speed: 0.12 + Math.random() * 0.3,
+      driftX: 0.08 + Math.random() * 0.2,
+      driftZ: 0.06 + Math.random() * 0.15,
       offset: Math.random() * Math.PI * 2,
-      size: 0.008 + Math.random() * 0.008,
+      size: 0.006 + Math.random() * 0.01,
     })),
   [gardenLength, gardenWidth, count]);
 
@@ -494,22 +508,24 @@ function AmbientParticles({ gardenLength, gardenWidth, season }: { gardenLength:
       const p = particles[i];
       if (!p) return;
       const mesh = child as THREE.Mesh;
-      mesh.position.y = p.y + Math.sin(t * p.speed + p.offset) * 0.15;
-      mesh.position.x = p.x + Math.sin(t * 0.15 + p.offset) * 0.5;
-      mesh.position.z = p.z + Math.cos(t * 0.1 + p.offset) * 0.3;
-      const pulse = (Math.sin(t * 2 + p.offset) + 1) / 2;
-      (mesh.material as THREE.MeshBasicMaterial).opacity = 0.3 + pulse * 0.6;
+      // Gentle floating with lazy drift
+      mesh.position.y = p.y + Math.sin(t * p.speed + p.offset) * 0.2;
+      mesh.position.x = p.x + Math.sin(t * p.driftX + p.offset) * 0.8;
+      mesh.position.z = p.z + Math.cos(t * p.driftZ + p.offset * 1.3) * 0.5;
+      const pulse = (Math.sin(t * 1.5 + p.offset) + 1) / 2;
+      (mesh.material as THREE.MeshBasicMaterial).opacity = 0.25 + pulse * 0.55;
+      mesh.scale.setScalar(0.8 + pulse * 0.4);
     });
   });
 
-  const color = isEvening ? '#FFFF88' : season === 'winter' ? '#E0E8FF' : '#FFE082';
+  const color = isEvening ? '#FFFF90' : season === 'winter' ? '#E0E8FF' : season === 'spring' ? '#FFE8A0' : '#FFE088';
 
   return (
     <group ref={ref}>
       {particles.map((p, i) => (
         <mesh key={`ambient-${i}`} position={[p.x, p.y, p.z]}>
-          <sphereGeometry args={[p.size, 4, 3]} />
-          <meshBasicMaterial color={color} transparent opacity={0.5} />
+          <sphereGeometry args={[p.size, 5, 4]} />
+          <meshBasicMaterial color={color} transparent opacity={0.45} />
         </mesh>
       ))}
     </group>
@@ -552,48 +568,59 @@ function GardenPond({ position, season }: { position: [number, number, number]; 
     }
   });
 
-  const waterColor = season === 'winter' ? '#B0C4DE' : season === 'autumn' ? '#5F9EA0' : '#4AA8C0';
+  const waterColor = season === 'winter' ? '#A8C0D8' : season === 'autumn' ? '#58A0A0' : '#50B8D0';
+  const waterDeep = season === 'winter' ? '#8098B0' : season === 'autumn' ? '#406868' : '#3890A0';
 
   return (
     <group position={position}>
-      {/* Pond basin / edge stones */}
-      <mesh position={[0, -0.01, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <circleGeometry args={[0.45, 12]} />
-        <meshStandardMaterial color="#4A5568" roughness={0.9} />
+      {/* Pond basin / deeper layer for depth illusion */}
+      <mesh position={[0, -0.02, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <circleGeometry args={[0.46, 16]} />
+        <meshStandardMaterial color="#3A4858" roughness={0.95} />
       </mesh>
-      {/* Stone border */}
-      {Array.from({ length: 10 }).map((_, i) => {
-        const angle = (i / 10) * Math.PI * 2;
+      {/* Dark underwater depth layer */}
+      <mesh position={[0, -0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.4, 16]} />
+        <meshStandardMaterial color={waterDeep} transparent opacity={0.85} roughness={0.3} />
+      </mesh>
+      {/* Stone border -- more varied and rounded */}
+      {Array.from({ length: 12 }).map((_, i) => {
+        const angle = (i / 12) * Math.PI * 2;
+        const size = 0.035 + (i % 3) * 0.012;
         return (
-          <mesh key={`ps-${i}`} position={[Math.cos(angle) * 0.42, 0.02, Math.sin(angle) * 0.42]} castShadow>
-            <sphereGeometry args={[0.04 + (i % 3) * 0.01, 5, 4]} />
-            <meshStandardMaterial color={i % 2 === 0 ? '#9E9E9E' : '#BDBDBD'} map={stoneTex} roughness={0.9} />
+          <mesh key={`ps-${i}`} position={[Math.cos(angle) * 0.43, 0.015, Math.sin(angle) * 0.43]} castShadow>
+            <sphereGeometry args={[size, 6, 5]} />
+            <meshStandardMaterial color={i % 3 === 0 ? '#A0A098' : i % 3 === 1 ? '#C0BDB0' : '#908880'} map={stoneTex} roughness={0.88} />
           </mesh>
         );
       })}
-      {/* Water surface */}
-      <mesh ref={waterRef} position={[0, 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[0.38, 12]} />
+      {/* Water surface -- more translucent and reflective */}
+      <mesh ref={waterRef} position={[0, 0.012, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.39, 16]} />
         <meshStandardMaterial
           color={waterColor}
           map={waterTex}
           transparent
-          opacity={0.7}
-          metalness={0.35}
-          roughness={0.08}
+          opacity={0.75}
+          metalness={0.4}
+          roughness={0.05}
         />
       </mesh>
-      {/* Water highlight shimmer */}
-      <mesh position={[0.08, 0.015, -0.05]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[0.08, 6]} />
-        <meshBasicMaterial color="#FFFFFF" transparent opacity={0.15} />
+      {/* Multiple highlight shimmers for sparkle effect */}
+      <mesh position={[0.1, 0.016, -0.06]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.06, 6]} />
+        <meshBasicMaterial color="#FFFFFF" transparent opacity={0.18} />
+      </mesh>
+      <mesh position={[-0.08, 0.016, 0.04]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.04, 5]} />
+        <meshBasicMaterial color="#FFFFFF" transparent opacity={0.12} />
       </mesh>
       {/* Ripple rings */}
-      <group ref={rippleRef} position={[0, 0.016, 0]}>
+      <group ref={rippleRef} position={[0, 0.017, 0]}>
         {[0, 1, 2].map((i) => (
           <mesh key={`ripple-${i}`} rotation={[-Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[0.12, 0.14, 12]} />
-            <meshBasicMaterial color={waterColor} transparent opacity={0.2} side={THREE.DoubleSide} />
+            <ringGeometry args={[0.1, 0.12, 16]} />
+            <meshBasicMaterial color={waterColor} transparent opacity={0.18} side={THREE.DoubleSide} />
           </mesh>
         ))}
       </group>

@@ -17,16 +17,17 @@ interface RaisedBed3DProps {
 }
 
 const SOIL_COLORS: Record<string, string> = {
-  'potting-mix': '#3B2710',
-  'compost': '#2E1E0A',
-  'loamy': '#5C3D1E',
-  'sandy': '#A08050',
-  'peat-mix': '#2A1F10',
-  'clay-mix': '#7A5530',
+  'potting-mix': '#483018',
+  'compost': '#382810',
+  'loamy': '#6B4828',
+  'sandy': '#B09060',
+  'peat-mix': '#352818',
+  'clay-mix': '#886038',
 };
 
-const WOOD_COLORS = ['#8B6914', '#A0784A', '#7A5A2E', '#6B4A22'];
-const WOOD_DARK = '#4A3018';
+// Warmer, more cartoon-like wood tones
+const WOOD_COLORS = ['#A87830', '#B88850', '#987038', '#886028'];
+const WOOD_DARK = '#584020';
 
 export function RaisedBed3D({ bed, gardenLength, gardenWidth, isSelected, onSelect }: RaisedBed3DProps) {
   const groupRef = useRef<THREE.Group>(null);
@@ -153,26 +154,26 @@ export function RaisedBed3D({ bed, gardenLength, gardenWidth, isSelected, onSele
         </mesh>
       ))}
 
-      {/* Corner posts - thicker, taller */}
+      {/* Corner posts - rounded cylinders for cozy cartoon look */}
       {corners.map((c, i) => (
         <group key={`corner-${i}`}>
           <mesh position={[c.x, h / 2, c.z]} castShadow>
-            <boxGeometry args={[0.065, h + 0.04, 0.065]} />
-            <meshStandardMaterial color="#5A3A18" roughness={0.9} />
+            <cylinderGeometry args={[0.03, 0.035, h + 0.05, 6]} />
+            <meshStandardMaterial color="#6A4820" roughness={0.85} />
           </mesh>
-          {/* Corner post cap */}
-          <mesh position={[c.x, h + 0.025, c.z]} castShadow>
-            <boxGeometry args={[0.075, 0.015, 0.075]} />
-            <meshStandardMaterial color="#7A5A30" roughness={0.8} />
+          {/* Corner post dome cap */}
+          <mesh position={[c.x, h + 0.03, c.z]} castShadow>
+            <sphereGeometry args={[0.038, 6, 4, 0, Math.PI * 2, 0, Math.PI / 2]} />
+            <meshStandardMaterial color="#907040" roughness={0.75} />
           </mesh>
         </group>
       ))}
 
-      {/* Top trim rails - decorative cap */}
+      {/* Top trim rails - wider decorative cap for finished look */}
       {topRails.map((rail, i) => (
-        <mesh key={`trim-${i}`} position={[rail.x, h + 0.008, rail.z]} rotation={[0, rail.rotY, 0]} castShadow>
-          <boxGeometry args={[rail.len, 0.02, wallThickness + 0.02]} />
-          <meshStandardMaterial color="#9A7A4A" roughness={0.75} />
+        <mesh key={`trim-${i}`} position={[rail.x, h + 0.012, rail.z]} rotation={[0, rail.rotY, 0]} castShadow>
+          <boxGeometry args={[rail.len, 0.025, wallThickness + 0.025]} />
+          <meshStandardMaterial color="#B09058" roughness={0.7} />
         </mesh>
       ))}
 
