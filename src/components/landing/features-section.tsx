@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import {
   Sprout,
   Calendar,
@@ -9,8 +8,8 @@ import {
   Users,
   Droplets,
   Bot,
-  Gamepad2,
-  Trophy,
+  Sparkles,
+  Crown,
 } from 'lucide-react';
 
 const features = [
@@ -18,72 +17,66 @@ const features = [
     icon: Sprout,
     title: 'Smart Plant Recommendations',
     description:
-      'Get personalized plant suggestions based on your soil type, climate zone, and sun exposure. Never guess what to grow again.',
-    color: 'text-green-400',
-    bg: 'bg-green-900/50',
-    xp: '+50 XP',
+      'Get personalized plant suggestions based on your soil type, climate zone, and sun exposure.',
+    iconColor: 'text-green-600 dark:text-green-400',
+    iconBg: 'bg-green-100 dark:bg-green-900/50',
   },
   {
     icon: Eye,
     title: '3D Garden Visualization',
     description:
-      'See your garden come alive in a charming 3D world with cute plants, butterflies, and Sprout your gardener companion.',
-    color: 'text-emerald-400',
-    bg: 'bg-emerald-900/50',
-    xp: '+30 XP',
+      'See your garden come alive in a charming 3D world with cute plants and your gardener companion.',
+    iconColor: 'text-emerald-600 dark:text-emerald-400',
+    iconBg: 'bg-emerald-100 dark:bg-emerald-900/50',
   },
   {
     icon: Bot,
     title: 'AI Garden Advisor',
     description:
-      'Your personal gardening expert, available 24/7. Knows your soil, climate, and plants to give tailored advice.',
-    color: 'text-lime-400',
-    bg: 'bg-lime-900/50',
+      'Your personal gardening expert, available 24/7. Tailored advice for your specific garden.',
+    iconColor: 'text-violet-600 dark:text-violet-400',
+    iconBg: 'bg-violet-100 dark:bg-violet-900/50',
     pro: true,
-    xp: '+100 XP',
   },
   {
     icon: Calendar,
     title: 'Planting Calendar',
     description:
-      'Month-by-month guidance on when to plant, water, and harvest each crop for your specific climate.',
-    color: 'text-yellow-400',
-    bg: 'bg-yellow-900/50',
-    xp: '+25 XP',
+      'Month-by-month guidance on when to plant, water, and harvest each crop for your climate.',
+    iconColor: 'text-amber-600 dark:text-yellow-400',
+    iconBg: 'bg-amber-100 dark:bg-yellow-900/50',
   },
   {
     icon: Users,
     title: 'Companion Planting',
     description:
-      'Discover which plants thrive together and which to keep apart. Maximize your yield with smart pairing.',
-    color: 'text-teal-400',
-    bg: 'bg-teal-900/50',
-    xp: '+40 XP',
+      'Discover which plants thrive together and which to keep apart. Maximize your yield.',
+    iconColor: 'text-teal-600 dark:text-teal-400',
+    iconBg: 'bg-teal-100 dark:bg-teal-900/50',
   },
   {
     icon: Droplets,
     title: 'Care Instructions',
     description:
-      'Detailed watering schedules, soil preparation tips, and organic pest management for every plant.',
-    color: 'text-cyan-400',
-    bg: 'bg-cyan-900/50',
-    xp: '+20 XP',
+      'Detailed watering schedules, soil preparation tips, and organic pest management.',
+    iconColor: 'text-sky-600 dark:text-cyan-400',
+    iconBg: 'bg-sky-100 dark:bg-cyan-900/50',
   },
 ];
 
 const containerVariants = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
+  visible: { transition: { staggerChildren: 0.08 } },
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' as const } },
 };
 
 export function FeaturesSection() {
   return (
-    <section className="py-24 px-6" id="features">
+    <section className="py-24 md:py-32 px-6 bg-white dark:bg-[#0D1F17]" id="features">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -93,18 +86,18 @@ export function FeaturesSection() {
           className="text-center mb-16"
         >
           <motion.span
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-900/40 border border-green-800/30 text-green-400 text-sm font-medium mb-4"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-green-800/30 text-green-700 dark:text-green-400 text-sm font-medium mb-6"
             whileInView={{ scale: [0.9, 1] }}
             viewport={{ once: true }}
           >
-            <Gamepad2 className="w-4 h-4" />
-            Features & Abilities
+            <Sparkles className="w-4 h-4" />
+            Features
           </motion.span>
-          <h2 className="text-3xl md:text-4xl font-bold text-green-50 mb-4">
-            Unlock Your Garden Powers
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-green-50 mb-5 tracking-tight">
+            Everything you need to grow
           </h2>
-          <p className="text-green-200/60 text-lg max-w-2xl mx-auto">
-            From planning to harvesting, level up your garden skills with every feature.
+          <p className="text-gray-500 dark:text-green-200/60 text-lg max-w-2xl mx-auto">
+            From planning to harvesting, powerful tools designed to make gardening simple and rewarding.
           </p>
         </motion.div>
 
@@ -117,25 +110,19 @@ export function FeaturesSection() {
         >
           {features.map((feature) => (
             <motion.div key={feature.title} variants={itemVariants}>
-              <Card hover className="h-full relative game-card">
+              <div className="relative h-full p-6 rounded-2xl border border-gray-100 dark:border-green-900/40 bg-white dark:bg-[#142A1E] transition-all duration-300 hover:border-green-200 dark:hover:border-green-700/60 hover:shadow-lg hover:shadow-green-100/50 dark:hover:shadow-green-900/20 hover:-translate-y-1 group">
                 {feature.pro && (
-                  <span className="absolute top-4 right-4 px-2 py-0.5 bg-amber-500/20 text-amber-400 text-xs font-medium rounded-full flex items-center gap-1">
-                    <Trophy className="w-3 h-3" />
+                  <span className="absolute top-4 right-4 px-2.5 py-1 bg-amber-50 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-semibold rounded-full flex items-center gap-1">
+                    <Crown className="w-3 h-3" />
                     PRO
                   </span>
                 )}
-                {/* XP badge */}
-                <span className="absolute top-4 left-4 px-2 py-0.5 bg-yellow-500/10 text-yellow-400 text-xs font-bold rounded-full border border-yellow-600/20">
-                  {feature.xp}
-                </span>
-                <div className={`w-12 h-12 rounded-xl ${feature.bg} flex items-center justify-center mb-4 mt-4`}>
-                  <feature.icon className={`w-6 h-6 ${feature.color}`} />
+                <div className={`w-12 h-12 rounded-2xl ${feature.iconBg} flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110`}>
+                  <feature.icon className={`w-6 h-6 ${feature.iconColor}`} />
                 </div>
-                <CardTitle className="mb-3">{feature.title}</CardTitle>
-                <CardContent>
-                  <p>{feature.description}</p>
-                </CardContent>
-              </Card>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-green-50 mb-2">{feature.title}</h3>
+                <p className="text-gray-500 dark:text-green-200/60 text-sm leading-relaxed">{feature.description}</p>
+              </div>
             </motion.div>
           ))}
         </motion.div>

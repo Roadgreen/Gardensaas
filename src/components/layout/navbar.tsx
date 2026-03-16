@@ -5,8 +5,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sprout, Menu, X, LogOut, User } from 'lucide-react';
+import { Sprout, Menu, X, LogOut, User, Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useTheme } from '@/components/providers/theme-provider';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -20,15 +21,22 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const { data: session } = useSession();
+  const { theme, toggleTheme } = useTheme();
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0D1F17]/90 backdrop-blur-md border-b border-green-900/30">
+    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b transition-colors duration-300"
+      style={{ background: 'var(--nav-bg)', borderColor: 'var(--nav-border)' }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <Sprout className="w-7 h-7 text-green-400 group-hover:text-green-300 transition-colors" />
-            <span className="text-lg font-bold text-green-50">GardenSaas</span>
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-sm group-hover:shadow-md group-hover:shadow-green-500/20 transition-all duration-300">
+              <Sprout className="w-4.5 h-4.5 text-white" />
+            </div>
+            <span className="text-lg font-bold" style={{ color: 'var(--heading)' }}>
+              Garden<span className="text-gradient">Saas</span>
+            </span>
           </Link>
 
           {/* Desktop nav */}
@@ -39,10 +47,10 @@ export function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                     isActive
-                      ? 'text-green-300 bg-green-900/40'
-                      : 'text-green-300/60 hover:text-green-200 hover:bg-green-900/20'
+                      ? 'text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/40'
+                      : 'text-gray-600 dark:text-green-300/60 hover:text-green-700 dark:hover:text-green-200 hover:bg-green-50 dark:hover:bg-green-900/20'
                   }`}
                 >
                   {link.label}
@@ -51,8 +59,15 @@ export function Navbar() {
             })}
           </div>
 
-          {/* CTA / User menu */}
-          <div className="hidden md:flex items-center gap-3">
+          {/* CTA / User menu / Theme */}
+          <div className="hidden md:flex items-center gap-2">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-lg text-gray-500 dark:text-green-400/60 hover:text-green-600 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20 transition-all duration-200 cursor-pointer"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
+            </button>
             {session ? (
               <>
                 <Link href="/garden/settings">
@@ -65,7 +80,7 @@ export function Navbar() {
                   variant="ghost"
                   size="sm"
                   onClick={() => signOut({ callbackUrl: '/' })}
-                  className="gap-2 text-green-400/60 hover:text-red-400"
+                  className="gap-2 text-gray-400 dark:text-green-400/60 hover:text-red-500 dark:hover:text-red-400"
                 >
                   <LogOut className="w-4 h-4" />
                 </Button>
@@ -82,13 +97,22 @@ export function Navbar() {
             )}
           </div>
 
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 text-green-300 hover:text-green-100 transition-colors cursor-pointer"
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Mobile: theme + menu */}
+          <div className="md:hidden flex items-center gap-1">
+            <button
+              onClick={toggleTheme}
+              className="p-2.5 rounded-lg text-gray-500 dark:text-green-400/60 hover:text-green-600 dark:hover:text-green-300 transition-colors cursor-pointer touch-target"
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2.5 rounded-lg text-gray-600 dark:text-green-300 hover:text-green-700 dark:hover:text-green-100 transition-colors cursor-pointer touch-target"
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -99,7 +123,9 @@ export function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-green-900/30 bg-[#0D1F17]/95 backdrop-blur-md"
+            transition={{ duration: 0.2 }}
+            className="md:hidden border-t backdrop-blur-xl overflow-hidden"
+            style={{ borderColor: 'var(--nav-border)', background: 'var(--nav-bg)' }}
           >
             <div className="px-4 py-4 space-y-1">
               {navLinks.map((link) => {
@@ -109,10 +135,10 @@ export function Navbar() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setIsOpen(false)}
-                    className={`block px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+                    className={`block px-4 py-3 rounded-xl text-sm font-medium transition-colors touch-target ${
                       isActive
-                        ? 'text-green-300 bg-green-900/40'
-                        : 'text-green-300/60 hover:text-green-200 hover:bg-green-900/20'
+                        ? 'text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/40'
+                        : 'text-gray-600 dark:text-green-300/60 hover:text-green-700 dark:hover:text-green-200 hover:bg-green-50 dark:hover:bg-green-900/20'
                     }`}
                   >
                     {link.label}
@@ -123,13 +149,13 @@ export function Navbar() {
                 {session ? (
                   <>
                     <Link href="/garden/settings" className="flex-1" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" size="sm" className="w-full">Account</Button>
+                      <Button variant="outline" size="sm" className="w-full touch-target">Account</Button>
                     </Link>
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => { signOut({ callbackUrl: '/' }); setIsOpen(false); }}
-                      className="gap-2"
+                      className="gap-2 touch-target"
                     >
                       <LogOut className="w-4 h-4" />
                     </Button>
@@ -137,10 +163,10 @@ export function Navbar() {
                 ) : (
                   <>
                     <Link href="/auth/login" className="flex-1" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" size="sm" className="w-full">Sign In</Button>
+                      <Button variant="outline" size="sm" className="w-full touch-target">Sign In</Button>
                     </Link>
                     <Link href="/auth/register" className="flex-1" onClick={() => setIsOpen(false)}>
-                      <Button size="sm" className="w-full">Start Free</Button>
+                      <Button size="sm" className="w-full touch-target">Start Free</Button>
                     </Link>
                   </>
                 )}

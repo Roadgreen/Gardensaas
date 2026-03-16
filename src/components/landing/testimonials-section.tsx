@@ -66,7 +66,7 @@ const itemVariants = {
 
 export function TestimonialsSection() {
   return (
-    <section className="py-24 px-6 bg-gradient-to-b from-[#0D1F17] to-[#0a1a10]">
+    <section className="py-24 md:py-32 px-6 bg-white dark:bg-gradient-to-b dark:from-[#0D1F17] dark:to-[#0a1a10]">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -75,13 +75,13 @@ export function TestimonialsSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <span className="inline-block px-4 py-1.5 rounded-full bg-green-900/40 border border-green-800/30 text-green-400 text-sm font-medium mb-4">
-            Gardener Stories
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-green-800/30 text-green-700 dark:text-green-400 text-sm font-medium mb-6">
+            Testimonials
           </span>
-          <h2 className="text-3xl md:text-4xl font-bold text-green-50 mb-4">
-            Loved by 10,000+ Gardeners
+          <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-green-50 mb-5 tracking-tight">
+            Loved by 10,000+ gardeners
           </h2>
-          <p className="text-green-200/60 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-500 dark:text-green-200/60 text-lg max-w-2xl mx-auto">
             Join a growing community of gardeners who plan smarter and harvest more.
           </p>
         </motion.div>
@@ -95,14 +95,14 @@ export function TestimonialsSection() {
         >
           {testimonials.map((t) => (
             <motion.div key={t.name} variants={itemVariants}>
-              <div className="rounded-2xl bg-[#142A1E] border border-green-900/40 p-6 h-full transition-all duration-300 hover:border-green-700/60 hover:shadow-lg hover:shadow-green-900/20 hover:-translate-y-0.5">
+              <div className="rounded-2xl bg-gray-50 dark:bg-[#142A1E] border border-gray-100 dark:border-green-900/40 p-6 h-full transition-all duration-300 hover:border-green-200 dark:hover:border-green-700/60 hover:shadow-lg hover:shadow-green-100/50 dark:hover:shadow-green-900/20 hover:-translate-y-0.5">
                 <div className="flex items-center gap-3 mb-4">
                   <div className={`w-10 h-10 rounded-full ${t.color} flex items-center justify-center text-white font-bold text-sm`}>
                     {t.avatar}
                   </div>
                   <div>
-                    <div className="text-green-50 font-medium text-sm">{t.name}</div>
-                    <div className="text-green-500/50 text-xs">{t.role}</div>
+                    <div className="text-gray-900 dark:text-green-50 font-medium text-sm">{t.name}</div>
+                    <div className="text-gray-400 dark:text-green-500/50 text-xs">{t.role}</div>
                   </div>
                 </div>
                 <div className="flex gap-0.5 mb-3">
@@ -110,7 +110,7 @@ export function TestimonialsSection() {
                     <Star key={i} className="w-4 h-4 text-yellow-400 fill-yellow-400" />
                   ))}
                 </div>
-                <p className="text-green-200/70 text-sm leading-relaxed">
+                <p className="text-gray-600 dark:text-green-200/70 text-sm leading-relaxed">
                   &ldquo;{t.text}&rdquo;
                 </p>
               </div>

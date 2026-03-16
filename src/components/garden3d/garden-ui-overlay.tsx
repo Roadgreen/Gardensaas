@@ -161,6 +161,25 @@ export function GardenUIOverlay({
     }
   }, [activeTool, onToolSelect, onTogglePlacement]);
 
+  // Keyboard shortcuts: 1-5 for tools, Escape to deselect
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      // Ignore if typing in an input
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      const key = e.key;
+      if (key >= '1' && key <= '5') {
+        const toolIndex = parseInt(key) - 1;
+        const tool = TOOLS[toolIndex];
+        if (tool) handleToolClick(tool.id);
+      } else if (key === 'Escape') {
+        onToolSelect?.(null);
+        setShowToolbar(false);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [handleToolClick, onToolSelect]);
+
   return (
     <>
       {/* ===== TOP-LEFT: Season & Weather ===== */}

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { SessionProvider } from "@/components/providers/session-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -58,14 +60,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#0D1F17] text-green-50`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        style={{ background: 'var(--background)', color: 'var(--foreground)' }}
       >
         <SessionProvider>
-          <Navbar />
-          <main className="pt-16">{children}</main>
-          <Footer />
+          <ThemeProvider>
+            <Navbar />
+            <main className="pt-16">{children}</main>
+            <Footer />
+            <ScrollToTop />
+          </ThemeProvider>
         </SessionProvider>
       </body>
     </html>

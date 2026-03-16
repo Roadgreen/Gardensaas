@@ -1,0 +1,123 @@
+'use client';
+
+import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
+import { useEffect, useRef, useState } from 'react';
+import { Sprout, Users, Leaf, Star } from 'lucide-react';
+
+function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+          let start = 0;
+          const duration = 2000;
+          const startTime = performance.now();
+          const step = (now: number) => {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // ease out cubic
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setCount(Math.floor(eased * target));
+            if (progress < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+        }
+      },
+      { threshold: 0.5 }
+    );
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [target, hasAnimated]);
+
+  return (
+    <span ref={ref}>
+      {count.toLocaleString()}{suffix}
+    </span>
+  );
+}
+
+const stats = [
+  {
+    icon: Sprout,
+    value: 300,
+    suffix: '+',
+    label: 'Plant Varieties',
+    description: 'Vegetables, herbs, fruits & more',
+    color: 'text-green-500',
+    bg: 'bg-green-100 dark:bg-green-900/40',
+  },
+  {
+    icon: Users,
+    value: 10000,
+    suffix: '+',
+    label: 'Happy Gardeners',
+    description: 'And growing every day',
+    color: 'text-blue-500',
+    bg: 'bg-blue-100 dark:bg-blue-900/40',
+  },
+  {
+    icon: Leaf,
+    value: 50000,
+    suffix: '+',
+    label: 'Plants Grown',
+    description: 'Tracked and harvested',
+    color: 'text-emerald-500',
+    bg: 'bg-emerald-100 dark:bg-emerald-900/40',
+  },
+  {
+    icon: Star,
+    value: 4.9,
+    suffix: '/5',
+    label: 'User Rating',
+    description: 'Based on 2,000+ reviews',
+    color: 'text-amber-500',
+    bg: 'bg-amber-100 dark:bg-amber-900/40',
+  },
+];
+
+export function StatsSection() {
+  return (
+    <section className="py-16 md:py-20 px-6 bg-gray-50 dark:bg-gradient-to-b dark:from-[#0D1F17] dark:to-[#0a1a10] relative overflow-hidden">
+      {/* Subtle pattern */}
+      <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)', backgroundSize: '32px 32px' }} />
+
+      <div className="max-w-6xl mx-auto relative">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+          {stats.map((stat, i) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: i * 0.1 }}
+              className="text-center group"
+            >
+              <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl ${stat.bg} mb-4 transition-transform duration-300 group-hover:scale-110`}>
+                <stat.icon className={`w-7 h-7 ${stat.color}`} />
+              </div>
+              <div className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-green-50 mb-1 tracking-tight">
+                {typeof stat.value === 'number' && stat.value >= 100 ? (
+                  <AnimatedCounter target={stat.value} suffix={stat.suffix} />
+                ) : (
+                  <>{stat.value}{stat.suffix}</>
+                )}
+              </div>
+              <div className="text-sm font-semibold text-gray-700 dark:text-green-200/80 mb-1">
+                {stat.label}
+              </div>
+              <div className="text-xs text-gray-400 dark:text-green-400/50">
+                {stat.description}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -490,6 +490,164 @@ function AmbientParticles({ gardenLength, gardenWidth, season }: { gardenLength:
   );
 }
 
+// Decorative pond with animated water surface and lily pads
+function GardenPond({ position, season }: { position: [number, number, number]; season: string }) {
+  const waterRef = useRef<THREE.Mesh>(null);
+  const rippleRef = useRef<THREE.Group>(null);
+
+  useFrame(() => {
+    if (!waterRef.current) return;
+    const t = performance.now() * 0.001;
+    // Subtle water surface undulation
+    (waterRef.current.material as THREE.MeshStandardMaterial).opacity = 0.65 + Math.sin(t * 1.5) * 0.05;
+    waterRef.current.position.y = position[1] + 0.005 + Math.sin(t * 0.8) * 0.003;
+
+    // Animate ripples
+    if (rippleRef.current) {
+      rippleRef.current.children.forEach((child, i) => {
+        const mesh = child as THREE.Mesh;
+        const phase = ((t * 0.5 + i * 1.2) % 3) / 3;
+        mesh.scale.setScalar(0.3 + phase * 1.2);
+        (mesh.material as THREE.MeshBasicMaterial).opacity = (1 - phase) * 0.25;
+      });
+    }
+  });
+
+  const waterColor = season === 'winter' ? '#B0C4DE' : season === 'autumn' ? '#5F9EA0' : '#4AA8C0';
+
+  return (
+    <group position={position}>
+      {/* Pond basin / edge stones */}
+      <mesh position={[0, -0.01, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <circleGeometry args={[0.45, 12]} />
+        <meshStandardMaterial color="#4A5568" roughness={0.9} />
+      </mesh>
+      {/* Stone border */}
+      {Array.from({ length: 10 }).map((_, i) => {
+        const angle = (i / 10) * Math.PI * 2;
+        return (
+          <mesh key={`ps-${i}`} position={[Math.cos(angle) * 0.42, 0.02, Math.sin(angle) * 0.42]} castShadow>
+            <sphereGeometry args={[0.04 + (i % 3) * 0.01, 5, 4]} />
+            <meshStandardMaterial color={i % 2 === 0 ? '#9E9E9E' : '#BDBDBD'} roughness={0.9} />
+          </mesh>
+        );
+      })}
+      {/* Water surface */}
+      <mesh ref={waterRef} position={[0, 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.38, 12]} />
+        <meshStandardMaterial
+          color={waterColor}
+          transparent
+          opacity={0.7}
+          metalness={0.3}
+          roughness={0.1}
+        />
+      </mesh>
+      {/* Water highlight shimmer */}
+      <mesh position={[0.08, 0.015, -0.05]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.08, 6]} />
+        <meshBasicMaterial color="#FFFFFF" transparent opacity={0.12} />
+      </mesh>
+      {/* Ripple rings */}
+      <group ref={rippleRef} position={[0, 0.016, 0]}>
+        {[0, 1, 2].map((i) => (
+          <mesh key={`ripple-${i}`} rotation={[-Math.PI / 2, 0, 0]}>
+            <ringGeometry args={[0.12, 0.14, 12]} />
+            <meshBasicMaterial color={waterColor} transparent opacity={0.2} side={THREE.DoubleSide} />
+          </mesh>
+        ))}
+      </group>
+      {/* Lily pads (not in winter) */}
+      {season !== 'winter' && (
+        <>
+          <LilyPad position={[-0.15, 0.018, 0.1]} scale={0.06} rotation={0.3} />
+          <LilyPad position={[0.12, 0.018, -0.08]} scale={0.05} rotation={1.2} />
+          <LilyPad position={[0.0, 0.018, -0.18]} scale={0.04} rotation={2.5} />
+        </>
+      )}
+      {/* Tiny fish splash (occasional) */}
+      {season !== 'winter' && <FishSplash position={[0, 0.02, 0]} />}
+    </group>
+  );
+}
+
+function LilyPad({ position, scale, rotation }: { position: [number, number, number]; scale: number; rotation: number }) {
+  const ref = useRef<THREE.Group>(null);
+  useFrame(() => {
+    if (!ref.current) return;
+    const t = performance.now() * 0.001;
+    ref.current.position.y = position[1] + Math.sin(t * 0.6 + rotation * 2) * 0.002;
+    ref.current.rotation.z = Math.sin(t * 0.3 + rotation) * 0.03;
+  });
+
+  return (
+    <group ref={ref} position={position} rotation={[0, rotation, 0]}>
+      {/* Pad */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[scale, 8, 0, Math.PI * 1.7]} />
+        <meshStandardMaterial color="#2E7D32" side={THREE.DoubleSide} />
+      </mesh>
+      {/* Flower on one pad */}
+      {scale > 0.05 && (
+        <group position={[0, 0.01, 0]}>
+          {[0, 1.2, 2.4, 3.6, 4.8].map((a, i) => (
+            <mesh key={`petal-${i}`} position={[Math.cos(a) * scale * 0.4, 0, Math.sin(a) * scale * 0.4]} rotation={[-Math.PI / 2 + 0.3, 0, a]}>
+              <boxGeometry args={[scale * 0.4, 0.003, scale * 0.25]} />
+              <meshStandardMaterial color="#FFB7D5" side={THREE.DoubleSide} />
+            </mesh>
+          ))}
+          <mesh position={[0, 0.005, 0]}>
+            <sphereGeometry args={[scale * 0.15, 5, 4]} />
+            <meshStandardMaterial color="#FFEB3B" />
+          </mesh>
+        </group>
+      )}
+    </group>
+  );
+}
+
+function FishSplash({ position }: { position: [number, number, number] }) {
+  const ref = useRef<THREE.Group>(null);
+  useFrame(() => {
+    if (!ref.current) return;
+    const t = performance.now() * 0.001;
+    // Fish jumps every ~8 seconds for a brief moment
+    const cycle = t % 8;
+    const isJumping = cycle > 7.2 && cycle < 7.8;
+    ref.current.visible = isJumping;
+    if (isJumping) {
+      const jumpPhase = (cycle - 7.2) / 0.6;
+      const arc = Math.sin(jumpPhase * Math.PI);
+      ref.current.position.x = position[0] + (Math.sin(t * 0.3) * 0.15);
+      ref.current.position.y = position[1] + arc * 0.08;
+      ref.current.position.z = position[2] + (Math.cos(t * 0.3) * 0.1);
+      ref.current.rotation.z = jumpPhase * Math.PI * 0.5 - Math.PI * 0.25;
+    }
+  });
+
+  return (
+    <group ref={ref} visible={false}>
+      {/* Tiny fish body */}
+      <mesh>
+        <capsuleGeometry args={[0.006, 0.015, 3, 4]} />
+        <meshStandardMaterial color="#FF8C00" metalness={0.3} />
+      </mesh>
+      {/* Tail */}
+      <mesh position={[-0.015, 0, 0]} rotation={[0, 0, 0.3]}>
+        <boxGeometry args={[0.01, 0.002, 0.008]} />
+        <meshStandardMaterial color="#FF6600" />
+      </mesh>
+      {/* Splash droplets around */}
+      {[0, 1, 2, 3].map((i) => (
+        <mesh key={`splash-${i}`} position={[Math.cos(i * 1.5) * 0.02, -0.01, Math.sin(i * 1.5) * 0.02]}>
+          <sphereGeometry args={[0.004, 3, 2]} />
+          <meshBasicMaterial color="#87CEEB" transparent opacity={0.6} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
 export function GardenDecorations({ gardenLength, gardenWidth, season }: GardenDecorationsProps) {
   const halfL = gardenLength / 2;
   const halfW = gardenWidth / 2;
@@ -606,6 +764,9 @@ export function GardenDecorations({ gardenLength, gardenWidth, season }: GardenD
           <meshStandardMaterial color="#5C3D1E" />
         </mesh>
       </group>
+
+      {/* Decorative pond */}
+      <GardenPond position={[halfL + 1.2, 0, 0.5]} season={season} />
 
       {/* Ambient pollen/firefly particles */}
       <AmbientParticles gardenLength={gardenLength} gardenWidth={gardenWidth} season={season} />
