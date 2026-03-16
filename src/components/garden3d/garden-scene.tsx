@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import type { GardenConfig, Plant } from '@/types';
 import { GardenerCharacter, getSeason, getTimeOfDay, getSeasonalDialogue, getRandomAdvice } from './gardener-character';
@@ -650,6 +650,57 @@ function PlantContextMenu({
   );
 }
 
+// Garden dimension labels rendered in 3D
+function GardenDimensionLabels({ length, width }: { length: number; width: number }) {
+  const halfL = length / 2;
+  const halfW = width / 2;
+
+  return (
+    <group>
+      {/* Length label (along X axis, front) */}
+      <Html
+        position={[0, 0.02, halfW + 0.25]}
+        center
+        distanceFactor={8}
+        style={{ pointerEvents: 'none' }}
+      >
+        <div style={{
+          background: 'rgba(74, 222, 128, 0.15)',
+          borderRadius: '4px',
+          padding: '1px 8px',
+          fontSize: '9px',
+          fontFamily: '"Nunito", sans-serif',
+          color: 'rgba(134, 239, 172, 0.7)',
+          whiteSpace: 'nowrap',
+          letterSpacing: '0.5px',
+        }}>
+          {length}m
+        </div>
+      </Html>
+      {/* Width label (along Z axis, right) */}
+      <Html
+        position={[halfL + 0.25, 0.02, 0]}
+        center
+        distanceFactor={8}
+        style={{ pointerEvents: 'none' }}
+      >
+        <div style={{
+          background: 'rgba(74, 222, 128, 0.15)',
+          borderRadius: '4px',
+          padding: '1px 8px',
+          fontSize: '9px',
+          fontFamily: '"Nunito", sans-serif',
+          color: 'rgba(134, 239, 172, 0.7)',
+          whiteSpace: 'nowrap',
+          letterSpacing: '0.5px',
+        }}>
+          {width}m
+        </div>
+      </Html>
+    </group>
+  );
+}
+
 // Inner scene content
 function SceneContent({
   config,
@@ -674,6 +725,7 @@ function SceneContent({
   showSpacing,
   selectedBedId,
   onSelectBed,
+  selectedPlantType,
 }: {
   config: GardenConfig;
   selectedPlantIndex: number | null;
@@ -697,10 +749,18 @@ function SceneContent({
   showSpacing: boolean;
   selectedBedId: string | null;
   onSelectBed: (bedId: string | null) => void;
+  selectedPlantType: string | null;
 }) {
   const halfL = config.length / 2;
   const halfW = config.width / 2;
   const controlsRef = useRef<any>(null);
+
+  // Get spacing for selected plant to use for grid snap
+  const selectedPlantSpacingCm = useMemo(() => {
+    if (!selectedPlantType || !isPlacementMode) return undefined;
+    const p = plants.find((pl) => pl.id === selectedPlantType);
+    return p?.spacingCm;
+  }, [selectedPlantType, isPlacementMode, plants]);
 
   return (
     <>
@@ -754,6 +814,7 @@ function SceneContent({
         plantPositions={config.plantedItems.map((item) => ({ x: item.x, z: item.z }))}
         season={season}
         showGrid={isPlacementMode}
+        gridSpacingCm={selectedPlantSpacingCm}
         onGroundClick={(cx, cz) => onGroundClick(cx, cz)}
       />
 
@@ -765,11 +826,20 @@ function SceneContent({
         const worldX = -halfL + (item.x / 100) * config.length;
         const worldZ = -halfW + (item.z / 100) * config.width;
 
+        // Elevate plant if inside a raised bed
+        let yOffset = 0;
+        if (item.raisedBedId) {
+          const bed = (config.raisedBeds || []).find((b) => b.id === item.raisedBedId);
+          if (bed) {
+            yOffset = bed.heightM - 0.02; // Place plant on top of bed soil
+          }
+        }
+
         return (
           <Plant3D
             key={`plant-${index}`}
             plant={plantData}
-            position={[worldX, 0, worldZ]}
+            position={[worldX, yOffset, worldZ]}
             plantedDate={item.plantedDate}
             isSelected={selectedPlantIndex === index}
             isWatering={activeTool === 'water' && selectedPlantIndex === index}
@@ -786,11 +856,11 @@ function SceneContent({
         config={config}
         plants={plants}
         showSpacing={showSpacing}
-        selectedPlantType={isPlacementMode ? (plants.find(p => {
-          // Find the currently selected plant type from the placement mode
-          return false; // Will be passed via selectedPlantType in the overlay
-        })?.id || null) : null}
+        selectedPlantType={isPlacementMode ? selectedPlantType : null}
       />
+
+      {/* Garden dimension labels in 3D */}
+      <GardenDimensionLabels length={config.length} width={config.width} />
 
       {/* Raised beds */}
       {(config.raisedBeds || []).map((bed) => (
@@ -926,7 +996,7 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
     return () => clearTimeout(timer);
   }, []);
 
-  // When a plant is selected, move camera focus and send gardener there
+  // When a plant is selected, move camera focus, send gardener there, and open info panel
   useEffect(() => {
     if (selectedPlantIndex !== null) {
       const item = config.plantedItems[selectedPlantIndex];
@@ -938,6 +1008,12 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
         setFocusTarget(new THREE.Vector3(worldX, 0, worldZ));
         setGardenerTarget(new THREE.Vector3(worldX + 0.3, 0, worldZ + 0.3));
         setGardenerAction('walking');
+
+        // Open the plant info panel automatically when a plant is clicked
+        const infoEvent = new CustomEvent('garden:info', {
+          detail: { index: selectedPlantIndex },
+        });
+        window.dispatchEvent(infoEvent);
 
         // After walking, switch to pointing at the plant
         const pointTimer = setTimeout(() => {
@@ -1021,17 +1097,33 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
 
   const handleGroundClick = useCallback((pctX: number, pctZ: number) => {
     if (isPlacementMode && selectedPlantType) {
-      // Dispatch custom event for plant placement (will be handled by parent)
-      const event = new CustomEvent('garden:plant', {
-        detail: { plantId: selectedPlantType, x: pctX, z: pctZ },
-      });
-      window.dispatchEvent(event);
-      SoundEffects.play('plant');
-      setGardenerAction('digging');
+      // Check if this click lands inside a raised bed
       const halfL = config.length / 2;
       const halfW = config.width / 2;
       const worldX = -halfL + (pctX / 100) * config.length;
       const worldZ = -halfW + (pctZ / 100) * config.width;
+
+      let raisedBedId: string | undefined;
+      (config.raisedBeds || []).forEach((bed) => {
+        const bedWorldX = -halfL + (bed.x / 100) * config.length;
+        const bedWorldZ = -halfW + (bed.z / 100) * config.width;
+        if (
+          worldX >= bedWorldX - bed.lengthM / 2 &&
+          worldX <= bedWorldX + bed.lengthM / 2 &&
+          worldZ >= bedWorldZ - bed.widthM / 2 &&
+          worldZ <= bedWorldZ + bed.widthM / 2
+        ) {
+          raisedBedId = bed.id;
+        }
+      });
+
+      // Dispatch custom event for plant placement (will be handled by parent)
+      const event = new CustomEvent('garden:plant', {
+        detail: { plantId: selectedPlantType, x: pctX, z: pctZ, raisedBedId },
+      });
+      window.dispatchEvent(event);
+      SoundEffects.play('plant');
+      setGardenerAction('digging');
       setGardenerTarget(new THREE.Vector3(worldX + 0.3, 0, worldZ + 0.3));
     }
   }, [isPlacementMode, selectedPlantType, config]);
@@ -1157,6 +1249,7 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
           showSpacing={externalShowSpacing}
           selectedBedId={externalSelectedBedId}
           onSelectBed={externalOnSelectBed || (() => {})}
+          selectedPlantType={selectedPlantType}
         />
       </Canvas>
 

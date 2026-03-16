@@ -333,6 +333,14 @@ export function PlantCatalogSidebar({
                   <span
                     style={{
                       fontSize: '9px',
+                      color: '#C084FC',
+                    }}
+                  >
+                    {plant.spacingCm}cm
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '9px',
                       color: '#9CA3AF',
                     }}
                   >
@@ -419,7 +427,24 @@ function SelectedPlantPreview({ plant }: { plant: Plant | null }) {
           {'\uD83D\uDCC5'} {plant.harvestDays} days
         </div>
         <div style={{ color: '#9CA3AF' }}>
-          {'\uD83D\uDCCF'} {plant.heightCm}cm tall
+          {'\uD83D\uDCC8'} {plant.heightCm}cm tall
+        </div>
+      </div>
+      {/* Spacing info */}
+      <div style={{
+        display: 'flex', gap: '6px', marginTop: '6px',
+        padding: '6px 8px', borderRadius: '8px',
+        background: 'rgba(168, 85, 247, 0.1)',
+        border: '1px solid rgba(168, 85, 247, 0.2)',
+      }}>
+        <div style={{ flex: 1, textAlign: 'center' }}>
+          <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#C084FC' }}>{plant.spacingCm}cm</div>
+          <div style={{ fontSize: '8px', color: '#9CA3AF' }}>between plants</div>
+        </div>
+        <div style={{ width: '1px', background: 'rgba(168, 85, 247, 0.2)' }} />
+        <div style={{ flex: 1, textAlign: 'center' }}>
+          <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#A78BFA' }}>{plant.rowSpacingCm || Math.round(plant.spacingCm * 1.5)}cm</div>
+          <div style={{ fontSize: '8px', color: '#9CA3AF' }}>between rows</div>
         </div>
       </div>
       <div

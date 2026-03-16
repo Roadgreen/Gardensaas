@@ -13,6 +13,9 @@ const defaultConfig: GardenConfig = {
   sunExposure: 'full-sun',
   plantedItems: [],
   raisedBeds: [],
+  latitude: undefined,
+  longitude: undefined,
+  city: undefined,
 };
 
 export function useGarden() {
@@ -59,12 +62,13 @@ export function useGarden() {
   );
 
   const addPlant = useCallback(
-    (plantId: string, x: number, z: number) => {
+    (plantId: string, x: number, z: number, raisedBedId?: string) => {
       const item: PlantedItem = {
         plantId,
         x,
         z,
         plantedDate: new Date().toISOString(),
+        ...(raisedBedId ? { raisedBedId } : {}),
       };
       setConfigState((prev) => {
         const updated = {

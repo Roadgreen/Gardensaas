@@ -1,11 +1,14 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Sprout, ArrowRight } from 'lucide-react';
 
 export function CTASection() {
+  const t = useTranslations('cta');
+
   return (
     <section className="py-24 md:py-32 px-6 bg-white dark:bg-[#0D1F17]">
       <motion.div
@@ -31,23 +34,22 @@ export function CTASection() {
           </motion.div>
 
           <h2 className="text-3xl md:text-5xl font-bold text-white mb-5 tracking-tight">
-            Ready to start growing?
+            {t('title')}
           </h2>
           <p className="text-green-100/80 text-lg mb-10 max-w-xl mx-auto">
-            Join thousands of gardeners who plan smarter, grow better, and harvest more.
-            Set up your garden in under 2 minutes.
+            {t('description')}
           </p>
 
           <Link href="/auth/register">
             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
               <Button size="lg" className="text-lg gap-2 px-10 py-4 bg-white text-green-700 hover:bg-green-50 shadow-xl shadow-green-900/20 border-0">
-                Start Growing for Free
+                {t('button')}
                 <ArrowRight className="w-5 h-5" />
               </Button>
             </motion.div>
           </Link>
           <p className="mt-5 text-sm text-green-100/50">
-            No credit card required. Free forever on the basic plan.
+            {t('note')}
           </p>
         </div>
       </motion.div>

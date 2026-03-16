@@ -18,18 +18,23 @@ interface SpacingConflict {
   indexB: number;
   distance: number;
   requiredDistance: number;
+  plantAName: string;
+  plantBName: string;
 }
 
 export function PlantSpacingRings({ config, plants, showSpacing, selectedPlantType }: PlantSpacingRingsProps) {
   const halfL = config.length / 2;
   const halfW = config.width / 2;
 
-  // Compute conflicts
-  const { rings, conflicts } = useMemo(() => {
+  // Compute conflicts and rings
+  const { rings, conflicts, companionPairs, enemyPairs } = useMemo(() => {
     const ringData: Array<{
       x: number; z: number; radius: number; color: string; hasConflict: boolean;
+      spacingCm: number; plantName: string;
     }> = [];
     const conflictData: SpacingConflict[] = [];
+    const companionData: Array<{ ax: number; az: number; bx: number; bz: number }> = [];
+    const enemyData: Array<{ ax: number; az: number; bx: number; bz: number; nameA: string; nameB: string }> = [];
 
     config.plantedItems.forEach((item, i) => {
       const plantData = plants.find((p) => p.id === item.plantId);
@@ -54,7 +59,20 @@ export function PlantSpacingRings({ config, plants, showSpacing, selectedPlantTy
 
         if (dist < requiredDist) {
           hasConflict = true;
-          conflictData.push({ indexA: i, indexB: j, distance: dist, requiredDistance: requiredDist });
+          conflictData.push({
+            indexA: i, indexB: j, distance: dist, requiredDistance: requiredDist,
+            plantAName: plantData.name.en, plantBName: otherPlant.name.en,
+          });
+        }
+
+        // Check companion/enemy relationships for nearby plants
+        if (dist < 2) {
+          if (plantData.companionPlants.includes(otherPlant.id) || otherPlant.companionPlants.includes(plantData.id)) {
+            companionData.push({ ax: worldX, az: worldZ, bx: otherX, bz: otherZ });
+          }
+          if (plantData.enemyPlants.includes(otherPlant.id) || otherPlant.enemyPlants.includes(plantData.id)) {
+            enemyData.push({ ax: worldX, az: worldZ, bx: otherX, bz: otherZ, nameA: plantData.name.en, nameB: otherPlant.name.en });
+          }
         }
       });
 
@@ -63,17 +81,22 @@ export function PlantSpacingRings({ config, plants, showSpacing, selectedPlantTy
         radius: radiusM,
         color: hasConflict ? '#EF4444' : plantData.color,
         hasConflict,
+        spacingCm: plantData.spacingCm,
+        plantName: plantData.name.en,
       });
     });
 
-    return { rings: ringData, conflicts: conflictData };
+    return { rings: ringData, conflicts: conflictData, companionPairs: companionData, enemyPairs: enemyData };
   }, [config.plantedItems, plants, halfL, halfW, config.length, config.width]);
 
-  // Also show preview ring for the selected plant type
-  const previewRadius = useMemo(() => {
-    if (!selectedPlantType) return 0;
+  // Compute snap grid for selected plant type
+  const snapGrid = useMemo(() => {
+    if (!selectedPlantType) return null;
     const p = plants.find((pl) => pl.id === selectedPlantType);
-    return p ? p.spacingCm / 100 / 2 : 0;
+    if (!p) return null;
+    const spacingM = p.spacingCm / 100;
+    const rowSpacingM = (p.rowSpacingCm || Math.round(p.spacingCm * 1.5)) / 100;
+    return { spacingM, rowSpacingM };
   }, [selectedPlantType, plants]);
 
   if (!showSpacing) return null;
@@ -89,10 +112,40 @@ export function PlantSpacingRings({ config, plants, showSpacing, selectedPlantTy
           radius={ring.radius}
           color={ring.color}
           hasConflict={ring.hasConflict}
+          spacingCm={ring.spacingCm}
         />
       ))}
 
-      {/* Conflict warning lines */}
+      {/* Companion plant connections (green dashed) */}
+      {companionPairs.map((pair, i) => (
+        <CompanionLine key={`comp-${i}`} ax={pair.ax} az={pair.az} bx={pair.bx} bz={pair.bz} />
+      ))}
+
+      {/* Enemy plant warnings (red lines) */}
+      {enemyPairs.map((pair, i) => (
+        <group key={`enemy-${i}`}>
+          <ConflictLine ax={pair.ax} az={pair.az} bx={pair.bx} bz={pair.bz} />
+          <Html
+            position={[(pair.ax + pair.bx) / 2, 0.35, (pair.az + pair.bz) / 2]}
+            center distanceFactor={6} style={{ pointerEvents: 'none' }}
+          >
+            <div style={{
+              background: 'rgba(239, 68, 68, 0.85)',
+              borderRadius: '8px',
+              padding: '2px 8px',
+              fontSize: '9px',
+              fontFamily: '"Nunito", sans-serif',
+              color: 'white',
+              whiteSpace: 'nowrap',
+              border: '1px solid #FCA5A5',
+            }}>
+              {'\u26A0'} Bad neighbors!
+            </div>
+          </Html>
+        </group>
+      ))}
+
+      {/* Spacing conflict warning lines */}
       {conflicts.map((conflict, i) => {
         const itemA = config.plantedItems[conflict.indexA];
         const itemB = config.plantedItems[conflict.indexB];
@@ -104,6 +157,8 @@ export function PlantSpacingRings({ config, plants, showSpacing, selectedPlantTy
         const bz = -halfW + (itemB.z / 100) * config.width;
         const midX = (ax + bx) / 2;
         const midZ = (az + bz) / 2;
+        const distCm = Math.round(conflict.distance * 100);
+        const neededCm = Math.round(conflict.requiredDistance * 100);
 
         return (
           <group key={`conflict-${i}`}>
@@ -113,22 +168,32 @@ export function PlantSpacingRings({ config, plants, showSpacing, selectedPlantTy
             <Html position={[midX, 0.3, midZ]} center distanceFactor={6} style={{ pointerEvents: 'none' }}>
               <div style={{
                 background: 'rgba(239, 68, 68, 0.9)',
-                borderRadius: '50%',
-                width: '18px',
-                height: '18px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '10px',
+                borderRadius: '8px',
+                padding: '3px 8px',
+                fontSize: '9px',
+                fontFamily: '"Nunito", sans-serif',
+                color: 'white',
+                whiteSpace: 'nowrap',
                 border: '1px solid #FCA5A5',
                 boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)',
+                textAlign: 'center',
               }}>
-                {'\u26A0'}
+                <div>{'\u26A0'} Too close! {distCm}cm / {neededCm}cm needed</div>
               </div>
             </Html>
           </group>
         );
       })}
+
+      {/* Snap grid visualization when placing a plant */}
+      {snapGrid && (
+        <SnapGridVisualization
+          halfL={halfL}
+          halfW={halfW}
+          spacingM={snapGrid.spacingM}
+          rowSpacingM={snapGrid.rowSpacingM}
+        />
+      )}
 
       {/* Conflict count */}
       {conflicts.length > 0 && (
@@ -152,8 +217,8 @@ export function PlantSpacingRings({ config, plants, showSpacing, selectedPlantTy
   );
 }
 
-function SpacingRing({ x, z, radius, color, hasConflict }: {
-  x: number; z: number; radius: number; color: string; hasConflict: boolean;
+function SpacingRing({ x, z, radius, color, hasConflict, spacingCm }: {
+  x: number; z: number; radius: number; color: string; hasConflict: boolean; spacingCm: number;
 }) {
   const ref = useRef<THREE.Mesh>(null);
 
@@ -187,8 +252,80 @@ function SpacingRing({ x, z, radius, color, hasConflict }: {
           side={THREE.DoubleSide}
         />
       </mesh>
+      {/* Spacing label on the ring edge */}
+      <Html
+        position={[x + radius * 0.7, 0.08, z - radius * 0.7]}
+        center
+        distanceFactor={8}
+        style={{ pointerEvents: 'none' }}
+      >
+        <div style={{
+          background: hasConflict ? 'rgba(239, 68, 68, 0.7)' : 'rgba(0,0,0,0.5)',
+          borderRadius: '4px',
+          padding: '1px 4px',
+          fontSize: '8px',
+          fontFamily: '"Nunito", sans-serif',
+          color: hasConflict ? '#FEE2E2' : '#D1D5DB',
+          whiteSpace: 'nowrap',
+        }}>
+          {spacingCm}cm
+        </div>
+      </Html>
     </group>
   );
+}
+
+function SnapGridVisualization({ halfL, halfW, spacingM, rowSpacingM }: {
+  halfL: number; halfW: number; spacingM: number; rowSpacingM: number;
+}) {
+  const gridLines = useMemo(() => {
+    const lines: Array<{ start: [number, number, number]; end: [number, number, number]; isRow: boolean }> = [];
+
+    // Column lines (plant spacing)
+    for (let x = -halfL; x <= halfL + 0.001; x += spacingM) {
+      lines.push({
+        start: [x, 0.054, -halfW],
+        end: [x, 0.054, halfW],
+        isRow: false,
+      });
+    }
+    // Row lines (row spacing)
+    for (let z = -halfW; z <= halfW + 0.001; z += rowSpacingM) {
+      lines.push({
+        start: [-halfL, 0.054, z],
+        end: [halfL, 0.054, z],
+        isRow: true,
+      });
+    }
+
+    return lines;
+  }, [halfL, halfW, spacingM, rowSpacingM]);
+
+  return (
+    <group>
+      {gridLines.map((line, i) => (
+        <SnapGridLine key={`snap-${i}`} start={line.start} end={line.end} isRow={line.isRow} />
+      ))}
+    </group>
+  );
+}
+
+function SnapGridLine({ start, end, isRow }: { start: [number, number, number]; end: [number, number, number]; isRow: boolean }) {
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const positions = new Float32Array([...start, ...end]);
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    return geo;
+  }, [start, end]);
+
+  const material = useMemo(() => new THREE.LineBasicMaterial({
+    color: isRow ? '#A78BFA' : '#C084FC',
+    transparent: true,
+    opacity: 0.2,
+    linewidth: 1,
+  }), [isRow]);
+
+  return <primitive object={new THREE.Line(geometry, material)} />;
 }
 
 function ConflictLine({ ax, az, bx, bz }: { ax: number; az: number; bx: number; bz: number }) {
@@ -216,4 +353,22 @@ function ConflictLine({ ax, az, bx, bz }: { ax: number; az: number; bx: number; 
   });
 
   return <primitive ref={ref} object={new THREE.Line(geometry, material)} />;
+}
+
+function CompanionLine({ ax, az, bx, bz }: { ax: number; az: number; bx: number; bz: number }) {
+  const geometry = useMemo(() => {
+    const geo = new THREE.BufferGeometry();
+    const positions = new Float32Array([ax, 0.055, az, bx, 0.055, bz]);
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    return geo;
+  }, [ax, az, bx, bz]);
+
+  const material = useMemo(() => new THREE.LineBasicMaterial({
+    color: '#4ADE80',
+    transparent: true,
+    opacity: 0.3,
+    linewidth: 1,
+  }), []);
+
+  return <primitive object={new THREE.Line(geometry, material)} />;
 }

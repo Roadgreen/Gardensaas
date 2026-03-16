@@ -14,8 +14,10 @@ model User {
   emailVerified  DateTime?
   hashedPassword String
   image          String?
+  locale         String    @default("en") // "en" | "fr"
   plan           String    @default("free") // "free" | "pro"
   stripeCustomerId String?
+  pushToken      String?   // Push notification token (Capacitor / FCM)
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   gardens        Garden[]
@@ -155,4 +157,26 @@ model DailyTip {
   plantId  String?  // optional reference to specific plant
   month    Int?     // optional: tip relevant for specific month (1-12)
   category String   // "general" | "watering" | "planting" | "harvest" | "pest"
+}
+
+model WeatherCache {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  gardenId      String   @db.ObjectId
+  latitude      Float
+  longitude     Float
+  temperature   Float
+  temperatureMax Float
+  temperatureMin Float
+  humidity      Float
+  precipitation Float    // mm in last 24h
+  windSpeed     Float
+  uvIndex       Float?
+  weatherCode   Int
+  forecast      Json     // 7-day forecast as JSON
+  rainfallLast7Days Float // total mm
+  fetchedAt     DateTime @default(now())
+  createdAt     DateTime @default(now())
+
+  @@index([gardenId])
+  @@index([fetchedAt])
 }

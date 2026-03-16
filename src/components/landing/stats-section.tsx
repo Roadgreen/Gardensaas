@@ -1,6 +1,7 @@
 'use client';
 
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
+import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { Sprout, Users, Leaf, Star } from 'lucide-react';
 
@@ -15,13 +16,11 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
       ([entry]) => {
         if (entry.isIntersecting && !hasAnimated) {
           setHasAnimated(true);
-          let start = 0;
           const duration = 2000;
           const startTime = performance.now();
           const step = (now: number) => {
             const elapsed = now - startTime;
             const progress = Math.min(elapsed / duration, 1);
-            // ease out cubic
             const eased = 1 - Math.pow(1 - progress, 3);
             setCount(Math.floor(eased * target));
             if (progress < 1) requestAnimationFrame(step);
@@ -42,56 +41,57 @@ function AnimatedCounter({ target, suffix = '' }: { target: number; suffix?: str
   );
 }
 
-const stats = [
-  {
-    icon: Sprout,
-    value: 300,
-    suffix: '+',
-    label: 'Plant Varieties',
-    description: 'Vegetables, herbs, fruits & more',
-    color: 'text-green-500',
-    bg: 'bg-green-100 dark:bg-green-900/40',
-  },
-  {
-    icon: Users,
-    value: 10000,
-    suffix: '+',
-    label: 'Happy Gardeners',
-    description: 'And growing every day',
-    color: 'text-blue-500',
-    bg: 'bg-blue-100 dark:bg-blue-900/40',
-  },
-  {
-    icon: Leaf,
-    value: 50000,
-    suffix: '+',
-    label: 'Plants Grown',
-    description: 'Tracked and harvested',
-    color: 'text-emerald-500',
-    bg: 'bg-emerald-100 dark:bg-emerald-900/40',
-  },
-  {
-    icon: Star,
-    value: 4.9,
-    suffix: '/5',
-    label: 'User Rating',
-    description: 'Based on 2,000+ reviews',
-    color: 'text-amber-500',
-    bg: 'bg-amber-100 dark:bg-amber-900/40',
-  },
-];
-
 export function StatsSection() {
+  const t = useTranslations('stats');
+
+  const stats = [
+    {
+      icon: Sprout,
+      value: 300,
+      suffix: '+',
+      labelKey: 'plants' as const,
+      descKey: 'plantsDesc' as const,
+      color: 'text-green-500',
+      bg: 'bg-green-100 dark:bg-green-900/40',
+    },
+    {
+      icon: Users,
+      value: 10000,
+      suffix: '+',
+      labelKey: 'gardeners' as const,
+      descKey: 'gardenersDesc' as const,
+      color: 'text-blue-500',
+      bg: 'bg-blue-100 dark:bg-blue-900/40',
+    },
+    {
+      icon: Leaf,
+      value: 50000,
+      suffix: '+',
+      labelKey: 'grown' as const,
+      descKey: 'grownDesc' as const,
+      color: 'text-emerald-500',
+      bg: 'bg-emerald-100 dark:bg-emerald-900/40',
+    },
+    {
+      icon: Star,
+      value: 4.9,
+      suffix: '/5',
+      labelKey: 'rating' as const,
+      descKey: 'ratingDesc' as const,
+      color: 'text-amber-500',
+      bg: 'bg-amber-100 dark:bg-amber-900/40',
+    },
+  ];
+
   return (
     <section className="py-16 md:py-20 px-6 bg-gray-50 dark:bg-gradient-to-b dark:from-[#0D1F17] dark:to-[#0a1a10] relative overflow-hidden">
-      {/* Subtle pattern */}
       <div className="absolute inset-0 opacity-[0.02] dark:opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)', backgroundSize: '32px 32px' }} />
 
       <div className="max-w-6xl mx-auto relative">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {stats.map((stat, i) => (
             <motion.div
-              key={stat.label}
+              key={stat.labelKey}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -109,10 +109,10 @@ export function StatsSection() {
                 )}
               </div>
               <div className="text-sm font-semibold text-gray-700 dark:text-green-200/80 mb-1">
-                {stat.label}
+                {t(stat.labelKey)}
               </div>
               <div className="text-xs text-gray-400 dark:text-green-400/50">
-                {stat.description}
+                {t(stat.descKey)}
               </div>
             </motion.div>
           ))}

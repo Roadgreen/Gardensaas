@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import {
   Sprout,
   Calendar,
@@ -11,64 +12,6 @@ import {
   Sparkles,
   Crown,
 } from 'lucide-react';
-
-const features = [
-  {
-    icon: Sprout,
-    emoji: '\uD83C\uDF31',
-    title: 'Recommandations intelligentes',
-    description:
-      'Des suggestions de plantes personnalisees selon votre sol, climat et ensoleillement.',
-    iconColor: 'text-green-600 dark:text-green-400',
-    iconBg: 'bg-green-100 dark:bg-green-900/50',
-  },
-  {
-    icon: Eye,
-    emoji: '\uD83C\uDFAE',
-    title: 'Jardin 3D interactif',
-    description:
-      'Visualisez votre jardin comme dans un jeu video avec un personnage jardinier et des plantes 3D.',
-    iconColor: 'text-emerald-600 dark:text-emerald-400',
-    iconBg: 'bg-emerald-100 dark:bg-emerald-900/50',
-  },
-  {
-    icon: Bot,
-    emoji: '\uD83E\uDD16',
-    title: 'Conseiller IA',
-    description:
-      'Votre expert jardinage personnel, disponible 24h/24. Des conseils adaptes a votre jardin.',
-    iconColor: 'text-violet-600 dark:text-violet-400',
-    iconBg: 'bg-violet-100 dark:bg-violet-900/50',
-    pro: true,
-  },
-  {
-    icon: Calendar,
-    emoji: '\uD83D\uDCC5',
-    title: 'Calendrier de plantation',
-    description:
-      'Un guide mois par mois pour savoir quand semer, arroser et recolter chaque culture.',
-    iconColor: 'text-amber-600 dark:text-yellow-400',
-    iconBg: 'bg-amber-100 dark:bg-yellow-900/50',
-  },
-  {
-    icon: Users,
-    emoji: '\uD83E\uDD1D',
-    title: 'Compagnonnage',
-    description:
-      'Decouvrez quelles plantes s\'entraident et lesquelles eviter de mettre cote a cote.',
-    iconColor: 'text-teal-600 dark:text-teal-400',
-    iconBg: 'bg-teal-100 dark:bg-teal-900/50',
-  },
-  {
-    icon: Droplets,
-    emoji: '\uD83D\uDCA7',
-    title: 'Guide d\'entretien',
-    description:
-      'Calendriers d\'arrosage, preparation du sol et gestion bio des nuisibles.',
-    iconColor: 'text-sky-600 dark:text-cyan-400',
-    iconBg: 'bg-sky-100 dark:bg-cyan-900/50',
-  },
-];
 
 const containerVariants = {
   hidden: {},
@@ -81,6 +24,60 @@ const itemVariants = {
 };
 
 export function FeaturesSection() {
+  const t = useTranslations('features');
+
+  const features = [
+    {
+      icon: Sprout,
+      emoji: '\uD83C\uDF31',
+      titleKey: 'smartRec' as const,
+      descKey: 'smartRecDesc' as const,
+      iconColor: 'text-green-600 dark:text-green-400',
+      iconBg: 'bg-green-100 dark:bg-green-900/50',
+    },
+    {
+      icon: Eye,
+      emoji: '\uD83C\uDFAE',
+      titleKey: 'garden3d' as const,
+      descKey: 'garden3dDesc' as const,
+      iconColor: 'text-emerald-600 dark:text-emerald-400',
+      iconBg: 'bg-emerald-100 dark:bg-emerald-900/50',
+    },
+    {
+      icon: Bot,
+      emoji: '\uD83E\uDD16',
+      titleKey: 'aiAdvisor' as const,
+      descKey: 'aiAdvisorDesc' as const,
+      iconColor: 'text-violet-600 dark:text-violet-400',
+      iconBg: 'bg-violet-100 dark:bg-violet-900/50',
+      pro: true,
+    },
+    {
+      icon: Calendar,
+      emoji: '\uD83D\uDCC5',
+      titleKey: 'calendar' as const,
+      descKey: 'calendarDesc' as const,
+      iconColor: 'text-amber-600 dark:text-yellow-400',
+      iconBg: 'bg-amber-100 dark:bg-yellow-900/50',
+    },
+    {
+      icon: Users,
+      emoji: '\uD83E\uDD1D',
+      titleKey: 'companion' as const,
+      descKey: 'companionDesc' as const,
+      iconColor: 'text-teal-600 dark:text-teal-400',
+      iconBg: 'bg-teal-100 dark:bg-teal-900/50',
+    },
+    {
+      icon: Droplets,
+      emoji: '\uD83D\uDCA7',
+      titleKey: 'care' as const,
+      descKey: 'careDesc' as const,
+      iconColor: 'text-sky-600 dark:text-cyan-400',
+      iconBg: 'bg-sky-100 dark:bg-cyan-900/50',
+    },
+  ];
+
   return (
     <section className="py-24 md:py-32 px-6 bg-white dark:bg-[#0D1F17]" id="features">
       <div className="max-w-6xl mx-auto">
@@ -97,13 +94,13 @@ export function FeaturesSection() {
             viewport={{ once: true }}
           >
             <Sparkles className="w-4 h-4" />
-            Fonctionnalites
+            {t('badge')}
           </motion.span>
           <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-green-50 mb-5 tracking-tight">
-            Tout pour faire pousser vos reves
+            {t('title')}
           </h2>
           <p className="text-gray-500 dark:text-green-200/60 text-lg max-w-2xl mx-auto">
-            Du semis a la recolte, des outils puissants pour rendre le jardinage simple et gratifiant.
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -115,7 +112,7 @@ export function FeaturesSection() {
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
           {features.map((feature) => (
-            <motion.div key={feature.title} variants={itemVariants}>
+            <motion.div key={feature.titleKey} variants={itemVariants}>
               <div className="relative h-full p-6 rounded-2xl border border-gray-100 dark:border-green-900/40 bg-white dark:bg-[#142A1E] transition-all duration-300 hover:border-green-200 dark:hover:border-green-700/60 hover:shadow-lg hover:shadow-green-100/50 dark:hover:shadow-green-900/20 hover:-translate-y-1 group">
                 {feature.pro && (
                   <span className="absolute top-4 right-4 px-2.5 py-1 bg-amber-50 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 text-xs font-semibold rounded-full flex items-center gap-1">
@@ -126,8 +123,8 @@ export function FeaturesSection() {
                 <div className={`w-14 h-14 rounded-2xl ${feature.iconBg} flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110`}>
                   <span className="text-2xl">{feature.emoji}</span>
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-green-50 mb-2">{feature.title}</h3>
-                <p className="text-gray-500 dark:text-green-200/60 text-sm leading-relaxed">{feature.description}</p>
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-green-50 mb-2">{t(feature.titleKey)}</h3>
+                <p className="text-gray-500 dark:text-green-200/60 text-sm leading-relaxed">{t(feature.descKey)}</p>
               </div>
             </motion.div>
           ))}

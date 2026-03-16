@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslations, useLocale } from 'next-intl';
 import { PlantCard } from '@/components/plants/plant-card';
 import { usePlants } from '@/lib/hooks';
 import { Search, Sprout, X, Grid3x3, List, Droplets, Sun, Clock, Leaf, ChevronDown, SlidersHorizontal } from 'lucide-react';
@@ -22,46 +23,14 @@ const seasonMonths: Record<string, number[]> = {
   winter: [12, 1, 2],
 };
 
-const categoryOptions: { value: CategoryFilter; label: string; emoji: string }[] = [
-  { value: 'all', label: 'All', emoji: '\uD83C\uDF3F' },
-  { value: 'vegetable', label: 'Vegetables', emoji: '\uD83E\uDD6C' },
-  { value: 'herb', label: 'Herbs', emoji: '\uD83C\uDF3F' },
-  { value: 'fruit', label: 'Fruits', emoji: '\uD83C\uDF53' },
-  { value: 'root', label: 'Roots', emoji: '\uD83E\uDD55' },
-  { value: 'ancient', label: 'Heritage', emoji: '\uD83C\uDFDB\uFE0F' },
-  { value: 'exotic', label: 'Exotic', emoji: '\uD83C\uDF34' },
-];
-
-const seasonOptions: { value: SeasonFilter; label: string; emoji: string }[] = [
-  { value: 'all', label: 'All', emoji: '\uD83D\uDD04' },
-  { value: 'spring', label: 'Spring', emoji: '\uD83C\uDF38' },
-  { value: 'summer', label: 'Summer', emoji: '\u2600\uFE0F' },
-  { value: 'autumn', label: 'Autumn', emoji: '\uD83C\uDF42' },
-  { value: 'winter', label: 'Winter', emoji: '\u2744\uFE0F' },
-];
-
-const difficultyOptions: { value: Difficulty | 'all'; label: string; emoji: string }[] = [
-  { value: 'all', label: 'All', emoji: '\uD83C\uDFAF' },
-  { value: 'easy', label: 'Easy', emoji: '\uD83D\uDE0A' },
-  { value: 'medium', label: 'Medium', emoji: '\uD83D\uDCAA' },
-  { value: 'hard', label: 'Hard', emoji: '\uD83D\uDD25' },
-];
-
-const sortOptions: { value: SortOption; label: string }[] = [
-  { value: 'name', label: 'Name A-Z' },
-  { value: 'difficulty', label: 'Easiest first' },
-  { value: 'harvest', label: 'Fastest harvest' },
-  { value: 'plantable', label: 'Plantable now' },
-];
-
-const difficultyLabels: Record<string, { label: string; class: string }> = {
-  easy: { label: 'Easy', class: 'text-green-400' },
-  medium: { label: 'Medium', class: 'text-yellow-400' },
-  hard: { label: 'Hard', class: 'text-red-400' },
-};
-
-function PlantListItem({ plant, index }: { plant: Plant; index: number }) {
+function PlantListItem({ plant, index, locale }: { plant: Plant; index: number; locale: string }) {
+  const t = useTranslations('plants');
   const plantable = isPlantableNow(plant);
+  const difficultyLabels: Record<string, { labelKey: string; class: string }> = {
+    easy: { labelKey: 'easy', class: 'text-green-400' },
+    medium: { labelKey: 'medium', class: 'text-yellow-400' },
+    hard: { labelKey: 'hard', class: 'text-red-400' },
+  };
   const diff = difficultyLabels[plant.difficulty] || difficultyLabels.easy;
 
   return (
@@ -84,16 +53,16 @@ function PlantListItem({ plant, index }: { plant: Plant; index: number }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <h3 className="text-green-50 font-medium truncate group-hover:text-green-300 transition-colors">
-                {plant.name.en}
+                {locale === 'fr' ? plant.name.fr : plant.name.en}
               </h3>
               {plantable && (
                 <span className="flex-shrink-0 px-2 py-0.5 text-[10px] font-semibold bg-green-600/30 text-green-300 rounded-full border border-green-600/40 flex items-center gap-1">
                   <Leaf className="w-2.5 h-2.5" />
-                  Now
+                  {t('now')}
                 </span>
               )}
             </div>
-            <p className="text-xs text-green-400/50 italic truncate">{plant.name.fr}</p>
+            <p className="text-xs text-green-400/50 italic truncate">{locale === 'fr' ? plant.name.en : plant.name.fr}</p>
           </div>
 
           {/* Stats - hidden on very small screens */}
@@ -106,7 +75,7 @@ function PlantListItem({ plant, index }: { plant: Plant; index: number }) {
               <Clock className="w-3 h-3" />
               {plant.harvestDays}d
             </span>
-            <span className={`font-medium ${diff.class}`}>{diff.label}</span>
+            <span className={`font-medium ${diff.class}`}>{t(diff.labelKey)}</span>
           </div>
 
           {/* Category badge */}
@@ -128,6 +97,40 @@ export default function PlantsPage() {
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [sortBy, setSortBy] = useState<SortOption>('name');
   const [showFilters, setShowFilters] = useState(true);
+  const t = useTranslations('plants');
+  const locale = useLocale();
+
+  const categoryOptions: { value: CategoryFilter; labelKey: string; emoji: string }[] = [
+    { value: 'all', labelKey: 'all', emoji: '\uD83C\uDF3F' },
+    { value: 'vegetable', labelKey: 'vegetables', emoji: '\uD83E\uDD6C' },
+    { value: 'herb', labelKey: 'herbs', emoji: '\uD83C\uDF3F' },
+    { value: 'fruit', labelKey: 'fruits', emoji: '\uD83C\uDF53' },
+    { value: 'root', labelKey: 'roots', emoji: '\uD83E\uDD55' },
+    { value: 'ancient', labelKey: 'heritage', emoji: '\uD83C\uDFDB\uFE0F' },
+    { value: 'exotic', labelKey: 'exotic', emoji: '\uD83C\uDF34' },
+  ];
+
+  const seasonOptions: { value: SeasonFilter; labelKey: string; emoji: string }[] = [
+    { value: 'all', labelKey: 'all', emoji: '\uD83D\uDD04' },
+    { value: 'spring', labelKey: 'spring', emoji: '\uD83C\uDF38' },
+    { value: 'summer', labelKey: 'summer', emoji: '\u2600\uFE0F' },
+    { value: 'autumn', labelKey: 'autumn', emoji: '\uD83C\uDF42' },
+    { value: 'winter', labelKey: 'winter', emoji: '\u2744\uFE0F' },
+  ];
+
+  const difficultyOptions: { value: Difficulty | 'all'; labelKey: string; emoji: string }[] = [
+    { value: 'all', labelKey: 'all', emoji: '\uD83C\uDFAF' },
+    { value: 'easy', labelKey: 'easy', emoji: '\uD83D\uDE0A' },
+    { value: 'medium', labelKey: 'medium', emoji: '\uD83D\uDCAA' },
+    { value: 'hard', labelKey: 'hard', emoji: '\uD83D\uDD25' },
+  ];
+
+  const sortOptions: { value: SortOption; labelKey: string }[] = [
+    { value: 'name', labelKey: 'nameAZ' },
+    { value: 'difficulty', labelKey: 'easiestFirst' },
+    { value: 'harvest', labelKey: 'fastestHarvest' },
+    { value: 'plantable', labelKey: 'plantableNow' },
+  ];
 
   const filtered = useMemo(() => {
     let result = plants.filter((plant) => {
@@ -149,7 +152,9 @@ export default function PlantsPage() {
     result = [...result].sort((a, b) => {
       switch (sortBy) {
         case 'name':
-          return a.name.en.localeCompare(b.name.en);
+          return locale === 'fr'
+            ? a.name.fr.localeCompare(b.name.fr)
+            : a.name.en.localeCompare(b.name.en);
         case 'difficulty': {
           const order = { easy: 0, medium: 1, hard: 2 };
           return order[a.difficulty] - order[b.difficulty];
@@ -167,7 +172,7 @@ export default function PlantsPage() {
     });
 
     return result;
-  }, [plants, search, category, season, difficulty, sortBy]);
+  }, [plants, search, category, season, difficulty, sortBy, locale]);
 
   const activeFilters = [category !== 'all', season !== 'all', difficulty !== 'all'].filter(Boolean).length;
 
@@ -194,9 +199,9 @@ export default function PlantsPage() {
           className="mb-6 sm:mb-8"
         >
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-green-50 mb-2 flex items-center gap-3">
-            Plant Catalogue
+            {t('title')}
           </h1>
-          <p className="text-gray-500 dark:text-green-300/60 text-sm sm:text-base">Explore {plants.length} plants with detailed growing information.</p>
+          <p className="text-gray-500 dark:text-green-300/60 text-sm sm:text-base">{t('subtitle', { count: plants.length })}</p>
         </motion.div>
 
         {/* Search + Controls bar */}
@@ -212,7 +217,7 @@ export default function PlantsPage() {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 dark:text-green-600" />
               <input
                 type="text"
-                placeholder="Search plants by name..."
+                placeholder={t('search')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full rounded-xl bg-gray-100 dark:bg-[#142A1E] border border-gray-200 dark:border-green-900/40 pl-12 pr-10 py-3 text-gray-900 dark:text-green-50 placeholder-gray-400 dark:placeholder-green-700 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/30 text-base transition-all"
@@ -238,7 +243,7 @@ export default function PlantsPage() {
                 >
                   {sortOptions.map((opt) => (
                     <option key={opt.value} value={opt.value}>
-                      {opt.label}
+                      {t(opt.labelKey)}
                     </option>
                   ))}
                 </select>
@@ -303,7 +308,7 @@ export default function PlantsPage() {
             >
               {/* Category filter */}
               <div>
-                <label className="text-xs text-gray-400 dark:text-green-400/60 mb-2 block uppercase tracking-wider font-semibold">Category</label>
+                <label className="text-xs text-gray-400 dark:text-green-400/60 mb-2 block uppercase tracking-wider font-semibold">{t('category')}</label>
                 <div className="flex flex-wrap gap-2">
                   {categoryOptions.map((c) => (
                     <button
@@ -316,7 +321,7 @@ export default function PlantsPage() {
                       }`}
                     >
                       <span>{c.emoji}</span>
-                      {c.label}
+                      {t(c.labelKey)}
                     </button>
                   ))}
                 </div>
@@ -324,7 +329,7 @@ export default function PlantsPage() {
 
               {/* Season filter */}
               <div>
-                <label className="text-xs text-gray-400 dark:text-green-400/60 mb-2 block uppercase tracking-wider font-semibold">Planting Season</label>
+                <label className="text-xs text-gray-400 dark:text-green-400/60 mb-2 block uppercase tracking-wider font-semibold">{t('plantingSeason')}</label>
                 <div className="flex flex-wrap gap-2">
                   {seasonOptions.map((s) => (
                     <button
@@ -337,7 +342,7 @@ export default function PlantsPage() {
                       }`}
                     >
                       <span>{s.emoji}</span>
-                      {s.label}
+                      {t(s.labelKey)}
                     </button>
                   ))}
                 </div>
@@ -345,7 +350,7 @@ export default function PlantsPage() {
 
               {/* Difficulty filter */}
               <div>
-                <label className="text-xs text-gray-400 dark:text-green-400/60 mb-2 block uppercase tracking-wider font-semibold">Difficulty</label>
+                <label className="text-xs text-gray-400 dark:text-green-400/60 mb-2 block uppercase tracking-wider font-semibold">{t('difficulty')}</label>
                 <div className="flex flex-wrap gap-2">
                   {difficultyOptions.map((d) => (
                     <button
@@ -358,7 +363,7 @@ export default function PlantsPage() {
                       }`}
                     >
                       <span>{d.emoji}</span>
-                      {d.label}
+                      {t(d.labelKey)}
                     </button>
                   ))}
                 </div>
@@ -370,7 +375,7 @@ export default function PlantsPage() {
                   onClick={() => { setCategory('all'); setSeason('all'); setDifficulty('all'); setSearch(''); }}
                   className="text-sm text-green-600 dark:text-green-500/60 hover:text-green-700 dark:hover:text-green-400 transition-colors cursor-pointer underline underline-offset-2"
                 >
-                  Clear filters ({activeFilters})
+                  {t('clearFilters')} ({activeFilters})
                 </button>
               )}
             </motion.div>
@@ -380,7 +385,7 @@ export default function PlantsPage() {
         {/* Results count */}
         <div className="flex items-center justify-between mb-4">
           <p className="text-sm text-gray-400 dark:text-green-400/50">
-            {filtered.length} plant{filtered.length > 1 ? 's' : ''} found
+            {t('found', { count: filtered.length, s: filtered.length > 1 ? 's' : '' })}
           </p>
           {/* Desktop filter toggle */}
           <button
@@ -388,7 +393,7 @@ export default function PlantsPage() {
             className="hidden sm:flex items-center gap-1.5 text-sm text-gray-500 dark:text-green-400/60 hover:text-green-600 dark:hover:text-green-400 transition-colors cursor-pointer"
           >
             <SlidersHorizontal className="w-3.5 h-3.5" />
-            {showFilters ? 'Hide filters' : 'Show filters'}
+            {showFilters ? t('hideFilters') : t('showFilters')}
           </button>
         </div>
 
@@ -417,7 +422,7 @@ export default function PlantsPage() {
               className="space-y-2"
             >
               {filtered.map((plant, i) => (
-                <PlantListItem key={plant.id} plant={plant} index={i} />
+                <PlantListItem key={plant.id} plant={plant} index={i} locale={locale} />
               ))}
             </motion.div>
           )}
@@ -426,12 +431,12 @@ export default function PlantsPage() {
         {filtered.length === 0 && (
           <div className="text-center py-16">
             <span className="text-4xl block mb-4">{'\uD83D\uDE14'}</span>
-            <p className="text-gray-400 dark:text-green-500/50 text-lg mb-2">No plants match your filters.</p>
+            <p className="text-gray-400 dark:text-green-500/50 text-lg mb-2">{t('noMatch')}</p>
             <button
               onClick={() => { setCategory('all'); setSeason('all'); setDifficulty('all'); setSearch(''); }}
               className="text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 underline text-sm cursor-pointer"
             >
-              Reset filters
+              {t('resetFilters')}
             </button>
           </div>
         )}

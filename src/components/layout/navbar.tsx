@@ -4,24 +4,27 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sprout, Menu, X, LogOut, User, Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/components/providers/theme-provider';
-
-const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/plants', label: 'Plants' },
-  { href: '/garden/dashboard', label: 'My Garden' },
-  { href: '/garden/3d', label: '3D View' },
-  { href: '/pricing', label: 'Pricing' },
-];
+import { LocaleSwitcher } from '@/components/locale-switcher';
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const { data: session } = useSession();
   const { theme, toggleTheme } = useTheme();
+  const t = useTranslations('nav');
+
+  const navLinks = [
+    { href: '/', label: t('home') },
+    { href: '/plants', label: t('plants') },
+    { href: '/garden/dashboard', label: t('myGarden') },
+    { href: '/garden/3d', label: t('3dView') },
+    { href: '/pricing', label: t('pricing') },
+  ];
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b transition-colors duration-300"
@@ -59,8 +62,9 @@ export function Navbar() {
             })}
           </div>
 
-          {/* CTA / User menu / Theme */}
+          {/* CTA / User menu / Theme / Locale */}
           <div className="hidden md:flex items-center gap-2">
+            <LocaleSwitcher />
             <button
               onClick={toggleTheme}
               className="p-2 rounded-lg text-gray-500 dark:text-green-400/60 hover:text-green-600 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20 transition-all duration-200 cursor-pointer"
@@ -73,7 +77,7 @@ export function Navbar() {
                 <Link href="/garden/settings">
                   <Button variant="ghost" size="sm" className="gap-2">
                     <User className="w-4 h-4" />
-                    {session.user?.name || 'Account'}
+                    {session.user?.name || t('account')}
                   </Button>
                 </Link>
                 <Button
@@ -88,17 +92,18 @@ export function Navbar() {
             ) : (
               <>
                 <Link href="/auth/login">
-                  <Button variant="ghost" size="sm">Sign In</Button>
+                  <Button variant="ghost" size="sm">{t('signIn')}</Button>
                 </Link>
                 <Link href="/auth/register">
-                  <Button size="sm">Start Free</Button>
+                  <Button size="sm">{t('startFree')}</Button>
                 </Link>
               </>
             )}
           </div>
 
-          {/* Mobile: theme + menu */}
+          {/* Mobile: theme + locale + menu */}
           <div className="md:hidden flex items-center gap-1">
+            <LocaleSwitcher />
             <button
               onClick={toggleTheme}
               className="p-2.5 rounded-lg text-gray-500 dark:text-green-400/60 hover:text-green-600 dark:hover:text-green-300 transition-colors cursor-pointer touch-target"
@@ -149,7 +154,7 @@ export function Navbar() {
                 {session ? (
                   <>
                     <Link href="/garden/settings" className="flex-1" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" size="sm" className="w-full touch-target">Account</Button>
+                      <Button variant="outline" size="sm" className="w-full touch-target">{t('account')}</Button>
                     </Link>
                     <Button
                       variant="ghost"
@@ -163,10 +168,10 @@ export function Navbar() {
                 ) : (
                   <>
                     <Link href="/auth/login" className="flex-1" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" size="sm" className="w-full touch-target">Sign In</Button>
+                      <Button variant="outline" size="sm" className="w-full touch-target">{t('signIn')}</Button>
                     </Link>
                     <Link href="/auth/register" className="flex-1" onClick={() => setIsOpen(false)}>
-                      <Button size="sm" className="w-full touch-target">Start Free</Button>
+                      <Button size="sm" className="w-full touch-target">{t('startFree')}</Button>
                     </Link>
                   </>
                 )}

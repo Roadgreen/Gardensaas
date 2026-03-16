@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
+import { useTranslations, useLocale } from 'next-intl';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -20,9 +21,9 @@ import {
   Crown,
   Zap,
   Ruler,
+  Globe,
 } from 'lucide-react';
 import { useGarden } from '@/lib/hooks';
-import { SOIL_LABELS, type SoilType } from '@/types';
 
 const GARDEN_SIZE_PRESETS = [
   { label: 'Window Box', length: 1, width: 0.5, emoji: '\uD83E\uDE9F' },
@@ -36,14 +37,22 @@ const GARDEN_SIZE_PRESETS = [
 export function SettingsPageClient() {
   const { data: session } = useSession();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const success = searchParams.get('success');
   const userPlan = (session?.user as Record<string, unknown>)?.plan as string || 'free';
+  const userLocale = (session?.user as Record<string, unknown>)?.locale as string || 'en';
   const isPro = userPlan === 'pro';
   const [upgrading, setUpgrading] = useState(false);
   const { config, updateConfig, isLoaded } = useGarden();
   const [gardenLength, setGardenLength] = useState('');
   const [gardenWidth, setGardenWidth] = useState('');
   const [dimensionsSaved, setDimensionsSaved] = useState(false);
+  const currentLocale = useLocale();
+  const [selectedLocale, setSelectedLocale] = useState(currentLocale);
+  const [localeSaving, setLocaleSaving] = useState(false);
+  const [localeSaved, setLocaleSaved] = useState(false);
+  const t = useTranslations('settings');
+  const tLocale = useTranslations('locale');
 
   useEffect(() => {
     if (isLoaded) {
@@ -51,6 +60,13 @@ export function SettingsPageClient() {
       setGardenWidth(config.width.toString());
     }
   }, [isLoaded, config.length, config.width]);
+
+  // Initialize selected locale from user's DB preference
+  useEffect(() => {
+    if (userLocale && ['en', 'fr'].includes(userLocale)) {
+      setSelectedLocale(userLocale);
+    }
+  }, [userLocale]);
 
   const handleUpgrade = async () => {
     setUpgrading(true);
@@ -68,15 +84,42 @@ export function SettingsPageClient() {
     setUpgrading(false);
   };
 
+  const handleLocaleChange = async (newLocale: string) => {
+    setSelectedLocale(newLocale);
+    setLocaleSaving(true);
+    try {
+      // Update user's locale in DB
+      await fetch('/api/user/locale', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ locale: newLocale }),
+      });
+      // Also set the cookie directly
+      await fetch('/api/locale', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ locale: newLocale }),
+      });
+      setLocaleSaved(true);
+      setTimeout(() => setLocaleSaved(false), 2000);
+      // Refresh to apply new locale
+      router.refresh();
+    } catch {
+      // Revert on error
+      setSelectedLocale(currentLocale);
+    }
+    setLocaleSaving(false);
+  };
+
   return (
     <div className="min-h-screen bg-[#0D1F17] py-8 px-6">
       <div className="max-w-3xl mx-auto">
         <Link href="/garden/dashboard" className="inline-flex items-center gap-2 text-green-400/60 hover:text-green-300 text-sm mb-8 transition-colors">
           <ArrowLeft className="w-4 h-4" />
-          Back to Dashboard
+          {t('backToDashboard')}
         </Link>
 
-        <h1 className="text-3xl font-bold text-green-50 mb-8">Billing & Settings</h1>
+        <h1 className="text-3xl font-bold text-green-50 mb-8">{t('title')}</h1>
 
         {success && (
           <motion.div
@@ -86,26 +129,61 @@ export function SettingsPageClient() {
           >
             <Check className="w-5 h-5 text-green-400" />
             <p className="text-green-200">
-              You have been upgraded to PRO! Enjoy your new features.
+              {t('upgradeSuccess')}
             </p>
           </motion.div>
         )}
 
         <div className="space-y-6">
+          {/* Language Preference */}
+          <Card>
+            <CardTitle className="flex items-center gap-2 mb-6">
+              <Globe className="w-5 h-5 text-green-400" />
+              {tLocale('switchLanguage')}
+            </CardTitle>
+            <CardContent>
+              <p className="text-sm text-green-200/60 mb-4">
+                {t('languageDescription')}
+              </p>
+              <div className="grid grid-cols-2 gap-4">
+                {(['en', 'fr'] as const).map((loc) => (
+                  <button
+                    key={loc}
+                    onClick={() => handleLocaleChange(loc)}
+                    disabled={localeSaving}
+                    className={`p-4 rounded-xl border text-center transition-all cursor-pointer ${
+                      selectedLocale === loc
+                        ? 'border-green-500 bg-green-900/30 text-green-50 shadow-lg shadow-green-900/20'
+                        : 'border-green-900/40 bg-[#0D1F17] text-green-300/70 hover:border-green-700/50'
+                    }`}
+                  >
+                    <span className="text-2xl block mb-1">{loc === 'en' ? '\uD83C\uDDEC\uD83C\uDDE7' : '\uD83C\uDDEB\uD83C\uDDF7'}</span>
+                    <span className="font-medium block">{tLocale(loc)}</span>
+                    {selectedLocale === loc && localeSaved && (
+                      <span className="text-xs text-green-400 flex items-center justify-center gap-1 mt-1">
+                        <Check className="w-3 h-3" /> {t('saved')}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Garden Dimensions */}
           <Card>
             <CardTitle className="flex items-center gap-2 mb-6">
               <Ruler className="w-5 h-5 text-green-400" />
-              Garden Dimensions
+              {t('gardenDimensions')}
             </CardTitle>
             <CardContent>
               <p className="text-sm text-green-200/60 mb-4">
-                Set the exact width and length of your garden in meters. The 3D view will render your garden at the correct proportions.
+                {t('gardenDimensionsDescription')}
               </p>
 
               {/* Presets */}
               <div className="mb-4">
-                <p className="text-xs text-green-400/50 mb-2">Quick presets:</p>
+                <p className="text-xs text-green-400/50 mb-2">{t('quickPresets')}:</p>
                 <div className="grid grid-cols-3 gap-2">
                   {GARDEN_SIZE_PRESETS.map((preset) => {
                     const isActive = gardenLength === preset.length.toString() && gardenWidth === preset.width.toString();
@@ -138,7 +216,7 @@ export function SettingsPageClient() {
               <div className="grid grid-cols-2 gap-4 mb-4">
                 <Input
                   id="garden-length"
-                  label="Length (m)"
+                  label={t('length')}
                   type="number"
                   min="0.5"
                   max="50"
@@ -148,7 +226,7 @@ export function SettingsPageClient() {
                 />
                 <Input
                   id="garden-width"
-                  label="Width (m)"
+                  label={t('width')}
                   type="number"
                   min="0.5"
                   max="50"
@@ -160,8 +238,8 @@ export function SettingsPageClient() {
 
               {parseFloat(gardenLength) > 0 && parseFloat(gardenWidth) > 0 && (
                 <p className="text-xs text-green-300/60 mb-3">
-                  Total area: <span className="text-green-200 font-bold">{(parseFloat(gardenLength) * parseFloat(gardenWidth)).toFixed(1)} m&sup2;</span>
-                  {' '} - Room for ~{Math.floor(parseFloat(gardenLength) * parseFloat(gardenWidth) * 4)} plants
+                  {t('totalArea')}: <span className="text-green-200 font-bold">{(parseFloat(gardenLength) * parseFloat(gardenWidth)).toFixed(1)} m&sup2;</span>
+                  {' '} - ~{Math.floor(parseFloat(gardenLength) * parseFloat(gardenWidth) * 4)} {t('plantsCapacity')}
                 </p>
               )}
 
@@ -181,12 +259,12 @@ export function SettingsPageClient() {
                 {dimensionsSaved ? (
                   <>
                     <Check className="w-4 h-4" />
-                    Dimensions Saved!
+                    {t('dimensionsSaved')}
                   </>
                 ) : (
                   <>
                     <Ruler className="w-4 h-4" />
-                    Update Garden Size
+                    {t('updateGardenSize')}
                   </>
                 )}
               </Button>
@@ -197,7 +275,7 @@ export function SettingsPageClient() {
           <Card>
             <CardTitle className="flex items-center gap-2 mb-6">
               <CreditCard className="w-5 h-5 text-green-400" />
-              Current Plan
+              {t('currentPlan')}
             </CardTitle>
             <CardContent>
               <div className={`p-6 rounded-xl border ${
@@ -218,62 +296,30 @@ export function SettingsPageClient() {
                     )}
                     <div>
                       <h3 className="text-lg font-bold text-green-50">
-                        {isPro ? 'Pro Plan' : 'Free Plan'}
+                        {isPro ? t('proPlan') : t('freePlan')}
                       </h3>
                       <p className="text-sm text-green-400/60">
-                        {isPro ? '9.99 EUR/month' : 'Free forever'}
+                        {isPro ? '9.99 EUR/' + t('month') : t('freeForever')}
                       </p>
                     </div>
                   </div>
                   {isPro && (
                     <span className="px-3 py-1 bg-amber-500/20 text-amber-400 text-xs font-semibold rounded-full flex items-center gap-1">
                       <Sparkles className="w-3 h-3" />
-                      Active
+                      {t('active')}
                     </span>
                   )}
                 </div>
 
-                {isPro ? (
-                  <div className="space-y-2">
-                    {[
-                      'AI Garden Advisor (10 questions/day)',
-                      'Unlimited gardens & plants',
-                      'Advanced 3D garden view',
-                      'Companion planting alerts',
-                      'Export garden plans',
-                      'Priority support',
-                    ].map((feature) => (
-                      <div key={feature} className="flex items-center gap-2">
-                        <Check className="w-4 h-4 text-amber-400" />
-                        <span className="text-sm text-green-200/80">{feature}</span>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <>
-                    <div className="space-y-2 mb-6">
-                      {[
-                        'Garden setup & configuration',
-                        'Plant encyclopedia (150+ plants)',
-                        'Basic garden planner',
-                        'Daily gardening tips',
-                        '1 garden, up to 5 plants',
-                      ].map((feature) => (
-                        <div key={feature} className="flex items-center gap-2">
-                          <Check className="w-4 h-4 text-green-400" />
-                          <span className="text-sm text-green-200/80">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <Button
-                      onClick={handleUpgrade}
-                      disabled={upgrading}
-                      className="w-full gap-2"
-                    >
-                      <Sparkles className="w-4 h-4" />
-                      {upgrading ? 'Redirecting to Stripe...' : 'Upgrade to Pro - 9.99 EUR/month'}
-                    </Button>
-                  </>
+                {!isPro && (
+                  <Button
+                    onClick={handleUpgrade}
+                    disabled={upgrading}
+                    className="w-full gap-2"
+                  >
+                    <Sparkles className="w-4 h-4" />
+                    {upgrading ? t('redirecting') : t('upgradeToPro')}
+                  </Button>
                 )}
               </div>
             </CardContent>
@@ -283,28 +329,28 @@ export function SettingsPageClient() {
           <Card>
             <CardTitle className="flex items-center gap-2 mb-6">
               <User className="w-5 h-5 text-green-400" />
-              Account
+              {t('account')}
             </CardTitle>
             <CardContent>
               <div className="space-y-4">
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-[#0D1F17] border border-green-900/30">
                   <User className="w-4 h-4 text-green-600" />
                   <div>
-                    <p className="text-xs text-green-500/50">Name</p>
-                    <p className="text-sm text-green-100">{session?.user?.name || 'Not signed in'}</p>
+                    <p className="text-xs text-green-500/50">{t('name')}</p>
+                    <p className="text-sm text-green-100">{session?.user?.name || t('notSignedIn')}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-[#0D1F17] border border-green-900/30">
                   <Mail className="w-4 h-4 text-green-600" />
                   <div>
-                    <p className="text-xs text-green-500/50">Email</p>
-                    <p className="text-sm text-green-100">{session?.user?.email || 'Not signed in'}</p>
+                    <p className="text-xs text-green-500/50">{t('email')}</p>
+                    <p className="text-sm text-green-100">{session?.user?.email || t('notSignedIn')}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-[#0D1F17] border border-green-900/30">
                   <Shield className="w-4 h-4 text-green-600" />
                   <div>
-                    <p className="text-xs text-green-500/50">Plan</p>
+                    <p className="text-xs text-green-500/50">{t('plan')}</p>
                     <p className="text-sm text-green-100 capitalize">{userPlan}</p>
                   </div>
                 </div>
@@ -318,7 +364,7 @@ export function SettingsPageClient() {
                     onClick={() => signOut({ callbackUrl: '/' })}
                   >
                     <LogOut className="w-4 h-4" />
-                    Sign Out
+                    {t('signOut')}
                   </Button>
                 </div>
               )}

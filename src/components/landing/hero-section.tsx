@@ -4,6 +4,7 @@ import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Sprout, Leaf, Sun, TreeDeciduous, Flower2, Bug, Heart, Sparkles, ArrowRight, Check } from 'lucide-react';
 import { GardenerGuide } from './gardener-guide';
@@ -14,7 +15,7 @@ const MiniGardenPreview = dynamic(
     ssr: false,
     loading: () => (
       <div className="w-full h-[300px] md:h-[400px] rounded-3xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/30 flex items-center justify-center">
-        <div className="animate-pulse text-green-500 dark:text-green-400 text-sm">Loading garden preview...</div>
+        <div className="animate-pulse text-green-500 dark:text-green-400 text-sm">Loading...</div>
       </div>
     ),
   }
@@ -32,6 +33,7 @@ const floatingElements = [
 ];
 
 export function HeroSection() {
+  const t = useTranslations('hero');
   return (
     <section className="relative min-h-[calc(100svh-72px)] flex items-center justify-center overflow-hidden bg-gradient-to-b from-green-50 via-white to-white dark:from-[#071510] dark:via-[#0D1F17] dark:to-[#0D1F17]">
       {/* Subtle background pattern - light mode */}
@@ -94,19 +96,19 @@ export function HeroSection() {
             >
               <Sprout className="w-4 h-4 text-green-600 dark:text-green-400" />
               <span className="text-green-700 dark:text-green-300 font-medium text-sm">
-                Smart Garden Planning Made Easy
+                {t('badge')}
               </span>
             </motion.div>
 
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 leading-[1.1] tracking-tight">
-              <span className="text-gray-900 dark:text-green-50">Grow Your</span>
+              <span className="text-gray-900 dark:text-green-50">{t('title1')}</span>
               <span className="block text-gradient animate-gradient-flow" style={{ backgroundSize: '200% 200%' }}>
-                Dream Garden
+                {t('title2')}
               </span>
             </h1>
 
             <p className="text-base sm:text-lg md:text-xl text-gray-500 dark:text-green-200/60 mb-8 sm:mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed">
-              Plan in 3D, get AI-powered advice, and grow 300+ vegetables, herbs, and fruits. Your personal garden assistant.
+              {t('description')}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start mb-8 sm:mb-10">
@@ -117,7 +119,7 @@ export function HeroSection() {
                 >
                   <Button size="lg" className="w-full sm:w-auto text-lg gap-2 px-8 py-4">
                     <Sprout className="w-5 h-5" />
-                    Start Your Garden
+                    {t('cta')}
                     <ArrowRight className="w-4 h-4" />
                   </Button>
                 </motion.div>
@@ -128,7 +130,7 @@ export function HeroSection() {
                   whileTap={{ scale: 0.97 }}
                 >
                   <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg gap-2 px-8 py-4">
-                    See Features
+                    {t('seeFeatures')}
                   </Button>
                 </motion.div>
               </Link>
@@ -142,10 +144,10 @@ export function HeroSection() {
               transition={{ delay: 0.8 }}
             >
               {[
-                '300+ Plants Database',
-                '3D Visualization',
-                'AI Advisor',
-                'Free Plan Available',
+                t('trust1'),
+                t('trust2'),
+                t('trust3'),
+                t('trust4'),
               ].map((item) => (
                 <span key={item} className="flex items-center gap-2 text-sm text-gray-500 dark:text-green-400/60">
                   <Check className="w-4 h-4 text-green-500 dark:text-green-400" />
@@ -167,7 +169,7 @@ export function HeroSection() {
               <div className="absolute -inset-4 bg-gradient-to-r from-green-200/30 via-emerald-200/20 to-lime-200/30 dark:from-green-600/10 dark:via-emerald-600/5 dark:to-lime-600/10 rounded-[2rem] blur-xl pointer-events-none" />
               <Suspense fallback={
                 <div className="w-full h-[300px] md:h-[400px] rounded-3xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/30 flex items-center justify-center">
-                  <div className="animate-pulse text-green-500 dark:text-green-400 text-sm">Loading garden preview...</div>
+                  <div className="animate-pulse text-green-500 dark:text-green-400 text-sm">Loading...</div>
                 </div>
               }>
                 <MiniGardenPreview />
@@ -180,7 +182,7 @@ export function HeroSection() {
                 transition={{ delay: 1.5 }}
               >
                 <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                Live Preview
+                {t('livePreview')}
               </motion.div>
             </div>
 

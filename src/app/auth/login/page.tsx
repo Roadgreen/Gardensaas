@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -15,6 +16,8 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const t = useTranslations('auth');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,14 +32,15 @@ export default function LoginPage() {
       });
 
       if (result?.error) {
-        setError('Invalid email or password');
+        setError(t('invalidCredentials'));
         setLoading(false);
         return;
       }
 
-      router.push('/garden/dashboard');
+      const callbackUrl = searchParams.get('callbackUrl') || '/garden/dashboard';
+      router.push(callbackUrl);
     } catch {
-      setError('An error occurred. Please try again.');
+      setError(t('genericError'));
       setLoading(false);
     }
   };
@@ -81,8 +85,8 @@ export default function LoginPage() {
               <Sprout className="w-7 h-7 text-green-400" />
             </div>
           </Link>
-          <h1 className="text-3xl font-bold text-green-50 mb-2">Welcome Back</h1>
-          <p className="text-green-300/60">Sign in to tend your garden</p>
+          <h1 className="text-3xl font-bold text-green-50 mb-2">{t('welcomeBack')}</h1>
+          <p className="text-green-300/60">{t('signInSubtitle')}</p>
         </div>
 
         <div className="bg-[#142A1E]/80 backdrop-blur-sm rounded-2xl border border-green-900/40 p-8 shadow-2xl shadow-black/20">
@@ -100,11 +104,11 @@ export default function LoginPage() {
               <Mail className="absolute left-3 top-9 w-4 h-4 text-green-600" />
               <Input
                 id="email"
-                label="Email"
+                label={t('email')}
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
+                placeholder={t('emailPlaceholder')}
                 required
                 className="pl-10"
               />
@@ -113,11 +117,11 @@ export default function LoginPage() {
               <Lock className="absolute left-3 top-9 w-4 h-4 text-green-600" />
               <Input
                 id="password"
-                label="Password"
+                label={t('password')}
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Your password"
+                placeholder={t('passwordPlaceholder')}
                 required
                 className="pl-10"
               />
@@ -130,19 +134,19 @@ export default function LoginPage() {
                     animate={{ rotate: 360 }}
                     transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
                   />
-                  Signing in...
+                  {t('signingIn')}
                 </span>
               ) : (
-                'Sign In'
+                t('signIn')
               )}
             </Button>
           </form>
         </div>
 
         <p className="text-center mt-6 text-sm text-green-400/60">
-          Don&apos;t have an account?{' '}
+          {t('noAccount')}{' '}
           <Link href="/auth/register" className="text-green-400 hover:text-green-300 font-medium transition-colors">
-            Sign Up
+            {t('signUp')}
           </Link>
         </p>
       </motion.div>

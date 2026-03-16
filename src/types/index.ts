@@ -36,6 +36,7 @@ export interface Plant {
   shape3d: Shape3D;
   color: string;
   spacingCm: number;
+  rowSpacingCm?: number; // spacing between rows, defaults to spacingCm * 1.5
   depthCm: number;
   heightCm: number;
   tips: string[];
@@ -49,6 +50,19 @@ export interface GardenConfig {
   sunExposure: SunExposure;
   plantedItems: PlantedItem[];
   raisedBeds: RaisedBed[];
+  latitude?: number;
+  longitude?: number;
+  city?: string;
+}
+
+export interface WateringTask {
+  plantId: string;
+  plantName: string;
+  wateringFrequency: string;
+  needsWatering: boolean;
+  reason: string;
+  urgency: 'high' | 'medium' | 'low' | 'skip';
+  amountMl?: number;
 }
 
 export interface PlantedItem {

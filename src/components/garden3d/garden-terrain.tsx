@@ -12,6 +12,7 @@ interface GardenTerrainProps {
   season: 'spring' | 'summer' | 'autumn' | 'winter';
   onGroundClick?: (x: number, z: number) => void;
   showGrid?: boolean;
+  gridSpacingCm?: number; // plant-specific grid spacing
 }
 
 const SOIL_COLORS: Record<string, string> = {
@@ -37,7 +38,7 @@ const SEASON_GRASS_DARK: Record<string, string> = {
   winter: '#B8BCA8',
 };
 
-export function GardenTerrain({ length, width, soilType, plantPositions, season, onGroundClick, showGrid }: GardenTerrainProps) {
+export function GardenTerrain({ length, width, soilType, plantPositions, season, onGroundClick, showGrid, gridSpacingCm }: GardenTerrainProps) {
   const grassColor = SEASON_GRASS[season];
   const grassDark = SEASON_GRASS_DARK[season];
   const soilColor = SOIL_COLORS[soilType] || SOIL_COLORS.loamy;
@@ -162,15 +163,16 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
     return items;
   }, [length, width, season, halfL, halfW]);
 
-  // Garden grid for placement
+  // Garden grid for placement - snaps to plant spacing when available
   const gridCells = useMemo(() => {
     if (!showGrid) return [];
-    const cellSize = 0.5; // 50cm cells
+    const cellSize = gridSpacingCm ? gridSpacingCm / 100 : 0.5; // Use plant spacing or default 50cm
+    const clampedSize = Math.max(0.1, Math.min(cellSize, 2)); // Clamp to reasonable values
     const cells: Array<{ x: number; z: number; cx: number; cz: number }> = [];
-    for (let ix = 0; ix < Math.floor(length / cellSize); ix++) {
-      for (let iz = 0; iz < Math.floor(width / cellSize); iz++) {
-        const x = -halfL + cellSize / 2 + ix * cellSize;
-        const z = -halfW + cellSize / 2 + iz * cellSize;
+    for (let ix = 0; ix < Math.floor(length / clampedSize); ix++) {
+      for (let iz = 0; iz < Math.floor(width / clampedSize); iz++) {
+        const x = -halfL + clampedSize / 2 + ix * clampedSize;
+        const z = -halfW + clampedSize / 2 + iz * clampedSize;
         // Convert to percent coords for storage
         const cx = ((x + halfL) / length) * 100;
         const cz = ((z + halfW) / width) * 100;
@@ -178,7 +180,7 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
       }
     }
     return cells;
-  }, [showGrid, length, width, halfL, halfW]);
+  }, [showGrid, length, width, halfL, halfW, gridSpacingCm]);
 
   // Stepping stones path leading to the garden
   const steppingStones = useMemo(() => {

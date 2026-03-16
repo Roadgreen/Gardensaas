@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState, useCallback, useEffect } from 'react';
+import { Suspense, useState, useCallback, useEffect, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,8 @@ import { PlantCatalogSidebar } from './plant-catalog-sidebar';
 import { DragDropOverlay } from './drag-drop-overlay';
 import { PlantInfoPanel } from './plant-info-panel';
 import { RaisedBedPanel } from './raised-bed-panel';
+import { GardenSizeSelector } from './garden-size-selector';
+import { SpacingInfoOverlay } from './spacing-info-overlay';
 import type { RaisedBed } from '@/types';
 
 const GardenScene = dynamic(() => import('./garden-scene').then(m => ({ default: m.GardenScene })), {
@@ -22,7 +24,7 @@ const GardenScene = dynamic(() => import('./garden-scene').then(m => ({ default:
 });
 
 export function Garden3DView() {
-  const { config, isLoaded, addPlant, removePlant, addRaisedBed, removeRaisedBed, updateRaisedBed } = useGarden();
+  const { config, isLoaded, addPlant, removePlant, addRaisedBed, removeRaisedBed, updateRaisedBed, updateConfig } = useGarden();
   const { plants } = usePlants();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
@@ -32,13 +34,25 @@ export function Garden3DView() {
   const [showRaisedBedPanel, setShowRaisedBedPanel] = useState(false);
   const [selectedBedId, setSelectedBedId] = useState<string | null>(null);
   const [infoPanelPlantIndex, setInfoPanelPlantIndex] = useState<number | null>(null);
+  const [showSizeSelector, setShowSizeSelector] = useState(false);
+
+  // Get the selected plant data for spacing info
+  const selectedPlantData = useMemo(() => {
+    if (!selectedPlantType) return null;
+    return plants.find(p => p.id === selectedPlantType) || null;
+  }, [selectedPlantType, plants]);
+
+  // Handler for garden resize
+  const handleGardenResize = useCallback((length: number, width: number) => {
+    updateConfig({ length, width });
+  }, [updateConfig]);
 
   // Listen for plant/remove/info events from the 3D scene
   useEffect(() => {
     const handlePlant = (e: Event) => {
       const detail = (e as CustomEvent).detail;
       if (detail?.plantId && detail?.x !== undefined && detail?.z !== undefined) {
-        addPlant(detail.plantId, detail.x, detail.z);
+        addPlant(detail.plantId, detail.x, detail.z, detail.raisedBedId);
       }
     };
     const handleRemove = (e: Event) => {
@@ -121,6 +135,18 @@ export function Garden3DView() {
           </span>
         </div>
         <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Garden size */}
+          <button
+            onClick={() => setShowSizeSelector(v => !v)}
+            className="px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
+            style={{
+              background: showSizeSelector ? 'rgba(74, 222, 128, 0.15)' : 'transparent',
+              borderColor: showSizeSelector ? 'rgba(74, 222, 128, 0.5)' : 'rgba(74, 222, 128, 0.2)',
+              color: showSizeSelector ? '#86EFAC' : '#9CA3AF',
+            }}
+          >
+            {'\uD83D\uDCCF'} <span className="hidden sm:inline">{config.length}x{config.width}m</span>
+          </button>
           {/* Spacing toggle */}
           <button
             onClick={() => setShowSpacing(v => !v)}
@@ -131,7 +157,7 @@ export function Garden3DView() {
               color: showSpacing ? '#C084FC' : '#9CA3AF',
             }}
           >
-            {'\uD83D\uDCCF'} <span className="hidden sm:inline">Spacing</span>
+            {'\uD83E\uDDF2'} <span className="hidden sm:inline">Spacing</span>
           </button>
           {/* Raised beds */}
           <button
@@ -182,13 +208,40 @@ export function Garden3DView() {
         {/* Drag-and-drop overlay */}
         <DragDropOverlay isDragging={isDragging} onDrop={handleDrop} />
 
+        {/* Spacing info overlay when placing a plant */}
+        <SpacingInfoOverlay
+          plant={selectedPlantData}
+          isVisible={!!selectedPlantType && !showSizeSelector}
+        />
+
+        {/* Garden size selector */}
+        {showSizeSelector && (
+          <GardenSizeSelector
+            currentLength={config.length}
+            currentWidth={config.width}
+            onResize={handleGardenResize}
+            onClose={() => setShowSizeSelector(false)}
+          />
+        )}
+
         {/* Plant info panel */}
         {infoPanelPlant && infoPanelItem && (
           <PlantInfoPanel
             plant={infoPanelPlant}
             plantedDate={infoPanelItem.plantedDate}
             allPlants={plants}
+            plantedItems={config.plantedItems}
+            gardenLength={config.length}
+            gardenWidth={config.width}
+            raisedBedId={infoPanelItem.raisedBedId}
+            raisedBeds={config.raisedBeds}
             onClose={() => setInfoPanelPlantIndex(null)}
+            onRemove={() => {
+              if (infoPanelPlantIndex !== null) {
+                removePlant(infoPanelPlantIndex);
+                setInfoPanelPlantIndex(null);
+              }
+            }}
           />
         )}
 

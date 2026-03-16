@@ -3,43 +3,24 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Check, Sparkles } from 'lucide-react';
 
 const plans = [
   {
-    name: 'Free',
+    key: 'free' as const,
     monthlyPrice: '0',
     yearlyPrice: '0',
-    description: 'Perfect for getting started',
-    features: [
-      'Garden setup & configuration',
-      'Plant encyclopedia (300+ plants)',
-      'Basic garden planner',
-      'Daily gardening tips',
-      '1 garden, up to 5 plants',
-      '3D garden view',
-    ],
-    cta: 'Start Growing for Free',
+    featureKeys: ['f1', 'f2', 'f3', 'f4', 'f5', 'f6'] as const,
     href: '/auth/register',
     popular: false,
   },
   {
-    name: 'Pro',
+    key: 'pro' as const,
     monthlyPrice: '9.99',
     yearlyPrice: '7.99',
-    description: 'For serious gardeners',
-    features: [
-      'Everything in Free',
-      'AI Garden Advisor (10 questions/day)',
-      'Advanced 3D garden view',
-      'Unlimited gardens & plants',
-      'Companion planting alerts',
-      'Export garden plans',
-      'Detailed harvest predictions',
-      'Priority support',
-    ],
-    cta: 'Go Pro',
+    featureKeys: ['f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8'] as const,
     href: '/auth/register',
     popular: true,
   },
@@ -47,6 +28,7 @@ const plans = [
 
 export function PricingSection() {
   const [isYearly, setIsYearly] = useState(false);
+  const t = useTranslations('pricing');
 
   return (
     <section className="py-24 md:py-32 px-6 bg-gray-50 dark:bg-[#0a1a10]" id="pricing">
@@ -59,13 +41,13 @@ export function PricingSection() {
           className="text-center mb-12"
         >
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-green-800/30 text-green-700 dark:text-green-400 text-sm font-medium mb-6">
-            Pricing
+            {t('badge')}
           </span>
           <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-green-50 mb-5 tracking-tight">
-            Simple, transparent pricing
+            {t('title')}
           </h2>
           <p className="text-gray-500 dark:text-green-200/60 text-lg max-w-2xl mx-auto mb-10">
-            Start free and upgrade when you need more gardens and advanced features.
+            {t('subtitle')}
           </p>
 
           {/* Monthly/Yearly Toggle */}
@@ -78,7 +60,7 @@ export function PricingSection() {
                   : 'text-gray-500 dark:text-green-400/60 hover:text-gray-700 dark:hover:text-green-300'
               }`}
             >
-              Monthly
+              {t('monthly')}
             </button>
             <button
               onClick={() => setIsYearly(true)}
@@ -88,7 +70,7 @@ export function PricingSection() {
                   : 'text-gray-500 dark:text-green-400/60 hover:text-gray-700 dark:hover:text-green-300'
               }`}
             >
-              Yearly
+              {t('yearly')}
               <span className="px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-300 text-xs font-semibold">
                 -20%
               </span>
@@ -101,7 +83,7 @@ export function PricingSection() {
             const price = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
             return (
               <motion.div
-                key={plan.name}
+                key={plan.key}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -116,13 +98,13 @@ export function PricingSection() {
                   <div className="absolute -top-3 left-1/2 -translate-x-1/2">
                     <span className="px-4 py-1.5 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-semibold rounded-full flex items-center gap-1 shadow-lg shadow-green-500/25">
                       <Sparkles className="w-3 h-3" />
-                      Most Popular
+                      {t('mostPopular')}
                     </span>
                   </div>
                 )}
                 <div className="mb-8">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-green-50 mb-1">{plan.name}</h3>
-                  <p className="text-sm text-gray-500 dark:text-green-300/60 mb-5">{plan.description}</p>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-green-50 mb-1">{t(`${plan.key}.name`)}</h3>
+                  <p className="text-sm text-gray-500 dark:text-green-300/60 mb-5">{t(`${plan.key}.description`)}</p>
                   <div className="flex items-baseline gap-1">
                     <motion.span
                       key={price}
@@ -133,22 +115,22 @@ export function PricingSection() {
                       {price}&euro;
                     </motion.span>
                     <span className="text-gray-400 dark:text-green-400/60 text-sm">
-                      /{isYearly ? 'mo, billed yearly' : 'month'}
+                      {isYearly ? t('perMonthYearly') : t('perMonth')}
                     </span>
                   </div>
                   {isYearly && plan.monthlyPrice !== '0' && (
                     <p className="text-xs text-green-600 dark:text-green-400 mt-2 font-medium">
-                      Save {((parseFloat(plan.monthlyPrice) - parseFloat(plan.yearlyPrice)) * 12).toFixed(0)}&euro; per year
+                      {t('savePerYear', { amount: ((parseFloat(plan.monthlyPrice) - parseFloat(plan.yearlyPrice)) * 12).toFixed(0) })}
                     </p>
                   )}
                 </div>
                 <ul className="space-y-3.5 mb-8">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3">
+                  {plan.featureKeys.map((fKey) => (
+                    <li key={fKey} className="flex items-start gap-3">
                       <div className="w-5 h-5 rounded-full bg-green-100 dark:bg-green-900/40 flex items-center justify-center flex-shrink-0 mt-0.5">
                         <Check className="w-3 h-3 text-green-600 dark:text-green-400" />
                       </div>
-                      <span className="text-sm text-gray-600 dark:text-green-200/80">{feature}</span>
+                      <span className="text-sm text-gray-600 dark:text-green-200/80">{t(`${plan.key}.${fKey}`)}</span>
                     </li>
                   ))}
                 </ul>
@@ -158,7 +140,7 @@ export function PricingSection() {
                       variant={plan.popular ? 'primary' : 'outline'}
                       className="w-full py-3"
                     >
-                      {plan.cta}
+                      {t(`${plan.key}.cta`)}
                     </Button>
                   </motion.div>
                 </Link>

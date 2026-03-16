@@ -1,6 +1,7 @@
 'use client';
 
 import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect, useRef, useCallback } from 'react';
 
@@ -116,6 +117,7 @@ function TestimonialCard({ t }: { t: typeof testimonials[0] }) {
 }
 
 export function TestimonialsSection() {
+  const t = useTranslations('testimonials');
   const [activePage, setActivePage] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const cardsPerPage = { mobile: 1, tablet: 2, desktop: 3 };
@@ -156,13 +158,13 @@ export function TestimonialsSection() {
           className="text-center mb-16"
         >
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-green-800/30 text-green-700 dark:text-green-400 text-sm font-medium mb-6">
-            Testimonials
+            {t('badge')}
           </span>
           <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-green-50 mb-5 tracking-tight">
-            Loved by 10,000+ Gardeners
+            {t('title')}
           </h2>
           <p className="text-gray-500 dark:text-green-200/60 text-lg max-w-2xl mx-auto">
-            Join a community of gardeners who plan better and harvest more.
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -240,13 +242,13 @@ export function TestimonialsSection() {
                 </span>
               ))}
             </span>
-            10,000+ active gardeners
+            {t('trustActive')}
           </span>
           <span className="flex items-center gap-1.5">
             <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-            4.9/5 average rating
+            {t('trustRating')}
           </span>
-          <span>Featured in "Top Garden Apps 2026"</span>
+          <span>{t('trustFeatured')}</span>
         </motion.div>
       </div>
     </section>

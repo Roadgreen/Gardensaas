@@ -49,14 +49,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     async session({ session, token }) {
       if (token?.id && session.user) {
         session.user.id = token.id as string;
-        // Fetch plan from DB
+        // Fetch plan and locale from DB
         const dbUser = await prisma.user.findUnique({
           where: { id: token.id as string },
-          select: { plan: true, stripeCustomerId: true },
+          select: { plan: true, stripeCustomerId: true, locale: true },
         });
         if (dbUser) {
           (session.user as unknown as Record<string, unknown>).plan = dbUser.plan;
           (session.user as unknown as Record<string, unknown>).stripeCustomerId = dbUser.stripeCustomerId;
+          (session.user as unknown as Record<string, unknown>).locale = dbUser.locale;
         }
       }
       return session;

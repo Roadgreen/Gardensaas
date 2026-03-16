@@ -2,50 +2,8 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { ChevronDown, HelpCircle } from 'lucide-react';
-
-const faqs = [
-  {
-    question: 'Quand est-ce que je devrais commencer mon potager ?',
-    answer:
-      'Le meilleur moment pour commencer depend de votre zone climatique. En general, vous pouvez commencer les semis en interieur des fevrier-mars, et planter en exterieur apres les dernieres gelees (avril-mai en climat tempere). Notre calendrier de plantation adapte automatiquement les dates a votre region.',
-  },
-  {
-    question: 'Combien de temps faut-il consacrer au jardinage chaque jour ?',
-    answer:
-      "Pour un petit potager (10-20 m2), comptez environ 15-30 minutes par jour pour l'arrosage, le desherbage et l'entretien. GardenSaas optimise votre temps en vous donnant les taches prioritaires chaque jour.",
-  },
-  {
-    question: "Est-ce que l'application fonctionne pour les balcons et petits espaces ?",
-    answer:
-      'Absolument ! GardenSaas supporte les jardins de toute taille, y compris les balcons et terrasses. Nous recommandons les plantes les plus adaptees a votre espace disponible, avec des varietes naines et des herbes aromatiques ideales pour la culture en pot.',
-  },
-  {
-    question: 'Comment fonctionne la vue 3D du jardin ?',
-    answer:
-      "La vue 3D vous permet de visualiser votre jardin comme dans un jeu video. Vous pouvez deplacer votre personnage jardinier, voir vos plantes en 3D, et planifier l'agencement de votre potager de maniere ludique et intuitive.",
-  },
-  {
-    question: 'Quelles plantes sont les plus faciles pour un debutant ?',
-    answer:
-      "Nous recommandons de commencer par des tomates cerises, du basilic, de la laitue, des radis et des courgettes. Ces plantes sont robustes, poussent rapidement et pardonnent les erreurs de debutant. Notre filtre 'difficulte facile' vous aidera a les trouver.",
-  },
-  {
-    question: "Le conseiller IA remplace-t-il un vrai jardinier ?",
-    answer:
-      "Notre IA est un excellent complement, pas un remplacement ! Elle analyse votre sol, votre climat et vos plantes pour donner des conseils personnalises 24h/24. Pour les cas complexes, elle vous orientera vers des ressources specialisees.",
-  },
-  {
-    question: 'Puis-je utiliser GardenSaas sans connexion internet ?',
-    answer:
-      "L'encyclopedie des plantes et votre plan de jardin sont accessibles hors ligne une fois charges. Les fonctionnalites comme la meteo en temps reel et le conseiller IA necessitent une connexion internet.",
-  },
-  {
-    question: "Qu'est-ce que le compagnonnage des plantes ?",
-    answer:
-      "Le compagnonnage est l'art de planter certaines especes cote a cote pour qu'elles s'entraident. Par exemple, le basilic protege les tomates des pucerons, et les carottes repoussent la mouche de l'oignon. GardenSaas vous montre automatiquement les bonnes et mauvaises associations.",
-  },
-];
 
 function FAQItem({ question, answer, index }: { question: string; answer: string; index: number }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -94,6 +52,19 @@ function FAQItem({ question, answer, index }: { question: string; answer: string
 }
 
 export function FAQSection() {
+  const t = useTranslations('faq');
+
+  const faqs = [
+    { question: t('q1'), answer: t('a1') },
+    { question: t('q2'), answer: t('a2') },
+    { question: t('q3'), answer: t('a3') },
+    { question: t('q4'), answer: t('a4') },
+    { question: t('q5'), answer: t('a5') },
+    { question: t('q6'), answer: t('a6') },
+    { question: t('q7'), answer: t('a7') },
+    { question: t('q8'), answer: t('a8') },
+  ];
+
   return (
     <section className="py-24 md:py-32 px-6 bg-gray-50 dark:bg-gradient-to-b dark:from-[#0a1a10] dark:to-[#0D1F17]">
       <div className="max-w-3xl mx-auto">
@@ -106,13 +77,13 @@ export function FAQSection() {
         >
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-green-800/30 text-green-700 dark:text-green-400 text-sm font-medium mb-6">
             <HelpCircle className="w-4 h-4" />
-            FAQ
+            {t('badge')}
           </span>
           <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-green-50 mb-5 tracking-tight">
-            Questions frequentes
+            {t('title')}
           </h2>
           <p className="text-gray-500 dark:text-green-200/60 text-lg max-w-2xl mx-auto">
-            Tout ce que vous devez savoir pour bien demarrer votre jardin.
+            {t('subtitle')}
           </p>
         </motion.div>
 

@@ -14,7 +14,7 @@ import {
   type ClimateZone,
   type SunExposure,
 } from '@/types';
-import { ArrowLeft, ArrowRight, Check, Ruler, Mountain, Cloud, Sun, Sprout, Trophy, Star } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Ruler, Mountain, Cloud, Sun, Sprout, Trophy, Star, MapPin, Locate, Search } from 'lucide-react';
 
 const steps = [
   {
@@ -30,6 +30,13 @@ const steps = [
     icon: Ruler,
     description: 'Every great garden starts with the right space. How big is yours?',
     quest: 'Quest: Map Your Territory',
+  },
+  {
+    id: 'location',
+    title: 'Garden Location',
+    icon: MapPin,
+    description: 'Where is your garden? This helps us give weather-based watering tips!',
+    quest: 'Quest: Pin Your Garden',
   },
   {
     id: 'soil',
@@ -121,6 +128,86 @@ export function SetupForm() {
 
   const [length, setLength] = useState(config.length.toString());
   const [width, setWidth] = useState(config.width.toString());
+  const [locationCity, setLocationCity] = useState(config.city || '');
+  const [locationLat, setLocationLat] = useState(config.latitude?.toString() || '');
+  const [locationLng, setLocationLng] = useState(config.longitude?.toString() || '');
+  const [geoLoading, setGeoLoading] = useState(false);
+  const [geoError, setGeoError] = useState('');
+  const [citySearching, setCitySearching] = useState(false);
+
+  const detectLocation = async () => {
+    setGeoLoading(true);
+    setGeoError('');
+    try {
+      const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+        });
+      });
+      const lat = pos.coords.latitude;
+      const lng = pos.coords.longitude;
+      setLocationLat(lat.toFixed(4));
+      setLocationLng(lng.toFixed(4));
+      updateConfig({ latitude: lat, longitude: lng });
+
+      // Reverse geocode to get city name using Open-Meteo geocoding
+      try {
+        const res = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=10&addressdetails=1`,
+          { headers: { 'User-Agent': 'GardenSaas/1.0' } }
+        );
+        if (res.ok) {
+          const data = await res.json();
+          const city = data.address?.city || data.address?.town || data.address?.village || data.display_name?.split(',')[0] || '';
+          if (city) {
+            setLocationCity(city);
+            updateConfig({ latitude: lat, longitude: lng, city });
+          }
+        }
+      } catch {
+        // Reverse geocoding failure is non-critical
+      }
+
+      gainXp(30);
+    } catch {
+      setGeoError('Could not detect location. Try entering a city name instead.');
+    } finally {
+      setGeoLoading(false);
+    }
+  };
+
+  const searchCity = async () => {
+    if (!locationCity.trim()) return;
+    setCitySearching(true);
+    setGeoError('');
+    try {
+      const res = await fetch(
+        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(locationCity.trim())}&count=1&language=en&format=json`
+      );
+      if (res.ok) {
+        const data = await res.json();
+        if (data.results && data.results.length > 0) {
+          const result = data.results[0];
+          setLocationLat(result.latitude.toFixed(4));
+          setLocationLng(result.longitude.toFixed(4));
+          setLocationCity(result.name + (result.country ? `, ${result.country}` : ''));
+          updateConfig({
+            latitude: result.latitude,
+            longitude: result.longitude,
+            city: result.name,
+          });
+          gainXp(25);
+        } else {
+          setGeoError('City not found. Try a different name.');
+        }
+      }
+    } catch {
+      setGeoError('Search failed. Check your connection.');
+    } finally {
+      setCitySearching(false);
+    }
+  };
 
   const gainXp = (amount: number) => {
     setXpGainAmount(amount);
@@ -142,10 +229,15 @@ export function SetupForm() {
       updateConfig({ length: parseFloat(length), width: parseFloat(width) });
       gainXp(25);
     } else if (step === 2) {
-      gainXp(20);
+      // Location step - XP already given via detect/search
+      if (!locationLat && !locationLng) {
+        // Skip is fine, location is optional
+      }
     } else if (step === 3) {
       gainXp(20);
     } else if (step === 4) {
+      gainXp(20);
+    } else if (step === 5) {
       gainXp(35);
     }
 
@@ -421,8 +513,146 @@ export function SetupForm() {
                 </div>
               )}
 
-              {/* Soil step */}
+              {/* Location step */}
               {step === 2 && (
+                <div className="space-y-5">
+                  {/* GPS detect button */}
+                  <motion.button
+                    type="button"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={detectLocation}
+                    disabled={geoLoading}
+                    className="w-full p-5 rounded-xl border border-green-700/50 bg-gradient-to-br from-green-900/40 to-emerald-900/20 text-left transition-all cursor-pointer hover:border-green-500/60 disabled:opacity-50"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 rounded-xl bg-green-600/20 flex items-center justify-center">
+                        {geoLoading ? (
+                          <Sprout className="w-6 h-6 text-green-400 animate-spin" />
+                        ) : (
+                          <Locate className="w-6 h-6 text-green-400" />
+                        )}
+                      </div>
+                      <div>
+                        <span className="font-medium text-green-50 block text-lg">
+                          {geoLoading ? 'Detecting...' : 'Use My Location'}
+                        </span>
+                        <span className="text-xs text-green-500/50 block mt-0.5">
+                          Auto-detect GPS coordinates from your device
+                        </span>
+                      </div>
+                    </div>
+                  </motion.button>
+
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1 h-px bg-green-800/30" />
+                    <span className="text-xs text-green-500/40">OR</span>
+                    <div className="flex-1 h-px bg-green-800/30" />
+                  </div>
+
+                  {/* City search */}
+                  <div>
+                    <label className="text-sm text-green-300/60 block mb-2">Search by city name:</label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="city"
+                        type="text"
+                        value={locationCity}
+                        onChange={(e) => setLocationCity(e.target.value)}
+                        placeholder="e.g. Paris, Lyon, London..."
+                        onKeyDown={(e) => e.key === 'Enter' && searchCity()}
+                      />
+                      <motion.button
+                        type="button"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={searchCity}
+                        disabled={citySearching || !locationCity.trim()}
+                        className="px-4 rounded-xl bg-green-600/20 border border-green-700/40 text-green-300 hover:bg-green-600/30 transition-all disabled:opacity-40 cursor-pointer"
+                      >
+                        {citySearching ? (
+                          <Sprout className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Search className="w-4 h-4" />
+                        )}
+                      </motion.button>
+                    </div>
+                  </div>
+
+                  {/* Manual coordinates */}
+                  <div>
+                    <label className="text-sm text-green-300/60 block mb-2">Or enter coordinates manually:</label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Input
+                        id="latitude"
+                        label="Latitude"
+                        type="number"
+                        step="0.0001"
+                        min="-90"
+                        max="90"
+                        value={locationLat}
+                        onChange={(e) => {
+                          setLocationLat(e.target.value);
+                          const lat = parseFloat(e.target.value);
+                          const lng = parseFloat(locationLng);
+                          if (!isNaN(lat) && !isNaN(lng)) {
+                            updateConfig({ latitude: lat, longitude: lng });
+                          }
+                        }}
+                        placeholder="48.8566"
+                      />
+                      <Input
+                        id="longitude"
+                        label="Longitude"
+                        type="number"
+                        step="0.0001"
+                        min="-180"
+                        max="180"
+                        value={locationLng}
+                        onChange={(e) => {
+                          setLocationLng(e.target.value);
+                          const lat = parseFloat(locationLat);
+                          const lng = parseFloat(e.target.value);
+                          if (!isNaN(lat) && !isNaN(lng)) {
+                            updateConfig({ latitude: lat, longitude: lng });
+                          }
+                        }}
+                        placeholder="2.3522"
+                      />
+                    </div>
+                  </div>
+
+                  {geoError && (
+                    <p className="text-xs text-red-400/80 text-center">{geoError}</p>
+                  )}
+
+                  {locationLat && locationLng && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="text-center p-3 rounded-xl bg-green-900/20 border border-green-800/30"
+                    >
+                      <MapPin className="w-4 h-4 text-green-400 inline mr-1" />
+                      <span className="text-green-300/70 text-sm">
+                        {locationCity ? (
+                          <>{locationCity} ({locationLat}, {locationLng})</>
+                        ) : (
+                          <>Location set: {locationLat}, {locationLng}</>
+                        )}
+                      </span>
+                    </motion.div>
+                  )}
+
+                  {!locationLat && !locationLng && (
+                    <p className="text-xs text-green-500/40 text-center">
+                      Location is optional but recommended for weather-based watering alerts.
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {/* Soil step */}
+              {step === 3 && (
                 <div className="grid grid-cols-2 gap-3">
                   {soilOptions.map((opt) => (
                     <motion.button
@@ -446,7 +676,7 @@ export function SetupForm() {
               )}
 
               {/* Climate step */}
-              {step === 3 && (
+              {step === 4 && (
                 <div className="grid grid-cols-2 gap-3">
                   {climateOptions.map((opt) => (
                     <motion.button
@@ -470,7 +700,7 @@ export function SetupForm() {
               )}
 
               {/* Sun step */}
-              {step === 4 && (
+              {step === 5 && (
                 <div className="space-y-3">
                   {sunOptions.map((opt) => (
                     <motion.button

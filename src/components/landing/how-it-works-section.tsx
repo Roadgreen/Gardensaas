@@ -1,62 +1,65 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import { Ruler, Sprout, Eye } from 'lucide-react';
 
-const steps = [
-  {
-    icon: Ruler,
-    emoji: '\uD83C\uDF31',
-    step: '1',
-    title: 'Configurez votre jardin',
-    description: 'Entrez les dimensions, le type de sol, la zone climatique et l\'exposition au soleil. Ca prend moins de 2 minutes !',
-    color: 'from-green-500 to-emerald-600',
-    bgAccent: 'bg-green-100/60 dark:bg-green-900/30',
-    illustration: [
-      { type: 'rect', x: 20, y: 20, w: 60, h: 40, fill: '#5C3D1E', rx: 4 },
-      { type: 'line', x1: 50, y1: 5, x2: 50, y2: 15, stroke: '#4ADE80' },
-      { type: 'circle', cx: 50, cy: 5, r: 3, fill: '#FFD700' },
-      { type: 'rect', x: 10, y: 62, w: 80, h: 3, fill: '#7EC850', rx: 1.5 },
-    ],
-  },
-  {
-    icon: Sprout,
-    emoji: '\uD83E\uDD55',
-    step: '2',
-    title: 'Choisissez vos plantes',
-    description: 'Parcourez 300+ plantes avec des recommandations intelligentes basees sur votre jardin. On vous dit ce qui pousse le mieux chez vous.',
-    color: 'from-emerald-500 to-teal-600',
-    bgAccent: 'bg-emerald-100/60 dark:bg-emerald-900/30',
-    illustration: [
-      { type: 'circle', cx: 25, cy: 35, r: 12, fill: '#FF6347' },
-      { type: 'circle', cx: 50, cy: 30, r: 10, fill: '#9370DB' },
-      { type: 'circle', cx: 72, cy: 38, r: 11, fill: '#FFD700' },
-      { type: 'line', x1: 25, y1: 47, x2: 25, y2: 60, stroke: '#4CAF50' },
-      { type: 'line', x1: 50, y1: 40, x2: 50, y2: 60, stroke: '#4CAF50' },
-      { type: 'line', x1: 72, y1: 49, x2: 72, y2: 60, stroke: '#4CAF50' },
-      { type: 'rect', x: 10, y: 60, w: 80, h: 5, fill: '#5C3D1E', rx: 2 },
-    ],
-  },
-  {
-    icon: Eye,
-    emoji: '\uD83C\uDFAE',
-    step: '3',
-    title: 'Cultivez & visualisez',
-    description: 'Regardez votre jardin en 3D, suivez votre calendrier de soins et demandez conseil au jardinier IA quand vous avez besoin d\'aide.',
-    color: 'from-teal-500 to-cyan-600',
-    bgAccent: 'bg-teal-100/60 dark:bg-teal-900/30',
-    illustration: [
-      { type: 'rect', x: 15, y: 25, w: 70, h: 35, fill: '#142A1E', rx: 6 },
-      { type: 'rect', x: 20, y: 30, w: 60, h: 25, fill: '#7EC850', rx: 3 },
-      { type: 'circle', cx: 35, cy: 40, r: 5, fill: '#FF6347' },
-      { type: 'circle', cx: 55, cy: 38, r: 4, fill: '#9370DB' },
-      { type: 'circle', cx: 68, cy: 42, r: 3, fill: '#FFD700' },
-      { type: 'rect', x: 30, y: 15, w: 40, h: 10, fill: '#4ADE80', rx: 5 },
-    ],
-  },
-];
-
 export function HowItWorksSection() {
+  const t = useTranslations('howItWorks');
+
+  const steps = [
+    {
+      icon: Ruler,
+      emoji: '\uD83C\uDF31',
+      step: '1',
+      titleKey: 'step1Title' as const,
+      descKey: 'step1Desc' as const,
+      color: 'from-green-500 to-emerald-600',
+      bgAccent: 'bg-green-100/60 dark:bg-green-900/30',
+      illustration: [
+        { type: 'rect', x: 20, y: 20, w: 60, h: 40, fill: '#5C3D1E', rx: 4 },
+        { type: 'line', x1: 50, y1: 5, x2: 50, y2: 15, stroke: '#4ADE80' },
+        { type: 'circle', cx: 50, cy: 5, r: 3, fill: '#FFD700' },
+        { type: 'rect', x: 10, y: 62, w: 80, h: 3, fill: '#7EC850', rx: 1.5 },
+      ],
+    },
+    {
+      icon: Sprout,
+      emoji: '\uD83E\uDD55',
+      step: '2',
+      titleKey: 'step2Title' as const,
+      descKey: 'step2Desc' as const,
+      color: 'from-emerald-500 to-teal-600',
+      bgAccent: 'bg-emerald-100/60 dark:bg-emerald-900/30',
+      illustration: [
+        { type: 'circle', cx: 25, cy: 35, r: 12, fill: '#FF6347' },
+        { type: 'circle', cx: 50, cy: 30, r: 10, fill: '#9370DB' },
+        { type: 'circle', cx: 72, cy: 38, r: 11, fill: '#FFD700' },
+        { type: 'line', x1: 25, y1: 47, x2: 25, y2: 60, stroke: '#4CAF50' },
+        { type: 'line', x1: 50, y1: 40, x2: 50, y2: 60, stroke: '#4CAF50' },
+        { type: 'line', x1: 72, y1: 49, x2: 72, y2: 60, stroke: '#4CAF50' },
+        { type: 'rect', x: 10, y: 60, w: 80, h: 5, fill: '#5C3D1E', rx: 2 },
+      ],
+    },
+    {
+      icon: Eye,
+      emoji: '\uD83C\uDFAE',
+      step: '3',
+      titleKey: 'step3Title' as const,
+      descKey: 'step3Desc' as const,
+      color: 'from-teal-500 to-cyan-600',
+      bgAccent: 'bg-teal-100/60 dark:bg-teal-900/30',
+      illustration: [
+        { type: 'rect', x: 15, y: 25, w: 70, h: 35, fill: '#142A1E', rx: 6 },
+        { type: 'rect', x: 20, y: 30, w: 60, h: 25, fill: '#7EC850', rx: 3 },
+        { type: 'circle', cx: 35, cy: 40, r: 5, fill: '#FF6347' },
+        { type: 'circle', cx: 55, cy: 38, r: 4, fill: '#9370DB' },
+        { type: 'circle', cx: 68, cy: 42, r: 3, fill: '#FFD700' },
+        { type: 'rect', x: 30, y: 15, w: 40, h: 10, fill: '#4ADE80', rx: 5 },
+      ],
+    },
+  ];
+
   return (
     <section className="py-24 md:py-32 px-6 bg-gray-50 dark:bg-gradient-to-b dark:from-[#0D1F17] dark:to-[#0a1a10]">
       <div className="max-w-5xl mx-auto">
@@ -68,13 +71,13 @@ export function HowItWorksSection() {
           className="text-center mb-16"
         >
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-green-800/30 text-green-700 dark:text-green-400 text-sm font-medium mb-6">
-            Comment ca marche
+            {t('badge')}
           </span>
           <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-green-50 mb-5 tracking-tight">
-            Votre jardin en 3 etapes simples
+            {t('title')}
           </h2>
           <p className="text-gray-500 dark:text-green-200/60 text-lg max-w-2xl mx-auto">
-            Du semis a la recolte, on rend le jardinage simple et amusant.
+            {t('subtitle')}
           </p>
         </motion.div>
 
@@ -118,8 +121,8 @@ export function HowItWorksSection() {
                   {step.step}
                 </span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 dark:text-green-50 mb-3">{step.title}</h3>
-              <p className="text-gray-500 dark:text-green-200/60 leading-relaxed">{step.description}</p>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-green-50 mb-3">{t(step.titleKey)}</h3>
+              <p className="text-gray-500 dark:text-green-200/60 leading-relaxed">{t(step.descKey)}</p>
             </motion.div>
           ))}
         </div>

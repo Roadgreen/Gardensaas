@@ -4,10 +4,11 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
+import { useTranslations, useLocale } from 'next-intl';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Sprout, Mail, Lock, User, Leaf, Flower2 } from 'lucide-react';
+import { Sprout, Mail, Lock, User, Leaf, Flower2, Globe } from 'lucide-react';
 
 export default function RegisterPage() {
   const [name, setName] = useState('');
@@ -15,7 +16,11 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const currentLocale = useLocale();
+  const [selectedLocale, setSelectedLocale] = useState(currentLocale);
   const router = useRouter();
+  const t = useTranslations('auth');
+  const tLocale = useTranslations('locale');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,14 +31,21 @@ export default function RegisterPage() {
       const res = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ name, email, password, locale: selectedLocale }),
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || 'Registration failed');
+        setError(data.error || t('genericError'));
         setLoading(false);
         return;
       }
+
+      // Set locale cookie to match user's choice
+      await fetch('/api/locale', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ locale: selectedLocale }),
+      });
 
       // Auto sign in after registration
       const signInResult = await signIn('credentials', {
@@ -50,7 +62,7 @@ export default function RegisterPage() {
 
       router.push('/garden/dashboard');
     } catch {
-      setError('An error occurred. Please try again.');
+      setError(t('genericError'));
       setLoading(false);
     }
   };
@@ -87,8 +99,8 @@ export default function RegisterPage() {
               <Sprout className="w-7 h-7 text-green-400" />
             </div>
           </Link>
-          <h1 className="text-3xl font-bold text-green-50 mb-2">Create Your Account</h1>
-          <p className="text-green-300/60">Start planning your dream garden</p>
+          <h1 className="text-3xl font-bold text-green-50 mb-2">{t('createAccount')}</h1>
+          <p className="text-green-300/60">{t('registerSubtitle')}</p>
         </div>
 
         <div className="bg-[#142A1E]/80 backdrop-blur-sm rounded-2xl border border-green-900/40 p-8 shadow-2xl shadow-black/20">
@@ -106,11 +118,11 @@ export default function RegisterPage() {
               <User className="absolute left-3 top-9 w-4 h-4 text-green-600" />
               <Input
                 id="name"
-                label="Name"
+                label={t('name')}
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Your name"
+                placeholder={t('namePlaceholder')}
                 required
                 className="pl-10"
               />
@@ -119,11 +131,11 @@ export default function RegisterPage() {
               <Mail className="absolute left-3 top-9 w-4 h-4 text-green-600" />
               <Input
                 id="email"
-                label="Email"
+                label={t('email')}
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
+                placeholder={t('emailPlaceholder')}
                 required
                 className="pl-10"
               />
@@ -132,15 +144,39 @@ export default function RegisterPage() {
               <Lock className="absolute left-3 top-9 w-4 h-4 text-green-600" />
               <Input
                 id="password"
-                label="Password"
+                label={t('password')}
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="At least 8 characters"
+                placeholder={t('passwordHint')}
                 minLength={8}
                 required
                 className="pl-10"
               />
+            </div>
+            {/* Language selection */}
+            <div>
+              <label className="block text-sm font-medium text-green-200/80 mb-2">
+                <Globe className="w-4 h-4 inline mr-1.5" />
+                {tLocale('switchLanguage')}
+              </label>
+              <div className="grid grid-cols-2 gap-3">
+                {(['en', 'fr'] as const).map((loc) => (
+                  <button
+                    key={loc}
+                    type="button"
+                    onClick={() => setSelectedLocale(loc)}
+                    className={`p-3 rounded-xl border text-center transition-all cursor-pointer ${
+                      selectedLocale === loc
+                        ? 'border-green-500 bg-green-900/30 text-green-50'
+                        : 'border-green-900/40 bg-[#0D1F17] text-green-300/70 hover:border-green-700/50'
+                    }`}
+                  >
+                    <span className="text-lg block mb-0.5">{loc === 'en' ? '\uD83C\uDDEC\uD83C\uDDE7' : '\uD83C\uDDEB\uD83C\uDDF7'}</span>
+                    <span className="text-sm font-medium">{tLocale(loc)}</span>
+                  </button>
+                ))}
+              </div>
             </div>
             <Button type="submit" disabled={loading} className="w-full">
               {loading ? (
@@ -150,27 +186,27 @@ export default function RegisterPage() {
                     animate={{ rotate: 360 }}
                     transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
                   />
-                  Creating account...
+                  {t('creatingAccount')}
                 </span>
               ) : (
-                'Create Account'
+                t('createAccountBtn')
               )}
             </Button>
           </form>
 
           <div className="mt-5 pt-5 border-t border-green-900/30 text-center">
             <p className="text-xs text-green-500/40">
-              Free plan includes 1 garden, 5 plants, and daily tips.
+              {t('freeIncludes')}
               <br />
-              Upgrade to Pro anytime for AI advisor and unlimited gardens.
+              {t('upgradeAnytime')}
             </p>
           </div>
         </div>
 
         <p className="text-center mt-6 text-sm text-green-400/60">
-          Already have an account?{' '}
+          {t('alreadyHaveAccount')}{' '}
           <Link href="/auth/login" className="text-green-400 hover:text-green-300 font-medium transition-colors">
-            Sign In
+            {t('signIn')}
           </Link>
         </p>
       </motion.div>

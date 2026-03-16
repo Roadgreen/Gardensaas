@@ -30,6 +30,17 @@ const PRESETS = [
   { label: 'XL (3x1.2m)', lengthM: 3, widthM: 1.2, heightM: 0.45 },
 ];
 
+const moveBtnStyle: React.CSSProperties = {
+  padding: '3px 10px',
+  borderRadius: '6px',
+  fontSize: '9px',
+  background: 'rgba(210, 160, 108, 0.2)',
+  border: '1px solid rgba(210, 160, 108, 0.3)',
+  color: '#D4A06C',
+  cursor: 'pointer',
+  fontFamily: '"Nunito", system-ui, sans-serif',
+};
+
 const panelStyle: React.CSSProperties = {
   position: 'absolute',
   bottom: '80px',
@@ -85,6 +96,14 @@ export function RaisedBedPanel({
 
   const selectedBed = beds.find((b) => b.id === selectedBedId);
 
+  const handleMoveBed = (bedId: string, dx: number, dz: number) => {
+    const bed = beds.find((b) => b.id === bedId);
+    if (!bed) return;
+    const newX = Math.max(5, Math.min(95, bed.x + dx));
+    const newZ = Math.max(5, Math.min(95, bed.z + dz));
+    onUpdateBed(bedId, { x: newX, z: newZ });
+  };
+
   return (
     <div style={panelStyle}>
       {/* Header */}
@@ -107,24 +126,53 @@ export function RaisedBedPanel({
       {beds.length > 0 && (
         <div style={{ marginBottom: '12px' }}>
           {beds.map((bed) => (
-            <div key={bed.id} style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              padding: '8px 10px', borderRadius: '10px', marginBottom: '4px',
-              background: selectedBedId === bed.id ? 'rgba(210, 160, 108, 0.2)' : 'rgba(0,0,0,0.15)',
-              border: selectedBedId === bed.id ? '1px solid rgba(210, 160, 108, 0.4)' : '1px solid transparent',
-              cursor: 'pointer',
-            }} onClick={() => onSelectBed(selectedBedId === bed.id ? null : bed.id)}>
-              <div>
-                <div style={{ fontSize: '12px', color: '#D4A06C', fontWeight: 'bold' }}>{bed.name}</div>
-                <div style={{ fontSize: '10px', color: '#9CA3AF' }}>
-                  {bed.lengthM}x{bed.widthM}x{bed.heightM}m - {RAISED_BED_SOIL_LABELS[bed.soilType]}
+            <div key={bed.id}>
+              <div style={{
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                padding: '8px 10px', borderRadius: selectedBedId === bed.id ? '10px 10px 0 0' : '10px', marginBottom: selectedBedId === bed.id ? '0' : '4px',
+                background: selectedBedId === bed.id ? 'rgba(210, 160, 108, 0.2)' : 'rgba(0,0,0,0.15)',
+                border: selectedBedId === bed.id ? '1px solid rgba(210, 160, 108, 0.4)' : '1px solid transparent',
+                borderBottom: selectedBedId === bed.id ? 'none' : undefined,
+                cursor: 'pointer',
+              }} onClick={() => onSelectBed(selectedBedId === bed.id ? null : bed.id)}>
+                <div>
+                  <div style={{ fontSize: '12px', color: '#D4A06C', fontWeight: 'bold' }}>{bed.name}</div>
+                  <div style={{ fontSize: '10px', color: '#9CA3AF' }}>
+                    {bed.lengthM}x{bed.widthM}x{bed.heightM}m - {RAISED_BED_SOIL_LABELS[bed.soilType]}
+                  </div>
                 </div>
+                <button onClick={(e) => { e.stopPropagation(); onRemoveBed(bed.id); }} style={{
+                  background: 'rgba(239, 68, 68, 0.2)', border: '1px solid rgba(239, 68, 68, 0.3)',
+                  borderRadius: '6px', color: '#FCA5A5', cursor: 'pointer', padding: '4px 8px',
+                  fontSize: '10px', fontFamily: '"Nunito", system-ui, sans-serif',
+                }}>{'\uD83D\uDDD1'}</button>
               </div>
-              <button onClick={(e) => { e.stopPropagation(); onRemoveBed(bed.id); }} style={{
-                background: 'rgba(239, 68, 68, 0.2)', border: '1px solid rgba(239, 68, 68, 0.3)',
-                borderRadius: '6px', color: '#FCA5A5', cursor: 'pointer', padding: '4px 8px',
-                fontSize: '10px', fontFamily: '"Nunito", system-ui, sans-serif',
-              }}>{'\uD83D\uDDD1'}</button>
+              {/* Position controls when selected */}
+              {selectedBedId === bed.id && (
+                <div style={{
+                  padding: '8px 10px', borderRadius: '0 0 10px 10px', marginBottom: '4px',
+                  background: 'rgba(210, 160, 108, 0.12)',
+                  border: '1px solid rgba(210, 160, 108, 0.4)',
+                  borderTop: 'none',
+                }}>
+                  <div style={{ fontSize: '9px', color: '#9CA3AF', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                    Position in garden
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                    <button onClick={(e) => { e.stopPropagation(); handleMoveBed(bed.id, 0, -5); }} style={moveBtnStyle}>Up</button>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', marginTop: '2px' }}>
+                    <button onClick={(e) => { e.stopPropagation(); handleMoveBed(bed.id, -5, 0); }} style={moveBtnStyle}>Left</button>
+                    <div style={{ fontSize: '9px', color: '#D4A06C', minWidth: '50px', textAlign: 'center' }}>
+                      {Math.round(bed.x)}%, {Math.round(bed.z)}%
+                    </div>
+                    <button onClick={(e) => { e.stopPropagation(); handleMoveBed(bed.id, 5, 0); }} style={moveBtnStyle}>Right</button>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', marginTop: '2px' }}>
+                    <button onClick={(e) => { e.stopPropagation(); handleMoveBed(bed.id, 0, 5); }} style={moveBtnStyle}>Down</button>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
