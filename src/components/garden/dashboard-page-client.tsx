@@ -42,6 +42,8 @@ import type { WateringTask } from '@/types';
 import { SproutMascot } from '@/components/sprout-mascot';
 import { calculateWateringTasks, getWateringSummary } from '@/lib/watering-service';
 import type { WeatherContext } from '@/lib/watering-service';
+import { getSeasonalQuickPicks } from '@/lib/smart-planting';
+import type { PlantingSuggestionResult } from '@/lib/smart-planting';
 
 const sidebarLinksConfig = [
   { href: '/garden/dashboard', key: 'dashboard', icon: LayoutDashboard },
@@ -774,6 +776,134 @@ function getPlantEmoji(id: string): string {
   return plantEmojis.default;
 }
 
+function SeasonalPicksWidget({ config, onAddPlant }: {
+  config: import('@/types').GardenConfig;
+  onAddPlant: (plantId: string, x: number, z: number) => void;
+}) {
+  const t = useTranslations('dashboard');
+  const locale = useLocale();
+  const lang = (locale === 'fr' ? 'fr' : 'en') as 'en' | 'fr';
+  const [addedIds, setAddedIds] = useState<Set<string>>(new Set());
+
+  const picks = getSeasonalQuickPicks(
+    config.climateZone,
+    config.soilType,
+    config.sunExposure,
+    6
+  );
+
+  if (picks.length === 0) return null;
+
+  const handleAdd = (plantId: string) => {
+    const x = Math.random() * config.length;
+    const z = Math.random() * config.width;
+    onAddPlant(plantId, x, z);
+    setAddedIds(prev => new Set(prev).add(plantId));
+  };
+
+  return (
+    <Card className="bg-gradient-to-br from-green-900/30 to-emerald-900/15 border-green-800/30">
+      <CardTitle className="flex items-center gap-2 mb-4">
+        <span className="text-xl">{'\uD83C\uDF31'}</span>
+        {t('seasonalPicks')}
+      </CardTitle>
+      <CardContent>
+        <p className="text-xs text-green-500/50 mb-3">{t('seasonalPicksDesc')}</p>
+        <div className="space-y-2">
+          {picks.map((pick) => {
+            const isAdded = addedIds.has(pick.plantId) || config.plantedItems.some(p => p.plantId === pick.plantId);
+            return (
+              <div
+                key={pick.plantId}
+                className="flex items-center gap-3 p-2.5 rounded-xl bg-[#0D1F17] border border-green-900/30 hover:border-green-700/40 transition-all"
+              >
+                <span className="text-lg">{getPlantEmoji(pick.plantId)}</span>
+                <div className="flex-1 min-w-0">
+                  <span className="text-green-50 text-sm font-medium block truncate">
+                    {pick.plantName[lang]}
+                  </span>
+                  <span className="text-[10px] text-green-500/40 block truncate">
+                    {pick.reason[lang]}
+                  </span>
+                </div>
+                {pick.canSowNow && (
+                  <span className="shrink-0 px-1.5 py-0.5 rounded-full bg-green-600/20 text-green-400 text-[10px] font-semibold">
+                    {t('seasonalNow')}
+                  </span>
+                )}
+                {isAdded ? (
+                  <span className="text-xs text-green-500/50 ml-1 shrink-0">{t('added')}</span>
+                ) : (
+                  <button
+                    onClick={() => handleAdd(pick.plantId)}
+                    className="text-green-600 hover:text-green-400 transition-colors p-1 ml-1 shrink-0 cursor-pointer"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+function FrostAlertBanner({ latitude, longitude }: { latitude?: number; longitude?: number }) {
+  const t = useTranslations('dashboard');
+  const [frostAlert, setFrostAlert] = useState<{ alert: boolean; message: string; date?: string; minTemp?: number } | null>(null);
+
+  useEffect(() => {
+    async function checkFrost() {
+      if (!latitude || !longitude) return;
+      try {
+        const res = await fetch(
+          `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=temperature_2m_min&timezone=auto&forecast_days=7`
+        );
+        if (!res.ok) return;
+        const data = await res.json();
+        const mins: number[] = data.daily?.temperature_2m_min || [];
+        const dates: string[] = data.daily?.time || [];
+        for (let i = 0; i < mins.length; i++) {
+          if (mins[i] <= 2) {
+            setFrostAlert({
+              alert: true,
+              date: dates[i],
+              minTemp: mins[i],
+              message: mins[i] <= 0
+                ? t('frostWarning', { temp: mins[i].toFixed(1), date: new Date(dates[i]).toLocaleDateString() })
+                : t('nearFrostWarning', { temp: mins[i].toFixed(1), date: new Date(dates[i]).toLocaleDateString() }),
+            });
+            return;
+          }
+        }
+      } catch {
+        // Silent fail
+      }
+    }
+    checkFrost();
+  }, [latitude, longitude, t]);
+
+  if (!frostAlert?.alert) return null;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mb-6 p-4 rounded-xl bg-red-900/30 border border-red-700/40"
+    >
+      <div className="flex items-center gap-3">
+        <Snowflake className="w-5 h-5 text-red-400 shrink-0" />
+        <div>
+          <p className="text-sm font-medium text-red-300">{frostAlert.message}</p>
+          <p className="text-xs text-red-400/60 mt-1">{t('frostProtectTip')}</p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export function DashboardPageClient() {
   const { data: session } = useSession();
   const { config, isLoaded, addPlant, removePlant } = useGarden();
@@ -900,6 +1030,9 @@ export function DashboardPageClient() {
               </div>
             </motion.div>
           </div>
+
+          {/* Frost Alert */}
+          <FrostAlertBanner latitude={config.latitude} longitude={config.longitude} />
 
           {/* Garden Progress Bar */}
           <motion.div
@@ -1090,6 +1223,9 @@ export function DashboardPageClient() {
             {/* Right column */}
             <div className="space-y-6">
               <WeatherWidget gardenLat={config.latitude} gardenLng={config.longitude} />
+
+              {/* Seasonal Smart Picks */}
+              <SeasonalPicksWidget config={config} onAddPlant={addPlant} />
 
               {/* Recommendations */}
               <Card>
