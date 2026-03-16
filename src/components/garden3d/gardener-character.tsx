@@ -144,14 +144,40 @@ export function getRandomAdvice(): string {
   return ADVICE_LINES[Math.floor(Math.random() * ADVICE_LINES.length)];
 }
 
+// ===== TOTAL CHARACTER HEIGHT: ~1.5 units =====
+// Head center ~1.10, radius 0.30 => top of head ~1.40
+// Hat adds ~0.12 => top ~1.52
+// Feet bottom ~0.0
+// Head is ~0.60 of 1.5 = 40% of total height (chibi ratio)
+
+// Pastel color palette
+const PALETTE = {
+  skin: '#FFE4CC',
+  skinDark: '#FFCFAA',
+  overalls: '#88D498',       // Soft pastel green
+  overallsDark: '#5EBB6E',   // Darker green accents
+  shirt: '#FFFDF5',          // Warm cream
+  hat: '#E8C872',            // Warm straw gold
+  hatBand: '#F27A7A',        // Soft coral red
+  boots: '#9B7653',          // Warm brown
+  bootSole: '#7A5C3D',
+  hair: '#8B5E3C',
+  cheek: '#FFB0B0',
+  mouth: '#E06070',
+  eyeBlack: '#221511',
+  button: '#FFD700',
+  flower: '#FFB7D5',
+  flowerCenter: '#FFEB3B',
+};
+
 // Heart / sparkle emote particles (kawaii style)
 function EmoteParticles({ active }: { active: boolean }) {
   const ref = useRef<THREE.Group>(null);
   const particles = useMemo(() =>
-    Array.from({ length: 6 }, (_, i) => ({
-      angle: (i / 6) * Math.PI * 2 + Math.random() * 0.5,
-      speed: 0.6 + Math.random() * 0.4,
-      dist: 0.12 + Math.random() * 0.08,
+    Array.from({ length: 8 }, (_, i) => ({
+      angle: (i / 8) * Math.PI * 2 + Math.random() * 0.4,
+      speed: 0.5 + Math.random() * 0.5,
+      dist: 0.1 + Math.random() * 0.1,
     })),
   []);
 
@@ -168,18 +194,18 @@ function EmoteParticles({ active }: { active: boolean }) {
     ref.current.children.forEach((child, i) => {
       const p = particles[i];
       const mesh = child as THREE.Mesh;
-      mesh.position.x = Math.cos(p.angle + elapsed * 2) * p.dist * (1 + elapsed);
-      mesh.position.y = elapsed * p.speed * 0.5;
-      mesh.position.z = Math.sin(p.angle + elapsed * 2) * p.dist * (1 + elapsed);
+      mesh.position.x = Math.cos(p.angle + elapsed * 2.5) * p.dist * (1 + elapsed * 1.2);
+      mesh.position.y = elapsed * p.speed * 0.6;
+      mesh.position.z = Math.sin(p.angle + elapsed * 2.5) * p.dist * (1 + elapsed * 1.2);
       const fade = Math.max(0, 1 - elapsed / 1.5);
-      mesh.scale.setScalar(fade * 0.8);
+      mesh.scale.setScalar(fade * 0.9);
       (mesh.material as THREE.MeshBasicMaterial).opacity = fade;
     });
   });
 
   if (!active) return null;
 
-  const colors = ['#FF69B4', '#FFD700', '#FF91AF', '#FFB6C1', '#FFA07A', '#FFDAB9'];
+  const colors = ['#FF69B4', '#FFD700', '#FF91AF', '#FFB6C1', '#FFA07A', '#FFDAB9', '#87CEEB', '#DDA0DD'];
 
   return (
     <group ref={ref} position={[0, 1.5, 0]}>
@@ -193,18 +219,17 @@ function EmoteParticles({ active }: { active: boolean }) {
   );
 }
 
-// Chibi tool held in stubby hand - scaled for small arms
+// Chibi tool held in stubby hand
 function HeldTool({ action }: { action: string }) {
   if (action === 'watering') {
     return (
-      <group position={[0, -0.08, 0.04]} rotation={[0.3, 0, 0]}>
-        {/* Tiny watering can */}
+      <group position={[0, -0.06, 0.04]} rotation={[0.3, 0, 0]}>
         <mesh>
-          <cylinderGeometry args={[0.02, 0.025, 0.05, 8]} />
+          <cylinderGeometry args={[0.025, 0.03, 0.06, 8]} />
           <meshStandardMaterial color="#7BC67E" metalness={0.3} roughness={0.6} />
         </mesh>
-        <mesh position={[0.025, 0.015, 0]}>
-          <cylinderGeometry args={[0.006, 0.004, 0.035, 6]} />
+        <mesh position={[0.03, 0.02, 0]}>
+          <cylinderGeometry args={[0.008, 0.005, 0.04, 6]} />
           <meshStandardMaterial color="#7BC67E" metalness={0.3} />
         </mesh>
       </group>
@@ -214,33 +239,29 @@ function HeldTool({ action }: { action: string }) {
     return (
       <group position={[0, -0.1, 0.02]} rotation={[-0.3, 0, 0]}>
         <mesh>
-          <cylinderGeometry args={[0.006, 0.006, 0.1, 6]} />
+          <cylinderGeometry args={[0.008, 0.008, 0.12, 6]} />
           <meshStandardMaterial color="#C4956A" />
         </mesh>
-        <mesh position={[0, -0.055, 0]}>
-          <boxGeometry args={[0.022, 0.025, 0.004]} />
+        <mesh position={[0, -0.065, 0]}>
+          <boxGeometry args={[0.025, 0.03, 0.005]} />
           <meshStandardMaterial color="#999" metalness={0.5} />
         </mesh>
       </group>
     );
   }
-  if (action === 'pointing') {
-    return null; // Chibi characters point with their whole stubby arm
-  }
   if (action === 'harvesting') {
     return (
       <group position={[0, -0.08, 0.03]} rotation={[0, 0, 0.2]}>
-        {/* Tiny basket */}
         <mesh>
-          <cylinderGeometry args={[0.03, 0.025, 0.03, 8]} />
+          <cylinderGeometry args={[0.035, 0.028, 0.035, 8]} />
           <meshStandardMaterial color="#C4956A" />
         </mesh>
-        <mesh position={[0.008, 0.02, 0]}>
-          <sphereGeometry args={[0.012, 6, 6]} />
+        <mesh position={[0.01, 0.022, 0]}>
+          <sphereGeometry args={[0.014, 6, 6]} />
           <meshStandardMaterial color="#E53935" />
         </mesh>
-        <mesh position={[-0.008, 0.018, 0.008]}>
-          <sphereGeometry args={[0.01, 6, 6]} />
+        <mesh position={[-0.01, 0.02, 0.01]}>
+          <sphereGeometry args={[0.012, 6, 6]} />
           <meshStandardMaterial color="#FF8A65" />
         </mesh>
       </group>
@@ -249,13 +270,13 @@ function HeldTool({ action }: { action: string }) {
   return null;
 }
 
-// Speech bubble with daily tip (auto-shows periodically)
+// Speech bubble with daily tip
 function DailyTipBubble({ show, tip }: { show: boolean; tip: string }) {
   if (!show) return null;
 
   return (
     <Html
-      position={[0.35, 1.6, 0]}
+      position={[0.4, 1.55, 0]}
       center
       distanceFactor={5}
       style={{ pointerEvents: 'none' }}
@@ -281,7 +302,7 @@ function DailyTipBubble({ show, tip }: { show: boolean; tip: string }) {
   );
 }
 
-// Cute Z particles when idle for a while (sleeping/resting)
+// Cute Z particles when idle for a while
 function IdleZzzParticles({ active }: { active: boolean }) {
   const ref = useRef<THREE.Group>(null);
 
@@ -291,7 +312,7 @@ function IdleZzzParticles({ active }: { active: boolean }) {
     ref.current.children.forEach((child, i) => {
       const mesh = child as THREE.Mesh;
       const phase = ((t * 0.3 + i * 0.5) % 2) / 2;
-      mesh.position.x = 0.2 + phase * 0.15;
+      mesh.position.x = 0.25 + phase * 0.15;
       mesh.position.y = 1.55 + phase * 0.3;
       mesh.position.z = 0;
       const fade = phase < 0.7 ? phase / 0.7 : (1 - phase) / 0.3;
@@ -314,50 +335,286 @@ function IdleZzzParticles({ active }: { active: boolean }) {
   );
 }
 
-// Blinking eyes component for the chibi character
-function ChibiEyes({ blinkRef }: { blinkRef: React.RefObject<{ scaleY: number } | null> }) {
-  // Eye whites (big oval eyes - Animal Crossing style)
+// ===== ANIMAL CROSSING CHIBI HEAD =====
+// Large round head with big sparkly eyes, rosy cheeks, tiny nose and mouth
+function ChibiHead() {
   return (
     <group>
+      {/* Main head - large sphere (radius 0.30, center at y=1.10) */}
+      <mesh position={[0, 1.10, 0]} castShadow>
+        <sphereGeometry args={[0.30, 20, 16]} />
+        <meshStandardMaterial color={PALETTE.skin} roughness={0.55} />
+      </mesh>
+
+      {/* Hair back - bowl-cut hemisphere */}
+      <mesh position={[0, 1.18, -0.06]} scale={[1.02, 1, 0.95]}>
+        <sphereGeometry args={[0.28, 14, 12, 0, Math.PI * 2, 0, Math.PI * 0.52]} />
+        <meshStandardMaterial color={PALETTE.hair} roughness={0.8} />
+      </mesh>
+
+      {/* Hair bangs - soft fringe across forehead */}
+      <mesh position={[0, 1.30, 0.14]} scale={[1.2, 0.32, 0.55]}>
+        <sphereGeometry args={[0.14, 12, 8]} />
+        <meshStandardMaterial color={PALETTE.hair} roughness={0.8} />
+      </mesh>
+
+      {/* Side hair tufts */}
+      <mesh position={[-0.25, 1.12, 0.02]} scale={[0.55, 0.75, 0.55]}>
+        <sphereGeometry args={[0.1, 8, 6]} />
+        <meshStandardMaterial color={PALETTE.hair} roughness={0.8} />
+      </mesh>
+      <mesh position={[0.25, 1.12, 0.02]} scale={[0.55, 0.75, 0.55]}>
+        <sphereGeometry args={[0.1, 8, 6]} />
+        <meshStandardMaterial color={PALETTE.hair} roughness={0.8} />
+      </mesh>
+
+      {/* ===== EYES (Animal Crossing: big oval whites, large pupils, double highlight) ===== */}
+
       {/* Left eye white */}
-      <mesh position={[-0.08, 1.16, 0.2]}>
-        <sphereGeometry args={[0.055, 12, 10]} />
+      <mesh position={[-0.10, 1.12, 0.25]} scale={[1, 1.15, 0.5]}>
+        <sphereGeometry args={[0.065, 14, 12]} />
         <meshBasicMaterial color="#FFFFFF" />
       </mesh>
       {/* Right eye white */}
-      <mesh position={[0.08, 1.16, 0.2]}>
-        <sphereGeometry args={[0.055, 12, 10]} />
+      <mesh position={[0.10, 1.12, 0.25]} scale={[1, 1.15, 0.5]}>
+        <sphereGeometry args={[0.065, 14, 12]} />
         <meshBasicMaterial color="#FFFFFF" />
       </mesh>
-      {/* Left pupil (big, cute) */}
-      <mesh position={[-0.08, 1.16, 0.245]}>
-        <sphereGeometry args={[0.035, 10, 8]} />
-        <meshStandardMaterial color="#2D1B0E" />
+
+      {/* Left pupil */}
+      <mesh position={[-0.10, 1.12, 0.29]}>
+        <sphereGeometry args={[0.045, 12, 10]} />
+        <meshStandardMaterial color={PALETTE.eyeBlack} />
       </mesh>
-      {/* Right pupil (big, cute) */}
-      <mesh position={[0.08, 1.16, 0.245]}>
-        <sphereGeometry args={[0.035, 10, 8]} />
-        <meshStandardMaterial color="#2D1B0E" />
+      {/* Right pupil */}
+      <mesh position={[0.10, 1.12, 0.29]}>
+        <sphereGeometry args={[0.045, 12, 10]} />
+        <meshStandardMaterial color={PALETTE.eyeBlack} />
       </mesh>
-      {/* Left eye shine (top-right sparkle) */}
-      <mesh position={[-0.065, 1.175, 0.27]}>
-        <sphereGeometry args={[0.013, 6, 6]} />
+
+      {/* Left eye large highlight (top-right) */}
+      <mesh position={[-0.082, 1.14, 0.32]}>
+        <sphereGeometry args={[0.017, 6, 6]} />
         <meshBasicMaterial color="#FFFFFF" />
       </mesh>
-      {/* Right eye shine (top-right sparkle) */}
-      <mesh position={[0.095, 1.175, 0.27]}>
-        <sphereGeometry args={[0.013, 6, 6]} />
+      {/* Right eye large highlight */}
+      <mesh position={[0.118, 1.14, 0.32]}>
+        <sphereGeometry args={[0.017, 6, 6]} />
         <meshBasicMaterial color="#FFFFFF" />
       </mesh>
-      {/* Left eye small shine */}
-      <mesh position={[-0.092, 1.148, 0.27]}>
-        <sphereGeometry args={[0.006, 4, 4]} />
+      {/* Left eye small highlight (bottom-left) */}
+      <mesh position={[-0.115, 1.10, 0.32]}>
+        <sphereGeometry args={[0.008, 4, 4]} />
         <meshBasicMaterial color="#FFFFFF" />
       </mesh>
-      {/* Right eye small shine */}
-      <mesh position={[0.068, 1.148, 0.27]}>
-        <sphereGeometry args={[0.006, 4, 4]} />
+      {/* Right eye small highlight */}
+      <mesh position={[0.085, 1.10, 0.32]}>
+        <sphereGeometry args={[0.008, 4, 4]} />
         <meshBasicMaterial color="#FFFFFF" />
+      </mesh>
+
+      {/* Soft eyebrows */}
+      <mesh position={[-0.10, 1.19, 0.26]} rotation={[0, 0, 0.12]} scale={[1, 0.28, 0.28]}>
+        <boxGeometry args={[0.07, 0.016, 0.01]} />
+        <meshStandardMaterial color={PALETTE.hair} />
+      </mesh>
+      <mesh position={[0.10, 1.19, 0.26]} rotation={[0, 0, -0.12]} scale={[1, 0.28, 0.28]}>
+        <boxGeometry args={[0.07, 0.016, 0.01]} />
+        <meshStandardMaterial color={PALETTE.hair} />
+      </mesh>
+
+      {/* Rosy cheeks (big and soft, Animal Crossing signature) */}
+      <mesh position={[-0.18, 1.06, 0.18]}>
+        <sphereGeometry args={[0.05, 10, 10]} />
+        <meshStandardMaterial color={PALETTE.cheek} transparent opacity={0.4} roughness={0.9} />
+      </mesh>
+      <mesh position={[0.18, 1.06, 0.18]}>
+        <sphereGeometry args={[0.05, 10, 10]} />
+        <meshStandardMaterial color={PALETTE.cheek} transparent opacity={0.4} roughness={0.9} />
+      </mesh>
+
+      {/* Tiny button nose */}
+      <mesh position={[0, 1.07, 0.29]}>
+        <sphereGeometry args={[0.018, 8, 6]} />
+        <meshStandardMaterial color={PALETTE.skinDark} roughness={0.7} />
+      </mesh>
+
+      {/* Small happy mouth (curved torus arc) */}
+      <mesh position={[0, 1.01, 0.27]} rotation={[0.15, 0, 0]}>
+        <torusGeometry args={[0.032, 0.006, 6, 12, Math.PI]} />
+        <meshStandardMaterial color={PALETTE.mouth} />
+      </mesh>
+
+      {/* ===== STRAW HAT (wide brim, dome top, ribbon + flower) ===== */}
+
+      {/* Brim - wide disc */}
+      <mesh position={[0, 1.34, 0]} rotation={[0.04, 0, 0]} castShadow>
+        <cylinderGeometry args={[0.40, 0.42, 0.03, 18]} />
+        <meshStandardMaterial color={PALETTE.hat} roughness={0.85} />
+      </mesh>
+      {/* Crown dome */}
+      <mesh position={[0, 1.42, 0]} castShadow>
+        <sphereGeometry args={[0.19, 14, 10, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        <meshStandardMaterial color={PALETTE.hat} roughness={0.85} />
+      </mesh>
+      {/* Crown cylinder */}
+      <mesh position={[0, 1.38, 0]} castShadow>
+        <cylinderGeometry args={[0.18, 0.20, 0.08, 14]} />
+        <meshStandardMaterial color={PALETTE.hat} roughness={0.85} />
+      </mesh>
+      {/* Ribbon band */}
+      <mesh position={[0, 1.365, 0]}>
+        <cylinderGeometry args={[0.205, 0.205, 0.035, 14]} />
+        <meshStandardMaterial color={PALETTE.hatBand} roughness={0.5} />
+      </mesh>
+      {/* Ribbon bow (side) */}
+      <mesh position={[0.20, 1.365, 0.06]} rotation={[0, 0.3, 0]}>
+        <sphereGeometry args={[0.03, 6, 6]} />
+        <meshStandardMaterial color={PALETTE.hatBand} roughness={0.5} />
+      </mesh>
+      <mesh position={[0.235, 1.365, 0.07]} rotation={[0, 0.3, 0]}>
+        <sphereGeometry args={[0.024, 6, 6]} />
+        <meshStandardMaterial color={PALETTE.hatBand} roughness={0.5} />
+      </mesh>
+
+      {/* Flower on hat */}
+      <mesh position={[-0.18, 1.40, 0.12]}>
+        <sphereGeometry args={[0.03, 8, 6]} />
+        <meshStandardMaterial color={PALETTE.flower} roughness={0.7} />
+      </mesh>
+      <mesh position={[-0.18, 1.40, 0.14]}>
+        <sphereGeometry args={[0.012, 6, 4]} />
+        <meshStandardMaterial color={PALETTE.flowerCenter} />
+      </mesh>
+      {/* Petals ring */}
+      {[0, 1, 2, 3, 4].map((i) => (
+        <mesh
+          key={`petal-${i}`}
+          position={[
+            -0.18 + Math.cos((i / 5) * Math.PI * 2) * 0.022,
+            1.40 + Math.sin((i / 5) * Math.PI * 2) * 0.022,
+            0.13,
+          ]}
+        >
+          <sphereGeometry args={[0.012, 5, 4]} />
+          <meshStandardMaterial color="#FFD0E8" />
+        </mesh>
+      ))}
+
+      {/* Tiny leaf on flower */}
+      <mesh position={[-0.20, 1.385, 0.13]} rotation={[0, 0, -0.4]} scale={[1, 0.5, 0.3]}>
+        <sphereGeometry args={[0.018, 5, 4]} />
+        <meshStandardMaterial color="#88D498" />
+      </mesh>
+    </group>
+  );
+}
+
+// ===== CHIBI BODY (short, round, chubby) =====
+function ChibiBody() {
+  return (
+    <group>
+      {/* Main torso - squished sphere (chubby belly, short) */}
+      <mesh position={[0, 0.52, 0]} castShadow scale={[1.1, 0.85, 0.95]}>
+        <sphereGeometry args={[0.24, 16, 14]} />
+        <meshStandardMaterial color={PALETTE.overalls} roughness={0.7} />
+      </mesh>
+
+      {/* Belly pocket patch (darker green) */}
+      <mesh position={[0, 0.48, 0.19]} scale={[0.7, 0.55, 0.3]}>
+        <sphereGeometry args={[0.16, 10, 8]} />
+        <meshStandardMaterial color={PALETTE.overallsDark} roughness={0.7} />
+      </mesh>
+
+      {/* Front pocket detail */}
+      <mesh position={[0, 0.44, 0.21]}>
+        <boxGeometry args={[0.12, 0.06, 0.01]} />
+        <meshStandardMaterial color={PALETTE.overallsDark} />
+      </mesh>
+      {/* Pocket stitching line */}
+      <mesh position={[0, 0.42, 0.215]}>
+        <boxGeometry args={[0.10, 0.004, 0.005]} />
+        <meshStandardMaterial color="#4DA85D" />
+      </mesh>
+
+      {/* Overall straps (left) */}
+      <mesh position={[-0.07, 0.65, 0.13]} scale={[1, 1, 0.3]}>
+        <boxGeometry args={[0.04, 0.14, 0.04]} />
+        <meshStandardMaterial color={PALETTE.overallsDark} />
+      </mesh>
+      {/* Overall straps (right) */}
+      <mesh position={[0.07, 0.65, 0.13]} scale={[1, 1, 0.3]}>
+        <boxGeometry args={[0.04, 0.14, 0.04]} />
+        <meshStandardMaterial color={PALETTE.overallsDark} />
+      </mesh>
+
+      {/* Gold buttons on straps */}
+      <mesh position={[-0.07, 0.60, 0.16]}>
+        <sphereGeometry args={[0.015, 6, 6]} />
+        <meshStandardMaterial color={PALETTE.button} metalness={0.6} roughness={0.3} />
+      </mesh>
+      <mesh position={[0.07, 0.60, 0.16]}>
+        <sphereGeometry args={[0.015, 6, 6]} />
+        <meshStandardMaterial color={PALETTE.button} metalness={0.6} roughness={0.3} />
+      </mesh>
+
+      {/* Undershirt visible at collar */}
+      <mesh position={[0, 0.68, 0.07]} scale={[1.15, 0.6, 0.85]}>
+        <sphereGeometry args={[0.12, 10, 8, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        <meshStandardMaterial color={PALETTE.shirt} roughness={0.8} />
+      </mesh>
+
+      {/* Small back collar detail */}
+      <mesh position={[0, 0.68, -0.08]} scale={[0.9, 0.5, 0.6]}>
+        <sphereGeometry args={[0.1, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        <meshStandardMaterial color={PALETTE.shirt} roughness={0.8} />
+      </mesh>
+    </group>
+  );
+}
+
+// ===== STUBBY ARM (reusable) =====
+function ChibiArm({ side }: { side: 'left' | 'right' }) {
+  const xSign = side === 'left' ? -1 : 1;
+  return (
+    <group>
+      {/* Arm shoulder (sphere cap) */}
+      <mesh position={[0, -0.02, 0]} castShadow>
+        <sphereGeometry args={[0.065, 10, 8]} />
+        <meshStandardMaterial color={PALETTE.overalls} roughness={0.7} />
+      </mesh>
+      {/* Arm cylinder */}
+      <mesh position={[0, -0.08, 0]} castShadow>
+        <cylinderGeometry args={[0.052, 0.058, 0.09, 8]} />
+        <meshStandardMaterial color={PALETTE.overalls} roughness={0.7} />
+      </mesh>
+      {/* Round mitt hand */}
+      <mesh position={[0, -0.14, 0]}>
+        <sphereGeometry args={[0.048, 10, 8]} />
+        <meshStandardMaterial color={PALETTE.skin} roughness={0.55} />
+      </mesh>
+    </group>
+  );
+}
+
+// ===== STUBBY LEG (reusable) =====
+function ChibiLeg() {
+  return (
+    <group>
+      {/* Leg cylinder */}
+      <mesh position={[0, -0.04, 0]} castShadow>
+        <cylinderGeometry args={[0.065, 0.07, 0.10, 10]} />
+        <meshStandardMaterial color={PALETTE.overalls} roughness={0.7} />
+      </mesh>
+      {/* Round boot */}
+      <mesh position={[0, -0.11, 0.012]} castShadow>
+        <sphereGeometry args={[0.068, 10, 8]} />
+        <meshStandardMaterial color={PALETTE.boots} roughness={0.7} />
+      </mesh>
+      {/* Boot sole */}
+      <mesh position={[0, -0.155, 0.012]}>
+        <cylinderGeometry args={[0.062, 0.068, 0.022, 10]} />
+        <meshStandardMaterial color={PALETTE.bootSole} roughness={0.9} />
       </mesh>
     </group>
   );
@@ -380,7 +637,6 @@ export function GardenerCharacter({
   const legRightRef = useRef<THREE.Group>(null);
   const bodyGroupRef = useRef<THREE.Group>(null);
   const headRef = useRef<THREE.Group>(null);
-  const blinkRef = useRef<{ scaleY: number }>({ scaleY: 1 });
 
   const [isWaving, setIsWaving] = useState(true);
   const [isWalking, setIsWalking] = useState(false);
@@ -396,9 +652,8 @@ export function GardenerCharacter({
   const startPos = useMemo(() => new THREE.Vector3(...position), [position]);
   const idleTimerRef = useRef(0);
   const actionTimerRef = useRef(0);
-  const blinkTimer = useRef(0);
 
-  // Walk to a specific target (sent by scene when plant is selected)
+  // Walk to a specific target
   useEffect(() => {
     if (walkToTarget) {
       walkTarget.current.copy(walkToTarget);
@@ -406,7 +661,7 @@ export function GardenerCharacter({
     }
   }, [walkToTarget]);
 
-  // Auto-patrol the garden when idle for a while (stroll behavior)
+  // Auto-patrol
   useEffect(() => {
     const patrolInterval = setInterval(() => {
       if (!isWalking && !isWaving && actionAnim === 'idle' && idleTimerRef.current > 8 && !walkToTarget) {
@@ -436,13 +691,13 @@ export function GardenerCharacter({
     }
   }, [currentAction]);
 
-  // Wave on arrival for 3 seconds
+  // Wave greeting on mount
   useEffect(() => {
     const timer = setTimeout(() => setIsWaving(false), 3000);
     return () => clearTimeout(timer);
   }, []);
 
-  // Show daily tip periodically
+  // Daily tip timer
   useEffect(() => {
     const interval = setInterval(() => {
       if (!showDialogue) {
@@ -455,6 +710,7 @@ export function GardenerCharacter({
     return () => clearInterval(interval);
   }, [showDialogue]);
 
+  // ===== MAIN ANIMATION LOOP =====
   useFrame((_, delta) => {
     if (!groupRef.current) return;
     const t = performance.now() * 0.001;
@@ -474,36 +730,33 @@ export function GardenerCharacter({
       }
     }
 
-    // === CHIBI IDLE ANIMATIONS ===
-    // Soft breathing / bouncing (more bouncy than before, kawaii style)
+    // ===== BODY BOUNCE / SWAY (chibi idle) =====
     if (bodyGroupRef.current) {
       const bounce = isWalking
-        ? Math.abs(Math.sin(t * 10)) * 0.06
-        : Math.sin(t * 2.5) * 0.025 + Math.sin(t * 0.8) * 0.01;
+        ? Math.abs(Math.sin(t * 10)) * 0.07  // Bouncy waddle when walking
+        : Math.sin(t * 2.5) * 0.03 + Math.sin(t * 0.8) * 0.012;  // Gentle breathing
       bodyGroupRef.current.position.y = bounce;
 
       if (!isWalking && !isWaving) {
-        // Gentle side-to-side sway (chibi waddle)
-        bodyGroupRef.current.rotation.z = Math.sin(t * 1.0) * 0.025;
-
-        // Idle stretching animation (after 10s idle)
+        // Gentle side-to-side sway
+        bodyGroupRef.current.rotation.z = Math.sin(t * 1.0) * 0.03;
+        // Idle stretch after 10s
         if (idleTimerRef.current > 10 && idleTimerRef.current < 12) {
           const stretchPhase = (idleTimerRef.current - 10) / 2;
-          bodyGroupRef.current.position.y += Math.sin(stretchPhase * Math.PI) * 0.05;
+          bodyGroupRef.current.position.y += Math.sin(stretchPhase * Math.PI) * 0.06;
         }
       } else {
         bodyGroupRef.current.rotation.z *= 0.9;
       }
     }
 
-    // Head movement - bigger head = more expressive looking around
+    // ===== HEAD ANIMATION (expressive looking around) =====
     if (headRef.current) {
       if (!isWalking) {
-        // Normal idle - gentle tilt
-        headRef.current.rotation.z = Math.sin(t * 1.0) * 0.06 + Math.sin(t * 0.35) * 0.03;
-        headRef.current.rotation.x = Math.sin(t * 0.7 + 1) * 0.04;
+        headRef.current.rotation.z = Math.sin(t * 1.0) * 0.07 + Math.sin(t * 0.35) * 0.035;
+        headRef.current.rotation.x = Math.sin(t * 0.7 + 1) * 0.045;
 
-        // Looking around behavior (after 5s idle) - cute curious look
+        // Look around after 5s idle
         if (idleTimerRef.current > 5) {
           const lookPhase = ((t * 0.3) % 4);
           if (lookPhase < 1) {
@@ -515,17 +768,17 @@ export function GardenerCharacter({
           }
         }
 
-        // Occasional head nod (curious bobbing)
+        // Curious head nod
         const nodCycle = t % 7;
         if (nodCycle > 5.5 && nodCycle < 6) {
-          headRef.current.rotation.x += Math.sin((nodCycle - 5.5) * Math.PI * 4) * 0.08;
+          headRef.current.rotation.x += Math.sin((nodCycle - 5.5) * Math.PI * 4) * 0.09;
         }
 
-        // Head tilt when idle for a while (confused/thinking pose)
+        // Confused tilt when idle long
         if (idleTimerRef.current > 12) {
           const scratchCycle = (t % 15);
           if (scratchCycle > 13 && scratchCycle < 14.5) {
-            headRef.current.rotation.z += Math.sin((scratchCycle - 13) * Math.PI * 2) * 0.06;
+            headRef.current.rotation.z += Math.sin((scratchCycle - 13) * Math.PI * 2) * 0.07;
           }
         }
       } else {
@@ -533,7 +786,7 @@ export function GardenerCharacter({
       }
     }
 
-    // === ACTION-SPECIFIC ARM ANIMATIONS (adapted for stubby arms) ===
+    // ===== ARM ANIMATIONS =====
     if (actionAnim === 'watering' && armRightRef.current) {
       armRightRef.current.rotation.z = -1.0 + Math.sin(t * 2) * 0.25;
       armRightRef.current.rotation.x = Math.sin(t * 3) * 0.15 - 0.25;
@@ -561,7 +814,6 @@ export function GardenerCharacter({
         bodyGroupRef.current.rotation.x = 0.1;
       }
     } else if (actionAnim === 'celebrating') {
-      // Both stubby arms up, jumping with joy!
       if (armRightRef.current) {
         armRightRef.current.rotation.z = -2.2 + Math.sin(t * 6) * 0.35;
         armRightRef.current.rotation.x = Math.sin(t * 4) * 0.25;
@@ -571,10 +823,10 @@ export function GardenerCharacter({
         armLeftRef.current.rotation.x = Math.sin(t * 4 + 0.5) * 0.25;
       }
       if (bodyGroupRef.current) {
-        bodyGroupRef.current.position.y = Math.abs(Math.sin(t * 5)) * 0.14;
+        bodyGroupRef.current.position.y = Math.abs(Math.sin(t * 5)) * 0.16;
       }
     } else if (!isWalking && actionAnim === 'idle' && idleTimerRef.current > 12 && armRightRef.current) {
-      // Scratching head idle animation (stubby arm reaches up)
+      // Scratch head when bored
       const scratchCycle = (t % 15);
       if (scratchCycle > 13 && scratchCycle < 14.5) {
         const scratchPhase = scratchCycle - 13;
@@ -582,21 +834,21 @@ export function GardenerCharacter({
         armRightRef.current.rotation.x = -0.4;
       }
     } else if (isWaving && armRightRef.current) {
-      // Enthusiastic chibi wave
-      armRightRef.current.rotation.z = Math.sin(t * 10) * 0.5 - 1.3;
-      armRightRef.current.rotation.x = Math.sin(t * 5) * 0.15;
+      // Enthusiastic wave greeting
+      armRightRef.current.rotation.z = Math.sin(t * 10) * 0.55 - 1.4;
+      armRightRef.current.rotation.x = Math.sin(t * 5) * 0.18;
     } else if (armRightRef.current && !isWalking) {
-      // Gentle idle arm sway
-      armRightRef.current.rotation.z = Math.sin(t * 1.5) * 0.08;
-      armRightRef.current.rotation.x = Math.sin(t * 1) * 0.05;
+      // Gentle idle sway
+      armRightRef.current.rotation.z = Math.sin(t * 1.5) * 0.09;
+      armRightRef.current.rotation.x = Math.sin(t * 1) * 0.06;
     }
 
     if (armLeftRef.current && !isWalking && actionAnim !== 'harvesting') {
-      armLeftRef.current.rotation.z = -Math.sin(t * 1.5 + 0.5) * 0.08;
-      armLeftRef.current.rotation.x = -Math.sin(t * 1 + 0.5) * 0.05;
+      armLeftRef.current.rotation.z = -Math.sin(t * 1.5 + 0.5) * 0.09;
+      armLeftRef.current.rotation.x = -Math.sin(t * 1 + 0.5) * 0.06;
     }
 
-    // Walk logic
+    // ===== WALKING LOGIC =====
     walkTimer.current += delta;
     if (!isWaving && walkTimer.current > walkPause.current && !walkToTarget) {
       if (!isWalking && actionAnim === 'idle') {
@@ -626,31 +878,31 @@ export function GardenerCharacter({
         walkTimer.current = 0;
       } else {
         dir.normalize();
-        const speed = 0.35 * delta; // Slightly slower waddle
+        const speed = 0.35 * delta;
         pos.x += dir.x * speed;
         pos.z += dir.z * speed;
 
         const angle = Math.atan2(dir.x, dir.z);
         groupRef.current.rotation.y += (angle - groupRef.current.rotation.y) * 0.1;
 
-        // Chibi waddle walk - stubby limbs swing less, body sways more
+        // Walking arm/leg swing (chibi waddle)
         if (armLeftRef.current) {
-          armLeftRef.current.rotation.x = Math.sin(t * 8) * 0.4;
+          armLeftRef.current.rotation.x = Math.sin(t * 8) * 0.45;
           armLeftRef.current.rotation.z = 0;
         }
         if (armRightRef.current && actionAnim === 'idle') {
-          armRightRef.current.rotation.x = -Math.sin(t * 8) * 0.4;
+          armRightRef.current.rotation.x = -Math.sin(t * 8) * 0.45;
           armRightRef.current.rotation.z = 0;
         }
         if (legLeftRef.current) {
-          legLeftRef.current.rotation.x = Math.sin(t * 8) * 0.3;
+          legLeftRef.current.rotation.x = Math.sin(t * 8) * 0.35;
         }
         if (legRightRef.current) {
-          legRightRef.current.rotation.x = -Math.sin(t * 8) * 0.3;
+          legRightRef.current.rotation.x = -Math.sin(t * 8) * 0.35;
         }
-        // Extra body waddle while walking
+        // Extra body waddle
         if (bodyGroupRef.current) {
-          bodyGroupRef.current.rotation.z = Math.sin(t * 8) * 0.04;
+          bodyGroupRef.current.rotation.z = Math.sin(t * 8) * 0.045;
         }
       }
     } else {
@@ -660,19 +912,6 @@ export function GardenerCharacter({
       if (legRightRef.current) {
         legRightRef.current.rotation.x *= 0.9;
       }
-    }
-
-    // Blinking animation
-    blinkTimer.current += delta;
-    if (blinkTimer.current > 3 + Math.random() * 2) {
-      blinkTimer.current = 0;
-    }
-    // Quick blink at start of each cycle
-    const blinkPhase = blinkTimer.current;
-    if (blinkPhase < 0.12) {
-      blinkRef.current.scaleY = Math.max(0.05, 1 - Math.sin((blinkPhase / 0.12) * Math.PI));
-    } else {
-      blinkRef.current.scaleY = 1;
     }
   });
 
@@ -684,18 +923,6 @@ export function GardenerCharacter({
     onAdviceRequest?.();
   }, [onAdviceRequest]);
 
-  // === CHIBI / ANIMAL CROSSING COLOR PALETTE ===
-  const skin = '#FFE0C2';        // Warm peachy skin
-  const skinDark = '#FFD1A6';    // Slightly darker skin for ears
-  const overalls = '#5EC269';    // Friendly green overalls
-  const overallsDark = '#3D9E4A'; // Darker green for straps/pocket
-  const shirt = '#FFFDF0';       // Creamy white undershirt
-  const hat = '#D4A55A';         // Warm straw hat
-  const hatBand = '#E85D5D';     // Soft red hat band
-  const boots = '#8B6040';       // Warm brown boots
-  const hair = '#7B4B2A';        // Rich brown hair
-  const cheekColor = '#FF9B9B';  // Rosy pink cheeks
-
   return (
     <group ref={groupRef} position={position}>
       <group
@@ -704,288 +931,66 @@ export function GardenerCharacter({
         onPointerOver={() => { setHovered(true); document.body.style.cursor = 'pointer'; }}
         onPointerOut={() => { setHovered(false); document.body.style.cursor = 'auto'; }}
       >
-        {/* ============================================ */}
-        {/* === CHIBI BODY (round, chubby, squished) === */}
-        {/* ============================================ */}
+        {/* ===== BODY ===== */}
+        <ChibiBody />
 
-        {/* Main body - squished sphere (wider than tall) */}
-        <mesh position={[0, 0.48, 0]} castShadow scale={[1, 0.85, 0.9]}>
-          <sphereGeometry args={[0.2, 14, 12]} />
-          <meshStandardMaterial color={overalls} roughness={0.7} />
-        </mesh>
-
-        {/* Belly highlight (slightly lighter green sphere on front) */}
-        <mesh position={[0, 0.46, 0.12]} scale={[0.7, 0.6, 0.3]}>
-          <sphereGeometry args={[0.15, 10, 8]} />
-          <meshStandardMaterial color={overallsDark} roughness={0.7} />
-        </mesh>
-
-        {/* Overall straps (left) */}
-        <mesh position={[-0.06, 0.6, 0.11]} scale={[1, 1, 0.3]}>
-          <boxGeometry args={[0.035, 0.12, 0.04]} />
-          <meshStandardMaterial color={overallsDark} />
-        </mesh>
-        {/* Overall straps (right) */}
-        <mesh position={[0.06, 0.6, 0.11]} scale={[1, 1, 0.3]}>
-          <boxGeometry args={[0.035, 0.12, 0.04]} />
-          <meshStandardMaterial color={overallsDark} />
-        </mesh>
-
-        {/* Front pocket (cute little rectangle) */}
-        <mesh position={[0, 0.42, 0.17]}>
-          <boxGeometry args={[0.1, 0.06, 0.01]} />
-          <meshStandardMaterial color={overallsDark} />
-        </mesh>
-
-        {/* Gold buttons on straps */}
-        <mesh position={[-0.06, 0.56, 0.13]}>
-          <sphereGeometry args={[0.012, 6, 6]} />
-          <meshStandardMaterial color="#FFD700" metalness={0.6} roughness={0.3} />
-        </mesh>
-        <mesh position={[0.06, 0.56, 0.13]}>
-          <sphereGeometry args={[0.012, 6, 6]} />
-          <meshStandardMaterial color="#FFD700" metalness={0.6} roughness={0.3} />
-        </mesh>
-
-        {/* Undershirt visible at collar area */}
-        <mesh position={[0, 0.62, 0.06]} scale={[1.1, 0.6, 0.8]}>
-          <sphereGeometry args={[0.1, 10, 8, 0, Math.PI * 2, 0, Math.PI / 2]} />
-          <meshStandardMaterial color={shirt} roughness={0.8} />
-        </mesh>
-
-        {/* ========================================== */}
-        {/* === CHIBI HEAD (big, round, expressive) === */}
-        {/* ========================================== */}
+        {/* ===== HEAD ===== */}
         <group ref={headRef}>
-          {/* Main head sphere - BIG relative to body (Animal Crossing style) */}
-          <mesh position={[0, 1.12, 0]} castShadow>
-            <sphereGeometry args={[0.24, 16, 14]} />
-            <meshStandardMaterial color={skin} roughness={0.6} />
-          </mesh>
-
-          {/* Hair (back hemisphere - like a cute bowl cut) */}
-          <mesh position={[0, 1.18, -0.06]} scale={[1, 1, 0.9]}>
-            <sphereGeometry args={[0.22, 12, 10, 0, Math.PI * 2, 0, Math.PI * 0.55]} />
-            <meshStandardMaterial color={hair} roughness={0.8} />
-          </mesh>
-
-          {/* Hair bangs (front fringe) */}
-          <mesh position={[0, 1.28, 0.12]} scale={[1.1, 0.3, 0.5]}>
-            <sphereGeometry args={[0.12, 10, 6]} />
-            <meshStandardMaterial color={hair} roughness={0.8} />
-          </mesh>
-
-          {/* Side hair tufts */}
-          <mesh position={[-0.2, 1.15, 0.02]} scale={[0.5, 0.7, 0.5]}>
-            <sphereGeometry args={[0.08, 8, 6]} />
-            <meshStandardMaterial color={hair} roughness={0.8} />
-          </mesh>
-          <mesh position={[0.2, 1.15, 0.02]} scale={[0.5, 0.7, 0.5]}>
-            <sphereGeometry args={[0.08, 8, 6]} />
-            <meshStandardMaterial color={hair} roughness={0.8} />
-          </mesh>
-
-          {/* === EYES (big, sparkly Animal Crossing eyes) === */}
-          <ChibiEyes blinkRef={blinkRef} />
-
-          {/* Cute little eyebrows */}
-          <mesh position={[-0.08, 1.21, 0.22]} rotation={[0, 0, 0.15]} scale={[1, 0.3, 0.3]}>
-            <boxGeometry args={[0.06, 0.015, 0.01]} />
-            <meshStandardMaterial color={hair} />
-          </mesh>
-          <mesh position={[0.08, 1.21, 0.22]} rotation={[0, 0, -0.15]} scale={[1, 0.3, 0.3]}>
-            <boxGeometry args={[0.06, 0.015, 0.01]} />
-            <meshStandardMaterial color={hair} />
-          </mesh>
-
-          {/* Rosy cheeks (bigger, more prominent) */}
-          <mesh position={[-0.15, 1.1, 0.15]}>
-            <sphereGeometry args={[0.04, 8, 8]} />
-            <meshStandardMaterial color={cheekColor} transparent opacity={0.45} roughness={0.9} />
-          </mesh>
-          <mesh position={[0.15, 1.1, 0.15]}>
-            <sphereGeometry args={[0.04, 8, 8]} />
-            <meshStandardMaterial color={cheekColor} transparent opacity={0.45} roughness={0.9} />
-          </mesh>
-
-          {/* Small cute mouth (simple curved line shape via torus) */}
-          <mesh position={[0, 1.05, 0.22]} rotation={[0.2, 0, 0]}>
-            <torusGeometry args={[0.025, 0.005, 6, 10, Math.PI]} />
-            <meshStandardMaterial color="#D4636E" />
-          </mesh>
-
-          {/* Little round nose */}
-          <mesh position={[0, 1.1, 0.235]}>
-            <sphereGeometry args={[0.015, 8, 6]} />
-            <meshStandardMaterial color={skinDark} roughness={0.7} />
-          </mesh>
-
-          {/* === STRAW HAT (bigger, floppy, cute) === */}
-          {/* Hat brim - wide and floppy */}
-          <mesh position={[0, 1.32, 0]} rotation={[0.05, 0, 0]} castShadow>
-            <cylinderGeometry args={[0.34, 0.36, 0.035, 14]} />
-            <meshStandardMaterial color={hat} roughness={0.8} />
-          </mesh>
-          {/* Hat crown - rounded dome */}
-          <mesh position={[0, 1.38, 0]} castShadow>
-            <sphereGeometry args={[0.16, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2]} />
-            <meshStandardMaterial color={hat} roughness={0.8} />
-          </mesh>
-          {/* Hat cylinder base */}
-          <mesh position={[0, 1.35, 0]} castShadow>
-            <cylinderGeometry args={[0.15, 0.17, 0.06, 12]} />
-            <meshStandardMaterial color={hat} roughness={0.8} />
-          </mesh>
-          {/* Hat band (red ribbon) */}
-          <mesh position={[0, 1.34, 0]}>
-            <cylinderGeometry args={[0.172, 0.172, 0.03, 12]} />
-            <meshStandardMaterial color={hatBand} roughness={0.6} />
-          </mesh>
-          {/* Ribbon bow on the side */}
-          <mesh position={[0.17, 1.34, 0.05]} rotation={[0, 0.3, 0]}>
-            <sphereGeometry args={[0.025, 6, 6]} />
-            <meshStandardMaterial color={hatBand} roughness={0.6} />
-          </mesh>
-          <mesh position={[0.2, 1.34, 0.06]} rotation={[0, 0.3, 0]}>
-            <sphereGeometry args={[0.02, 6, 6]} />
-            <meshStandardMaterial color={hatBand} roughness={0.6} />
-          </mesh>
-          {/* Little flower on hat */}
-          <mesh position={[-0.15, 1.37, 0.1]}>
-            <sphereGeometry args={[0.025, 8, 6]} />
-            <meshStandardMaterial color="#FFB7D5" roughness={0.7} />
-          </mesh>
-          <mesh position={[-0.15, 1.37, 0.115]}>
-            <sphereGeometry args={[0.01, 6, 4]} />
-            <meshStandardMaterial color="#FFEB3B" />
-          </mesh>
-          {/* Extra flower petals */}
-          {[0, 1, 2, 3, 4].map((i) => (
-            <mesh
-              key={`petal-${i}`}
-              position={[
-                -0.15 + Math.cos((i / 5) * Math.PI * 2) * 0.018,
-                1.37 + Math.sin((i / 5) * Math.PI * 2) * 0.018,
-                0.108,
-              ]}
-            >
-              <sphereGeometry args={[0.01, 5, 4]} />
-              <meshStandardMaterial color="#FFD0E8" />
-            </mesh>
-          ))}
+          <ChibiHead />
         </group>
 
-        {/* ============================================ */}
-        {/* === STUBBY ARMS (short, round, cute) ======= */}
-        {/* ============================================ */}
-
-        {/* Left arm */}
-        <group ref={armLeftRef} position={[-0.22, 0.52, 0]}>
-          {/* Arm (capsule-like: sphere + cylinder + sphere) */}
-          <mesh position={[0, -0.03, 0]} castShadow>
-            <sphereGeometry args={[0.055, 8, 8]} />
-            <meshStandardMaterial color={overalls} roughness={0.7} />
-          </mesh>
-          <mesh position={[0, -0.08, 0]} castShadow>
-            <cylinderGeometry args={[0.045, 0.05, 0.08, 8]} />
-            <meshStandardMaterial color={overalls} roughness={0.7} />
-          </mesh>
-          {/* Stubby hand (round mitt) */}
-          <mesh position={[0, -0.13, 0]}>
-            <sphereGeometry args={[0.04, 8, 8]} />
-            <meshStandardMaterial color={skin} roughness={0.6} />
-          </mesh>
+        {/* ===== LEFT ARM ===== */}
+        <group ref={armLeftRef} position={[-0.26, 0.56, 0]}>
+          <ChibiArm side="left" />
         </group>
 
-        {/* Right arm */}
-        <group ref={armRightRef} position={[0.22, 0.52, 0]}>
-          <mesh position={[0, -0.03, 0]} castShadow>
-            <sphereGeometry args={[0.055, 8, 8]} />
-            <meshStandardMaterial color={overalls} roughness={0.7} />
-          </mesh>
-          <mesh position={[0, -0.08, 0]} castShadow>
-            <cylinderGeometry args={[0.045, 0.05, 0.08, 8]} />
-            <meshStandardMaterial color={overalls} roughness={0.7} />
-          </mesh>
-          {/* Stubby hand */}
-          <mesh position={[0, -0.13, 0]}>
-            <sphereGeometry args={[0.04, 8, 8]} />
-            <meshStandardMaterial color={skin} roughness={0.6} />
-          </mesh>
-          {/* Tool in right hand */}
+        {/* ===== RIGHT ARM ===== */}
+        <group ref={armRightRef} position={[0.26, 0.56, 0]}>
+          <ChibiArm side="right" />
           <HeldTool action={actionAnim} />
         </group>
 
-        {/* ============================================ */}
-        {/* === STUBBY LEGS (short, round) ============= */}
-        {/* ============================================ */}
-
-        {/* Left leg */}
-        <group ref={legLeftRef} position={[-0.09, 0.3, 0]}>
-          {/* Leg (short cylinder) */}
-          <mesh position={[0, -0.04, 0]} castShadow>
-            <cylinderGeometry args={[0.055, 0.06, 0.1, 8]} />
-            <meshStandardMaterial color={overalls} roughness={0.7} />
-          </mesh>
-          {/* Round boot */}
-          <mesh position={[0, -0.1, 0.01]} castShadow>
-            <sphereGeometry args={[0.06, 8, 8]} />
-            <meshStandardMaterial color={boots} roughness={0.7} />
-          </mesh>
-          {/* Boot sole */}
-          <mesh position={[0, -0.14, 0.01]}>
-            <cylinderGeometry args={[0.055, 0.06, 0.02, 8]} />
-            <meshStandardMaterial color="#6B4530" roughness={0.9} />
-          </mesh>
+        {/* ===== LEFT LEG ===== */}
+        <group ref={legLeftRef} position={[-0.10, 0.32, 0]}>
+          <ChibiLeg />
         </group>
 
-        {/* Right leg */}
-        <group ref={legRightRef} position={[0.09, 0.3, 0]}>
-          <mesh position={[0, -0.04, 0]} castShadow>
-            <cylinderGeometry args={[0.055, 0.06, 0.1, 8]} />
-            <meshStandardMaterial color={overalls} roughness={0.7} />
-          </mesh>
-          <mesh position={[0, -0.1, 0.01]} castShadow>
-            <sphereGeometry args={[0.06, 8, 8]} />
-            <meshStandardMaterial color={boots} roughness={0.7} />
-          </mesh>
-          <mesh position={[0, -0.14, 0.01]}>
-            <cylinderGeometry args={[0.055, 0.06, 0.02, 8]} />
-            <meshStandardMaterial color="#6B4530" roughness={0.9} />
-          </mesh>
+        {/* ===== RIGHT LEG ===== */}
+        <group ref={legRightRef} position={[0.10, 0.32, 0]}>
+          <ChibiLeg />
         </group>
 
-        {/* Hover glow ring (bigger for chibi) */}
+        {/* Hover glow ring */}
         {hovered && (
           <mesh position={[0, 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <ringGeometry args={[0.32, 0.38, 20]} />
+            <ringGeometry args={[0.36, 0.42, 22]} />
             <meshBasicMaterial color="#FDE047" transparent opacity={0.5} />
           </mesh>
         )}
 
-        {/* Shadow blob (rounder) */}
+        {/* Ground shadow */}
         <mesh position={[0, 0.005, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-          <circleGeometry args={[0.2, 12]} />
+          <circleGeometry args={[0.24, 14]} />
           <meshBasicMaterial color="#000000" transparent opacity={0.12} />
         </mesh>
 
-        {/* Exclamation mark when hovered (positioned above bigger head) */}
+        {/* Exclamation mark on hover */}
         {hovered && !showDialogue && (
-          <group position={[0, 1.65, 0]}>
+          <group position={[0, 1.72, 0]}>
             <mesh>
-              <boxGeometry args={[0.035, 0.1, 0.035]} />
+              <boxGeometry args={[0.04, 0.11, 0.04]} />
               <meshBasicMaterial color="#FDE047" />
             </mesh>
-            <mesh position={[0, -0.075, 0]}>
-              <sphereGeometry args={[0.02, 8, 6]} />
+            <mesh position={[0, -0.08, 0]}>
+              <sphereGeometry args={[0.022, 8, 6]} />
               <meshBasicMaterial color="#FDE047" />
             </mesh>
           </group>
         )}
 
-        {/* Action indicator icon (higher for bigger head) */}
+        {/* Action indicator icon */}
         {actionAnim !== 'idle' && actionAnim !== 'walking' && (
-          <Html position={[0, 1.7, 0]} center distanceFactor={5} style={{ pointerEvents: 'none' }}>
+          <Html position={[0, 1.75, 0]} center distanceFactor={5} style={{ pointerEvents: 'none' }}>
             <div style={{
               fontSize: '18px',
               animation: 'pulse 1s ease-in-out infinite',
@@ -1006,10 +1011,10 @@ export function GardenerCharacter({
       {/* Daily tip bubble */}
       <DailyTipBubble show={showDailyTip && !showDialogue} tip={dailyTip} />
 
-      {/* Speech bubble (Animal Crossing style dialogue box) */}
+      {/* Speech bubble (Animal Crossing style) */}
       {showDialogue && (
         <Html
-          position={[0, 1.8, 0]}
+          position={[0, 1.85, 0]}
           center
           distanceFactor={5}
           style={{ pointerEvents: 'auto' }}
@@ -1033,7 +1038,7 @@ export function GardenerCharacter({
               animation: 'fadeInUp 0.3s ease-out',
             }}
           >
-            {/* Game-style character name plate */}
+            {/* Character name plate */}
             <div style={{
               fontWeight: 'bold',
               color: '#FFFFFF',
