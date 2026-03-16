@@ -361,6 +361,29 @@ export function GardenerCharacter({
     }
   }, [walkToTarget]);
 
+  // Auto-patrol the garden when idle for a while (stroll behavior)
+  useEffect(() => {
+    const patrolInterval = setInterval(() => {
+      if (!isWalking && !isWaving && actionAnim === 'idle' && idleTimerRef.current > 8 && !walkToTarget) {
+        // Pick a random point in the garden to patrol
+        const bL = gardenBounds?.halfL ?? 3;
+        const bW = gardenBounds?.halfW ?? 3;
+        const angle = Math.random() * Math.PI * 2;
+        const dist = 0.5 + Math.random() * Math.min(bL, bW) * 0.7;
+        const tx = Math.cos(angle) * dist;
+        const tz = Math.sin(angle) * dist;
+        walkTarget.current.set(
+          Math.max(-bL, Math.min(bL, tx)),
+          startPos.y,
+          Math.max(-bW, Math.min(bW, tz))
+        );
+        setIsWalking(true);
+        idleTimerRef.current = 0;
+      }
+    }, 6000);
+    return () => clearInterval(patrolInterval);
+  }, [isWalking, isWaving, actionAnim, walkToTarget, gardenBounds, startPos]);
+
   // Update action animation
   useEffect(() => {
     setActionAnim(currentAction);

@@ -95,8 +95,113 @@ function getSeasonInfo() {
   return { name: 'Hiver', emoji: '\u2744\uFE0F', icon: Snowflake, color: 'text-blue-400', bg: 'bg-blue-500/20' };
 }
 
+interface OpenMeteoData {
+  temperature: number;
+  humidity: number;
+  windSpeed: number;
+  weatherCode: number;
+  tempMax: number;
+  tempMin: number;
+  forecast: Array<{
+    date: string;
+    tempMax: number;
+    tempMin: number;
+    weatherCode: number;
+    precipitation: number;
+  }>;
+}
+
+function getWeatherEmoji(code: number): string {
+  if (code === 0) return '\u2600\uFE0F';
+  if (code <= 3) return '\u26C5';
+  if (code <= 48) return '\u2601\uFE0F';
+  if (code <= 57) return '\uD83C\uDF27\uFE0F';
+  if (code <= 67) return '\uD83C\uDF27\uFE0F';
+  if (code <= 77) return '\u2744\uFE0F';
+  if (code <= 82) return '\uD83C\uDF27\uFE0F';
+  if (code <= 86) return '\u2744\uFE0F';
+  return '\u26C8\uFE0F';
+}
+
+function getWeatherLabel(code: number): string {
+  if (code === 0) return 'Ensoleille';
+  if (code <= 3) return 'Partiellement nuageux';
+  if (code <= 48) return 'Nuageux';
+  if (code <= 57) return 'Bruine';
+  if (code <= 67) return 'Pluie';
+  if (code <= 77) return 'Neige';
+  if (code <= 82) return 'Averses';
+  if (code <= 86) return 'Neige';
+  return 'Orage';
+}
+
 function WeatherWidget() {
   const season = getSeasonInfo();
+  const [weather, setWeather] = useState<OpenMeteoData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchWeather() {
+      try {
+        // Try to get user location, fallback to Paris
+        let lat = 48.8566;
+        let lng = 2.3522;
+
+        if (navigator.geolocation) {
+          try {
+            const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
+              navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 3000 });
+            });
+            lat = pos.coords.latitude;
+            lng = pos.coords.longitude;
+          } catch {
+            // Use default Paris coords
+          }
+        }
+
+        const res = await fetch(
+          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lng}&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&daily=temperature_2m_max,temperature_2m_min,weather_code,precipitation_sum&timezone=auto&forecast_days=7`
+        );
+
+        if (!res.ok) throw new Error('Weather API error');
+        const data = await res.json();
+
+        setWeather({
+          temperature: Math.round(data.current.temperature_2m),
+          humidity: data.current.relative_humidity_2m,
+          windSpeed: Math.round(data.current.wind_speed_10m),
+          weatherCode: data.current.weather_code,
+          tempMax: Math.round(data.daily.temperature_2m_max[0]),
+          tempMin: Math.round(data.daily.temperature_2m_min[0]),
+          forecast: data.daily.time.slice(1, 4).map((date: string, i: number) => ({
+            date,
+            tempMax: Math.round(data.daily.temperature_2m_max[i + 1]),
+            tempMin: Math.round(data.daily.temperature_2m_min[i + 1]),
+            weatherCode: data.daily.weather_code[i + 1],
+            precipitation: data.daily.precipitation_sum[i + 1] || 0,
+          })),
+        });
+      } catch (err) {
+        setError('Impossible de charger la meteo');
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchWeather();
+  }, []);
+
+  if (loading) {
+    return (
+      <Card className="bg-gradient-to-br from-[#142A1E] to-[#1A3528]">
+        <div className="flex items-center justify-center py-8">
+          <Sprout className="w-5 h-5 text-green-400 animate-spin" />
+          <span className="ml-2 text-green-300/60 text-sm">Chargement meteo...</span>
+        </div>
+      </Card>
+    );
+  }
 
   return (
     <Card className="bg-gradient-to-br from-[#142A1E] to-[#1A3528] overflow-hidden relative">
@@ -104,53 +209,83 @@ function WeatherWidget() {
       <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-blue-500/5 to-transparent rounded-full -translate-y-8 translate-x-8" />
 
       <div className="flex items-center gap-3 mb-4">
-        <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
-          <CloudSun className="w-6 h-6 text-blue-400" />
+        <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center text-2xl">
+          {weather ? getWeatherEmoji(weather.weatherCode) : '\u2601\uFE0F'}
         </div>
         <div>
           <h3 className="text-sm font-semibold text-green-200">Meteo du jardin</h3>
           <p className="text-xs text-green-500/50 flex items-center gap-1">
             {season.emoji} {season.name}
+            {weather && <span className="ml-1">- {getWeatherLabel(weather.weatherCode)}</span>}
           </p>
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-3 text-center mb-4">
-        <div className="p-3 rounded-xl bg-[#0D1F17]/50 border border-green-900/20">
-          <Thermometer className="w-4 h-4 text-orange-400 mx-auto mb-1" />
-          <p className="text-xl font-bold text-green-50">18&deg;</p>
-          <p className="text-xs text-green-500/50">Temperature</p>
-        </div>
-        <div className="p-3 rounded-xl bg-[#0D1F17]/50 border border-green-900/20">
-          <Droplets className="w-4 h-4 text-blue-400 mx-auto mb-1" />
-          <p className="text-xl font-bold text-green-50">65%</p>
-          <p className="text-xs text-green-500/50">Humidite</p>
-        </div>
-        <div className="p-3 rounded-xl bg-[#0D1F17]/50 border border-green-900/20">
-          <Sun className="w-4 h-4 text-yellow-400 mx-auto mb-1" />
-          <p className="text-xl font-bold text-green-50">12h</p>
-          <p className="text-xs text-green-500/50">Ensoleillement</p>
-        </div>
-      </div>
-
-      {/* 3-day mini forecast */}
-      <div className="flex gap-2 mb-3">
-        {[
-          { day: 'Dem.', temp: '17\u00B0', icon: CloudSun, rain: false },
-          { day: 'Mer.', temp: '20\u00B0', icon: Sun, rain: false },
-          { day: 'Jeu.', temp: '15\u00B0', icon: CloudRain, rain: true },
-        ].map((d) => (
-          <div key={d.day} className="flex-1 text-center p-2 rounded-lg bg-[#0D1F17]/30">
-            <p className="text-xs text-green-500/50">{d.day}</p>
-            <d.icon className={`w-4 h-4 mx-auto my-1 ${d.rain ? 'text-blue-400' : 'text-yellow-400'}`} />
-            <p className="text-xs font-medium text-green-200">{d.temp}</p>
+      {weather ? (
+        <>
+          <div className="grid grid-cols-3 gap-3 text-center mb-4">
+            <div className="p-3 rounded-xl bg-[#0D1F17]/50 border border-green-900/20">
+              <Thermometer className="w-4 h-4 text-orange-400 mx-auto mb-1" />
+              <p className="text-xl font-bold text-green-50">{weather.temperature}&deg;</p>
+              <p className="text-xs text-green-500/50">{weather.tempMin}&deg; / {weather.tempMax}&deg;</p>
+            </div>
+            <div className="p-3 rounded-xl bg-[#0D1F17]/50 border border-green-900/20">
+              <Droplets className="w-4 h-4 text-blue-400 mx-auto mb-1" />
+              <p className="text-xl font-bold text-green-50">{weather.humidity}%</p>
+              <p className="text-xs text-green-500/50">Humidite</p>
+            </div>
+            <div className="p-3 rounded-xl bg-[#0D1F17]/50 border border-green-900/20">
+              <Sun className="w-4 h-4 text-yellow-400 mx-auto mb-1" />
+              <p className="text-xl font-bold text-green-50">{weather.windSpeed}</p>
+              <p className="text-xs text-green-500/50">km/h vent</p>
+            </div>
           </div>
-        ))}
-      </div>
 
-      <p className="text-xs text-green-500/40 text-center">
-        Connectez l'API meteo pour des donnees en direct
-      </p>
+          {/* Watering recommendation based on weather */}
+          <div className={`mb-4 p-3 rounded-xl border ${
+            weather.humidity < 50 || weather.temperature > 28
+              ? 'bg-blue-900/20 border-blue-700/30'
+              : 'bg-green-900/20 border-green-700/30'
+          }`}>
+            <div className="flex items-center gap-2">
+              <Droplets className={`w-4 h-4 ${weather.humidity < 50 ? 'text-blue-400' : 'text-green-400'}`} />
+              <span className={`text-xs font-medium ${weather.humidity < 50 ? 'text-blue-300' : 'text-green-300'}`}>
+                {weather.humidity < 50 || weather.temperature > 28
+                  ? 'Pensez a arroser aujourd\'hui - air sec'
+                  : weather.weatherCode > 50
+                  ? 'Pluie prevue - pas besoin d\'arroser'
+                  : 'Conditions normales - arrosage selon planning'}
+              </span>
+            </div>
+          </div>
+
+          {/* 3-day forecast with real data */}
+          <div className="flex gap-2 mb-3">
+            {weather.forecast.map((d, i) => {
+              const date = new Date(d.date);
+              const dayName = date.toLocaleDateString('fr-FR', { weekday: 'short' });
+              return (
+                <div key={i} className="flex-1 text-center p-2 rounded-lg bg-[#0D1F17]/30">
+                  <p className="text-xs text-green-500/50 capitalize">{dayName}</p>
+                  <span className="text-base block my-1">{getWeatherEmoji(d.weatherCode)}</span>
+                  <p className="text-xs font-medium text-green-200">{d.tempMax}&deg;</p>
+                  <p className="text-[10px] text-green-500/40">{d.tempMin}&deg;</p>
+                  {d.precipitation > 0 && (
+                    <p className="text-[10px] text-blue-400">{d.precipitation.toFixed(0)}mm</p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          <p className="text-xs text-green-500/30 text-center flex items-center justify-center gap-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+            Donnees en direct - Open-Meteo
+          </p>
+        </>
+      ) : (
+        <p className="text-xs text-yellow-400/60 text-center py-4">{error || 'Meteo indisponible'}</p>
+      )}
     </Card>
   );
 }
@@ -159,14 +294,54 @@ function DailyTasksCalendar() {
   const today = new Date();
   const dayName = today.toLocaleDateString('fr-FR', { weekday: 'long' });
   const dateStr = today.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
+  const hour = today.getHours();
+  const [doneTasks, setDoneTasks] = useState<Set<number>>(new Set());
 
-  const tasks = [
-    { text: 'Arroser les tomates', emoji: '\uD83C\uDF45', done: false, time: 'Matin' },
-    { text: 'Semer les radis', emoji: '\uD83E\uDD55', done: false, time: 'Matin' },
-    { text: 'Pailler autour des poivrons', emoji: '\uD83C\uDF36\uFE0F', done: true, time: 'Fait' },
-    { text: 'Verifier le basilic (pucerons)', emoji: '\uD83C\uDF3F', done: false, time: 'Apres-midi' },
-    { text: 'Recolter la laitue', emoji: '\uD83E\uDD6C', done: false, time: 'Soir' },
-  ];
+  const seasonTasks: Record<string, Array<{ text: string; emoji: string; time: string }>> = {
+    spring: [
+      { text: 'Semer les radis et carottes', emoji: '\uD83E\uDD55', time: 'Matin' },
+      { text: 'Preparer les semis de tomates', emoji: '\uD83C\uDF45', time: 'Matin' },
+      { text: 'Desherber les allees', emoji: '\uD83C\uDF3F', time: 'Apres-midi' },
+      { text: 'Pailler le potager', emoji: '\uD83C\uDF3E', time: 'Apres-midi' },
+      { text: 'Arroser les jeunes plants', emoji: '\uD83D\uDCA7', time: 'Soir' },
+    ],
+    summer: [
+      { text: 'Arroser tot le matin', emoji: '\uD83D\uDCA7', time: 'Matin' },
+      { text: 'Recolter les tomates mures', emoji: '\uD83C\uDF45', time: 'Matin' },
+      { text: 'Verifier les pucerons', emoji: '\uD83D\uDC1B', time: 'Apres-midi' },
+      { text: 'Tuteurer les plants hauts', emoji: '\uD83C\uDF3B', time: 'Apres-midi' },
+      { text: 'Recolter les courgettes', emoji: '\uD83E\uDD52', time: 'Soir' },
+    ],
+    autumn: [
+      { text: 'Recolter les derniers legumes', emoji: '\uD83C\uDF3E', time: 'Matin' },
+      { text: 'Semer les engrais verts', emoji: '\uD83C\uDF31', time: 'Matin' },
+      { text: 'Ramasser les feuilles mortes', emoji: '\uD83C\uDF42', time: 'Apres-midi' },
+      { text: 'Preparer le compost', emoji: '\u267B\uFE0F', time: 'Apres-midi' },
+      { text: 'Proteger les plants sensibles', emoji: '\uD83E\uDDE3', time: 'Soir' },
+    ],
+    winter: [
+      { text: 'Planifier le jardin de printemps', emoji: '\uD83D\uDCCB', time: 'Matin' },
+      { text: 'Commander les graines', emoji: '\uD83C\uDF30', time: 'Matin' },
+      { text: 'Entretenir les outils', emoji: '\uD83D\uDD27', time: 'Apres-midi' },
+      { text: 'Verifier le compost', emoji: '\u267B\uFE0F', time: 'Apres-midi' },
+      { text: 'Lire sur le compagnonnage', emoji: '\uD83D\uDCDA', time: 'Soir' },
+    ],
+  };
+
+  const currentSeason = getSeasonInfo().name === 'Printemps' ? 'spring' : getSeasonInfo().name === 'Ete' ? 'summer' : getSeasonInfo().name === 'Automne' ? 'autumn' : 'winter';
+  const tasks = (seasonTasks[currentSeason] || seasonTasks.spring).map((t, i) => ({
+    ...t,
+    done: doneTasks.has(i),
+  }));
+
+  const toggleTask = (idx: number) => {
+    setDoneTasks(prev => {
+      const next = new Set(prev);
+      if (next.has(idx)) next.delete(idx);
+      else next.add(idx);
+      return next;
+    });
+  };
 
   return (
     <Card>
@@ -178,6 +353,19 @@ function DailyTasksCalendar() {
         <span className="text-xs font-normal text-green-500/50 capitalize">{dayName} {dateStr}</span>
       </CardTitle>
       <CardContent>
+        {/* Task progress */}
+        <div className="flex items-center gap-3 mb-3">
+          <div className="flex-1 h-2 rounded-full bg-[#0D1F17] overflow-hidden">
+            <motion.div
+              className="h-full rounded-full bg-green-500"
+              initial={{ width: 0 }}
+              animate={{ width: `${tasks.length > 0 ? (doneTasks.size / tasks.length) * 100 : 0}%` }}
+              transition={{ duration: 0.5 }}
+            />
+          </div>
+          <span className="text-xs font-medium text-green-400/60">{doneTasks.size}/{tasks.length}</span>
+        </div>
+
         <div className="space-y-2">
           {tasks.map((task, i) => (
             <motion.div
@@ -185,7 +373,8 @@ function DailyTasksCalendar() {
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: i * 0.08 }}
-              className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
+              onClick={() => toggleTask(i)}
+              className={`flex items-center gap-3 p-3 rounded-xl border transition-all cursor-pointer ${
                 task.done
                   ? 'bg-green-900/20 border-green-800/20'
                   : 'bg-[#0D1F17] border-green-900/30 hover:border-green-700/40'
@@ -205,11 +394,21 @@ function DailyTasksCalendar() {
                   ? 'bg-green-900/30 text-green-500/50'
                   : 'bg-green-900/40 text-green-400/70'
               }`}>
-                {task.time}
+                {task.done ? 'Fait' : task.time}
               </span>
             </motion.div>
           ))}
         </div>
+
+        {doneTasks.size === tasks.length && tasks.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mt-3 text-center py-2 bg-green-900/20 rounded-xl"
+          >
+            <p className="text-green-300 font-medium text-sm">{'\u2705'} Toutes les taches sont faites !</p>
+          </motion.div>
+        )}
       </CardContent>
     </Card>
   );
@@ -424,6 +623,52 @@ export function DashboardPageClient() {
               </div>
             </motion.div>
           </div>
+
+          {/* Garden Progress Bar */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="mb-8"
+          >
+            <Card className="bg-gradient-to-r from-green-900/30 to-emerald-900/15 border-green-800/30">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-xl">{'\uD83C\uDF3E'}</span>
+                  <span className="text-sm font-semibold text-green-200">Progression du jardin</span>
+                </div>
+                <span className="text-sm font-bold text-green-400">
+                  {plantedPlants.length > 0 ? Math.round((plantedPlants.length / Math.max(20, plantedPlants.length)) * 100) : 0}%
+                </span>
+              </div>
+              <div className="w-full h-4 rounded-full bg-[#0D1F17] border border-green-900/30 overflow-hidden mb-3">
+                <motion.div
+                  className="h-full rounded-full"
+                  style={{
+                    background: 'linear-gradient(90deg, #22C55E, #4ADE80, #86EFAC)',
+                    boxShadow: '0 0 10px rgba(74, 222, 128, 0.3)',
+                  }}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${plantedPlants.length > 0 ? Math.round((plantedPlants.length / Math.max(20, plantedPlants.length)) * 100) : 0}%` }}
+                  transition={{ duration: 1, delay: 0.5 }}
+                />
+              </div>
+              <div className="flex justify-between text-xs text-green-500/50">
+                <span>{plantedPlants.length} parcelle{plantedPlants.length !== 1 ? 's' : ''} plantee{plantedPlants.length !== 1 ? 's' : ''}</span>
+                <span>
+                  {plantedPlants.filter(({ item, plant }) => {
+                    if (!plant) return false;
+                    const daysPassed = Math.floor((new Date().getTime() - new Date(item.plantedDate).getTime()) / (1000 * 60 * 60 * 24));
+                    return daysPassed >= plant.harvestDays;
+                  }).length} prete{plantedPlants.filter(({ item, plant }) => {
+                    if (!plant) return false;
+                    const daysPassed = Math.floor((new Date().getTime() - new Date(item.plantedDate).getTime()) / (1000 * 60 * 60 * 24));
+                    return daysPassed >= plant.harvestDays;
+                  }).length !== 1 ? 's' : ''} a recolter
+                </span>
+              </div>
+            </Card>
+          </motion.div>
 
           {/* Quick Actions */}
           <div className="mb-8">

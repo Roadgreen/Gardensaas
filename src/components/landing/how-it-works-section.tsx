@@ -12,6 +12,12 @@ const steps = [
     description: 'Entrez les dimensions, le type de sol, la zone climatique et l\'exposition au soleil. Ca prend moins de 2 minutes !',
     color: 'from-green-500 to-emerald-600',
     bgAccent: 'bg-green-100/60 dark:bg-green-900/30',
+    illustration: [
+      { type: 'rect', x: 20, y: 20, w: 60, h: 40, fill: '#5C3D1E', rx: 4 },
+      { type: 'line', x1: 50, y1: 5, x2: 50, y2: 15, stroke: '#4ADE80' },
+      { type: 'circle', cx: 50, cy: 5, r: 3, fill: '#FFD700' },
+      { type: 'rect', x: 10, y: 62, w: 80, h: 3, fill: '#7EC850', rx: 1.5 },
+    ],
   },
   {
     icon: Sprout,
@@ -21,6 +27,15 @@ const steps = [
     description: 'Parcourez 300+ plantes avec des recommandations intelligentes basees sur votre jardin. On vous dit ce qui pousse le mieux chez vous.',
     color: 'from-emerald-500 to-teal-600',
     bgAccent: 'bg-emerald-100/60 dark:bg-emerald-900/30',
+    illustration: [
+      { type: 'circle', cx: 25, cy: 35, r: 12, fill: '#FF6347' },
+      { type: 'circle', cx: 50, cy: 30, r: 10, fill: '#9370DB' },
+      { type: 'circle', cx: 72, cy: 38, r: 11, fill: '#FFD700' },
+      { type: 'line', x1: 25, y1: 47, x2: 25, y2: 60, stroke: '#4CAF50' },
+      { type: 'line', x1: 50, y1: 40, x2: 50, y2: 60, stroke: '#4CAF50' },
+      { type: 'line', x1: 72, y1: 49, x2: 72, y2: 60, stroke: '#4CAF50' },
+      { type: 'rect', x: 10, y: 60, w: 80, h: 5, fill: '#5C3D1E', rx: 2 },
+    ],
   },
   {
     icon: Eye,
@@ -30,6 +45,14 @@ const steps = [
     description: 'Regardez votre jardin en 3D, suivez votre calendrier de soins et demandez conseil au jardinier IA quand vous avez besoin d\'aide.',
     color: 'from-teal-500 to-cyan-600',
     bgAccent: 'bg-teal-100/60 dark:bg-teal-900/30',
+    illustration: [
+      { type: 'rect', x: 15, y: 25, w: 70, h: 35, fill: '#142A1E', rx: 6 },
+      { type: 'rect', x: 20, y: 30, w: 60, h: 25, fill: '#7EC850', rx: 3 },
+      { type: 'circle', cx: 35, cy: 40, r: 5, fill: '#FF6347' },
+      { type: 'circle', cx: 55, cy: 38, r: 4, fill: '#9370DB' },
+      { type: 'circle', cx: 68, cy: 42, r: 3, fill: '#FFD700' },
+      { type: 'rect', x: 30, y: 15, w: 40, h: 10, fill: '#4ADE80', rx: 5 },
+    ],
   },
 ];
 
@@ -68,6 +91,21 @@ export function HowItWorksSection() {
               transition={{ duration: 0.5, delay: i * 0.15 }}
               className="relative text-center"
             >
+              {/* Illustration */}
+              <motion.div
+                className="mx-auto mb-4 w-32 h-24 relative"
+                whileHover={{ scale: 1.05 }}
+              >
+                <svg viewBox="0 0 100 70" className="w-full h-full">
+                  {(step.illustration as Array<Record<string, unknown>>).map((el: Record<string, unknown>, j: number) => {
+                    if (el.type === 'rect') return <rect key={j} x={el.x as number} y={el.y as number} width={el.w as number} height={el.h as number} fill={el.fill as string} rx={el.rx as number} />;
+                    if (el.type === 'circle') return <circle key={j} cx={el.cx as number} cy={el.cy as number} r={el.r as number} fill={el.fill as string} />;
+                    if (el.type === 'line') return <line key={j} x1={el.x1 as number} y1={el.y1 as number} x2={el.x2 as number} y2={el.y2 as number} stroke={el.stroke as string} strokeWidth="2" strokeLinecap="round" />;
+                    return null;
+                  })}
+                </svg>
+              </motion.div>
+
               <div className="relative inline-flex mb-6">
                 <motion.div
                   className={`w-24 h-24 rounded-3xl bg-gradient-to-br ${step.color} flex items-center justify-center shadow-lg shadow-green-500/10`}

@@ -211,16 +211,68 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
         <meshStandardMaterial color={grassColor} />
       </mesh>
 
-      {/* Garden soil bed - slightly raised */}
+      {/* Grass texture variation patches for natural look */}
+      {Array.from({ length: 8 }).map((_, i) => {
+        const rng = (seed: number) => {
+          const x = Math.sin(seed * 127.1 + 311.7) * 43758.5453123;
+          return x - Math.floor(x);
+        };
+        const px = (rng(i * 3.7) - 0.5) * (length + 3);
+        const pz = (rng(i * 5.1 + 10) - 0.5) * (width + 3);
+        const isInside = Math.abs(px) < halfL - 0.2 && Math.abs(pz) < halfW - 0.2;
+        if (isInside) return null;
+        return (
+          <mesh key={`gpatch-${i}`} rotation={[-Math.PI / 2, 0, rng(i * 8) * Math.PI]} position={[px, -0.005, pz]} receiveShadow>
+            <circleGeometry args={[0.3 + rng(i * 2) * 0.5, 8]} />
+            <meshStandardMaterial color={rng(i) > 0.5 ? grassDark : grassColor} transparent opacity={0.5} />
+          </mesh>
+        );
+      })}
+
+      {/* Dirt path leading to garden */}
+      {Array.from({ length: 8 }).map((_, i) => (
+        <mesh key={`path-${i}`} rotation={[-Math.PI / 2, 0, 0]} position={[(Math.sin(i * 0.3) * 0.1), -0.008, halfW + 0.3 + i * 0.4]} receiveShadow>
+          <planeGeometry args={[0.35, 0.35]} />
+          <meshStandardMaterial color="#B8A88A" transparent opacity={0.6} />
+        </mesh>
+      ))}
+
+      {/* Garden soil bed - slightly raised with richer texture */}
       <mesh position={[0, 0.015, 0]} receiveShadow castShadow>
         <boxGeometry args={[length, 0.06, width]} />
-        <meshStandardMaterial color={soilColor} />
+        <meshStandardMaterial color={soilColor} roughness={0.95} />
       </mesh>
 
-      {/* Soil bed border trim (darker edge) */}
-      <mesh position={[0, 0.02, 0]}>
-        <boxGeometry args={[length + 0.08, 0.04, width + 0.08]} />
-        <meshStandardMaterial color="#3E2A10" transparent opacity={0.4} />
+      {/* Soil moisture variation patches */}
+      {Array.from({ length: 5 }).map((_, i) => {
+        const rng = (seed: number) => {
+          const x = Math.sin(seed * 127.1 + 311.7) * 43758.5453123;
+          return x - Math.floor(x);
+        };
+        return (
+          <mesh key={`moist-${i}`} rotation={[-Math.PI / 2, 0, 0]} position={[(rng(i * 4.3) - 0.5) * (length - 0.3), 0.047, (rng(i * 7.1) - 0.5) * (width - 0.3)]} receiveShadow>
+            <circleGeometry args={[0.15 + rng(i * 2.7) * 0.1, 6]} />
+            <meshStandardMaterial color="#4A3215" transparent opacity={0.25} />
+          </mesh>
+        );
+      })}
+
+      {/* Soil bed border trim (wooden frame) */}
+      <mesh position={[0, 0.03, -halfW - 0.03]}>
+        <boxGeometry args={[length + 0.1, 0.06, 0.05]} />
+        <meshStandardMaterial color="#6B4A2A" roughness={0.8} />
+      </mesh>
+      <mesh position={[0, 0.03, halfW + 0.03]}>
+        <boxGeometry args={[length + 0.1, 0.06, 0.05]} />
+        <meshStandardMaterial color="#6B4A2A" roughness={0.8} />
+      </mesh>
+      <mesh position={[-halfL - 0.03, 0.03, 0]}>
+        <boxGeometry args={[0.05, 0.06, width + 0.1]} />
+        <meshStandardMaterial color="#6B4A2A" roughness={0.8} />
+      </mesh>
+      <mesh position={[halfL + 0.03, 0.03, 0]}>
+        <boxGeometry args={[0.05, 0.06, width + 0.1]} />
+        <meshStandardMaterial color="#6B4A2A" roughness={0.8} />
       </mesh>
 
       {/* Row lines on soil for visual structure */}

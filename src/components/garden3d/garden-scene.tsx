@@ -258,7 +258,11 @@ function CelestialBody({ timeOfDay, season }: { timeOfDay: string; season: strin
           <Cloud position={[8, 12, -5]} scale={1} />
           <Cloud position={[-6, 14, -8]} scale={0.7} />
           <Cloud position={[3, 11, 5]} scale={0.85} />
+          <Cloud position={[-12, 13, -3]} scale={0.6} />
+          <Cloud position={[15, 11, 2]} scale={0.9} />
+          <Cloud position={[-8, 15, 6]} scale={0.5} />
           {season === 'winter' && <Cloud position={[-3, 10, -3]} scale={1.2} />}
+          {season === 'winter' && <Cloud position={[5, 9, 4]} scale={1.1} />}
         </group>
       )}
     </group>
@@ -285,31 +289,103 @@ function TwinkleStar({ position, speed, offset }: { position: [number, number, n
 
 function Cloud({ position, scale }: { position: [number, number, number]; scale: number }) {
   const cloudRef = useRef<THREE.Group>(null);
+  const driftSpeed = useRef(0.15 + Math.random() * 0.25);
+  const startX = useRef(position[0]);
 
   useFrame(() => {
     if (!cloudRef.current) return;
-    const time = performance.now() * 0.0001;
-    cloudRef.current.position.x = position[0] + Math.sin(time + position[2]) * 2;
+    const time = performance.now() * 0.001;
+    // Clouds drift continuously across the sky
+    const drift = (time * driftSpeed.current) % 50;
+    cloudRef.current.position.x = startX.current + drift - 25;
+    cloudRef.current.position.y = position[1] + Math.sin(time * 0.2 + position[2]) * 0.3;
+    // Wrap around when too far
+    if (cloudRef.current.position.x > 25) {
+      startX.current -= 50;
+    }
   });
 
   return (
     <group ref={cloudRef} position={position} scale={scale}>
       <mesh>
-        <sphereGeometry args={[1, 6, 4]} />
-        <meshStandardMaterial color="white" transparent opacity={0.85} />
+        <sphereGeometry args={[1, 8, 6]} />
+        <meshStandardMaterial color="white" transparent opacity={0.82} />
       </mesh>
-      <mesh position={[0.8, -0.1, 0]}>
-        <sphereGeometry args={[0.7, 6, 4]} />
-        <meshStandardMaterial color="white" transparent opacity={0.85} />
+      <mesh position={[0.9, -0.1, 0]}>
+        <sphereGeometry args={[0.75, 7, 5]} />
+        <meshStandardMaterial color="white" transparent opacity={0.8} />
       </mesh>
-      <mesh position={[-0.6, -0.15, 0.2]}>
-        <sphereGeometry args={[0.6, 6, 4]} />
-        <meshStandardMaterial color="white" transparent opacity={0.85} />
+      <mesh position={[-0.7, -0.15, 0.2]}>
+        <sphereGeometry args={[0.65, 7, 5]} />
+        <meshStandardMaterial color="white" transparent opacity={0.8} />
       </mesh>
-      <mesh position={[0.3, 0.3, -0.1]}>
+      <mesh position={[0.3, 0.35, -0.1]}>
+        <sphereGeometry args={[0.55, 6, 5]} />
+        <meshStandardMaterial color="white" transparent opacity={0.78} />
+      </mesh>
+      <mesh position={[1.5, -0.05, 0.15]}>
         <sphereGeometry args={[0.5, 6, 4]} />
-        <meshStandardMaterial color="white" transparent opacity={0.85} />
+        <meshStandardMaterial color="white" transparent opacity={0.75} />
       </mesh>
+    </group>
+  );
+}
+
+// Flying birds that cross the sky occasionally
+function FlyingBirds({ gardenLength, gardenWidth }: { gardenLength: number; gardenWidth: number }) {
+  const groupRef = useRef<THREE.Group>(null);
+  const birds = useMemo(() =>
+    Array.from({ length: 5 }, (_, i) => ({
+      offset: i * 2.5,
+      speed: 1.2 + Math.random() * 0.8,
+      height: 6 + Math.random() * 4,
+      z: (Math.random() - 0.5) * gardenWidth * 2,
+      flapSpeed: 8 + Math.random() * 4,
+      size: 0.06 + Math.random() * 0.04,
+    })),
+  [gardenLength, gardenWidth]);
+
+  useFrame(() => {
+    if (!groupRef.current) return;
+    const t = performance.now() * 0.001;
+    groupRef.current.children.forEach((child, i) => {
+      const b = birds[i];
+      if (!b) return;
+      const birdGroup = child as THREE.Group;
+      // Fly across the sky in a sine wave path
+      const phase = ((t * b.speed * 0.15 + b.offset) % 1);
+      birdGroup.position.x = -15 + phase * 30;
+      birdGroup.position.y = b.height + Math.sin(t * 0.5 + b.offset) * 0.5;
+      birdGroup.position.z = b.z + Math.sin(t * 0.3 + b.offset) * 1;
+      birdGroup.rotation.y = Math.PI * 0.5 + Math.sin(t * 0.2 + b.offset) * 0.2;
+      // Wing flapping
+      const wingAngle = Math.sin(t * b.flapSpeed) * 0.6;
+      if (birdGroup.children[1]) (birdGroup.children[1] as THREE.Mesh).rotation.z = -wingAngle - 0.2;
+      if (birdGroup.children[2]) (birdGroup.children[2] as THREE.Mesh).rotation.z = wingAngle + 0.2;
+    });
+  });
+
+  return (
+    <group ref={groupRef}>
+      {birds.map((b, i) => (
+        <group key={`fbird-${i}`}>
+          {/* Body */}
+          <mesh>
+            <capsuleGeometry args={[b.size * 0.3, b.size, 3, 4]} />
+            <meshStandardMaterial color="#2D3748" />
+          </mesh>
+          {/* Left wing */}
+          <mesh position={[-b.size * 0.8, 0, 0]}>
+            <boxGeometry args={[b.size * 1.5, 0.003, b.size * 0.5]} />
+            <meshStandardMaterial color="#4A5568" />
+          </mesh>
+          {/* Right wing */}
+          <mesh position={[b.size * 0.8, 0, 0]}>
+            <boxGeometry args={[b.size * 1.5, 0.003, b.size * 0.5]} />
+            <meshStandardMaterial color="#4A5568" />
+          </mesh>
+        </group>
+      ))}
     </group>
   );
 }
@@ -729,6 +805,9 @@ function SceneContent({
         gardenLength={config.length}
         gardenWidth={config.width}
       />
+
+      {/* Flying birds in the sky */}
+      <FlyingBirds gardenLength={config.length} gardenWidth={config.width} />
 
       {/* Decorations */}
       <GardenDecorations
