@@ -203,6 +203,12 @@
     "added": "Added",
     "browseAllPlants": "Browse all plants",
     "liveData": "Live data - Open-Meteo",
+    "seasonalPicks": "Plant now",
+    "seasonalPicksDesc": "Best plants to sow or plant this month based on your garden",
+    "seasonalNow": "Now",
+    "frostWarning": "Frost warning! {temp} degrees expected on {date}. Protect sensitive plants!",
+    "nearFrostWarning": "Near-frost conditions ({temp} degrees) expected on {date}. Consider covering tender plants.",
+    "frostProtectTip": "Cover sensitive plants with fleece or move pots indoors tonight.",
     "weather": {
       "gardenWeather": "Garden weather",
       "loading": "Loading weather...",
@@ -376,6 +382,22 @@
       "growPlants": "Grow Plants",
       "getTips": "Get Tips"
     },
+    "progressBar": {
+      "step": "Step {current} of {total}",
+      "stepLabel1": "Location",
+      "stepLabel2": "Garden Zones",
+      "stepLabel3": "What to Plant"
+    },
+    "sproutTips": {
+      "location": "Knowing your city helps me find the right weather data and planting calendar for you! Type your city name below.",
+      "locationDone": "Great choice! I'll use this location to check local temperatures and frost dates for your plants.",
+      "dimensions": "Now let's define the overall size of your garden. Pick a preset or enter custom dimensions!",
+      "soil": "Soil type determines which plants will thrive. If unsure, 'Loamy' is a safe bet!",
+      "climate": "Your climate zone affects when to plant and what grows best. Pick the one closest to your area.",
+      "sun": "Sun exposure is crucial! Most vegetables need at least 6 hours of direct sunlight.",
+      "zones": "Divide your garden into zones - each can have different soil and sun conditions. This gives better planting advice!",
+      "suggestions": "Based on your zones, the current month, and your local climate, here are my top picks for you!"
+    },
     "dimensions": {
       "title": "Choose Your Plot",
       "description": "Every great garden starts with the right space. How big is yours?",
@@ -394,15 +416,16 @@
       "width": "Width (m)"
     },
     "location": {
-      "title": "Garden Location",
-      "description": "Where is your garden? This helps us give weather-based watering tips!",
+      "title": "Where is your garden?",
+      "description": "Enter your city or town name so we can fetch weather data and give you the best planting advice.",
       "quest": "Quest: Pin Your Garden",
       "detecting": "Detecting...",
-      "useMyLocation": "Use My Location",
-      "autoDetect": "Auto-detect GPS coordinates from your device",
+      "useMyLocation": "Use GPS instead",
+      "autoDetect": "Detect my current location automatically",
       "or": "OR",
-      "searchByCity": "Search by city name:",
+      "searchByCity": "Enter your city or town:",
       "cityPlaceholder": "e.g. Paris, Lyon, London...",
+      "cityHint": "We use this to fetch local weather and frost dates - not GPS, because you might not be at home!",
       "manualCoords": "Or enter coordinates manually:",
       "latitude": "Latitude",
       "longitude": "Longitude",
@@ -410,7 +433,9 @@
       "locationOptional": "Location is optional but recommended for weather-based watering alerts.",
       "geoError": "Could not detect location. Try entering a city name instead.",
       "cityNotFound": "City not found. Try a different name.",
-      "searchFailed": "Search failed. Check your connection."
+      "searchFailed": "Search failed. Check your connection.",
+      "typingHint": "Start typing to see suggestions...",
+      "searching": "Searching..."
     },
     "soil": {
       "title": "Know Your Earth",
@@ -461,8 +486,10 @@
     "level": "Level {level} Gardener",
     "back": "Back",
     "nextQuest": "Next Quest",
+    "nextStep": "Next Step",
     "beginAdventure": "Begin Adventure",
     "completeQuest": "Complete Quest!",
+    "goToMyGarden": "Go to My Garden",
     "zones": {
       "title": "Your Garden Zones",
       "description": "Add planting areas to your garden. You can have raised beds and in-ground plots.",
@@ -496,6 +523,30 @@
       "defaultPlotName": "Plot",
       "defaultPotName": "Pot",
       "defaultGreenhouseName": "Greenhouse"
+    },
+    "suggestions": {
+      "title": "Smart Planting Suggestions",
+      "description": "Based on your zones, soil, season and local weather, here's what to plant!",
+      "quest": "Quest: Choose Your First Plants",
+      "noZonesHint": "Go back and add some zones first to get personalized planting suggestions.",
+      "sowNow": "Sow now",
+      "indoors": "Start indoors",
+      "qty": "Qty",
+      "spacing": "Spacing",
+      "days": "d harvest",
+      "goodWith": "Good with",
+      "soilLabel": "Soil",
+      "sunLabel": "Sun",
+      "plantsAdded": "{count} plants added to your garden!",
+      "scoreLabel": "Match",
+      "companionsLabel": "Good companions",
+      "enemiesLabel": "Avoid with",
+      "harvestIn": "Harvest in",
+      "perPlant": "per plant",
+      "currentMonth": "Current month: {month}",
+      "basedOnClimate": "Based on your climate in {city}",
+      "fitInZone": "Fits in {zone} ({area}m²)",
+      "algorithmExplain": "Score based on: season match, soil compatibility, sun exposure, companion planting, and local climate"
     }
   },
   "garden3d": {
