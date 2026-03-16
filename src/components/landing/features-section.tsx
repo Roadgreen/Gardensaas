@@ -15,50 +15,56 @@ import {
 const features = [
   {
     icon: Sprout,
-    title: 'Smart Plant Recommendations',
+    emoji: '\uD83C\uDF31',
+    title: 'Recommandations intelligentes',
     description:
-      'Get personalized plant suggestions based on your soil type, climate zone, and sun exposure.',
+      'Des suggestions de plantes personnalisees selon votre sol, climat et ensoleillement.',
     iconColor: 'text-green-600 dark:text-green-400',
     iconBg: 'bg-green-100 dark:bg-green-900/50',
   },
   {
     icon: Eye,
-    title: '3D Garden Visualization',
+    emoji: '\uD83C\uDFAE',
+    title: 'Jardin 3D interactif',
     description:
-      'See your garden come alive in a charming 3D world with cute plants and your gardener companion.',
+      'Visualisez votre jardin comme dans un jeu video avec un personnage jardinier et des plantes 3D.',
     iconColor: 'text-emerald-600 dark:text-emerald-400',
     iconBg: 'bg-emerald-100 dark:bg-emerald-900/50',
   },
   {
     icon: Bot,
-    title: 'AI Garden Advisor',
+    emoji: '\uD83E\uDD16',
+    title: 'Conseiller IA',
     description:
-      'Your personal gardening expert, available 24/7. Tailored advice for your specific garden.',
+      'Votre expert jardinage personnel, disponible 24h/24. Des conseils adaptes a votre jardin.',
     iconColor: 'text-violet-600 dark:text-violet-400',
     iconBg: 'bg-violet-100 dark:bg-violet-900/50',
     pro: true,
   },
   {
     icon: Calendar,
-    title: 'Planting Calendar',
+    emoji: '\uD83D\uDCC5',
+    title: 'Calendrier de plantation',
     description:
-      'Month-by-month guidance on when to plant, water, and harvest each crop for your climate.',
+      'Un guide mois par mois pour savoir quand semer, arroser et recolter chaque culture.',
     iconColor: 'text-amber-600 dark:text-yellow-400',
     iconBg: 'bg-amber-100 dark:bg-yellow-900/50',
   },
   {
     icon: Users,
-    title: 'Companion Planting',
+    emoji: '\uD83E\uDD1D',
+    title: 'Compagnonnage',
     description:
-      'Discover which plants thrive together and which to keep apart. Maximize your yield.',
+      'Decouvrez quelles plantes s\'entraident et lesquelles eviter de mettre cote a cote.',
     iconColor: 'text-teal-600 dark:text-teal-400',
     iconBg: 'bg-teal-100 dark:bg-teal-900/50',
   },
   {
     icon: Droplets,
-    title: 'Care Instructions',
+    emoji: '\uD83D\uDCA7',
+    title: 'Guide d\'entretien',
     description:
-      'Detailed watering schedules, soil preparation tips, and organic pest management.',
+      'Calendriers d\'arrosage, preparation du sol et gestion bio des nuisibles.',
     iconColor: 'text-sky-600 dark:text-cyan-400',
     iconBg: 'bg-sky-100 dark:bg-cyan-900/50',
   },
@@ -91,13 +97,13 @@ export function FeaturesSection() {
             viewport={{ once: true }}
           >
             <Sparkles className="w-4 h-4" />
-            Features
+            Fonctionnalites
           </motion.span>
           <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-green-50 mb-5 tracking-tight">
-            Everything you need to grow
+            Tout pour faire pousser vos reves
           </h2>
           <p className="text-gray-500 dark:text-green-200/60 text-lg max-w-2xl mx-auto">
-            From planning to harvesting, powerful tools designed to make gardening simple and rewarding.
+            Du semis a la recolte, des outils puissants pour rendre le jardinage simple et gratifiant.
           </p>
         </motion.div>
 
@@ -117,8 +123,8 @@ export function FeaturesSection() {
                     PRO
                   </span>
                 )}
-                <div className={`w-12 h-12 rounded-2xl ${feature.iconBg} flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110`}>
-                  <feature.icon className={`w-6 h-6 ${feature.iconColor}`} />
+                <div className={`w-14 h-14 rounded-2xl ${feature.iconBg} flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110`}>
+                  <span className="text-2xl">{feature.emoji}</span>
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-green-50 mb-2">{feature.title}</h3>
                 <p className="text-gray-500 dark:text-green-200/60 text-sm leading-relaxed">{feature.description}</p>

@@ -14,6 +14,8 @@ import {
   ThermometerSun,
   Sprout,
   AlertTriangle,
+  Heart,
+  ShieldAlert,
 } from 'lucide-react';
 import type { Plant } from '@/types';
 import {
@@ -29,10 +31,38 @@ interface PlantDetailProps {
   plant: Plant;
 }
 
+const plantEmojis: Record<string, string> = {
+  tomato: '\uD83C\uDF45', carrot: '\uD83E\uDD55', pepper: '\uD83C\uDF36\uFE0F', corn: '\uD83C\uDF3D',
+  lettuce: '\uD83E\uDD6C', strawberry: '\uD83C\uDF53', potato: '\uD83E\uDD54', onion: '\uD83E\uDDC5',
+  garlic: '\uD83E\uDDC4', broccoli: '\uD83E\uDD66', eggplant: '\uD83C\uDF46', cucumber: '\uD83E\uDD52',
+  melon: '\uD83C\uDF48', lemon: '\uD83C\uDF4B', cherry: '\uD83C\uDF52', grape: '\uD83C\uDF47',
+  peach: '\uD83C\uDF51', pear: '\uD83C\uDF50', apple: '\uD83C\uDF4E', pumpkin: '\uD83C\uDF83',
+  mushroom: '\uD83C\uDF44', avocado: '\uD83E\uDD51', mango: '\uD83E\uDD6D', pineapple: '\uD83C\uDF4D',
+  watermelon: '\uD83C\uDF49', bean: '\uD83E\uDED8', pea: '\uD83E\uDED1', sunflower: '\uD83C\uDF3B',
+  zucchini: '\uD83E\uDD52', squash: '\uD83C\uDF83', radish: '\uD83E\uDD55', beet: '\uD83E\uDD55',
+};
+
+function getPlantEmoji(id: string): string {
+  for (const [key, emoji] of Object.entries(plantEmojis)) {
+    if (id.includes(key)) return emoji;
+  }
+  return '\uD83C\uDF3F';
+}
+
+const monthSeasonEmojis = ['\u2744\uFE0F', '\u2744\uFE0F', '\uD83C\uDF38', '\uD83C\uDF38', '\uD83C\uDF38', '\u2600\uFE0F', '\u2600\uFE0F', '\u2600\uFE0F', '\uD83C\uDF42', '\uD83C\uDF42', '\uD83C\uDF42', '\u2744\uFE0F'];
+
+const difficultyMeta: Record<string, { label: string; emoji: string }> = {
+  easy: { label: 'Facile', emoji: '\uD83D\uDE0A' },
+  medium: { label: 'Moyen', emoji: '\uD83D\uDCAA' },
+  hard: { label: 'Difficile', emoji: '\uD83D\uDD25' },
+};
+
 export function PlantDetail({ plant }: PlantDetailProps) {
   const plantable = isPlantableNow(plant);
   const companions = getCompanionPlants(plant.id);
   const enemies = getEnemyPlants(plant.id);
+  const emoji = getPlantEmoji(plant.id);
+  const diff = difficultyMeta[plant.difficulty] || difficultyMeta.easy;
 
   return (
     <div className="min-h-screen bg-[#0D1F17] py-8 px-6">
@@ -40,7 +70,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
         <Link href="/plants">
           <Button variant="ghost" size="sm" className="mb-6 gap-2">
             <ArrowLeft className="w-4 h-4" />
-            All Plants
+            Toutes les plantes
           </Button>
         </Link>
 
@@ -51,18 +81,17 @@ export function PlantDetail({ plant }: PlantDetailProps) {
         >
           {/* Header */}
           <div className="flex items-start gap-6 mb-8">
-            <div
-              className="w-20 h-20 rounded-2xl flex-shrink-0 flex items-center justify-center shadow-lg"
+            <motion.div
+              className="w-24 h-24 rounded-3xl flex-shrink-0 flex items-center justify-center shadow-lg"
               style={{
                 backgroundColor: plant.color + '25',
                 border: `3px solid ${plant.color}60`,
               }}
+              whileHover={{ scale: 1.1, rotate: 5 }}
+              transition={{ type: 'spring' }}
             >
-              <div
-                className="w-10 h-10 rounded-full"
-                style={{ backgroundColor: plant.color }}
-              />
-            </div>
+              <span className="text-5xl">{emoji}</span>
+            </motion.div>
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-green-50 mb-1">
                 {plant.name.en}
@@ -70,20 +99,21 @@ export function PlantDetail({ plant }: PlantDetailProps) {
               <p className="text-green-400/60 text-lg italic mb-3">{plant.name.fr}</p>
               <div className="flex flex-wrap gap-2">
                 <span
-                  className="px-3 py-1 rounded-full text-sm font-medium"
+                  className="px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1"
                   style={{
                     color: getDifficultyColor(plant.difficulty),
                     backgroundColor: getDifficultyColor(plant.difficulty) + '20',
                   }}
                 >
-                  {plant.difficulty}
+                  {diff.emoji} {diff.label}
                 </span>
                 <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-900/50 text-green-300 capitalize">
                   {plant.category}
                 </span>
                 {plantable && (
-                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-600/30 text-green-300 border border-green-600/40">
-                    Plant now
+                  <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-600/30 text-green-300 border border-green-600/40 flex items-center gap-1">
+                    <Sprout className="w-3.5 h-3.5" />
+                    A planter maintenant
                   </span>
                 )}
               </div>
@@ -99,62 +129,48 @@ export function PlantDetail({ plant }: PlantDetailProps) {
 
           {/* Quick stats grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <Card>
-              <div className="flex flex-col items-center text-center">
-                <Droplets className="w-6 h-6 text-blue-400 mb-2" />
-                <span className="text-xs text-green-400/60 mb-1">Watering</span>
-                <span className="text-sm font-medium text-green-100">
-                  {getWateringLabel(plant.wateringFrequency)}
-                </span>
-              </div>
-            </Card>
-            <Card>
-              <div className="flex flex-col items-center text-center">
-                <Sun className="w-6 h-6 text-yellow-400 mb-2" />
-                <span className="text-xs text-green-400/60 mb-1">Sun</span>
-                <span className="text-sm font-medium text-green-100">
-                  {plant.sunExposure.map(s => s === 'full-sun' ? 'Full sun' : s === 'partial-shade' ? 'Partial shade' : 'Shade').join(', ')}
-                </span>
-              </div>
-            </Card>
-            <Card>
-              <div className="flex flex-col items-center text-center">
-                <Clock className="w-6 h-6 text-orange-400 mb-2" />
-                <span className="text-xs text-green-400/60 mb-1">Harvest</span>
-                <span className="text-sm font-medium text-green-100">{plant.harvestDays} days</span>
-              </div>
-            </Card>
-            <Card>
-              <div className="flex flex-col items-center text-center">
-                <Ruler className="w-6 h-6 text-green-400 mb-2" />
-                <span className="text-xs text-green-400/60 mb-1">Spacing</span>
-                <span className="text-sm font-medium text-green-100">{plant.spacingCm} cm</span>
-              </div>
-            </Card>
+            {[
+              { icon: Droplets, emoji: '\uD83D\uDCA7', label: 'Arrosage', value: getWateringLabel(plant.wateringFrequency), color: 'text-blue-400' },
+              { icon: Sun, emoji: '\u2600\uFE0F', label: 'Soleil', value: plant.sunExposure.map(s => s === 'full-sun' ? 'Plein soleil' : s === 'partial-shade' ? 'Mi-ombre' : 'Ombre').join(', '), color: 'text-yellow-400' },
+              { icon: Clock, emoji: '\u23F0', label: 'Recolte', value: `${plant.harvestDays} jours`, color: 'text-orange-400' },
+              { icon: Ruler, emoji: '\uD83D\uDCCF', label: 'Espacement', value: `${plant.spacingCm} cm`, color: 'text-green-400' },
+            ].map((stat) => (
+              <Card key={stat.label}>
+                <div className="flex flex-col items-center text-center">
+                  <span className="text-2xl mb-2">{stat.emoji}</span>
+                  <span className="text-xs text-green-400/60 mb-1">{stat.label}</span>
+                  <span className="text-sm font-medium text-green-100">{stat.value}</span>
+                </div>
+              </Card>
+            ))}
           </div>
 
-          {/* Additional info */}
+          {/* Planting details + Visual calendar */}
           <div className="grid md:grid-cols-2 gap-6 mb-6">
             <Card>
               <CardTitle className="flex items-center gap-2 mb-3">
-                <ArrowDown className="w-5 h-5 text-green-400" />
-                Planting Details
+                <span className="text-lg">{'\uD83C\uDF31'}</span>
+                Details de plantation
               </CardTitle>
               <CardContent>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-green-300/60">Planting depth</span>
-                    <span className="text-green-100">{plant.depthCm} cm</span>
+                <div className="space-y-3 text-sm">
+                  <div className="flex justify-between items-center p-2 rounded-lg bg-[#0D1F17]/40">
+                    <span className="text-green-300/60">Profondeur de semis</span>
+                    <span className="text-green-100 font-medium">{plant.depthCm} cm</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-green-300/60">Plant height</span>
-                    <span className="text-green-100">{plant.heightCm} cm</span>
+                  <div className="flex justify-between items-center p-2 rounded-lg bg-[#0D1F17]/40">
+                    <span className="text-green-300/60">Hauteur a maturite</span>
+                    <span className="text-green-100 font-medium">{plant.heightCm} cm</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-green-300/60">Soil types</span>
-                    <span className="text-green-100 capitalize">
+                  <div className="flex justify-between items-center p-2 rounded-lg bg-[#0D1F17]/40">
+                    <span className="text-green-300/60">Types de sol</span>
+                    <span className="text-green-100 font-medium capitalize">
                       {plant.soilTypes.join(', ')}
                     </span>
+                  </div>
+                  <div className="flex justify-between items-center p-2 rounded-lg bg-[#0D1F17]/40">
+                    <span className="text-green-300/60">Difficulte</span>
+                    <span className="text-green-100 font-medium">{diff.emoji} {diff.label}</span>
                   </div>
                 </div>
               </CardContent>
@@ -162,24 +178,34 @@ export function PlantDetail({ plant }: PlantDetailProps) {
 
             <Card>
               <CardTitle className="flex items-center gap-2 mb-3">
-                <ThermometerSun className="w-5 h-5 text-yellow-400" />
-                Planting Months
+                <span className="text-lg">{'\uD83D\uDCC5'}</span>
+                Calendrier visuel
               </CardTitle>
               <CardContent>
-                <div className="flex flex-wrap gap-2">
+                <div className="grid grid-cols-4 gap-2">
                   {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => {
                     const active = plant.plantingMonths.includes(month);
+                    const isCurrent = month === new Date().getMonth() + 1;
                     return (
-                      <span
+                      <motion.div
                         key={month}
-                        className={`px-2 py-1 rounded text-xs font-medium ${
+                        className={`p-2 rounded-xl text-center border transition-all ${
                           active
-                            ? 'bg-green-600/30 text-green-300 border border-green-600/40'
-                            : 'bg-green-950/50 text-green-700 border border-green-900/30'
+                            ? isCurrent
+                              ? 'bg-green-600/40 text-green-200 border-green-500 shadow-lg shadow-green-500/20'
+                              : 'bg-green-600/20 text-green-300 border-green-600/40'
+                            : 'bg-green-950/50 text-green-700 border-green-900/30'
                         }`}
+                        whileHover={active ? { scale: 1.05 } : {}}
                       >
-                        {MONTH_NAMES[month - 1].slice(0, 3)}
-                      </span>
+                        <span className="text-sm">{monthSeasonEmojis[month - 1]}</span>
+                        <span className={`block text-xs font-medium mt-0.5 ${active ? '' : 'opacity-50'}`}>
+                          {MONTH_NAMES[month - 1].slice(0, 3)}
+                        </span>
+                        {active && (
+                          <span className="block text-[10px] mt-0.5 text-green-400">{'\u2713'} Semis</span>
+                        )}
+                      </motion.div>
                     );
                   })}
                 </div>
@@ -187,32 +213,37 @@ export function PlantDetail({ plant }: PlantDetailProps) {
             </Card>
           </div>
 
-          {/* Companion & enemy plants */}
+          {/* Companion & enemy plants - visual */}
           <div className="grid md:grid-cols-2 gap-6 mb-6">
             <Card>
               <CardTitle className="flex items-center gap-2 mb-3">
-                <Sprout className="w-5 h-5 text-green-400" />
-                Companion Plants
+                <Heart className="w-5 h-5 text-green-400" />
+                <span className="text-lg">{'\uD83E\uDD1D'}</span>
+                Bons voisins
               </CardTitle>
               <CardContent>
                 {companions.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
+                  <div className="grid grid-cols-2 gap-2">
                     {companions.map((c) => (
                       <Link key={c.id} href={`/plants/${c.id}`}>
-                        <span className="px-3 py-1 rounded-full text-sm bg-green-900/50 text-green-300 hover:bg-green-800/50 transition-colors cursor-pointer">
-                          {c.name.en}
-                        </span>
+                        <motion.div
+                          className="p-3 rounded-xl bg-green-900/30 border border-green-800/30 hover:border-green-600/50 transition-all cursor-pointer flex items-center gap-2"
+                          whileHover={{ scale: 1.03 }}
+                        >
+                          <span className="text-lg">{getPlantEmoji(c.id)}</span>
+                          <span className="text-sm text-green-200 truncate">{c.name.en}</span>
+                        </motion.div>
                       </Link>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-green-500/50">No companion plants listed.</p>
+                  <p className="text-sm text-green-500/50">Pas de compagnons listes.</p>
                 )}
                 {plant.companionPlants.filter(id => !companions.find(c => c.id === id)).length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-2">
+                  <div className="flex flex-wrap gap-2 mt-3">
                     {plant.companionPlants.filter(id => !companions.find(c => c.id === id)).map(id => (
-                      <span key={id} className="px-3 py-1 rounded-full text-sm bg-green-950/50 text-green-500/50 capitalize">
-                        {id}
+                      <span key={id} className="px-3 py-1 rounded-full text-sm bg-green-950/50 text-green-500/50 capitalize flex items-center gap-1">
+                        {'\uD83C\uDF3F'} {id}
                       </span>
                     ))}
                   </div>
@@ -222,28 +253,33 @@ export function PlantDetail({ plant }: PlantDetailProps) {
 
             <Card>
               <CardTitle className="flex items-center gap-2 mb-3">
-                <AlertTriangle className="w-5 h-5 text-red-400" />
-                Keep Apart
+                <ShieldAlert className="w-5 h-5 text-red-400" />
+                <span className="text-lg">{'\u26A0\uFE0F'}</span>
+                A eloigner
               </CardTitle>
               <CardContent>
                 {enemies.length > 0 ? (
-                  <div className="flex flex-wrap gap-2">
+                  <div className="grid grid-cols-2 gap-2">
                     {enemies.map((e) => (
                       <Link key={e.id} href={`/plants/${e.id}`}>
-                        <span className="px-3 py-1 rounded-full text-sm bg-red-900/30 text-red-300 hover:bg-red-800/30 transition-colors cursor-pointer">
-                          {e.name.en}
-                        </span>
+                        <motion.div
+                          className="p-3 rounded-xl bg-red-900/20 border border-red-800/20 hover:border-red-600/40 transition-all cursor-pointer flex items-center gap-2"
+                          whileHover={{ scale: 1.03 }}
+                        >
+                          <span className="text-lg">{getPlantEmoji(e.id)}</span>
+                          <span className="text-sm text-red-200 truncate">{e.name.en}</span>
+                        </motion.div>
                       </Link>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-green-500/50">Gets along with everyone!</p>
+                  <p className="text-sm text-green-500/50">S'entend bien avec tout le monde !</p>
                 )}
                 {plant.enemyPlants.filter(id => !enemies.find(e => e.id === id)).length > 0 && (
-                  <div className="flex flex-wrap gap-2 mt-2">
+                  <div className="flex flex-wrap gap-2 mt-3">
                     {plant.enemyPlants.filter(id => !enemies.find(e => e.id === id)).map(id => (
-                      <span key={id} className="px-3 py-1 rounded-full text-sm bg-red-950/50 text-red-400/50 capitalize">
-                        {id}
+                      <span key={id} className="px-3 py-1 rounded-full text-sm bg-red-950/50 text-red-400/50 capitalize flex items-center gap-1">
+                        {'\u274C'} {id}
                       </span>
                     ))}
                   </div>
@@ -254,16 +290,25 @@ export function PlantDetail({ plant }: PlantDetailProps) {
 
           {/* Tips */}
           <Card>
-            <CardTitle className="mb-4">Growing Tips</CardTitle>
+            <CardTitle className="mb-4 flex items-center gap-2">
+              <span className="text-lg">{'\uD83D\uDCA1'}</span>
+              Conseils de culture
+            </CardTitle>
             <CardContent>
               <ul className="space-y-3">
                 {plant.tips.map((tip, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <span className="w-6 h-6 rounded-full bg-green-900/50 flex-shrink-0 flex items-center justify-center text-xs text-green-400 font-medium mt-0.5">
+                  <motion.li
+                    key={i}
+                    className="flex items-start gap-3 p-3 rounded-xl bg-[#0D1F17]/40"
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: i * 0.1 }}
+                  >
+                    <span className="w-7 h-7 rounded-full bg-green-900/50 flex-shrink-0 flex items-center justify-center text-xs text-green-400 font-bold mt-0.5">
                       {i + 1}
                     </span>
-                    <span className="text-green-100">{tip}</span>
-                  </li>
+                    <span className="text-green-100 text-sm leading-relaxed">{tip}</span>
+                  </motion.li>
                 ))}
               </ul>
             </CardContent>
