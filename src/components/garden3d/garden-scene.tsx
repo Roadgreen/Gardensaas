@@ -10,9 +10,12 @@ import { GardenTerrain } from './garden-terrain';
 import { Plant3D } from './plant-3d';
 import { GardenDecorations } from './garden-decorations';
 import { GardenUIOverlay } from './garden-ui-overlay';
+import { WeatherSystem } from './weather-effects';
 
 interface GardenSceneProps {
   config: GardenConfig;
+  selectedPlantType?: string | null;
+  onPlantAdded?: () => void;
 }
 
 // ===== Sound Effects Placeholder System =====
@@ -586,6 +589,7 @@ function SceneContent({
   gardenerTarget,
   gardenerAction,
   focusTarget,
+  weather,
 }: {
   config: GardenConfig;
   selectedPlantIndex: number | null;
@@ -603,8 +607,9 @@ function SceneContent({
   isPlacementMode: boolean;
   onGroundClick: (x: number, z: number) => void;
   gardenerTarget: THREE.Vector3 | null;
-  gardenerAction: 'idle' | 'walking' | 'watering' | 'digging' | 'harvesting';
+  gardenerAction: 'idle' | 'walking' | 'watering' | 'digging' | 'harvesting' | 'pointing' | 'celebrating';
   focusTarget: THREE.Vector3 | null;
+  weather: string;
 }) {
   const halfL = config.length / 2;
   const halfW = config.width / 2;
@@ -708,6 +713,15 @@ function SceneContent({
         currentAction={gardenerAction}
       />
 
+      {/* Weather effects (rain, snow, sun rays, wind) */}
+      <WeatherSystem
+        season={season}
+        timeOfDay={timeOfDay}
+        gardenLength={config.length}
+        gardenWidth={config.width}
+        weather={weather}
+      />
+
       {/* Seasonal particle effects (fireflies, falling leaves) */}
       <SeasonalParticles
         season={season}
@@ -739,7 +753,17 @@ function SceneContent({
   );
 }
 
-export function GardenScene({ config }: GardenSceneProps) {
+// Get weather based on season (shared with overlay)
+function getWeather(season: string): string {
+  const hour = new Date().getHours();
+  if (season === 'winter') return hour % 3 === 0 ? 'Snowy' : 'Overcast';
+  if (season === 'spring') return hour % 4 === 0 ? 'Light Rain' : 'Partly Cloudy';
+  if (season === 'autumn') return hour % 3 === 0 ? 'Cloudy' : 'Breezy';
+  const states = ['Sunny', 'Partly Cloudy', 'Cloudy', 'Light Rain', 'Clear'];
+  return states[hour % states.length];
+}
+
+export function GardenScene({ config, selectedPlantType: externalSelectedPlantType }: GardenSceneProps) {
   const [selectedPlantIndex, setSelectedPlantIndex] = useState<number | null>(null);
   const [isIsometric, setIsIsometric] = useState(false);
   const [gardenerDialogue, setGardenerDialogue] = useState('');
@@ -754,11 +778,20 @@ export function GardenScene({ config }: GardenSceneProps) {
     y: number;
   } | null>(null);
   const [gardenerTarget, setGardenerTarget] = useState<THREE.Vector3 | null>(null);
-  const [gardenerAction, setGardenerAction] = useState<'idle' | 'walking' | 'watering' | 'digging' | 'harvesting'>('idle');
+  const [gardenerAction, setGardenerAction] = useState<'idle' | 'walking' | 'watering' | 'digging' | 'harvesting' | 'pointing' | 'celebrating'>('idle');
   const [focusTarget, setFocusTarget] = useState<THREE.Vector3 | null>(null);
 
   const season = useMemo(() => getSeason(), []);
   const timeOfDay = useMemo(() => getTimeOfDay(), []);
+  const weather = useMemo(() => getWeather(season), [season]);
+
+  // Sync external plant type selection from sidebar
+  useEffect(() => {
+    if (externalSelectedPlantType) {
+      setSelectedPlantType(externalSelectedPlantType);
+      setIsPlacementMode(true);
+    }
+  }, [externalSelectedPlantType]);
 
   // Load plants data
   useEffect(() => {
@@ -792,12 +825,40 @@ export function GardenScene({ config }: GardenSceneProps) {
         setFocusTarget(new THREE.Vector3(worldX, 0, worldZ));
         setGardenerTarget(new THREE.Vector3(worldX + 0.3, 0, worldZ + 0.3));
         setGardenerAction('walking');
+
+        // After walking, switch to pointing at the plant
+        const pointTimer = setTimeout(() => {
+          setGardenerAction('pointing');
+        }, 1500);
+
+        // Check if this plant is harvest-ready for celebration
+        const plantData = plants.find((p) => p.id === item.plantId);
+        if (plantData) {
+          const now = new Date();
+          const planted = new Date(item.plantedDate);
+          const daysPassed = Math.floor(
+            (now.getTime() - planted.getTime()) / (1000 * 60 * 60 * 24)
+          );
+          if (daysPassed >= plantData.harvestDays) {
+            const celebrateTimer = setTimeout(() => {
+              setGardenerAction('celebrating');
+              setGardenerDialogue('This one is ready to harvest! Great work!');
+              setShowGardenerDialogue(true);
+            }, 2500);
+            return () => {
+              clearTimeout(pointTimer);
+              clearTimeout(celebrateTimer);
+            };
+          }
+        }
+
+        return () => clearTimeout(pointTimer);
       }
     } else {
       setFocusTarget(null);
       setGardenerAction('idle');
     }
-  }, [selectedPlantIndex, config]);
+  }, [selectedPlantIndex, config, plants]);
 
   const handleGardenerClick = useCallback(() => {
     const advice = getRandomAdvice();
@@ -824,9 +885,19 @@ export function GardenScene({ config }: GardenSceneProps) {
     if (tool === 'water' && selectedPlantIndex !== null) {
       setGardenerAction('watering');
       SoundEffects.play('water');
+      setGardenerDialogue('Watering time! Plants love a good drink.');
+      setShowGardenerDialogue(true);
     } else if (tool === 'harvest' && selectedPlantIndex !== null) {
       setGardenerAction('harvesting');
       SoundEffects.play('harvest');
+      // Celebrate after harvest animation
+      setTimeout(() => {
+        setGardenerAction('celebrating');
+        setGardenerDialogue('Great harvest! Your garden is producing well!');
+        setShowGardenerDialogue(true);
+      }, 2000);
+    } else if (tool === 'info' && selectedPlantIndex !== null) {
+      setGardenerAction('pointing');
     }
   }, [selectedPlantIndex]);
 
@@ -964,6 +1035,7 @@ export function GardenScene({ config }: GardenSceneProps) {
           gardenerTarget={gardenerTarget}
           gardenerAction={gardenerAction}
           focusTarget={focusTarget}
+          weather={weather}
         />
       </Canvas>
 

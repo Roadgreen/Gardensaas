@@ -13,8 +13,10 @@ interface GardenerCharacterProps {
   showDialogue: boolean;
   onDialogueClose?: () => void;
   walkToTarget?: THREE.Vector3 | null;
-  currentAction?: 'idle' | 'walking' | 'watering' | 'digging' | 'harvesting';
+  currentAction?: 'idle' | 'walking' | 'watering' | 'digging' | 'harvesting' | 'pointing' | 'celebrating';
 }
+
+type GardenerAction = 'idle' | 'walking' | 'watering' | 'digging' | 'harvesting' | 'pointing' | 'celebrating';
 
 // Seasonal + time-based dialogue sets
 const DIALOGUE_SETS = {
@@ -215,6 +217,17 @@ function HeldTool({ action }: { action: string }) {
         <mesh position={[0, -0.065, 0]}>
           <boxGeometry args={[0.025, 0.03, 0.003]} />
           <meshStandardMaterial color="#888" metalness={0.5} />
+        </mesh>
+      </group>
+    );
+  }
+  if (action === 'pointing') {
+    // Pointing finger
+    return (
+      <group position={[0, -0.2, 0.05]} rotation={[-1.2, 0, 0]}>
+        <mesh>
+          <cylinderGeometry args={[0.006, 0.004, 0.04, 4]} />
+          <meshStandardMaterial color="#FFD5B8" />
         </mesh>
       </group>
     );
@@ -469,6 +482,32 @@ export function GardenerCharacter({
       }
       if (armLeftRef.current) {
         armLeftRef.current.rotation.x = -0.3 + Math.sin(t * 2 + 1) * 0.3;
+      }
+    } else if (actionAnim === 'pointing') {
+      // Pointing animation - arm extended forward
+      if (armRightRef.current) {
+        armRightRef.current.rotation.x = -1.2 + Math.sin(t * 1.5) * 0.08;
+        armRightRef.current.rotation.z = -0.15;
+      }
+      if (armLeftRef.current) {
+        armLeftRef.current.rotation.z = Math.sin(t * 1) * 0.1;
+      }
+      // Body leans forward slightly
+      if (bodyGroupRef.current) {
+        bodyGroupRef.current.rotation.x = 0.08;
+      }
+    } else if (actionAnim === 'celebrating') {
+      // Both arms up, jumping
+      if (armRightRef.current) {
+        armRightRef.current.rotation.z = -2.5 + Math.sin(t * 6) * 0.3;
+        armRightRef.current.rotation.x = Math.sin(t * 4) * 0.2;
+      }
+      if (armLeftRef.current) {
+        armLeftRef.current.rotation.z = 2.5 - Math.sin(t * 6 + 0.5) * 0.3;
+        armLeftRef.current.rotation.x = Math.sin(t * 4 + 0.5) * 0.2;
+      }
+      if (bodyGroupRef.current) {
+        bodyGroupRef.current.position.y = Math.abs(Math.sin(t * 5)) * 0.12;
       }
     } else if (!isWalking && actionAnim === 'idle' && idleTimerRef.current > 12 && armRightRef.current) {
       // Scratching head idle animation
@@ -754,7 +793,7 @@ export function GardenerCharacter({
               animation: 'pulse 1s ease-in-out infinite',
               textShadow: '0 2px 4px rgba(0,0,0,0.3)',
             }}>
-              {actionAnim === 'watering' ? '\u{1F4A7}' : actionAnim === 'digging' ? '\u{26CF}\u{FE0F}' : '\u{1F33E}'}
+              {actionAnim === 'watering' ? '\u{1F4A7}' : actionAnim === 'digging' ? '\u{26CF}\u{FE0F}' : actionAnim === 'pointing' ? '\u{1F449}' : actionAnim === 'celebrating' ? '\u{1F389}' : '\u{1F33E}'}
             </div>
           </Html>
         )}
