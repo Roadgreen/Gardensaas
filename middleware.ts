@@ -1,59 +1,16 @@
-import { auth } from '@/lib/auth';
-import { NextResponse } from 'next/server';
+import NextAuth from 'next-auth';
+import { authConfig } from '@/lib/auth.config';
 
-// Routes that are always public (no login required)
-const publicPaths = ['/', '/pricing', '/auth/login', '/auth/register'];
-// Path prefixes that are public (e.g. /plants, /plants/tomato)
-const publicPrefixes = ['/plants'];
+const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
-  const { pathname } = req.nextUrl;
+  // The authorized callback in auth.config.ts handles public/private route logic.
+  // If we reach here, the user is authorized. Sync locale cookie if logged in.
+  const response = undefined; // let NextAuth handle the response
 
-  // Allow API routes
-  if (pathname.startsWith('/api')) {
-    return NextResponse.next();
-  }
-
-  // Allow static files and Next.js internals
-  if (
-    pathname.startsWith('/_next') ||
-    pathname.startsWith('/favicon') ||
-    pathname.includes('.')
-  ) {
-    return NextResponse.next();
-  }
-
-  // Allow explicitly public paths
-  if (publicPaths.includes(pathname)) {
-    return NextResponse.next();
-  }
-
-  // Allow public prefix paths (plant catalog is public)
-  if (publicPrefixes.some((prefix) => pathname.startsWith(prefix))) {
-    return NextResponse.next();
-  }
-
-  // All other pages require authentication
-  if (!req.auth) {
-    const loginUrl = new URL('/auth/login', req.url);
-    loginUrl.searchParams.set('callbackUrl', pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
-  // Sync locale from user session to cookie if logged in
-  const response = NextResponse.next();
-  const userLocale = (req.auth?.user as Record<string, unknown>)?.locale as string | undefined;
-  if (userLocale && ['en', 'fr'].includes(userLocale)) {
-    const currentCookie = req.cookies.get('locale')?.value;
-    if (currentCookie !== userLocale) {
-      response.cookies.set('locale', userLocale, {
-        path: '/',
-        maxAge: 60 * 60 * 24 * 365,
-        sameSite: 'lax',
-      });
-    }
-  }
-
+  // We can only set cookies via NextResponse when we intercept,
+  // but locale sync is better handled in the session callback.
+  // The authorized callback already handles redirects for unauthenticated users.
   return response;
 });
 

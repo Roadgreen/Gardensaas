@@ -78,7 +78,7 @@ const MONTH_NAMES_FR = ['Janvier','Fevrier','Mars','Avril','Mai','Juin','Juillet
 // ===== 3-Step Major Structure =====
 // Major Step 1: Location (substeps: welcome, city input)
 // Major Step 2: Garden Setup (substeps: dimensions, soil, climate, sun, zones)
-// Major Step 3: What to Plant (substeps: suggestions per zone)
+// Major Step 3: Review & Plant (substeps: review, suggestions per zone)
 
 const MAJOR_STEPS = [
   { id: 'location', icon: MapPin, labelKey: 'stepLabel1' },
@@ -95,6 +95,7 @@ const ALL_SUBSTEPS = [
   { id: 'climate', majorStep: 1, icon: Cloud, titleKey: 'climate.title', descKey: 'climate.description', tipKey: 'climate' },
   { id: 'sun', majorStep: 1, icon: Sun, titleKey: 'sun.title', descKey: 'sun.description', tipKey: 'sun' },
   { id: 'zones', majorStep: 1, icon: Layers, titleKey: 'zones.title', descKey: 'zones.description', tipKey: 'zones' },
+  { id: 'review', majorStep: 2, icon: Search, titleKey: 'review.title', descKey: 'review.description', tipKey: 'review' },
   { id: 'suggestions', majorStep: 2, icon: Leaf, titleKey: 'suggestions.title', descKey: 'suggestions.description', tipKey: 'suggestions' },
 ];
 
@@ -353,6 +354,19 @@ export function SetupForm() {
     }, 300);
   }, [locale]);
 
+  // Auto-detect climate zone from latitude
+  const detectClimateFromLat = useCallback((lat: number) => {
+    const absLat = Math.abs(lat);
+    let zone: ClimateZone = 'temperate';
+    if (absLat < 10) zone = 'tropical';
+    else if (absLat < 23.5) zone = 'subtropical';
+    else if (absLat < 35) zone = 'mediterranean';
+    else if (absLat < 50) zone = 'temperate';
+    else if (absLat < 60) zone = 'continental';
+    else zone = 'subarctic';
+    updateConfig({ climateZone: zone });
+  }, [updateConfig]);
+
   const selectCity = (city: CityResult) => {
     const displayName = city.admin1
       ? `${city.name}, ${city.admin1}, ${city.country}`
@@ -365,6 +379,7 @@ export function SetupForm() {
       longitude: city.longitude,
       city: city.name,
     });
+    detectClimateFromLat(city.latitude);
     setShowCitySuggestions(false);
     setCitySuggestions([]);
     gainXp(25);
@@ -390,6 +405,7 @@ export function SetupForm() {
             longitude: result.longitude,
             city: result.name,
           });
+          detectClimateFromLat(result.latitude);
           gainXp(25);
         } else {
           setGeoError(t('location.cityNotFound'));
@@ -417,6 +433,7 @@ export function SetupForm() {
       setLocationLat(lat.toFixed(4));
       setLocationLng(lng.toFixed(4));
       updateConfig({ latitude: lat, longitude: lng });
+      detectClimateFromLat(lat);
 
       try {
         const res = await fetch(
@@ -464,6 +481,8 @@ export function SetupForm() {
       gainXp(35);
     } else if (id === 'zones') {
       gainXp(40);
+    } else if (id === 'review') {
+      gainXp(15);
     } else if (id === 'suggestions') {
       gainXp(50);
     }
@@ -493,6 +512,12 @@ export function SetupForm() {
   const getSproutTip = (): string => {
     if (currentSubStep.id === 'location' && locationLat && locationCity) {
       return t('sproutTips.locationDone');
+    }
+    if (currentSubStep.id === 'climate' && locationLat) {
+      return t('sproutTips.climateAutoDetected');
+    }
+    if (currentSubStep.id === 'review') {
+      return t('sproutTips.review');
     }
     return t(`sproutTips.${currentSubStep.tipKey}`);
   };
@@ -889,6 +914,19 @@ export function SetupForm() {
 
               {/* ===== Climate Step ===== */}
               {currentSubStep.id === 'climate' && (
+                <div className="space-y-4">
+                  {locationLat && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex items-center gap-2 p-3 rounded-xl bg-blue-900/20 border border-blue-700/30"
+                    >
+                      <MapPin className="w-4 h-4 text-blue-400 shrink-0" />
+                      <p className="text-xs text-blue-300">
+                        {t('climate.autoDetectedHint', { city: locationCity || `${locationLat}, ${locationLng}` })}
+                      </p>
+                    </motion.div>
+                  )}
                 <div className="grid grid-cols-2 gap-3">
                   {climateOptions.map((opt) => (
                     <motion.button
@@ -908,6 +946,7 @@ export function SetupForm() {
                       <span className="text-xs text-green-500/50 block mt-1">{opt.desc}</span>
                     </motion.button>
                   ))}
+                </div>
                 </div>
               )}
 
@@ -950,6 +989,11 @@ export function SetupForm() {
                   t={t}
                   onXpGain={gainXp}
                 />
+              )}
+
+              {/* ===== Review Step ===== */}
+              {currentSubStep.id === 'review' && (
+                <GardenReviewStep config={config} t={t} locale={locale} />
               )}
 
               {/* ===== Smart Suggestions Step ===== */}
@@ -1299,6 +1343,199 @@ function ZonesStep({ config, onAddZone, onRemoveZone, onAddRaisedBed, onRemoveRa
   );
 }
 
+// ===== Garden Review Step Component =====
+interface GardenReviewStepProps {
+  config: import('@/types').GardenConfig;
+  t: ReturnType<typeof useTranslations<'setup'>>;
+  locale: string;
+}
+
+function GardenReviewStep({ config, t, locale }: GardenReviewStepProps) {
+  const lang = (locale === 'fr' ? 'fr' : 'en') as 'en' | 'fr';
+  const [weather, setWeather] = useState<{ temp: number; description: string; humidity: number } | null>(null);
+  const [weatherLoading, setWeatherLoading] = useState(false);
+
+  const allZones = [
+    ...(config.zones || []),
+    ...(config.raisedBeds || []).map(b => ({
+      id: b.id, name: b.name, widthM: b.widthM, lengthM: b.lengthM,
+      soilType: b.soilType as string, sunExposure: config.sunExposure,
+      zoneType: 'raised-bed' as ZoneType, x: b.x, z: b.z, color: '#D4A06C',
+    })),
+  ];
+
+  const totalArea = config.length * config.width;
+  const zoneArea = allZones.reduce((s, z) => s + z.widthM * z.lengthM, 0);
+
+  // Fetch weather on mount if we have coordinates
+  useEffect(() => {
+    if (config.latitude && config.longitude) {
+      setWeatherLoading(true);
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${config.latitude}&longitude=${config.longitude}&current=temperature_2m,relative_humidity_2m,weather_code&timezone=auto`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.current) {
+            const code = data.current.weather_code as number;
+            let desc = 'Clear';
+            if (code >= 1 && code <= 3) desc = lang === 'fr' ? 'Partiellement nuageux' : 'Partly cloudy';
+            else if (code >= 45 && code <= 48) desc = lang === 'fr' ? 'Brouillard' : 'Foggy';
+            else if (code >= 51 && code <= 67) desc = lang === 'fr' ? 'Pluie' : 'Rainy';
+            else if (code >= 71 && code <= 77) desc = lang === 'fr' ? 'Neige' : 'Snowy';
+            else if (code >= 80 && code <= 99) desc = lang === 'fr' ? 'Orageux' : 'Stormy';
+            else desc = lang === 'fr' ? 'Ensoleille' : 'Sunny';
+
+            setWeather({
+              temp: Math.round(data.current.temperature_2m),
+              description: desc,
+              humidity: data.current.relative_humidity_2m,
+            });
+          }
+        })
+        .catch(() => {})
+        .finally(() => setWeatherLoading(false));
+    }
+  }, [config.latitude, config.longitude, lang]);
+
+  const climateLabel = CLIMATE_LABELS[config.climateZone] || config.climateZone;
+  const sunLabel = SUN_LABELS[config.sunExposure] || config.sunExposure;
+  const soilLabel = SOIL_LABELS[config.soilType] || config.soilType;
+
+  return (
+    <div className="space-y-4">
+      {/* Weather card */}
+      {weather && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="p-4 rounded-xl bg-gradient-to-r from-blue-900/30 to-cyan-900/20 border border-blue-700/30"
+        >
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="text-2xl font-bold text-blue-100">{weather.temp}°C</div>
+              <div className="text-xs text-blue-300">{weather.description}</div>
+            </div>
+            <div className="text-right">
+              <div className="text-xs text-blue-400/60">{config.city || ''}</div>
+              <div className="text-xs text-blue-400/60">{t('review.humidity')}: {weather.humidity}%</div>
+            </div>
+          </div>
+        </motion.div>
+      )}
+      {weatherLoading && (
+        <div className="flex items-center justify-center gap-2 p-3 rounded-xl bg-blue-900/20 border border-blue-700/30">
+          <Sprout className="w-4 h-4 text-blue-400 animate-spin" />
+          <span className="text-xs text-blue-300">{t('review.fetchingWeather')}</span>
+        </div>
+      )}
+
+      {/* Garden overview card */}
+      <div className="p-4 rounded-xl bg-[#0D1F17] border border-green-900/40">
+        <div className="text-sm font-bold text-green-200 mb-3">{t('review.gardenOverview')}</div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="p-2.5 rounded-lg bg-green-900/20 border border-green-800/30">
+            <Ruler className="w-4 h-4 text-green-400 mb-1" />
+            <div className="text-xs text-green-500/60">{t('review.size')}</div>
+            <div className="text-sm text-green-200 font-medium">{config.length}m x {config.width}m</div>
+            <div className="text-[10px] text-green-500/40">{totalArea.toFixed(1)} m&sup2;</div>
+          </div>
+          <div className="p-2.5 rounded-lg bg-green-900/20 border border-green-800/30">
+            <Mountain className="w-4 h-4 text-green-400 mb-1" />
+            <div className="text-xs text-green-500/60">{t('review.soil')}</div>
+            <div className="text-sm text-green-200 font-medium">{soilLabel}</div>
+          </div>
+          <div className="p-2.5 rounded-lg bg-green-900/20 border border-green-800/30">
+            <Cloud className="w-4 h-4 text-green-400 mb-1" />
+            <div className="text-xs text-green-500/60">{t('review.climate')}</div>
+            <div className="text-sm text-green-200 font-medium">{climateLabel}</div>
+          </div>
+          <div className="p-2.5 rounded-lg bg-green-900/20 border border-green-800/30">
+            <Sun className="w-4 h-4 text-green-400 mb-1" />
+            <div className="text-xs text-green-500/60">{t('review.sun')}</div>
+            <div className="text-sm text-green-200 font-medium">{sunLabel.split('(')[0].trim()}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Zones mini-map */}
+      {allZones.length > 0 && (
+        <div className="p-4 rounded-xl bg-[#0D1F17] border border-green-900/40">
+          <div className="text-sm font-bold text-green-200 mb-3">
+            {t('review.zones')} ({allZones.length})
+          </div>
+
+          {/* Visual mini-map */}
+          <div className="relative w-full aspect-[4/3] rounded-xl bg-gradient-to-b from-green-900/30 to-green-950/40 border border-green-800/30 mb-3 overflow-hidden">
+            {/* Garden boundary */}
+            <div className="absolute inset-2 border-2 border-dashed border-green-700/30 rounded-lg" />
+            {/* Zone blocks */}
+            {allZones.map((zone, i) => {
+              const wPct = Math.min((zone.widthM / config.width) * 100, 90);
+              const lPct = Math.min((zone.lengthM / config.length) * 100, 90);
+              const xPct = 5 + (i * 20) % 70;
+              const yPct = 5 + (i * 15) % 60;
+              const color = zone.color || ZONE_COLORS[i % ZONE_COLORS.length];
+              return (
+                <motion.div
+                  key={zone.id}
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="absolute rounded-md flex items-center justify-center"
+                  style={{
+                    left: `${xPct}%`, top: `${yPct}%`,
+                    width: `${Math.max(wPct, 15)}%`, height: `${Math.max(lPct, 15)}%`,
+                    backgroundColor: `${color}20`, borderColor: `${color}60`,
+                    borderWidth: 2,
+                  }}
+                >
+                  <span className="text-[9px] text-green-200/80 font-medium truncate px-1">
+                    {zone.name}
+                  </span>
+                </motion.div>
+              );
+            })}
+          </div>
+
+          {/* Zone list */}
+          <div className="space-y-1.5">
+            {allZones.map((zone) => (
+              <div key={zone.id} className="flex items-center justify-between text-xs px-2 py-1.5 rounded-lg bg-green-900/15">
+                <div className="flex items-center gap-2">
+                  <span>{zone.zoneType === 'raised-bed' ? '\uD83E\uDDF1' : zone.zoneType === 'pot' ? '\uD83E\uDEB4' : zone.zoneType === 'greenhouse' ? '\uD83C\uDFE1' : '\uD83D\uDFE9'}</span>
+                  <span className="text-green-200">{zone.name}</span>
+                </div>
+                <span className="text-green-500/50">{(zone.widthM * zone.lengthM).toFixed(1)} m&sup2;</span>
+              </div>
+            ))}
+          </div>
+          <div className="text-center text-xs text-green-400/50 mt-2">
+            {t('review.totalZoneArea')}: {zoneArea.toFixed(1)} m&sup2; / {totalArea.toFixed(1)} m&sup2;
+          </div>
+        </div>
+      )}
+
+      {allZones.length === 0 && (
+        <div className="text-center p-4 rounded-xl bg-amber-900/15 border border-amber-700/30">
+          <AlertTriangle className="w-5 h-5 text-amber-400 mx-auto mb-2" />
+          <p className="text-xs text-amber-300">{t('review.noZonesWarning')}</p>
+        </div>
+      )}
+
+      {/* Ready banner */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="text-center p-4 rounded-xl bg-gradient-to-r from-green-900/30 to-emerald-900/20 border border-green-700/30"
+      >
+        <Leaf className="w-6 h-6 text-green-400 mx-auto mb-2" />
+        <p className="text-sm text-green-200 font-medium">{t('review.readyMessage')}</p>
+        <p className="text-xs text-green-500/50 mt-1">{t('review.readyHint')}</p>
+      </motion.div>
+    </div>
+  );
+}
+
 // ===== Smart Suggestions Step Component =====
 interface SmartSuggestionsStepProps {
   config: import('@/types').GardenConfig;
@@ -1328,9 +1565,24 @@ function SmartSuggestionsStep({ config, t, onAddPlant }: SmartSuggestionsStepPro
   const lang = (locale === 'fr' ? 'fr' : 'en') as 'en' | 'fr';
   const [addedPlants, setAddedPlants] = useState<Set<string>>(new Set());
   const [activeZoneIdx, setActiveZoneIdx] = useState(0);
+  const [weatherTemp, setWeatherTemp] = useState<number | undefined>(undefined);
 
   const currentMonth = new Date().getMonth();
   const monthName = lang === 'fr' ? MONTH_NAMES_FR[currentMonth] : MONTH_NAMES_EN[currentMonth];
+
+  // Fetch weather temperature for better scoring
+  useEffect(() => {
+    if (config.latitude && config.longitude) {
+      fetch(`https://api.open-meteo.com/v1/forecast?latitude=${config.latitude}&longitude=${config.longitude}&current=temperature_2m&timezone=auto`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.current?.temperature_2m !== undefined) {
+            setWeatherTemp(Math.round(data.current.temperature_2m));
+          }
+        })
+        .catch(() => {});
+    }
+  }, [config.latitude, config.longitude]);
 
   // Generate planting plans for all zones
   const zones = (config.zones || []).map(z => ({
@@ -1346,7 +1598,7 @@ function SmartSuggestionsStep({ config, t, onAddPlant }: SmartSuggestionsStepPro
   const existingPlantIds = config.plantedItems.map(p => p.plantId);
 
   const plans = getGardenPlantingPlan(
-    zones, beds, config.climateZone, config.sunExposure, existingPlantIds
+    zones, beds, config.climateZone, config.sunExposure, existingPlantIds, weatherTemp
   );
 
   const hasZones = plans.length > 0;
@@ -1369,7 +1621,7 @@ function SmartSuggestionsStep({ config, t, onAddPlant }: SmartSuggestionsStepPro
 
   return (
     <div className="space-y-5">
-      {/* Context banner: current month + city */}
+      {/* Context banner: current month + city + weather */}
       <div className="flex flex-wrap gap-2">
         <div className="px-3 py-1.5 rounded-full bg-blue-900/20 border border-blue-700/30 text-xs text-blue-300">
           {'\uD83D\uDCC5'} {t('suggestions.currentMonth', { month: monthName })}
@@ -1377,6 +1629,11 @@ function SmartSuggestionsStep({ config, t, onAddPlant }: SmartSuggestionsStepPro
         {config.city && (
           <div className="px-3 py-1.5 rounded-full bg-emerald-900/20 border border-emerald-700/30 text-xs text-emerald-300">
             {'\uD83C\uDF0D'} {t('suggestions.basedOnClimate', { city: config.city })}
+          </div>
+        )}
+        {weatherTemp !== undefined && (
+          <div className="px-3 py-1.5 rounded-full bg-cyan-900/20 border border-cyan-700/30 text-xs text-cyan-300">
+            {'\uD83C\uDF21\uFE0F'} {weatherTemp}°C {t('suggestions.currentTemp')}
           </div>
         )}
       </div>

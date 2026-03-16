@@ -396,7 +396,9 @@
       "climate": "Votre zone climatique affecte quand planter et ce qui pousse le mieux. Choisissez celle la plus proche de votre region.",
       "sun": "L'exposition au soleil est cruciale ! La plupart des legumes ont besoin d'au moins 6 heures de soleil direct.",
       "zones": "Divisez votre jardin en zones - chacune peut avoir des conditions de sol et de soleil differentes. Cela donne de meilleurs conseils de plantation !",
-      "suggestions": "En fonction de vos zones, du mois actuel et de votre climat local, voici mes meilleurs choix pour vous !"
+      "suggestions": "En fonction de vos zones, du mois actuel et de votre climat local, voici mes meilleurs choix pour vous !",
+      "climateAutoDetected": "J ai detecte votre zone climatique a partir de votre position ! Vous pouvez ajuster si vous le souhaitez.",
+      "review": "Voici un resume de votre jardin. Verifiez que tout est correct avant les suggestions de plantation !"
     },
     "dimensions": {
       "title": "Choisissez votre parcelle",
@@ -469,7 +471,8 @@
       "continental": "Continental",
       "continentalDesc": "Etes chauds, hivers froids. Fortes variations saisonnieres.",
       "subarctic": "Subarctique",
-      "subarcticDesc": "Etes courts et frais, hivers longs et froids. Plantes rustiques uniquement !"
+      "subarcticDesc": "Etes courts et frais, hivers longs et froids. Plantes rustiques uniquement !",
+      "autoDetectedHint": "Zone climatique detectee automatiquement depuis votre position ({city}). Vous pouvez toujours la modifier."
     },
     "sun": {
       "title": "Puissance solaire",
@@ -546,7 +549,24 @@
       "currentMonth": "Mois actuel : {month}",
       "basedOnClimate": "Base sur votre climat a {city}",
       "fitInZone": "Convient a {zone} ({area}m2)",
-      "algorithmExplain": "Score base sur : saison, compatibilite du sol, exposition au soleil, compagnonnage et climat local"
+      "algorithmExplain": "Score base sur : saison, compatibilite du sol, exposition au soleil, compagnonnage et climat local",
+      "currentTemp": "en ce moment"
+    },
+    "review": {
+      "title": "Resume du jardin",
+      "description": "Verifiez la configuration de votre jardin avant les suggestions.",
+      "gardenOverview": "Votre jardin en un coup d oeil",
+      "size": "Taille du jardin",
+      "soil": "Type de sol",
+      "climate": "Climat",
+      "sun": "Exposition au soleil",
+      "zones": "Zones de plantation",
+      "totalZoneArea": "Surface totale des zones",
+      "noZonesWarning": "Vous n avez pas de zones de plantation. Revenez en arriere pour en ajouter !",
+      "readyMessage": "Votre jardin est pret pour les suggestions de plantation !",
+      "readyHint": "Appuyez sur suivant pour voir ce qui pousse le mieux dans votre jardin.",
+      "humidity": "Humidite",
+      "fetchingWeather": "Chargement de la meteo locale..."
     }
   },
   "garden3d": {

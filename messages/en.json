@@ -396,7 +396,9 @@
       "climate": "Your climate zone affects when to plant and what grows best. Pick the one closest to your area.",
       "sun": "Sun exposure is crucial! Most vegetables need at least 6 hours of direct sunlight.",
       "zones": "Divide your garden into zones - each can have different soil and sun conditions. This gives better planting advice!",
-      "suggestions": "Based on your zones, the current month, and your local climate, here are my top picks for you!"
+      "suggestions": "Based on your zones, the current month, and your local climate, here are my top picks for you!",
+      "climateAutoDetected": "I detected your climate zone based on your location! Feel free to adjust if you know better.",
+      "review": "Here is a summary of your garden setup. Check everything looks good before we suggest what to plant!"
     },
     "dimensions": {
       "title": "Choose Your Plot",
@@ -469,7 +471,8 @@
       "continental": "Continental",
       "continentalDesc": "Hot summers, cold winters. Strong seasonal shifts.",
       "subarctic": "Subarctic",
-      "subarcticDesc": "Short cool summers, long cold winters. Hardy plants only!"
+      "subarcticDesc": "Short cool summers, long cold winters. Hardy plants only!",
+      "autoDetectedHint": "Climate zone auto-detected from your location ({city}). You can still change it."
     },
     "sun": {
       "title": "Sun Power",
@@ -546,7 +549,24 @@
       "currentMonth": "Current month: {month}",
       "basedOnClimate": "Based on your climate in {city}",
       "fitInZone": "Fits in {zone} ({area}m²)",
-      "algorithmExplain": "Score based on: season match, soil compatibility, sun exposure, companion planting, and local climate"
+      "algorithmExplain": "Score based on: season match, soil compatibility, sun exposure, companion planting, and local climate",
+      "currentTemp": "right now"
+    },
+    "review": {
+      "title": "Garden Summary",
+      "description": "Review your garden setup before we suggest plants.",
+      "gardenOverview": "Your Garden at a Glance",
+      "size": "Garden Size",
+      "soil": "Soil Type",
+      "climate": "Climate",
+      "sun": "Sun Exposure",
+      "zones": "Planting Zones",
+      "totalZoneArea": "Total zone area",
+      "noZonesWarning": "You have no planting zones. Go back to add some for better suggestions!",
+      "readyMessage": "Your garden is ready for planting suggestions!",
+      "readyHint": "Hit next to see what grows best in your garden right now.",
+      "humidity": "Humidity",
+      "fetchingWeather": "Fetching local weather..."
     }
   },
   "garden3d": {

@@ -124,6 +124,188 @@
           "en": "Flat, ribbed French variety with excellent flavor for slicing.",
           "fr": "Variete francaise plate et cotelee au gout excellent pour les salades."
         }
+      },
+      {
+        "id": "tomato-san-marzano",
+        "name": {
+          "en": "San Marzano",
+          "fr": "San Marzano"
+        },
+        "color": "#DC2626",
+        "harvestDays": 80,
+        "description": {
+          "en": "Classic Italian plum tomato, the gold standard for sauces and passata.",
+          "fr": "Tomate allongee italienne, la reference absolue pour les sauces et les coulis."
+        }
+      },
+      {
+        "id": "tomato-brandywine",
+        "name": {
+          "en": "Brandywine",
+          "fr": "Brandywine"
+        },
+        "color": "#E11D48",
+        "harvestDays": 90,
+        "description": {
+          "en": "Large pink beefsteak heirloom with intense, balanced flavor. A favorite of tomato connoisseurs.",
+          "fr": "Grosse tomate rose ancienne au gout intense et equilibre. La preferee des amateurs de tomates."
+        }
+      },
+      {
+        "id": "tomato-ananas",
+        "name": {
+          "en": "Pineapple Tomato",
+          "fr": "Tomate Ananas"
+        },
+        "color": "#F59E0B",
+        "harvestDays": 85,
+        "description": {
+          "en": "Large bicolor yellow-red heirloom with sweet, fruity flavor reminiscent of pineapple.",
+          "fr": "Grosse tomate ancienne bicolore jaune-rouge au gout sucre et fruite rappelant l'ananas."
+        }
+      },
+      {
+        "id": "tomato-rose-de-berne",
+        "name": {
+          "en": "Rose de Berne",
+          "fr": "Rose de Berne"
+        },
+        "color": "#F472B6",
+        "harvestDays": 75,
+        "description": {
+          "en": "Swiss heirloom with thin pink skin and delicate sweet flavor. A must-have in any garden.",
+          "fr": "Variete suisse ancienne a peau fine rose et saveur delicate. Un incontournable au potager."
+        }
+      },
+      {
+        "id": "tomato-cornue-des-andes",
+        "name": {
+          "en": "Cornue des Andes",
+          "fr": "Cornue des Andes"
+        },
+        "color": "#DC2626",
+        "harvestDays": 78,
+        "description": {
+          "en": "Horn-shaped tomato with very few seeds and dense flesh. Excellent for salads and drying.",
+          "fr": "Tomate en forme de corne avec tres peu de graines et une chair dense. Excellente en salade et sechee."
+        }
+      },
+      {
+        "id": "tomato-noire-de-russie",
+        "name": {
+          "en": "Black Russian",
+          "fr": "Noire de Russie"
+        },
+        "color": "#5B2333",
+        "harvestDays": 82,
+        "description": {
+          "en": "Dark mahogany heirloom with smoky, sweet flavor and soft texture.",
+          "fr": "Tomate ancienne acajou fonce au gout fume et sucre, a la texture fondante."
+        }
+      },
+      {
+        "id": "tomato-olivette",
+        "name": {
+          "en": "Olivette",
+          "fr": "Olivette"
+        },
+        "color": "#EF4444",
+        "harvestDays": 70,
+        "description": {
+          "en": "Small oval tomato shaped like an olive, very productive and perfect for preserves.",
+          "fr": "Petite tomate ovale en forme d'olive, tres productive et parfaite pour les conserves."
+        }
+      },
+      {
+        "id": "tomato-montfavet",
+        "name": {
+          "en": "Montfavet",
+          "fr": "Montfavet"
+        },
+        "color": "#DC2626",
+        "harvestDays": 68,
+        "description": {
+          "en": "Early French hybrid developed by INRA. Reliable, productive and disease-resistant.",
+          "fr": "Hybride francais precoce developpe par l'INRA. Fiable, productif et resistant aux maladies."
+        }
+      },
+      {
+        "id": "tomato-super-steak",
+        "name": {
+          "en": "Super Steak",
+          "fr": "Super Steak"
+        },
+        "color": "#DC2626",
+        "harvestDays": 85,
+        "description": {
+          "en": "Very large beefsteak tomato, fruits can exceed 500g. Perfect for burgers and thick slices.",
+          "fr": "Tres grosse tomate charnue pouvant depasser 500g. Parfaite pour les burgers et en tranches epaisses."
+        }
+      },
+      {
+        "id": "tomato-cerise-jaune",
+        "name": {
+          "en": "Yellow Cherry",
+          "fr": "Tomate Cerise Jaune"
+        },
+        "color": "#FACC15",
+        "harvestDays": 62,
+        "description": {
+          "en": "Golden yellow cherry tomato, very sweet and prolific. Children love them.",
+          "fr": "Tomate cerise jaune doree, tres sucree et prolifique. Les enfants les adorent."
+        }
+      },
+      {
+        "id": "tomato-grappe",
+        "name": {
+          "en": "Vine Tomato",
+          "fr": "Tomate Grappe"
+        },
+        "color": "#EF4444",
+        "harvestDays": 72,
+        "description": {
+          "en": "Medium cluster tomato harvested on the vine. Uniform, aromatic and stores well.",
+          "fr": "Tomate moyenne recoltee en grappes. Calibre regulier, parfumee et bonne conservation."
+        }
+      },
+      {
+        "id": "tomato-saint-pierre",
+        "name": {
+          "en": "Saint Pierre",
+          "fr": "Saint Pierre"
+        },
+        "color": "#DC2626",
+        "harvestDays": 75,
+        "description": {
+          "en": "Traditional French market tomato, versatile and very productive. A classic potager variety.",
+          "fr": "Tomate de marche traditionnelle francaise, polyvalente et tres productive. Un classique du potager."
+        }
+      },
+      {
+        "id": "tomato-pyros",
+        "name": {
+          "en": "Pyros",
+          "fr": "Pyros"
+        },
+        "color": "#B91C1C",
+        "harvestDays": 70,
+        "description": {
+          "en": "Early determinate variety with good disease resistance. Compact plant ideal for small gardens.",
+          "fr": "Variete determinee precoce avec bonne resistance aux maladies. Plant compact ideal pour petits jardins."
+        }
+      },
+      {
+        "id": "tomato-cocktail",
+        "name": {
+          "en": "Cocktail Tomato",
+          "fr": "Tomate Cocktail"
+        },
+        "color": "#EF4444",
+        "harvestDays": 65,
+        "description": {
+          "en": "Medium-small tomato between cherry and standard size. Sweet, firm and great for appetizers.",
+          "fr": "Tomate entre la cerise et le calibre standard. Sucree, ferme et parfaite pour l'aperitif."
+        }
       }
     ]
   },
@@ -228,6 +410,71 @@
         "description": {
           "en": "Yellow French heirloom carrot with mild, sweet flavor.",
           "fr": "Carotte jaune ancienne du Doubs au gout doux et sucre."
+        }
+      },
+      {
+        "id": "carrot-touchon",
+        "name": {
+          "en": "Touchon",
+          "fr": "Touchon"
+        },
+        "color": "#EA580C",
+        "harvestDays": 68,
+        "description": {
+          "en": "Half-long cylindrical carrot, coreless and very sweet. Excellent raw or cooked.",
+          "fr": "Carotte demi-longue cylindrique, sans coeur et tres sucree. Excellente crue ou cuite."
+        }
+      },
+      {
+        "id": "carrot-colmar",
+        "name": {
+          "en": "Colmar",
+          "fr": "Colmar a Coeur Rouge"
+        },
+        "color": "#C2410C",
+        "harvestDays": 85,
+        "description": {
+          "en": "Large late-season carrot that stores exceptionally well through winter.",
+          "fr": "Grosse carotte tardive qui se conserve remarquablement bien tout l'hiver."
+        }
+      },
+      {
+        "id": "carrot-imperator",
+        "name": {
+          "en": "Imperator",
+          "fr": "Imperator"
+        },
+        "color": "#EA580C",
+        "harvestDays": 75,
+        "description": {
+          "en": "Long, tapered carrot with high sugar content. The classic supermarket shape.",
+          "fr": "Carotte longue et fuselee a forte teneur en sucre. La forme classique des marches."
+        }
+      },
+      {
+        "id": "carrot-blanche-de-kuttigen",
+        "name": {
+          "en": "White Kuttigen",
+          "fr": "Blanche de Kuttigen"
+        },
+        "color": "#FEF9C3",
+        "harvestDays": 80,
+        "description": {
+          "en": "Rare Swiss white carrot with delicate, slightly nutty flavor.",
+          "fr": "Carotte blanche suisse rare au gout delicat et legerement noiseté."
+        }
+      },
+      {
+        "id": "carrot-marche-de-paris",
+        "name": {
+          "en": "Paris Market",
+          "fr": "Marche de Paris"
+        },
+        "color": "#EA580C",
+        "harvestDays": 55,
+        "description": {
+          "en": "Round, golf ball-sized carrot perfect for containers and shallow soils.",
+          "fr": "Petite carotte ronde comme une balle de golf, parfaite en pot et en sol peu profond."
         }
       }
     ]
@@ -334,6 +581,97 @@
         "description": {
           "en": "Oak-shaped leaves with a tender, buttery texture.",
           "fr": "Feuilles en forme de chene a la texture tendre et beurriere."
+        }
+      },
+      {
+        "id": "lettuce-iceberg",
+        "name": {
+          "en": "Iceberg",
+          "fr": "Iceberg"
+        },
+        "color": "#BBF7D0",
+        "harvestDays": 60,
+        "description": {
+          "en": "Crisp, tightly packed head lettuce with a refreshing crunch. Classic for burgers and sandwiches.",
+          "fr": "Laitue pommee bien serree au croquant rafraichissant. Classique pour les burgers et sandwichs."
+        }
+      },
+      {
+        "id": "lettuce-laitue-beurre",
+        "name": {
+          "en": "Butterhead Lettuce",
+          "fr": "Laitue Beurre"
+        },
+        "color": "#86EFAC",
+        "harvestDays": 50,
+        "description": {
+          "en": "Soft, buttery leaves that melt in the mouth. Forms a loose, tender head.",
+          "fr": "Feuilles tendres et fondantes qui fondent en bouche. Forme une pomme souple et delicate."
+        }
+      },
+      {
+        "id": "lettuce-sucrine",
+        "name": {
+          "en": "Sucrine",
+          "fr": "Sucrine"
+        },
+        "color": "#16A34A",
+        "harvestDays": 45,
+        "description": {
+          "en": "Small, compact romaine-type with sweet, crunchy heart. Heat-resistant and slow to bolt.",
+          "fr": "Petite laitue compacte type romaine au coeur sucre et croquant. Resistante a la chaleur et lente a monter."
+        }
+      },
+      {
+        "id": "lettuce-scarole",
+        "name": {
+          "en": "Escarole",
+          "fr": "Scarole"
+        },
+        "color": "#A3E635",
+        "harvestDays": 55,
+        "description": {
+          "en": "Broad-leaved endive with slightly bitter flavor. Excellent braised or in soups.",
+          "fr": "Chicoree a larges feuilles au gout legerement amer. Excellente braisee ou en soupe."
+        }
+      },
+      {
+        "id": "lettuce-rougette",
+        "name": {
+          "en": "Rougette du Midi",
+          "fr": "Rougette du Midi"
+        },
+        "color": "#BE123C",
+        "harvestDays": 48,
+        "description": {
+          "en": "Small red butterhead from southern France. Beautiful color and excellent heat tolerance.",
+          "fr": "Petite laitue beurre rouge du sud de la France. Belle couleur et excellente resistance a la chaleur."
+        }
+      },
+      {
+        "id": "lettuce-frisee",
+        "name": {
+          "en": "Frisee",
+          "fr": "Frisee"
+        },
+        "color": "#D9F99D",
+        "harvestDays": 52,
+        "description": {
+          "en": "Curly, finely cut leaves with a pleasantly bitter taste. Heart blanches to pale yellow.",
+          "fr": "Feuilles frisees et finement decoupees au gout agreablement amer. Le coeur blanchit en jaune pale."
+        }
+      },
+      {
+        "id": "lettuce-merveille-quatre-saisons",
+        "name": {
+          "en": "Marvel of Four Seasons",
+          "fr": "Merveille des Quatre Saisons"
+        },
+        "color": "#9F1239",
+        "harvestDays": 55,
+        "description": {
+          "en": "Stunning red-tinged French heirloom butterhead. Sow nearly year-round in mild climates.",
+          "fr": "Magnifique laitue beurre ancienne aux reflets rouges. Semis quasi toute l'annee en climat doux."
         }
       }
     ]
@@ -535,6 +873,110 @@
           "en": "Small Spanish pepper, usually mild but sometimes hot!",
           "fr": "Petit piment espagnol, generalement doux mais parfois piquant !"
         }
+      },
+      {
+        "id": "pepper-bell-green",
+        "name": {
+          "en": "Green Bell Pepper",
+          "fr": "Poivron Vert"
+        },
+        "color": "#16A34A",
+        "harvestDays": 65,
+        "description": {
+          "en": "Classic green bell pepper, harvested before full ripeness. Slightly bitter, great for cooking.",
+          "fr": "Poivron vert classique recolte avant maturite complete. Legerement amer, excellent en cuisine."
+        }
+      },
+      {
+        "id": "pepper-bell-orange",
+        "name": {
+          "en": "Orange Bell Pepper",
+          "fr": "Poivron Orange"
+        },
+        "color": "#F97316",
+        "harvestDays": 78,
+        "description": {
+          "en": "Bright orange sweet pepper, fruity and very sweet when ripe.",
+          "fr": "Poivron orange vif, fruite et tres sucre a maturite."
+        }
+      },
+      {
+        "id": "pepper-corne-de-taureau",
+        "name": {
+          "en": "Bull's Horn Pepper",
+          "fr": "Corne de Taureau"
+        },
+        "color": "#DC2626",
+        "harvestDays": 80,
+        "description": {
+          "en": "Long, pointed Italian sweet pepper with thick flesh. Superb grilled or roasted.",
+          "fr": "Long poivron doux italien pointu a chair epaisse. Superbe grille ou roti."
+        }
+      },
+      {
+        "id": "pepper-piquillo",
+        "name": {
+          "en": "Piquillo",
+          "fr": "Piquillo"
+        },
+        "color": "#B91C1C",
+        "harvestDays": 85,
+        "description": {
+          "en": "Small triangular Spanish pepper, sweet with a slight kick. Traditionally roasted over embers.",
+          "fr": "Petit poivron espagnol triangulaire, sucre avec une pointe de piquant. Traditionnellement roti a la braise."
+        }
+      },
+      {
+        "id": "pepper-piment-anglet",
+        "name": {
+          "en": "Piment d'Anglet",
+          "fr": "Piment d'Anglet"
+        },
+        "color": "#22C55E",
+        "harvestDays": 75,
+        "description": {
+          "en": "Mild Basque pepper also called piment doux du Pays Basque. Essential for piperade.",
+          "fr": "Piment doux basque incontournable pour la piperade. Aussi appele piment doux du Pays Basque."
+        }
+      },
+      {
+        "id": "pepper-jalapeno",
+        "name": {
+          "en": "Jalapeno",
+          "fr": "Jalapeno"
+        },
+        "color": "#15803D",
+        "harvestDays": 72,
+        "description": {
+          "en": "Popular Mexican hot pepper with medium heat. Great fresh, pickled, or smoked (chipotle).",
+          "fr": "Piment mexicain populaire a chaleur moderee. Excellent frais, marine ou fume (chipotle)."
+        }
+      },
+      {
+        "id": "pepper-habanero",
+        "name": {
+          "en": "Habanero",
+          "fr": "Habanero"
+        },
+        "color": "#F97316",
+        "harvestDays": 95,
+        "description": {
+          "en": "Very hot lantern-shaped pepper with fruity aroma. Handle with gloves!",
+          "fr": "Piment tres fort en forme de lanterne au parfum fruite. Manipuler avec des gants !"
+        }
+      },
+      {
+        "id": "pepper-doux-landes",
+        "name": {
+          "en": "Doux des Landes",
+          "fr": "Doux des Landes"
+        },
+        "color": "#16A34A",
+        "harvestDays": 70,
+        "description": {
+          "en": "Sweet mild pepper from southwest France. Long thin fruits, excellent fried whole.",
+          "fr": "Piment doux du sud-ouest. Fruits longs et fins, excellent frit entier a la poele."
+        }
       }
     ]
   },
@@ -622,6 +1064,97 @@
         "description": {
           "en": "Dark green classic zucchini, very productive.",
           "fr": "Courgette classique vert fonce, tres productive."
+        }
+      },
+      {
+        "id": "zucchini-trompette",
+        "name": {
+          "en": "Tromboncino",
+          "fr": "Courgette Trompette"
+        },
+        "color": "#A3E635",
+        "harvestDays": 55,
+        "description": {
+          "en": "Climbing Italian variety with curved neck. Nutty flavor, also eaten as winter squash if left to mature.",
+          "fr": "Variete italienne grimpante au col courbe. Gout de noisette, se mange aussi en courge d'hiver a maturite."
+        }
+      },
+      {
+        "id": "zucchini-blanche-virginie",
+        "name": {
+          "en": "White Virginia",
+          "fr": "Blanche de Virginie"
+        },
+        "color": "#F5F5DC",
+        "harvestDays": 48,
+        "description": {
+          "en": "Pale white-green zucchini with very tender flesh. Mild and delicate taste.",
+          "fr": "Courgette blanc-vert pale a la chair tres tendre. Gout doux et delicat."
+        }
+      },
+      {
+        "id": "zucchini-longue-de-nice",
+        "name": {
+          "en": "Long de Nice",
+          "fr": "Longue de Nice"
+        },
+        "color": "#4ADE80",
+        "harvestDays": 52,
+        "description": {
+          "en": "Long, speckled light green French heirloom. The flowers are prized for stuffing and frying.",
+          "fr": "Longue courgette vert clair tachetee, variete ancienne nicoise. Ses fleurs sont prisees pour les beignets."
+        }
+      },
+      {
+        "id": "zucchini-patisson",
+        "name": {
+          "en": "Patty Pan Squash",
+          "fr": "Patisson"
+        },
+        "color": "#FEF9C3",
+        "harvestDays": 55,
+        "description": {
+          "en": "Flat, scalloped-edge squash in white or yellow. Best harvested young for tender flesh.",
+          "fr": "Courge plate aux bords festonnes blanche ou jaune. Meilleure recoltee jeune pour sa chair tendre."
+        }
+      },
+      {
+        "id": "zucchini-patisson-orange",
+        "name": {
+          "en": "Orange Patty Pan",
+          "fr": "Patisson Orange"
+        },
+        "color": "#F97316",
+        "harvestDays": 55,
+        "description": {
+          "en": "Bright orange patty pan variety. Decorative and delicious, with slightly sweet flesh.",
+          "fr": "Patisson orange vif. Decoratif et delicieux, a la chair legerement sucree."
+        }
+      },
+      {
+        "id": "zucchini-verte-des-maraichers",
+        "name": {
+          "en": "Market Green",
+          "fr": "Verte des Maraichers"
+        },
+        "color": "#166534",
+        "harvestDays": 50,
+        "description": {
+          "en": "Dark green market garden variety, very early and productive. Firm flesh with excellent flavor.",
+          "fr": "Variete maraichere vert fonce, tres precoce et productive. Chair ferme au gout excellent."
+        }
+      },
+      {
+        "id": "zucchini-grisette-provence",
+        "name": {
+          "en": "Grisette de Provence",
+          "fr": "Grisette de Provence"
+        },
+        "color": "#9CA3AF",
+        "harvestDays": 50,
+        "description": {
+          "en": "Grey-green Provencal variety with speckled skin. Dense flesh that holds up well in ratatouille.",
+          "fr": "Variete provencale gris-vert a la peau tachetee. Chair dense qui tient bien dans la ratatouille."
         }
       }
     ]
@@ -713,6 +1246,58 @@
           "en": "Round, yellow cucumber with mild, sweet taste.",
           "fr": "Concombre rond et jaune au gout doux et sucre."
         }
+      },
+      {
+        "id": "cucumber-marketmore",
+        "name": {
+          "en": "Marketmore",
+          "fr": "Marketmore"
+        },
+        "color": "#166534",
+        "harvestDays": 58,
+        "description": {
+          "en": "Dark green slicing cucumber, disease-resistant and very productive. Never bitter.",
+          "fr": "Concombre vert fonce a couper, resistant aux maladies et tres productif. Jamais amer."
+        }
+      },
+      {
+        "id": "cucumber-noa",
+        "name": {
+          "en": "Noa",
+          "fr": "Noa"
+        },
+        "color": "#15803D",
+        "harvestDays": 50,
+        "description": {
+          "en": "Mini cucumber ideal for snacking. Seedless, thin-skinned and very crunchy.",
+          "fr": "Mini concombre ideal pour le grignotage. Sans pepins, peau fine et tres croquant."
+        }
+      },
+      {
+        "id": "cucumber-vert-long-maraicher",
+        "name": {
+          "en": "Long Green Market",
+          "fr": "Vert Long Maraicher"
+        },
+        "color": "#15803D",
+        "harvestDays": 60,
+        "description": {
+          "en": "Traditional French market cucumber. Long, straight and smooth-skinned.",
+          "fr": "Concombre traditionnel des maraichers francais. Long, droit et a peau lisse."
+        }
+      },
+      {
+        "id": "cucumber-white-wonder",
+        "name": {
+          "en": "White Wonder",
+          "fr": "Merveille Blanche"
+        },
+        "color": "#FAFAFA",
+        "harvestDays": 58,
+        "description": {
+          "en": "Ivory-white heirloom cucumber with crisp, mild flesh. Striking appearance in salads.",
+          "fr": "Concombre ancien blanc ivoire a la chair croquante et douce. Aspect saisissant en salade."
+        }
       }
     ]
   },
@@ -802,6 +1387,58 @@
         "description": {
           "en": "Small white French spring onion.",
           "fr": "Petit oignon blanc francais de printemps."
+        }
+      },
+      {
+        "id": "onion-stuttgarter",
+        "name": {
+          "en": "Stuttgarter",
+          "fr": "Stuttgarter"
+        },
+        "color": "#CA8A04",
+        "harvestDays": 100,
+        "description": {
+          "en": "Flat German storage onion, reliable and easy to grow from sets. Strong flavor.",
+          "fr": "Oignon plat allemand de conservation, fiable et facile a cultiver a partir de bulbilles. Gout prononce."
+        }
+      },
+      {
+        "id": "onion-cebette",
+        "name": {
+          "en": "Spring Onion",
+          "fr": "Cebette"
+        },
+        "color": "#F0FDF4",
+        "harvestDays": 50,
+        "description": {
+          "en": "Long-stemmed fresh onion harvested young. Essential in Asian and French cuisine.",
+          "fr": "Oignon frais a long fut recolte jeune. Indispensable en cuisine asiatique et francaise."
+        }
+      },
+      {
+        "id": "onion-rouge-brunswick",
+        "name": {
+          "en": "Red Brunswick",
+          "fr": "Rouge de Brunswick"
+        },
+        "color": "#881337",
+        "harvestDays": 115,
+        "description": {
+          "en": "Deep purple-red storage onion. Mild enough to eat raw in salads.",
+          "fr": "Oignon de conservation rouge-violet fonce. Assez doux pour etre mange cru en salade."
+        }
+      },
+      {
+        "id": "onion-rosace",
+        "name": {
+          "en": "Rosace",
+          "fr": "Rosace"
+        },
+        "color": "#FDA4AF",
+        "harvestDays": 105,
+        "description": {
+          "en": "Pink French onion from Brittany, sweet and mild. Braids beautifully for storage.",
+          "fr": "Oignon rose de Bretagne, sucre et doux. Se tresse joliment pour la conservation."
         }
       }
     ]

@@ -170,6 +170,82 @@ const PALETTE = {
   flowerCenter: '#FFEB3B',
 };
 
+// Seasonal palette overrides for outfit changes
+const SEASONAL_PALETTE: Record<string, Partial<typeof PALETTE>> = {
+  spring: {
+    overalls: '#88D498',
+    overallsDark: '#5EBB6E',
+    hat: '#E8C872',
+    hatBand: '#F27A7A',
+    flower: '#FFB7D5',
+  },
+  summer: {
+    overalls: '#7EC8D8',       // Light blue overalls
+    overallsDark: '#58A8C0',
+    hat: '#F5E8A0',            // Lighter straw hat
+    hatBand: '#FF9944',        // Orange band
+    flower: '#FFD700',         // Sunflower yellow
+  },
+  autumn: {
+    overalls: '#D4956A',       // Warm amber overalls
+    overallsDark: '#B87848',
+    hat: '#C49060',            // Darker straw
+    hatBand: '#8B4513',        // Brown band
+    flower: '#E87030',         // Orange flower
+  },
+  winter: {
+    overalls: '#A0B8D0',       // Soft blue-grey
+    overallsDark: '#7898B0',
+    hat: '#D0D8E0',            // Pale grey
+    hatBand: '#E06070',        // Red scarf color
+    flower: '#E0E8F0',         // Frost white
+  },
+};
+
+function getSeasonalPalette(): typeof PALETTE {
+  const season = getSeason();
+  const overrides = SEASONAL_PALETTE[season] || {};
+  return { ...PALETTE, ...overrides };
+}
+
+// Seasonal gardening tips for speech bubbles
+const SEASONAL_TIPS: Record<string, string[]> = {
+  spring: [
+    "Spring is here! Time to start seeds indoors for transplanting.",
+    "Add compost to your beds now -- your plants will thank you!",
+    "Prune fruit trees before buds open for a better harvest.",
+    "Watch for late frosts! Keep row covers ready.",
+    "Plant peas and lettuce early -- they love cool weather!",
+  ],
+  summer: [
+    "Water deeply in the morning to beat the afternoon heat!",
+    "Mulch around your plants to keep roots cool and moist.",
+    "Harvest herbs regularly to encourage bushier growth.",
+    "Check under leaves for pest eggs -- early detection saves plants!",
+    "Tomatoes love consistent watering -- avoid drought stress.",
+  ],
+  autumn: [
+    "Time to plant garlic and shallots for next year!",
+    "Collect fallen leaves for composting -- free garden gold!",
+    "Plant cover crops to protect soil over winter.",
+    "Harvest root vegetables before the first hard freeze.",
+    "Clean and oil your tools for winter storage.",
+  ],
+  winter: [
+    "Plan your spring garden layout while things are quiet.",
+    "Order seeds now for the best selection!",
+    "Build raised beds during winter downtime.",
+    "Check stored vegetables for signs of spoilage.",
+    "Dream big! Sketch out new garden ideas for spring.",
+  ],
+};
+
+export function getSeasonalTip(): string {
+  const season = getSeason();
+  const tips = SEASONAL_TIPS[season] || SEASONAL_TIPS.spring;
+  return tips[Math.floor(Math.random() * tips.length)];
+}
+
 // Heart / sparkle emote particles (kawaii style)
 function EmoteParticles({ active }: { active: boolean }) {
   const ref = useRef<THREE.Group>(null);
@@ -219,18 +295,30 @@ function EmoteParticles({ active }: { active: boolean }) {
   );
 }
 
-// Chibi tool held in stubby hand
+// Chibi tool held in stubby hand -- always holds a cute watering can by default
 function HeldTool({ action }: { action: string }) {
   if (action === 'watering') {
     return (
       <group position={[0, -0.06, 0.04]} rotation={[0.3, 0, 0]}>
+        {/* Watering can body */}
         <mesh>
-          <cylinderGeometry args={[0.025, 0.03, 0.06, 8]} />
+          <cylinderGeometry args={[0.028, 0.035, 0.07, 8]} />
           <meshStandardMaterial color="#7BC67E" metalness={0.3} roughness={0.6} />
         </mesh>
-        <mesh position={[0.03, 0.02, 0]}>
-          <cylinderGeometry args={[0.008, 0.005, 0.04, 6]} />
+        {/* Spout */}
+        <mesh position={[0.035, 0.02, 0]} rotation={[0, 0, -0.4]}>
+          <cylinderGeometry args={[0.008, 0.005, 0.05, 6]} />
           <meshStandardMaterial color="#7BC67E" metalness={0.3} />
+        </mesh>
+        {/* Spout head */}
+        <mesh position={[0.055, 0.035, 0]}>
+          <sphereGeometry args={[0.012, 6, 4]} />
+          <meshStandardMaterial color="#5EBB6E" metalness={0.4} />
+        </mesh>
+        {/* Handle */}
+        <mesh position={[0, 0.04, -0.015]} rotation={[0.3, 0, 0]}>
+          <torusGeometry args={[0.022, 0.004, 4, 8, Math.PI]} />
+          <meshStandardMaterial color="#5EBB6E" metalness={0.4} />
         </mesh>
       </group>
     );
@@ -267,7 +355,24 @@ function HeldTool({ action }: { action: string }) {
       </group>
     );
   }
-  return null;
+  // Default: always hold a small watering can when idle/walking
+  return (
+    <group position={[0, -0.06, 0.04]} rotation={[0.15, 0, 0.1]}>
+      {/* Cute small watering can */}
+      <mesh>
+        <cylinderGeometry args={[0.02, 0.025, 0.05, 8]} />
+        <meshStandardMaterial color="#7BC67E" metalness={0.2} roughness={0.65} />
+      </mesh>
+      <mesh position={[0.025, 0.015, 0]} rotation={[0, 0, -0.3]}>
+        <cylinderGeometry args={[0.006, 0.004, 0.03, 6]} />
+        <meshStandardMaterial color="#7BC67E" metalness={0.2} />
+      </mesh>
+      <mesh position={[0, 0.03, -0.01]} rotation={[0.3, 0, 0]}>
+        <torusGeometry args={[0.016, 0.003, 4, 8, Math.PI]} />
+        <meshStandardMaterial color="#5EBB6E" metalness={0.3} />
+      </mesh>
+    </group>
+  );
 }
 
 // Speech bubble with daily tip
@@ -335,9 +440,119 @@ function IdleZzzParticles({ active }: { active: boolean }) {
   );
 }
 
+// ===== SEASONAL ACCESSORIES =====
+// Winter scarf, summer sunglasses, etc.
+function SeasonalAccessories() {
+  const season = getSeason();
+
+  if (season === 'winter') {
+    // Cozy red scarf wrapped around neck
+    return (
+      <group position={[0, 0.72, 0]}>
+        {/* Scarf wrap around neck */}
+        <mesh position={[0, 0, 0.05]}>
+          <cylinderGeometry args={[0.16, 0.16, 0.08, 12]} />
+          <meshStandardMaterial color="#E06070" roughness={0.85} />
+        </mesh>
+        {/* Scarf draping end (left) */}
+        <mesh position={[-0.12, -0.06, 0.12]} rotation={[0.2, 0, 0.3]}>
+          <boxGeometry args={[0.06, 0.14, 0.025]} />
+          <meshStandardMaterial color="#E06070" roughness={0.85} />
+        </mesh>
+        {/* Scarf end fringe */}
+        {[0, 1, 2].map((i) => (
+          <mesh key={`fringe-${i}`} position={[-0.12 + i * 0.02, -0.14, 0.12]} rotation={[0.2, 0, 0.3]}>
+            <boxGeometry args={[0.012, 0.03, 0.015]} />
+            <meshStandardMaterial color="#D05060" roughness={0.85} />
+          </mesh>
+        ))}
+        {/* Scarf knot bump */}
+        <mesh position={[-0.05, 0, 0.16]}>
+          <sphereGeometry args={[0.03, 6, 6]} />
+          <meshStandardMaterial color="#D05060" roughness={0.85} />
+        </mesh>
+      </group>
+    );
+  }
+
+  if (season === 'summer') {
+    // Cute sunglasses pushed up on forehead
+    return (
+      <group position={[0, 1.20, 0.28]}>
+        {/* Left lens */}
+        <mesh position={[-0.1, 0, 0]}>
+          <sphereGeometry args={[0.045, 8, 6]} />
+          <meshStandardMaterial color="#2D1B69" metalness={0.5} roughness={0.2} />
+        </mesh>
+        {/* Right lens */}
+        <mesh position={[0.1, 0, 0]}>
+          <sphereGeometry args={[0.045, 8, 6]} />
+          <meshStandardMaterial color="#2D1B69" metalness={0.5} roughness={0.2} />
+        </mesh>
+        {/* Bridge */}
+        <mesh position={[0, 0, 0.01]}>
+          <boxGeometry args={[0.06, 0.012, 0.01]} />
+          <meshStandardMaterial color="#FFD700" metalness={0.6} roughness={0.3} />
+        </mesh>
+        {/* Left arm */}
+        <mesh position={[-0.15, -0.01, -0.02]} rotation={[0, 0.2, 0]}>
+          <boxGeometry args={[0.05, 0.008, 0.01]} />
+          <meshStandardMaterial color="#FFD700" metalness={0.6} roughness={0.3} />
+        </mesh>
+        {/* Right arm */}
+        <mesh position={[0.15, -0.01, -0.02]} rotation={[0, -0.2, 0]}>
+          <boxGeometry args={[0.05, 0.008, 0.01]} />
+          <meshStandardMaterial color="#FFD700" metalness={0.6} roughness={0.3} />
+        </mesh>
+      </group>
+    );
+  }
+
+  if (season === 'autumn') {
+    // Leaf pin on hat
+    return (
+      <group position={[0.25, 1.42, 0.1]}>
+        <mesh rotation={[0, 0.5, 0.3]} scale={[1, 0.5, 0.3]}>
+          <sphereGeometry args={[0.025, 6, 5]} />
+          <meshStandardMaterial color="#E87030" />
+        </mesh>
+        <mesh position={[0.02, -0.005, 0]} rotation={[0, 0.5, 0.1]} scale={[1, 0.5, 0.3]}>
+          <sphereGeometry args={[0.02, 5, 4]} />
+          <meshStandardMaterial color="#D05028" />
+        </mesh>
+      </group>
+    );
+  }
+
+  // Spring: extra flowers (already has one, add a ladybug)
+  return (
+    <group position={[0.30, 1.38, -0.05]}>
+      {/* Cute ladybug on hat brim */}
+      <mesh>
+        <sphereGeometry args={[0.015, 6, 4]} />
+        <meshStandardMaterial color="#E53935" />
+      </mesh>
+      <mesh position={[0, 0.005, 0.01]}>
+        <sphereGeometry args={[0.008, 5, 4]} />
+        <meshStandardMaterial color="#1a1a1a" />
+      </mesh>
+      {/* Spots */}
+      <mesh position={[-0.006, 0.012, 0]}>
+        <sphereGeometry args={[0.003, 4, 3]} />
+        <meshStandardMaterial color="#1a1a1a" />
+      </mesh>
+      <mesh position={[0.006, 0.01, 0.003]}>
+        <sphereGeometry args={[0.003, 4, 3]} />
+        <meshStandardMaterial color="#1a1a1a" />
+      </mesh>
+    </group>
+  );
+}
+
 // ===== ANIMAL CROSSING CHIBI HEAD =====
 // Extra-large round head with big sparkly eyes, prominent rosy cheeks, tiny nose and mouth
 function ChibiHead() {
+  const pal = getSeasonalPalette();
   return (
     <group>
       {/* Main head - extra large sphere for AC proportions (radius 0.38, center at y=1.05) */}
@@ -475,7 +690,7 @@ function ChibiHead() {
       {/* Brim - extra wide disc for AC look */}
       <mesh position={[0, 1.34, 0]} rotation={[0.04, 0, 0]} castShadow>
         <cylinderGeometry args={[0.50, 0.53, 0.035, 22]} />
-        <meshStandardMaterial color={PALETTE.hat} roughness={0.85} />
+        <meshStandardMaterial color={pal.hat} roughness={0.85} />
       </mesh>
       {/* Brim underside shadow ring */}
       <mesh position={[0, 1.33, 0]} rotation={[0.04, 0, 0]}>
@@ -485,26 +700,26 @@ function ChibiHead() {
       {/* Crown dome - taller */}
       <mesh position={[0, 1.48, 0]} castShadow>
         <sphereGeometry args={[0.22, 16, 12, 0, Math.PI * 2, 0, Math.PI / 2]} />
-        <meshStandardMaterial color={PALETTE.hat} roughness={0.85} />
+        <meshStandardMaterial color={pal.hat} roughness={0.85} />
       </mesh>
       {/* Crown cylinder - taller */}
       <mesh position={[0, 1.42, 0]} castShadow>
         <cylinderGeometry args={[0.21, 0.24, 0.12, 16]} />
-        <meshStandardMaterial color={PALETTE.hat} roughness={0.85} />
+        <meshStandardMaterial color={pal.hat} roughness={0.85} />
       </mesh>
       {/* Ribbon band - wider */}
       <mesh position={[0, 1.395, 0]}>
         <cylinderGeometry args={[0.245, 0.245, 0.045, 16]} />
-        <meshStandardMaterial color={PALETTE.hatBand} roughness={0.5} />
+        <meshStandardMaterial color={pal.hatBand} roughness={0.5} />
       </mesh>
       {/* Ribbon bow (side) - bigger */}
       <mesh position={[0.24, 1.395, 0.07]} rotation={[0, 0.3, 0]}>
         <sphereGeometry args={[0.038, 8, 8]} />
-        <meshStandardMaterial color={PALETTE.hatBand} roughness={0.5} />
+        <meshStandardMaterial color={pal.hatBand} roughness={0.5} />
       </mesh>
       <mesh position={[0.28, 1.395, 0.08]} rotation={[0, 0.3, 0]}>
         <sphereGeometry args={[0.03, 8, 8]} />
-        <meshStandardMaterial color={PALETTE.hatBand} roughness={0.5} />
+        <meshStandardMaterial color={pal.hatBand} roughness={0.5} />
       </mesh>
       {/* Ribbon bow knot center */}
       <mesh position={[0.225, 1.395, 0.065]}>
@@ -515,7 +730,7 @@ function ChibiHead() {
       {/* Flower on hat - bigger */}
       <mesh position={[-0.22, 1.43, 0.14]}>
         <sphereGeometry args={[0.038, 10, 8]} />
-        <meshStandardMaterial color={PALETTE.flower} roughness={0.7} />
+        <meshStandardMaterial color={pal.flower} roughness={0.7} />
       </mesh>
       <mesh position={[-0.22, 1.43, 0.165]}>
         <sphereGeometry args={[0.015, 6, 4]} />
@@ -546,36 +761,40 @@ function ChibiHead() {
         <sphereGeometry args={[0.018, 5, 4]} />
         <meshStandardMaterial color="#7BC67E" />
       </mesh>
+
+      {/* Seasonal accessories */}
+      <SeasonalAccessories />
     </group>
   );
 }
 
 // ===== CHIBI BODY (extra round, chubby, Animal Crossing proportions) =====
 function ChibiBody() {
+  const pal = getSeasonalPalette();
   return (
     <group>
       {/* Main torso - big round sphere (very chubby belly, wider) */}
       <mesh position={[0, 0.48, 0]} castShadow scale={[1.3, 0.9, 1.1]}>
         <sphereGeometry args={[0.28, 18, 16]} />
-        <meshStandardMaterial color={PALETTE.overalls} roughness={0.7} />
+        <meshStandardMaterial color={pal.overalls} roughness={0.7} />
       </mesh>
 
       {/* Extra belly roundness - front bulge */}
       <mesh position={[0, 0.44, 0.1]} castShadow scale={[1.1, 0.85, 0.7]}>
         <sphereGeometry args={[0.22, 14, 12]} />
-        <meshStandardMaterial color={PALETTE.overalls} roughness={0.7} />
+        <meshStandardMaterial color={pal.overalls} roughness={0.7} />
       </mesh>
 
-      {/* Belly pocket patch (darker green) */}
+      {/* Belly pocket patch (darker) */}
       <mesh position={[0, 0.44, 0.24]} scale={[0.75, 0.55, 0.3]}>
         <sphereGeometry args={[0.18, 12, 10]} />
-        <meshStandardMaterial color={PALETTE.overallsDark} roughness={0.7} />
+        <meshStandardMaterial color={pal.overallsDark} roughness={0.7} />
       </mesh>
 
       {/* Front pocket detail */}
       <mesh position={[0, 0.40, 0.27]}>
         <boxGeometry args={[0.14, 0.07, 0.01]} />
-        <meshStandardMaterial color={PALETTE.overallsDark} />
+        <meshStandardMaterial color={pal.overallsDark} />
       </mesh>
       {/* Pocket stitching line */}
       <mesh position={[0, 0.375, 0.275]}>
@@ -586,12 +805,12 @@ function ChibiBody() {
       {/* Overall straps (left) */}
       <mesh position={[-0.09, 0.62, 0.13]} scale={[1, 1, 0.3]}>
         <boxGeometry args={[0.05, 0.16, 0.04]} />
-        <meshStandardMaterial color={PALETTE.overallsDark} />
+        <meshStandardMaterial color={pal.overallsDark} />
       </mesh>
       {/* Overall straps (right) */}
       <mesh position={[0.09, 0.62, 0.13]} scale={[1, 1, 0.3]}>
         <boxGeometry args={[0.05, 0.16, 0.04]} />
-        <meshStandardMaterial color={PALETTE.overallsDark} />
+        <meshStandardMaterial color={pal.overallsDark} />
       </mesh>
 
       {/* Gold buttons on straps - bigger */}
