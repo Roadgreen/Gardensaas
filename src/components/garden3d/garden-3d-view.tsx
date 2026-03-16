@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Grid3x3 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { useGarden, usePlants } from '@/lib/hooks';
 import { PlantCatalogSidebar } from './plant-catalog-sidebar';
 import { DragDropOverlay } from './drag-drop-overlay';
@@ -18,7 +19,7 @@ const GardenScene = dynamic(() => import('./garden-scene').then(m => ({ default:
   ssr: false,
   loading: () => (
     <div className="w-full h-full flex items-center justify-center bg-[#0D1F17]">
-      <div className="animate-pulse text-green-400">Loading 3D scene...</div>
+      <div className="animate-pulse text-green-400">Loading...</div>
     </div>
   ),
 });
@@ -26,6 +27,7 @@ const GardenScene = dynamic(() => import('./garden-scene').then(m => ({ default:
 export function Garden3DView() {
   const { config, isLoaded, addPlant, removePlant, addRaisedBed, removeRaisedBed, updateRaisedBed, updateConfig } = useGarden();
   const { plants } = usePlants();
+  const t = useTranslations('garden3d');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [draggingPlantId, setDraggingPlantId] = useState<string | null>(null);
@@ -110,7 +112,7 @@ export function Garden3DView() {
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-[#0D1F17] flex items-center justify-center">
-        <div className="animate-pulse text-green-400">Loading garden...</div>
+        <div className="animate-pulse text-green-400">{t('loadingGarden')}</div>
       </div>
     );
   }
@@ -123,15 +125,15 @@ export function Garden3DView() {
           <Link href="/garden/dashboard">
             <Button variant="ghost" size="sm" className="gap-1 sm:gap-2 px-2 sm:px-3">
               <ArrowLeft className="w-4 h-4" />
-              <span className="hidden sm:inline">Dashboard</span>
+              <span className="hidden sm:inline">{t('dashboard')}</span>
             </Button>
           </Link>
           <span className="text-xs sm:text-sm text-green-300/60 hidden sm:inline">
-            {config.length}m x {config.width}m | {config.plantedItems.length} plants
-            {(config.raisedBeds || []).length > 0 && ` | ${(config.raisedBeds || []).length} beds`}
+            {config.length}m x {config.width}m | {config.plantedItems.length} {t('plants')}
+            {(config.raisedBeds || []).length > 0 && ` | ${(config.raisedBeds || []).length} ${t('beds')}`}
           </span>
           <span className="text-xs text-green-300/60 sm:hidden">
-            {config.plantedItems.length} plants
+            {config.plantedItems.length} {t('plants')}
           </span>
         </div>
         <div className="flex items-center gap-1.5 sm:gap-2">
@@ -157,7 +159,7 @@ export function Garden3DView() {
               color: showSpacing ? '#C084FC' : '#9CA3AF',
             }}
           >
-            {'\uD83E\uDDF2'} <span className="hidden sm:inline">Spacing</span>
+            {'\uD83E\uDDF2'} <span className="hidden sm:inline">{t('spacing')}</span>
           </button>
           {/* Raised beds */}
           <button
@@ -169,7 +171,7 @@ export function Garden3DView() {
               color: showRaisedBedPanel ? '#D4A06C' : '#9CA3AF',
             }}
           >
-            {'\uD83E\uDDF1'} <span className="hidden sm:inline">Beds</span>
+            {'\uD83E\uDDF1'} <span className="hidden sm:inline">{t('beds')}</span>
           </button>
           {/* Catalog */}
           <button
@@ -181,12 +183,12 @@ export function Garden3DView() {
               color: isSidebarOpen ? '#86EFAC' : '#9CA3AF',
             }}
           >
-            {'\uD83C\uDF3B'} <span className="hidden sm:inline">Catalog</span>
+            {'\uD83C\uDF3B'} <span className="hidden sm:inline">{t('catalog')}</span>
           </button>
           <Link href="/garden/planner">
             <Button variant="secondary" size="sm" className="gap-1 sm:gap-2 px-2 sm:px-3">
               <Grid3x3 className="w-4 h-4" />
-              <span className="hidden sm:inline">2D Planner</span>
+              <span className="hidden sm:inline">{t('planner2d')}</span>
             </Button>
           </Link>
         </div>
@@ -260,7 +262,7 @@ export function Garden3DView() {
 
         <Suspense fallback={
           <div className="w-full h-full flex items-center justify-center">
-            <div className="animate-pulse text-green-400">Loading 3D scene...</div>
+            <div className="animate-pulse text-green-400">Loading...</div>
           </div>
         }>
           <GardenScene

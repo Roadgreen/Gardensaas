@@ -37,6 +37,24 @@ export default function LoginPage() {
         return;
       }
 
+      // Fetch user's saved locale and sync cookie so the app renders in their language
+      try {
+        const sessionRes = await fetch('/api/auth/session');
+        if (sessionRes.ok) {
+          const session = await sessionRes.json();
+          const userLocale = session?.user?.locale;
+          if (userLocale && ['en', 'fr'].includes(userLocale)) {
+            await fetch('/api/locale', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ locale: userLocale }),
+            });
+          }
+        }
+      } catch {
+        // Non-critical: locale sync failure should not block login
+      }
+
       const callbackUrl = searchParams.get('callbackUrl') || '/garden/dashboard';
       router.push(callbackUrl);
     } catch {

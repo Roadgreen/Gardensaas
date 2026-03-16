@@ -1,11 +1,10 @@
 import { auth } from '@/lib/auth';
 import { NextResponse } from 'next/server';
 
-// Routes that require authentication
-const protectedPrefixes = ['/garden', '/plants'];
-
-// Routes that are always public
+// Routes that are always public (no login required)
 const publicPaths = ['/', '/pricing', '/auth/login', '/auth/register'];
+// Path prefixes that are public (e.g. /plants, /plants/tomato)
+const publicPrefixes = ['/plants'];
 
 export default auth((req) => {
   const { pathname } = req.nextUrl;
@@ -29,18 +28,33 @@ export default auth((req) => {
     return NextResponse.next();
   }
 
-  // Check if the path is protected
-  const isProtected = protectedPrefixes.some((prefix) =>
-    pathname.startsWith(prefix)
-  );
+  // Allow public prefix paths (plant catalog is public)
+  if (publicPrefixes.some((prefix) => pathname.startsWith(prefix))) {
+    return NextResponse.next();
+  }
 
-  if (isProtected && !req.auth) {
+  // All other pages require authentication
+  if (!req.auth) {
     const loginUrl = new URL('/auth/login', req.url);
     loginUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  return NextResponse.next();
+  // Sync locale from user session to cookie if logged in
+  const response = NextResponse.next();
+  const userLocale = (req.auth?.user as Record<string, unknown>)?.locale as string | undefined;
+  if (userLocale && ['en', 'fr'].includes(userLocale)) {
+    const currentCookie = req.cookies.get('locale')?.value;
+    if (currentCookie !== userLocale) {
+      response.cookies.set('locale', userLocale, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 365,
+        sameSite: 'lax',
+      });
+    }
+  }
+
+  return response;
 });
 
 export const config = {

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useGarden } from '@/lib/hooks';
@@ -16,59 +17,16 @@ import {
 } from '@/types';
 import { ArrowLeft, ArrowRight, Check, Ruler, Mountain, Cloud, Sun, Sprout, Trophy, Star, MapPin, Locate, Search } from 'lucide-react';
 
-const steps = [
-  {
-    id: 'welcome',
-    title: 'Welcome, Gardener!',
-    icon: Sprout,
-    description: 'Sprout is ready to help you start your garden adventure!',
-    quest: 'Quest: Begin Your Garden Journey',
-  },
-  {
-    id: 'dimensions',
-    title: 'Choose Your Plot',
-    icon: Ruler,
-    description: 'Every great garden starts with the right space. How big is yours?',
-    quest: 'Quest: Map Your Territory',
-  },
-  {
-    id: 'location',
-    title: 'Garden Location',
-    icon: MapPin,
-    description: 'Where is your garden? This helps us give weather-based watering tips!',
-    quest: 'Quest: Pin Your Garden',
-  },
-  {
-    id: 'soil',
-    title: 'Know Your Earth',
-    icon: Mountain,
-    description: 'Different soil, different superpowers! What does your garden have?',
-    quest: 'Quest: Identify Your Soil',
-  },
-  {
-    id: 'climate',
-    title: 'Your Climate Zone',
-    icon: Cloud,
-    description: 'Where in the world does your garden live?',
-    quest: 'Quest: Set Your Location',
-  },
-  {
-    id: 'sun',
-    title: 'Sun Power',
-    icon: Sun,
-    description: 'How much sunshine does your garden get?',
-    quest: 'Quest: Measure the Light',
-  },
+const stepConfigs = [
+  { id: 'welcome', icon: Sprout, titleKey: 'welcome.title', descKey: 'welcome.description', questKey: 'welcome.quest' },
+  { id: 'dimensions', icon: Ruler, titleKey: 'dimensions.title', descKey: 'dimensions.description', questKey: 'dimensions.quest' },
+  { id: 'location', icon: MapPin, titleKey: 'location.title', descKey: 'location.description', questKey: 'location.quest' },
+  { id: 'soil', icon: Mountain, titleKey: 'soil.title', descKey: 'soil.description', questKey: 'soil.quest' },
+  { id: 'climate', icon: Cloud, titleKey: 'climate.title', descKey: 'climate.description', questKey: 'climate.quest' },
+  { id: 'sun', icon: Sun, titleKey: 'sun.title', descKey: 'sun.description', questKey: 'sun.quest' },
 ];
 
-const SOIL_DESCRIPTIONS: Record<string, string> = {
-  clay: 'Dense & heavy. Holds water well but drains slowly.',
-  sandy: 'Light & gritty. Drains fast but needs more water.',
-  loamy: 'The gold standard! Rich, balanced, and fertile.',
-  silty: 'Smooth & fertile. Retains moisture nicely.',
-  peaty: 'Dark & spongy. Acidic and moisture-rich.',
-  chalky: 'Alkaline & stony. Free-draining with lime.',
-};
+const SOIL_KEYS = ['clay', 'sandy', 'loamy', 'silty', 'peaty', 'chalky'] as const;
 
 const SOIL_EMOJIS: Record<string, string> = {
   clay: '\u{1F9F1}',
@@ -79,14 +37,7 @@ const SOIL_EMOJIS: Record<string, string> = {
   chalky: '\u{26F0}',
 };
 
-const CLIMATE_DESCRIPTIONS: Record<string, string> = {
-  tropical: 'Hot & humid year-round. Paradise for tropical plants!',
-  subtropical: 'Warm with mild winters. Great growing season!',
-  mediterranean: 'Hot dry summers, mild wet winters. Classic!',
-  temperate: 'Four distinct seasons. Most versatile for gardening!',
-  continental: 'Hot summers, cold winters. Strong seasonal shifts.',
-  subarctic: 'Short cool summers, long cold winters. Hardy plants only!',
-};
+const CLIMATE_KEYS = ['tropical', 'subtropical', 'mediterranean', 'temperate', 'continental', 'subarctic'] as const;
 
 const CLIMATE_EMOJIS: Record<string, string> = {
   tropical: '\u{1F334}',
@@ -97,10 +48,10 @@ const CLIMATE_EMOJIS: Record<string, string> = {
   subarctic: '\u{1F9CA}',
 };
 
-const SUN_DESCRIPTIONS: Record<string, string> = {
-  'full-sun': 'Your garden is a sun champion! Most veggies will thrive here.',
-  'partial-shade': 'A nice mix! Perfect for leafy greens and herbs.',
-  'full-shade': 'Shady haven. Great for ferns, lettuce, and mushrooms!',
+const SUN_KEY_MAP: Record<string, string> = {
+  'full-sun': 'fullSun',
+  'partial-shade': 'partialShade',
+  'full-shade': 'fullShade',
 };
 
 const SUN_EMOJIS: Record<string, string> = {
@@ -110,18 +61,26 @@ const SUN_EMOJIS: Record<string, string> = {
 };
 
 const GARDEN_SIZE_PRESETS = [
-  { label: 'Window Box', length: 1, width: 0.5, emoji: '\u{1FA9F}' },
-  { label: 'Balcony', length: 2, width: 1, emoji: '\u{1F3E0}' },
-  { label: 'Small Plot', length: 3, width: 2, emoji: '\u{1F331}' },
-  { label: 'Medium Garden', length: 5, width: 3, emoji: '\u{1F333}' },
-  { label: 'Large Garden', length: 8, width: 5, emoji: '\u{1F3E1}' },
-  { label: 'Farm Plot', length: 12, width: 8, emoji: '\u{1F33E}' },
+  { labelKey: 'windowBox', length: 1, width: 0.5, emoji: '\u{1FA9F}' },
+  { labelKey: 'balcony', length: 2, width: 1, emoji: '\u{1F3E0}' },
+  { labelKey: 'smallPlot', length: 3, width: 2, emoji: '\u{1F331}' },
+  { labelKey: 'mediumGarden', length: 5, width: 3, emoji: '\u{1F333}' },
+  { labelKey: 'largeGarden', length: 8, width: 5, emoji: '\u{1F3E1}' },
+  { labelKey: 'farmPlot', length: 12, width: 8, emoji: '\u{1F33E}' },
 ];
 
 export function SetupForm() {
   const [step, setStep] = useState(0);
   const { config, updateConfig } = useGarden();
   const router = useRouter();
+  const t = useTranslations('setup');
+
+  const steps = stepConfigs.map((s) => ({
+    ...s,
+    title: t(s.titleKey),
+    description: t(s.descKey),
+    quest: t(s.questKey),
+  }));
   const [xp, setXp] = useState(0);
   const [showXpGain, setShowXpGain] = useState(false);
   const [xpGainAmount, setXpGainAmount] = useState(0);
@@ -171,7 +130,7 @@ export function SetupForm() {
 
       gainXp(30);
     } catch {
-      setGeoError('Could not detect location. Try entering a city name instead.');
+      setGeoError(t('location.geoError'));
     } finally {
       setGeoLoading(false);
     }
@@ -199,11 +158,11 @@ export function SetupForm() {
           });
           gainXp(25);
         } else {
-          setGeoError('City not found. Try a different name.');
+          setGeoError(t('location.cityNotFound'));
         }
       }
     } catch {
-      setGeoError('Search failed. Check your connection.');
+      setGeoError(t('location.searchFailed'));
     } finally {
       setCitySearching(false);
     }
@@ -258,9 +217,9 @@ export function SetupForm() {
     updateConfig({ length: preset.length, width: preset.width });
   };
 
-  const soilOptions = Object.entries(SOIL_LABELS).map(([value, label]) => ({ value, label }));
-  const climateOptions = Object.entries(CLIMATE_LABELS).map(([value, label]) => ({ value, label }));
-  const sunOptions = Object.entries(SUN_LABELS).map(([value, label]) => ({ value, label }));
+  const soilOptions = SOIL_KEYS.map((key) => ({ value: key, label: t(`soil.${key}`), desc: t(`soil.${key}Desc`) }));
+  const climateOptions = CLIMATE_KEYS.map((key) => ({ value: key, label: t(`climate.${key}`), desc: t(`climate.${key}Desc`) }));
+  const sunOptions = Object.entries(SUN_KEY_MAP).map(([value, key]) => ({ value, label: t(`sun.${key}`), desc: t(`sun.${key}Desc`) }));
 
   return (
     <div className="min-h-screen bg-[#0D1F17] flex flex-col items-center justify-center px-6 py-12">
@@ -275,7 +234,7 @@ export function SetupForm() {
             <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
             <span className="text-sm font-bold text-yellow-400">{xp} XP</span>
           </div>
-          <span className="text-xs text-green-500/50">Level {Math.floor(xp / 100) + 1} Gardener</span>
+          <span className="text-xs text-green-500/50">{t('level', { level: Math.floor(xp / 100) + 1 })}</span>
         </div>
         <div className="w-full h-3 rounded-full bg-[#1A2F23] border border-green-800/30 overflow-hidden">
           <motion.div
@@ -418,19 +377,18 @@ export function SetupForm() {
                     style={{ fontFamily: '"Nunito", "Comic Sans MS", cursive, sans-serif' }}
                   >
                     <div className="text-green-600 font-bold text-xs mb-1">Sprout</div>
-                    Hi there! I&apos;m Sprout, your gardening companion! Let&apos;s set up your garden together.
-                    I&apos;ll help you every step of the way!
+                    {t('welcome.sproutIntro')}
                   </div>
 
                   <div className="flex flex-wrap justify-center gap-3 mt-4">
                     {[
-                      { icon: '\u{1F3AE}', text: 'Earn XP' },
-                      { icon: '\u{1F3C6}', text: 'Get Badges' },
-                      { icon: '\u{1F331}', text: 'Grow Plants' },
-                      { icon: '\u{1F4AC}', text: 'Get Tips' },
+                      { icon: '\u{1F3AE}', textKey: 'welcome.earnXp' },
+                      { icon: '\u{1F3C6}', textKey: 'welcome.getBadges' },
+                      { icon: '\u{1F331}', textKey: 'welcome.growPlants' },
+                      { icon: '\u{1F4AC}', textKey: 'welcome.getTips' },
                     ].map((item) => (
-                      <span key={item.text} className="px-3 py-1.5 rounded-full bg-green-900/30 border border-green-800/30 text-xs text-green-300">
-                        <span className="mr-1">{item.icon}</span> {item.text}
+                      <span key={item.textKey} className="px-3 py-1.5 rounded-full bg-green-900/30 border border-green-800/30 text-xs text-green-300">
+                        <span className="mr-1">{item.icon}</span> {t(item.textKey)}
                       </span>
                     ))}
                   </div>
@@ -442,13 +400,13 @@ export function SetupForm() {
                 <div className="space-y-6">
                   {/* Presets grid */}
                   <div>
-                    <p className="text-sm text-green-300/60 mb-3">Quick select:</p>
+                    <p className="text-sm text-green-300/60 mb-3">{t('dimensions.quickSelect')}</p>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                       {GARDEN_SIZE_PRESETS.map((preset) => {
                         const isSelected = length === preset.length.toString() && width === preset.width.toString();
                         return (
                           <motion.button
-                            key={preset.label}
+                            key={preset.labelKey}
                             type="button"
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.97 }}
@@ -460,7 +418,7 @@ export function SetupForm() {
                             }`}
                           >
                             <span className="text-2xl block mb-1">{preset.emoji}</span>
-                            <span className="font-medium text-sm block">{preset.label}</span>
+                            <span className="font-medium text-sm block">{t(`dimensions.${preset.labelKey}`)}</span>
                             <span className="text-xs text-green-500/50">{preset.length}m x {preset.width}m</span>
                           </motion.button>
                         );
@@ -469,11 +427,11 @@ export function SetupForm() {
                   </div>
 
                   <div className="border-t border-green-800/30 pt-4">
-                    <p className="text-sm text-green-300/60 mb-3">Or enter custom size:</p>
+                    <p className="text-sm text-green-300/60 mb-3">{t('dimensions.customSize')}</p>
                     <div className="grid grid-cols-2 gap-4">
                       <Input
                         id="length"
-                        label="Length (m)"
+                        label={t('dimensions.length')}
                         type="number"
                         min="0.5"
                         max="50"
@@ -484,7 +442,7 @@ export function SetupForm() {
                       />
                       <Input
                         id="width"
-                        label="Width (m)"
+                        label={t('dimensions.width')}
                         type="number"
                         min="0.5"
                         max="50"
@@ -503,10 +461,10 @@ export function SetupForm() {
                       className="text-center p-3 rounded-xl bg-green-900/20 border border-green-800/30"
                     >
                       <span className="text-green-300/70 text-sm">
-                        Total area: <span className="text-green-200 font-bold">{(parseFloat(length) * parseFloat(width)).toFixed(1)} m&sup2;</span>
+                        {t('dimensions.totalArea')} <span className="text-green-200 font-bold">{(parseFloat(length) * parseFloat(width)).toFixed(1)} m&sup2;</span>
                       </span>
                       <span className="text-green-500/50 text-xs block mt-1">
-                        Room for ~{Math.floor(parseFloat(length) * parseFloat(width) * 4)} plants
+                        {t('dimensions.roomForPlants', { count: Math.floor(parseFloat(length) * parseFloat(width) * 4) })}
                       </span>
                     </motion.div>
                   )}
@@ -535,10 +493,10 @@ export function SetupForm() {
                       </div>
                       <div>
                         <span className="font-medium text-green-50 block text-lg">
-                          {geoLoading ? 'Detecting...' : 'Use My Location'}
+                          {geoLoading ? t('location.detecting') : t('location.useMyLocation')}
                         </span>
                         <span className="text-xs text-green-500/50 block mt-0.5">
-                          Auto-detect GPS coordinates from your device
+                          {t('location.autoDetect')}
                         </span>
                       </div>
                     </div>
@@ -546,20 +504,20 @@ export function SetupForm() {
 
                   <div className="flex items-center gap-3">
                     <div className="flex-1 h-px bg-green-800/30" />
-                    <span className="text-xs text-green-500/40">OR</span>
+                    <span className="text-xs text-green-500/40">{t('location.or')}</span>
                     <div className="flex-1 h-px bg-green-800/30" />
                   </div>
 
                   {/* City search */}
                   <div>
-                    <label className="text-sm text-green-300/60 block mb-2">Search by city name:</label>
+                    <label className="text-sm text-green-300/60 block mb-2">{t('location.searchByCity')}</label>
                     <div className="flex gap-2">
                       <Input
                         id="city"
                         type="text"
                         value={locationCity}
                         onChange={(e) => setLocationCity(e.target.value)}
-                        placeholder="e.g. Paris, Lyon, London..."
+                        placeholder={t('location.cityPlaceholder')}
                         onKeyDown={(e) => e.key === 'Enter' && searchCity()}
                       />
                       <motion.button
@@ -581,11 +539,11 @@ export function SetupForm() {
 
                   {/* Manual coordinates */}
                   <div>
-                    <label className="text-sm text-green-300/60 block mb-2">Or enter coordinates manually:</label>
+                    <label className="text-sm text-green-300/60 block mb-2">{t('location.manualCoords')}</label>
                     <div className="grid grid-cols-2 gap-3">
                       <Input
                         id="latitude"
-                        label="Latitude"
+                        label={t('location.latitude')}
                         type="number"
                         step="0.0001"
                         min="-90"
@@ -603,7 +561,7 @@ export function SetupForm() {
                       />
                       <Input
                         id="longitude"
-                        label="Longitude"
+                        label={t('location.longitude')}
                         type="number"
                         step="0.0001"
                         min="-180"
@@ -637,7 +595,7 @@ export function SetupForm() {
                         {locationCity ? (
                           <>{locationCity} ({locationLat}, {locationLng})</>
                         ) : (
-                          <>Location set: {locationLat}, {locationLng}</>
+                          <>{t('location.locationSet')} {locationLat}, {locationLng}</>
                         )}
                       </span>
                     </motion.div>
@@ -645,7 +603,7 @@ export function SetupForm() {
 
                   {!locationLat && !locationLng && (
                     <p className="text-xs text-green-500/40 text-center">
-                      Location is optional but recommended for weather-based watering alerts.
+                      {t('location.locationOptional')}
                     </p>
                   )}
                 </div>
@@ -669,7 +627,7 @@ export function SetupForm() {
                     >
                       <span className="text-2xl block mb-1">{SOIL_EMOJIS[opt.value]}</span>
                       <span className="font-medium block">{opt.label}</span>
-                      <span className="text-xs text-green-500/50 block mt-1">{SOIL_DESCRIPTIONS[opt.value]}</span>
+                      <span className="text-xs text-green-500/50 block mt-1">{opt.desc}</span>
                     </motion.button>
                   ))}
                 </div>
@@ -693,7 +651,7 @@ export function SetupForm() {
                     >
                       <span className="text-2xl block mb-1">{CLIMATE_EMOJIS[opt.value]}</span>
                       <span className="font-medium block">{opt.label}</span>
-                      <span className="text-xs text-green-500/50 block mt-1">{CLIMATE_DESCRIPTIONS[opt.value]}</span>
+                      <span className="text-xs text-green-500/50 block mt-1">{opt.desc}</span>
                     </motion.button>
                   ))}
                 </div>
@@ -719,7 +677,7 @@ export function SetupForm() {
                         <span className="text-3xl">{SUN_EMOJIS[opt.value]}</span>
                         <div>
                           <span className="font-medium block text-lg">{opt.label}</span>
-                          <span className="text-xs text-green-500/50 block mt-1">{SUN_DESCRIPTIONS[opt.value]}</span>
+                          <span className="text-xs text-green-500/50 block mt-1">{opt.desc}</span>
                         </div>
                       </div>
                     </motion.button>
@@ -739,7 +697,7 @@ export function SetupForm() {
             className="gap-2"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back
+            {t('back')}
           </Button>
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
             <Button
@@ -750,16 +708,16 @@ export function SetupForm() {
               {step === steps.length - 1 ? (
                 <>
                   <Trophy className="w-4 h-4" />
-                  Complete Quest!
+                  {t('completeQuest')}
                 </>
               ) : step === 0 ? (
                 <>
-                  Begin Adventure
+                  {t('beginAdventure')}
                   <ArrowRight className="w-4 h-4" />
                 </>
               ) : (
                 <>
-                  Next Quest
+                  {t('nextQuest')}
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}

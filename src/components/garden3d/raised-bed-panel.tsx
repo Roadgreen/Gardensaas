@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import type { RaisedBed, RaisedBedSoilType } from '@/types';
 import { RAISED_BED_SOIL_LABELS } from '@/types';
 
@@ -65,8 +66,9 @@ const panelStyle: React.CSSProperties = {
 export function RaisedBedPanel({
   beds, selectedBedId, onAddBed, onRemoveBed, onUpdateBed, onSelectBed, onClose
 }: RaisedBedPanelProps) {
+  const t = useTranslations('garden3d.raisedBeds');
   const [showCreate, setShowCreate] = useState(false);
-  const [newName, setNewName] = useState('Raised Bed ' + (beds.length + 1));
+  const [newName, setNewName] = useState(t('defaultName') + ' ' + (beds.length + 1));
   const [newLength, setNewLength] = useState('1.5');
   const [newWidth, setNewWidth] = useState('0.8');
   const [newHeight, setNewHeight] = useState('0.35');
@@ -75,7 +77,7 @@ export function RaisedBedPanel({
   const handleCreate = () => {
     const bed: RaisedBed = {
       id: 'bed-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7),
-      name: newName || 'Raised Bed',
+      name: newName || t('defaultName'),
       x: 50, // Center of garden
       z: 50,
       widthM: parseFloat(newWidth) || 0.8,
@@ -85,7 +87,7 @@ export function RaisedBedPanel({
     };
     onAddBed(bed);
     setShowCreate(false);
-    setNewName('Raised Bed ' + (beds.length + 2));
+    setNewName(t('defaultName') + ' ' + (beds.length + 2));
   };
 
   const applyPreset = (preset: typeof PRESETS[0]) => {
@@ -111,8 +113,8 @@ export function RaisedBedPanel({
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ fontSize: '20px' }}>{'\uD83E\uDDF1'}</span>
           <div>
-            <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#D4A06C' }}>Raised Beds</div>
-            <div style={{ fontSize: '10px', color: '#9CA3AF' }}>{beds.length} bed{beds.length !== 1 ? 's' : ''} placed</div>
+            <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#D4A06C' }}>{t('title')}</div>
+            <div style={{ fontSize: '10px', color: '#9CA3AF' }}>{t('bedsPlaced', { count: beds.length })}</div>
           </div>
         </div>
         <button onClick={onClose} style={{
@@ -156,20 +158,20 @@ export function RaisedBedPanel({
                   borderTop: 'none',
                 }}>
                   <div style={{ fontSize: '9px', color: '#9CA3AF', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                    Position in garden
+                    {t('positionInGarden')}
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-                    <button onClick={(e) => { e.stopPropagation(); handleMoveBed(bed.id, 0, -5); }} style={moveBtnStyle}>Up</button>
+                    <button onClick={(e) => { e.stopPropagation(); handleMoveBed(bed.id, 0, -5); }} style={moveBtnStyle}>{t('up')}</button>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', marginTop: '2px' }}>
-                    <button onClick={(e) => { e.stopPropagation(); handleMoveBed(bed.id, -5, 0); }} style={moveBtnStyle}>Left</button>
+                    <button onClick={(e) => { e.stopPropagation(); handleMoveBed(bed.id, -5, 0); }} style={moveBtnStyle}>{t('left')}</button>
                     <div style={{ fontSize: '9px', color: '#D4A06C', minWidth: '50px', textAlign: 'center' }}>
                       {Math.round(bed.x)}%, {Math.round(bed.z)}%
                     </div>
-                    <button onClick={(e) => { e.stopPropagation(); handleMoveBed(bed.id, 5, 0); }} style={moveBtnStyle}>Right</button>
+                    <button onClick={(e) => { e.stopPropagation(); handleMoveBed(bed.id, 5, 0); }} style={moveBtnStyle}>{t('right')}</button>
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', marginTop: '2px' }}>
-                    <button onClick={(e) => { e.stopPropagation(); handleMoveBed(bed.id, 0, 5); }} style={moveBtnStyle}>Down</button>
+                    <button onClick={(e) => { e.stopPropagation(); handleMoveBed(bed.id, 0, 5); }} style={moveBtnStyle}>{t('down')}</button>
                   </div>
                 </div>
               )}
@@ -186,12 +188,12 @@ export function RaisedBedPanel({
           border: '1px solid rgba(210, 160, 108, 0.2)',
         }}>
           <div style={{ fontSize: '13px', fontWeight: 'bold', color: '#D4A06C', marginBottom: '10px' }}>
-            New Raised Bed
+            {t('newBed')}
           </div>
 
           {/* Name */}
           <div style={{ marginBottom: '8px' }}>
-            <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '4px' }}>Name</label>
+            <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '4px' }}>{t('name')}</label>
             <input
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
@@ -206,7 +208,7 @@ export function RaisedBedPanel({
 
           {/* Presets */}
           <div style={{ marginBottom: '8px' }}>
-            <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '4px' }}>Quick Size</label>
+            <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '4px' }}>{t('quickSize')}</label>
             <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
               {PRESETS.map((p) => (
                 <button key={p.label} onClick={() => applyPreset(p)} style={{
@@ -225,7 +227,7 @@ export function RaisedBedPanel({
           {/* Dimensions */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px', marginBottom: '8px' }}>
             <div>
-              <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '2px' }}>Length (m)</label>
+              <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '2px' }}>{t('lengthM')}</label>
               <input type="number" min="0.3" max="5" step="0.1" value={newLength}
                 onChange={(e) => setNewLength(e.target.value)}
                 style={{
@@ -237,7 +239,7 @@ export function RaisedBedPanel({
               />
             </div>
             <div>
-              <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '2px' }}>Width (m)</label>
+              <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '2px' }}>{t('widthM')}</label>
               <input type="number" min="0.2" max="3" step="0.1" value={newWidth}
                 onChange={(e) => setNewWidth(e.target.value)}
                 style={{
@@ -249,7 +251,7 @@ export function RaisedBedPanel({
               />
             </div>
             <div>
-              <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '2px' }}>Height (m)</label>
+              <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '2px' }}>{t('heightM')}</label>
               <input type="number" min="0.15" max="1" step="0.05" value={newHeight}
                 onChange={(e) => setNewHeight(e.target.value)}
                 style={{
@@ -264,7 +266,7 @@ export function RaisedBedPanel({
 
           {/* Soil type */}
           <div style={{ marginBottom: '10px' }}>
-            <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '4px' }}>Soil Type</label>
+            <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '4px' }}>{t('soilType')}</label>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '4px' }}>
               {SOIL_OPTIONS.map((opt) => (
                 <button key={opt.value} onClick={() => setNewSoil(opt.value)} style={{
@@ -289,13 +291,13 @@ export function RaisedBedPanel({
               background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
               color: '#9CA3AF', cursor: 'pointer', fontSize: '12px',
               fontFamily: '"Nunito", system-ui, sans-serif',
-            }}>Cancel</button>
+            }}>{t('cancel')}</button>
             <button onClick={handleCreate} style={{
               flex: 1, padding: '8px', borderRadius: '8px',
               background: 'rgba(210, 160, 108, 0.3)', border: '1px solid rgba(210, 160, 108, 0.5)',
               color: '#D4A06C', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold',
               fontFamily: '"Nunito", system-ui, sans-serif',
-            }}>Add Bed</button>
+            }}>{t('addBed')}</button>
           </div>
         </div>
       ) : (
@@ -307,7 +309,7 @@ export function RaisedBedPanel({
           fontFamily: '"Nunito", system-ui, sans-serif',
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
         }}>
-          <span style={{ fontSize: '18px' }}>+</span> Add Raised Bed
+          <span style={{ fontSize: '18px' }}>+</span> {t('addRaisedBed')}
         </button>
       )}
 
@@ -316,7 +318,7 @@ export function RaisedBedPanel({
         marginTop: '10px', fontSize: '10px', color: '#6B7280', textAlign: 'center',
         padding: '6px', borderRadius: '6px', background: 'rgba(0,0,0,0.1)',
       }}>
-        Raised beds are placed in the center. Drag to reposition in the garden.
+        {t('tip')}
       </div>
     </div>
   );

@@ -464,6 +464,47 @@
     "beginAdventure": "Begin Adventure",
     "completeQuest": "Complete Quest!"
   },
+  "garden3d": {
+    "dashboard": "Dashboard",
+    "plants": "plants",
+    "beds": "beds",
+    "spacing": "Spacing",
+    "catalog": "Catalog",
+    "planner2d": "2D Planner",
+    "loadingGarden": "Loading garden...",
+    "loading3d": "Loading 3D scene...",
+    "dimensions": {
+      "title": "Garden Dimensions",
+      "current": "Current: {length}m x {width}m ({area} m\u00b2)",
+      "quickPresets": "Quick presets",
+      "length": "Length (m)",
+      "width": "Width (m)",
+      "totalArea": "Total area:",
+      "roomForPlants": "Room for ~{count} plants",
+      "apply": "Apply Dimensions"
+    },
+    "raisedBeds": {
+      "title": "Raised Beds",
+      "bedsPlaced": "{count} bed(s) placed",
+      "newBed": "New Raised Bed",
+      "name": "Name",
+      "quickSize": "Quick Size",
+      "soilType": "Soil Type",
+      "cancel": "Cancel",
+      "addBed": "Add Bed",
+      "addRaisedBed": "Add Raised Bed",
+      "positionInGarden": "Position in garden",
+      "up": "Up",
+      "down": "Down",
+      "left": "Left",
+      "right": "Right",
+      "tip": "Raised beds are placed in the center. Use controls to reposition in the garden.",
+      "lengthM": "Length (m)",
+      "widthM": "Width (m)",
+      "heightM": "Height (m)",
+      "defaultName": "Raised Bed"
+    }
+  },
   "locale": {
     "en": "English",
     "fr": "Fran\u00e7ais",

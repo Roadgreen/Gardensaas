@@ -989,12 +989,12 @@ export function DashboardPageClient() {
                 <div className="flex justify-between items-center mb-4">
                   <CardTitle className="flex items-center gap-2">
                     <span className="text-xl">{'\uD83C\uDF3F'}</span>
-                    Mes plantes ({plantedPlants.length})
+                    {t('myPlants')} ({plantedPlants.length})
                   </CardTitle>
                   <Link href="/plants">
                     <Button variant="secondary" size="sm" className="gap-1">
                       <Plus className="w-4 h-4" />
-                      Ajouter
+                      {t('add')}
                     </Button>
                   </Link>
                 </div>
@@ -1002,9 +1002,9 @@ export function DashboardPageClient() {
                   {plantedPlants.length === 0 ? (
                     <div className="text-center py-8">
                       <span className="text-4xl block mb-3">{'\uD83C\uDF31'}</span>
-                      <p className="text-green-500/50 mb-3">Pas encore de plantes. Ajoutez-en pour commencer !</p>
+                      <p className="text-green-500/50 mb-3">{t('noPlantsYet')}</p>
                       <Link href="/plants">
-                        <Button variant="outline" size="sm">Parcourir les plantes</Button>
+                        <Button variant="outline" size="sm">{t('browsePlants')}</Button>
                       </Link>
                     </div>
                   ) : (
@@ -1020,9 +1020,9 @@ export function DashboardPageClient() {
                           <div className="flex items-center gap-3">
                             <span className="text-xl">{getPlantEmoji(plant!.id)}</span>
                             <div>
-                              <span className="text-green-50 font-medium text-sm">{plant!.name.en}</span>
+                              <span className="text-green-50 font-medium text-sm">{plant!.name[locale as 'en' | 'fr'] || plant!.name.en}</span>
                               <span className="text-xs text-green-500/50 ml-2">
-                                {new Date(item.plantedDate).toLocaleDateString('fr-FR')}
+                                {new Date(item.plantedDate).toLocaleDateString(locale === 'fr' ? 'fr-FR' : 'en-US')}
                               </span>
                             </div>
                           </div>
@@ -1046,11 +1046,14 @@ export function DashboardPageClient() {
               <Card>
                 <CardTitle className="flex items-center gap-2 mb-4">
                   <span className="text-xl">{'\uD83D\uDCC5'}</span>
-                  Calendrier de plantation
+                  {t('plantingCalendar')}
                 </CardTitle>
                 <CardContent>
                   <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
-                    {MONTH_NAMES.map((name, i) => {
+                    {Array.from({ length: 12 }, (_, i) => {
+                      const d = new Date(2026, i, 1);
+                      return d.toLocaleDateString(locale === 'fr' ? 'fr-FR' : 'en-US', { month: 'long' });
+                    }).map((name, i) => {
                       const month = i + 1;
                       const isCurrent = month === currentMonth;
                       const monthSeasonEmoji = [3,4,5].includes(month) ? '\uD83C\uDF38' : [6,7,8].includes(month) ? '\u2600\uFE0F' : [9,10,11].includes(month) ? '\uD83C\uDF42' : '\u2744\uFE0F';
@@ -1073,7 +1076,7 @@ export function DashboardPageClient() {
                           </span>
                           {isCurrent && (
                             <div className="mt-1">
-                              <span className="text-xs text-green-400">{plantableThisMonth.length} plantes</span>
+                              <span className="text-xs text-green-400">{plantableThisMonth.length} {t('plants')}</span>
                             </div>
                           )}
                         </div>
@@ -1092,7 +1095,7 @@ export function DashboardPageClient() {
               <Card>
                 <CardTitle className="flex items-center gap-2 mb-4">
                   <span className="text-xl">{'\uD83C\uDF3E'}</span>
-                  Recommande pour vous
+                  {t('recommendedForYou')}
                 </CardTitle>
                 <CardContent>
                   <div className="space-y-2">
@@ -1117,7 +1120,7 @@ export function DashboardPageClient() {
                             </div>
                           </Link>
                           {isPlanted ? (
-                            <span className="text-xs text-green-500/50 ml-2 shrink-0">Ajoute</span>
+                            <span className="text-xs text-green-500/50 ml-2 shrink-0">{t('added')}</span>
                           ) : (
                             <button
                               onClick={() => {
@@ -1136,7 +1139,7 @@ export function DashboardPageClient() {
                   </div>
                   <Link href="/plants" className="block mt-3">
                     <Button variant="ghost" size="sm" className="w-full gap-1">
-                      Parcourir toutes les plantes
+                      {t('browseAllPlants')}
                       <ChevronRight className="w-3.5 h-3.5" />
                     </Button>
                   </Link>

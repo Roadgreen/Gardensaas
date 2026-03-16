@@ -2,6 +2,7 @@
 
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useState, useRef, useEffect } from 'react';
 import { Globe } from 'lucide-react';
 
@@ -14,6 +15,7 @@ export function LocaleSwitcher() {
   const locale = useLocale();
   const t = useTranslations('locale');
   const router = useRouter();
+  const { data: session } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -28,11 +30,20 @@ export function LocaleSwitcher() {
   }, []);
 
   async function switchLocale(newLocale: string) {
+    // Set the cookie for next-intl
     await fetch('/api/locale', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ locale: newLocale }),
     });
+    // Also persist to DB if user is logged in
+    if (session?.user) {
+      fetch('/api/user/locale', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ locale: newLocale }),
+      }).catch(() => {});
+    }
     setIsOpen(false);
     router.refresh();
   }

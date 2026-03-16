@@ -80,7 +80,21 @@ model Garden {
   updatedAt    DateTime      @updatedAt
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   gardenPlants GardenPlant[]
+  raisedBeds   GardenRaisedBed[]
   seasons      GardenSeason[]
+}
+
+model GardenRaisedBed {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  gardenId  String  @db.ObjectId
+  name      String  @default("Raised Bed")
+  x         Float   // percent position in garden (0-100)
+  z         Float
+  widthM    Float   // meters
+  lengthM   Float   // meters
+  heightM   Float   // meters (typical: 0.2 - 0.8)
+  soilType  String  @default("potting-mix")
+  garden    Garden  @relation(fields: [gardenId], references: [id], onDelete: Cascade)
 }
 
 model GardenPlant {
@@ -91,6 +105,7 @@ model GardenPlant {
   z           Float
   plantedDate DateTime @default(now())
   notes       String?
+  raisedBedId String?  // optional: placed inside a raised bed
   garden      Garden   @relation(fields: [gardenId], references: [id], onDelete: Cascade)
 }
 

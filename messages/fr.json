@@ -464,6 +464,47 @@
     "beginAdventure": "Commencer l'aventure",
     "completeQuest": "Terminer la qu\u00eate !"
   },
+  "garden3d": {
+    "dashboard": "Tableau de bord",
+    "plants": "plantes",
+    "beds": "bacs",
+    "spacing": "Espacement",
+    "catalog": "Catalogue",
+    "planner2d": "Planificateur 2D",
+    "loadingGarden": "Chargement du jardin...",
+    "loading3d": "Chargement de la sc\u00e8ne 3D...",
+    "dimensions": {
+      "title": "Dimensions du jardin",
+      "current": "Actuel : {length}m x {width}m ({area} m\u00b2)",
+      "quickPresets": "Pr\u00e9r\u00e9glages rapides",
+      "length": "Longueur (m)",
+      "width": "Largeur (m)",
+      "totalArea": "Surface totale :",
+      "roomForPlants": "Place pour ~{count} plantes",
+      "apply": "Appliquer les dimensions"
+    },
+    "raisedBeds": {
+      "title": "Bacs de culture",
+      "bedsPlaced": "{count} bac(s) plac\u00e9(s)",
+      "newBed": "Nouveau bac de culture",
+      "name": "Nom",
+      "quickSize": "Taille rapide",
+      "soilType": "Type de sol",
+      "cancel": "Annuler",
+      "addBed": "Ajouter le bac",
+      "addRaisedBed": "Ajouter un bac de culture",
+      "positionInGarden": "Position dans le jardin",
+      "up": "Haut",
+      "down": "Bas",
+      "left": "Gauche",
+      "right": "Droite",
+      "tip": "Les bacs sont plac\u00e9s au centre. Utilisez les contr\u00f4les pour repositionner dans le jardin.",
+      "lengthM": "Longueur (m)",
+      "widthM": "Largeur (m)",
+      "heightM": "Hauteur (m)",
+      "defaultName": "Bac de culture"
+    }
+  },
   "locale": {
     "en": "English",
     "fr": "Fran\u00e7ais",

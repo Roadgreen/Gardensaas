@@ -1097,12 +1097,37 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
 
   const handleGroundClick = useCallback((pctX: number, pctZ: number) => {
     if (isPlacementMode && selectedPlantType) {
-      // Check if this click lands inside a raised bed
       const halfL = config.length / 2;
       const halfW = config.width / 2;
       const worldX = -halfL + (pctX / 100) * config.length;
       const worldZ = -halfW + (pctZ / 100) * config.width;
 
+      // Enforce minimum spacing rules
+      const newPlantData = plants.find((p) => p.id === selectedPlantType);
+      if (newPlantData) {
+        const newSpacingM = newPlantData.spacingCm / 100;
+        let tooClose = false;
+        for (const existing of config.plantedItems) {
+          const existingPlant = plants.find((p) => p.id === existing.plantId);
+          if (!existingPlant) continue;
+          const existingX = -halfL + (existing.x / 100) * config.length;
+          const existingZ = -halfW + (existing.z / 100) * config.width;
+          const dist = Math.sqrt((worldX - existingX) ** 2 + (worldZ - existingZ) ** 2);
+          const minDist = (newSpacingM + existingPlant.spacingCm / 100) / 2;
+          if (dist < minDist) {
+            tooClose = true;
+            break;
+          }
+        }
+        if (tooClose) {
+          setGardenerDialogue(`Too close! ${newPlantData.name.en} needs ${newPlantData.spacingCm}cm spacing.`);
+          setShowGardenerDialogue(true);
+          SoundEffects.play('click');
+          return;
+        }
+      }
+
+      // Check if this click lands inside a raised bed
       let raisedBedId: string | undefined;
       (config.raisedBeds || []).forEach((bed) => {
         const bedWorldX = -halfL + (bed.x / 100) * config.length;
@@ -1126,7 +1151,7 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
       setGardenerAction('digging');
       setGardenerTarget(new THREE.Vector3(worldX + 0.3, 0, worldZ + 0.3));
     }
-  }, [isPlacementMode, selectedPlantType, config]);
+  }, [isPlacementMode, selectedPlantType, config, plants]);
 
   const handleRightClickPlant = useCallback((index: number, event: MouseEvent) => {
     event.preventDefault();

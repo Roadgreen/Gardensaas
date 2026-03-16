@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface GardenSizeSelectorProps {
   currentLength: number;
@@ -10,12 +11,12 @@ interface GardenSizeSelectorProps {
 }
 
 const PRESETS = [
-  { label: 'Window Box', length: 1, width: 0.5, emoji: '\uD83E\uDE9F' },
-  { label: 'Balcony', length: 2, width: 1, emoji: '\uD83C\uDFE0' },
-  { label: 'Small', length: 3, width: 2, emoji: '\uD83C\uDF31' },
-  { label: 'Medium', length: 5, width: 3, emoji: '\uD83C\uDF33' },
-  { label: 'Large', length: 8, width: 5, emoji: '\uD83C\uDFE1' },
-  { label: 'Farm', length: 12, width: 8, emoji: '\uD83C\uDF3E' },
+  { labelKey: 'windowBox', length: 1, width: 0.5, emoji: '\uD83E\uDE9F' },
+  { labelKey: 'balcony', length: 2, width: 1, emoji: '\uD83C\uDFE0' },
+  { labelKey: 'smallPlot', length: 3, width: 2, emoji: '\uD83C\uDF31' },
+  { labelKey: 'mediumGarden', length: 5, width: 3, emoji: '\uD83C\uDF33' },
+  { labelKey: 'largeGarden', length: 8, width: 5, emoji: '\uD83C\uDFE1' },
+  { labelKey: 'farmPlot', length: 12, width: 8, emoji: '\uD83C\uDF3E' },
 ];
 
 const panelStyle: React.CSSProperties = {
@@ -38,6 +39,8 @@ const panelStyle: React.CSSProperties = {
 export function GardenSizeSelector({ currentLength, currentWidth, onResize, onClose }: GardenSizeSelectorProps) {
   const [length, setLength] = useState(currentLength.toString());
   const [width, setWidth] = useState(currentWidth.toString());
+  const t = useTranslations('garden3d.dimensions');
+  const tSetup = useTranslations('setup.dimensions');
 
   const handleApply = useCallback(() => {
     const l = parseFloat(length);
@@ -64,9 +67,9 @@ export function GardenSizeSelector({ currentLength, currentWidth, onResize, onCl
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ fontSize: '20px' }}>{'\uD83D\uDCCF'}</span>
           <div>
-            <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#86EFAC' }}>Garden Dimensions</div>
+            <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#86EFAC' }}>{t('title')}</div>
             <div style={{ fontSize: '10px', color: '#9CA3AF' }}>
-              Current: {currentLength}m x {currentWidth}m ({(currentLength * currentWidth).toFixed(1)} m2)
+              {t('current', { length: currentLength, width: currentWidth, area: (currentLength * currentWidth).toFixed(1) })}
             </div>
           </div>
         </div>
@@ -80,14 +83,14 @@ export function GardenSizeSelector({ currentLength, currentWidth, onResize, onCl
       {/* Presets */}
       <div style={{ marginBottom: '12px' }}>
         <div style={{ fontSize: '10px', color: '#9CA3AF', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-          Quick presets
+          {t('quickPresets')}
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '6px' }}>
           {PRESETS.map((preset) => {
             const isActive = currentLength === preset.length && currentWidth === preset.width;
             return (
               <button
-                key={preset.label}
+                key={preset.labelKey}
                 onClick={() => handlePreset(preset)}
                 style={{
                   padding: '8px 4px', borderRadius: '10px', fontSize: '11px',
@@ -99,7 +102,7 @@ export function GardenSizeSelector({ currentLength, currentWidth, onResize, onCl
                 }}
               >
                 <div style={{ fontSize: '16px' }}>{preset.emoji}</div>
-                <div style={{ fontWeight: 'bold' }}>{preset.label}</div>
+                <div style={{ fontWeight: 'bold' }}>{tSetup(preset.labelKey)}</div>
                 <div style={{ fontSize: '9px', color: '#9CA3AF' }}>{preset.length}x{preset.width}m</div>
               </button>
             );
@@ -110,7 +113,7 @@ export function GardenSizeSelector({ currentLength, currentWidth, onResize, onCl
       {/* Custom dimensions */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '8px', alignItems: 'end', marginBottom: '10px' }}>
         <div>
-          <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '4px' }}>Length (m)</label>
+          <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '4px' }}>{t('length')}</label>
           <input
             type="number" min="0.5" max="50" step="0.5"
             value={length}
@@ -125,7 +128,7 @@ export function GardenSizeSelector({ currentLength, currentWidth, onResize, onCl
         </div>
         <div style={{ fontSize: '14px', color: '#6B7280', paddingBottom: '10px' }}>x</div>
         <div>
-          <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '4px' }}>Width (m)</label>
+          <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '4px' }}>{t('width')}</label>
           <input
             type="number" min="0.5" max="50" step="0.5"
             value={width}
@@ -146,8 +149,8 @@ export function GardenSizeSelector({ currentLength, currentWidth, onResize, onCl
           fontSize: '11px', color: '#6EE7B7', textAlign: 'center', marginBottom: '10px',
           padding: '6px', borderRadius: '8px', background: 'rgba(74, 222, 128, 0.08)',
         }}>
-          Total area: <span style={{ fontWeight: 'bold' }}>{area.toFixed(1)} m2</span>
-          {' '} - Room for ~{Math.floor(area * 4)} plants
+          {t('totalArea')} <span style={{ fontWeight: 'bold' }}>{area.toFixed(1)} m&sup2;</span>
+          {' '} - {t('roomForPlants', { count: Math.floor(area * 4) })}
         </div>
       )}
 
@@ -160,7 +163,7 @@ export function GardenSizeSelector({ currentLength, currentWidth, onResize, onCl
         fontFamily: '"Nunito", system-ui, sans-serif',
         transition: 'all 0.15s',
       }}>
-        Apply Dimensions
+        {t('apply')}
       </button>
     </div>
   );
