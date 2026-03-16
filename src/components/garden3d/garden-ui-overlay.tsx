@@ -123,11 +123,16 @@ export function GardenUIOverlay({
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [showToolbar, setShowToolbar] = useState(false);
   const [toolTooltip, setToolTooltip] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     setWeather(getWeather(season));
     const now = new Date();
     setCurrentDate(now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }));
+    setIsMobile(window.innerWidth < 640);
+    const handleResize = () => setIsMobile(window.innerWidth < 640);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [season]);
 
   const filteredPlants = useMemo(() => {
@@ -447,8 +452,8 @@ export function GardenUIOverlay({
                 onMouseEnter={() => setToolTooltip(tool.description)}
                 onMouseLeave={() => setToolTooltip(null)}
                 style={{
-                  width: '48px',
-                  height: '48px',
+                  width: isMobile ? '40px' : '48px',
+                  height: isMobile ? '40px' : '48px',
                   borderRadius: '12px',
                   border: activeTool === tool.id
                     ? `2px solid ${tool.color}`
@@ -581,18 +586,21 @@ export function GardenUIOverlay({
         </div>
       )}
 
-      {/* ===== HINT ===== */}
-      <div style={{
-        position: 'absolute',
-        bottom: '4px',
-        right: '12px',
-        zIndex: 15,
-        fontFamily: '"Nunito", system-ui, sans-serif',
-        fontSize: '10px',
-        color: 'rgba(156, 163, 175, 0.5)',
-        pointerEvents: 'none',
-      }}>
-        Click plants for info | Click Sprout for tips | Scroll to zoom | Drag to rotate
+      {/* ===== HINT (hidden on small screens via CSS media query) ===== */}
+      <div
+        className="garden-hint-desktop"
+        style={{
+          position: 'absolute',
+          bottom: '4px',
+          right: '12px',
+          zIndex: 15,
+          fontFamily: '"Nunito", system-ui, sans-serif',
+          fontSize: '10px',
+          color: 'rgba(156, 163, 175, 0.5)',
+          pointerEvents: 'none',
+        }}
+      >
+        Tap plants for info | Pinch to zoom | Drag to rotate
       </div>
     </>
   );

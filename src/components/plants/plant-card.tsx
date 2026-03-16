@@ -88,20 +88,20 @@ export function PlantCard({ plant, index = 0 }: PlantCardProps) {
           )}
 
           {/* Plant emoji + name */}
-          <div className="flex items-start gap-4 mb-4 mt-1">
+          <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4 mt-1">
             <motion.div
-              className="w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
+              className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
               style={{ backgroundColor: plant.color + '20', border: `2px solid ${plant.color}30` }}
               whileHover={{ rotate: [0, -5, 5, 0] }}
               transition={{ duration: 0.4 }}
             >
-              <span className="text-2xl">{emoji}</span>
+              <span className="text-xl sm:text-2xl">{emoji}</span>
             </motion.div>
-            <div className="min-w-0 pt-1">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-green-50 group-hover:text-green-600 dark:group-hover:text-green-300 transition-colors truncate">
+            <div className="min-w-0 pt-0.5 sm:pt-1">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-green-50 group-hover:text-green-600 dark:group-hover:text-green-300 transition-colors truncate">
                 {plant.name.en}
               </h3>
-              <p className="text-sm text-gray-400 dark:text-green-400/60 italic">{plant.name.fr}</p>
+              <p className="text-xs sm:text-sm text-gray-400 dark:text-green-400/60 italic">{plant.name.fr}</p>
             </div>
           </div>
 

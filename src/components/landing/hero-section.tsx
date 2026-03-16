@@ -98,18 +98,18 @@ export function HeroSection() {
               </span>
             </motion.div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-[1.1] tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 sm:mb-6 leading-[1.1] tracking-tight">
               <span className="text-gray-900 dark:text-green-50">Grow Your</span>
               <span className="block text-gradient animate-gradient-flow" style={{ backgroundSize: '200% 200%' }}>
                 Dream Garden
               </span>
             </h1>
 
-            <p className="text-lg md:text-xl text-gray-500 dark:text-green-200/60 mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-gray-500 dark:text-green-200/60 mb-8 sm:mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed">
               Plan in 3D, get AI-powered advice, and grow 300+ vegetables, herbs, and fruits. Your personal garden assistant.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-10">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start mb-8 sm:mb-10">
               <Link href="/garden/setup">
                 <motion.div
                   whileHover={{ scale: 1.03 }}

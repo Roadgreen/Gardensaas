@@ -85,36 +85,39 @@ export function Garden3DView() {
   }
 
   return (
-    <div className="h-[calc(100vh-64px)] bg-[#0D1F17] flex flex-col">
+    <div className="h-[calc(100svh-64px)] bg-[#0D1F17] flex flex-col">
       {/* Top bar */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-green-900/30 bg-[#0D1F17]/80 backdrop-blur-sm z-10">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between px-2 sm:px-4 py-2 sm:py-3 border-b border-green-900/30 bg-[#0D1F17]/80 backdrop-blur-sm z-10">
+        <div className="flex items-center gap-2 sm:gap-3">
           <Link href="/garden/dashboard">
-            <Button variant="ghost" size="sm" className="gap-2">
+            <Button variant="ghost" size="sm" className="gap-1 sm:gap-2 px-2 sm:px-3">
               <ArrowLeft className="w-4 h-4" />
-              Dashboard
+              <span className="hidden sm:inline">Dashboard</span>
             </Button>
           </Link>
-          <span className="text-sm text-green-300/60">
+          <span className="text-xs sm:text-sm text-green-300/60 hidden sm:inline">
             {config.length}m x {config.width}m | {config.plantedItems.length} plants
           </span>
+          <span className="text-xs text-green-300/60 sm:hidden">
+            {config.plantedItems.length} plants
+          </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <button
             onClick={() => setIsSidebarOpen((v) => !v)}
-            className="px-3 py-1.5 text-xs rounded-lg border transition-all"
+            className="px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
             style={{
               background: isSidebarOpen ? 'rgba(74, 222, 128, 0.15)' : 'transparent',
               borderColor: isSidebarOpen ? 'rgba(74, 222, 128, 0.5)' : 'rgba(74, 222, 128, 0.2)',
               color: isSidebarOpen ? '#86EFAC' : '#9CA3AF',
             }}
           >
-            {'\uD83C\uDF3B'} Catalog
+            {'\uD83C\uDF3B'} <span className="hidden sm:inline">Catalog</span>
           </button>
           <Link href="/garden/planner">
-            <Button variant="secondary" size="sm" className="gap-2">
+            <Button variant="secondary" size="sm" className="gap-1 sm:gap-2 px-2 sm:px-3">
               <Grid3x3 className="w-4 h-4" />
-              2D Planner
+              <span className="hidden sm:inline">2D Planner</span>
             </Button>
           </Link>
         </div>

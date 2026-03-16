@@ -285,3 +285,32 @@ html {
     min-width: 44px;
   }
 }
+
+/* Hide garden hint on mobile */
+@media (max-width: 640px) {
+  .garden-hint-desktop {
+    display: none !important;
+  }
+}
+
+/* Better mobile spacing for the 3D toolbar */
+@media (max-width: 640px) {
+  .garden-3d-toolbar {
+    padding: 4px 6px !important;
+    gap: 2px !important;
+  }
+}
+
+/* Responsive card grid adjustments */
+@media (max-width: 480px) {
+  .plant-card-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Safe area insets for notched phones */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: calc(env(safe-area-inset-bottom) + 16px);
+  }
+}
