@@ -8,6 +8,9 @@ import { ArrowLeft, Grid3x3 } from 'lucide-react';
 import { useGarden, usePlants } from '@/lib/hooks';
 import { PlantCatalogSidebar } from './plant-catalog-sidebar';
 import { DragDropOverlay } from './drag-drop-overlay';
+import { PlantInfoPanel } from './plant-info-panel';
+import { RaisedBedPanel } from './raised-bed-panel';
+import type { RaisedBed } from '@/types';
 
 const GardenScene = dynamic(() => import('./garden-scene').then(m => ({ default: m.GardenScene })), {
   ssr: false,
@@ -19,14 +22,18 @@ const GardenScene = dynamic(() => import('./garden-scene').then(m => ({ default:
 });
 
 export function Garden3DView() {
-  const { config, isLoaded, addPlant, removePlant } = useGarden();
+  const { config, isLoaded, addPlant, removePlant, addRaisedBed, removeRaisedBed, updateRaisedBed } = useGarden();
   const { plants } = usePlants();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [draggingPlantId, setDraggingPlantId] = useState<string | null>(null);
   const [selectedPlantType, setSelectedPlantType] = useState<string | null>(null);
+  const [showSpacing, setShowSpacing] = useState(true);
+  const [showRaisedBedPanel, setShowRaisedBedPanel] = useState(false);
+  const [selectedBedId, setSelectedBedId] = useState<string | null>(null);
+  const [infoPanelPlantIndex, setInfoPanelPlantIndex] = useState<number | null>(null);
 
-  // Listen for plant/remove events from the 3D scene
+  // Listen for plant/remove/info events from the 3D scene
   useEffect(() => {
     const handlePlant = (e: Event) => {
       const detail = (e as CustomEvent).detail;
@@ -38,13 +45,22 @@ export function Garden3DView() {
       const detail = (e as CustomEvent).detail;
       if (detail?.index !== undefined) {
         removePlant(detail.index);
+        setInfoPanelPlantIndex(null);
+      }
+    };
+    const handleInfo = (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.index !== undefined) {
+        setInfoPanelPlantIndex(detail.index);
       }
     };
     window.addEventListener('garden:plant', handlePlant);
     window.addEventListener('garden:remove', handleRemove);
+    window.addEventListener('garden:info', handleInfo);
     return () => {
       window.removeEventListener('garden:plant', handlePlant);
       window.removeEventListener('garden:remove', handleRemove);
+      window.removeEventListener('garden:info', handleInfo);
     };
   }, [addPlant, removePlant]);
 
@@ -62,11 +78,8 @@ export function Garden3DView() {
     (relX: number, relY: number) => {
       const plantId = draggingPlantId || selectedPlantType;
       if (!plantId) return;
-      // Convert relative drop position to garden percentage coords
-      // relX/relY are 0-1 within the canvas; map to garden percent coords
       const pctX = relX * 100;
       const pctZ = relY * 100;
-      // Clamp to garden bounds
       const clampedX = Math.max(5, Math.min(95, pctX));
       const clampedZ = Math.max(5, Math.min(95, pctZ));
       addPlant(plantId, clampedX, clampedZ);
@@ -75,6 +88,10 @@ export function Garden3DView() {
     },
     [draggingPlantId, selectedPlantType, addPlant]
   );
+
+  // Determine info panel plant
+  const infoPanelItem = infoPanelPlantIndex !== null ? config.plantedItems[infoPanelPlantIndex] : null;
+  const infoPanelPlant = infoPanelItem ? plants.find(p => p.id === infoPanelItem.plantId) : null;
 
   if (!isLoaded) {
     return (
@@ -97,12 +114,38 @@ export function Garden3DView() {
           </Link>
           <span className="text-xs sm:text-sm text-green-300/60 hidden sm:inline">
             {config.length}m x {config.width}m | {config.plantedItems.length} plants
+            {(config.raisedBeds || []).length > 0 && ` | ${(config.raisedBeds || []).length} beds`}
           </span>
           <span className="text-xs text-green-300/60 sm:hidden">
             {config.plantedItems.length} plants
           </span>
         </div>
         <div className="flex items-center gap-1.5 sm:gap-2">
+          {/* Spacing toggle */}
+          <button
+            onClick={() => setShowSpacing(v => !v)}
+            className="px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
+            style={{
+              background: showSpacing ? 'rgba(168, 85, 247, 0.15)' : 'transparent',
+              borderColor: showSpacing ? 'rgba(168, 85, 247, 0.5)' : 'rgba(74, 222, 128, 0.2)',
+              color: showSpacing ? '#C084FC' : '#9CA3AF',
+            }}
+          >
+            {'\uD83D\uDCCF'} <span className="hidden sm:inline">Spacing</span>
+          </button>
+          {/* Raised beds */}
+          <button
+            onClick={() => setShowRaisedBedPanel(v => !v)}
+            className="px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
+            style={{
+              background: showRaisedBedPanel ? 'rgba(210, 160, 108, 0.15)' : 'transparent',
+              borderColor: showRaisedBedPanel ? 'rgba(210, 160, 108, 0.5)' : 'rgba(74, 222, 128, 0.2)',
+              color: showRaisedBedPanel ? '#D4A06C' : '#9CA3AF',
+            }}
+          >
+            {'\uD83E\uDDF1'} <span className="hidden sm:inline">Beds</span>
+          </button>
+          {/* Catalog */}
           <button
             onClick={() => setIsSidebarOpen((v) => !v)}
             className="px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
@@ -139,6 +182,29 @@ export function Garden3DView() {
         {/* Drag-and-drop overlay */}
         <DragDropOverlay isDragging={isDragging} onDrop={handleDrop} />
 
+        {/* Plant info panel */}
+        {infoPanelPlant && infoPanelItem && (
+          <PlantInfoPanel
+            plant={infoPanelPlant}
+            plantedDate={infoPanelItem.plantedDate}
+            allPlants={plants}
+            onClose={() => setInfoPanelPlantIndex(null)}
+          />
+        )}
+
+        {/* Raised bed panel */}
+        {showRaisedBedPanel && (
+          <RaisedBedPanel
+            beds={config.raisedBeds || []}
+            selectedBedId={selectedBedId}
+            onAddBed={addRaisedBed}
+            onRemoveBed={removeRaisedBed}
+            onUpdateBed={updateRaisedBed}
+            onSelectBed={setSelectedBedId}
+            onClose={() => setShowRaisedBedPanel(false)}
+          />
+        )}
+
         <Suspense fallback={
           <div className="w-full h-full flex items-center justify-center">
             <div className="animate-pulse text-green-400">Loading 3D scene...</div>
@@ -147,6 +213,9 @@ export function Garden3DView() {
           <GardenScene
             config={config}
             selectedPlantType={selectedPlantType}
+            showSpacing={showSpacing}
+            selectedBedId={selectedBedId}
+            onSelectBed={setSelectedBedId}
             onPlantAdded={() => {
               // Plant was placed via click, handled through events
             }}

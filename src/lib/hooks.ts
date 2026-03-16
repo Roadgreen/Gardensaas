@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import type { GardenConfig, PlantedItem } from '@/types';
+import type { GardenConfig, PlantedItem, RaisedBed } from '@/types';
 
 const GARDEN_STORAGE_KEY = 'garden-config';
 
@@ -12,6 +12,7 @@ const defaultConfig: GardenConfig = {
   climateZone: 'temperate',
   sunExposure: 'full-sun',
   plantedItems: [],
+  raisedBeds: [],
 };
 
 export function useGarden() {
@@ -23,6 +24,8 @@ export function useGarden() {
       const stored = localStorage.getItem(GARDEN_STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored) as GardenConfig;
+        // Backward compat: ensure raisedBeds array exists
+        if (!parsed.raisedBeds) parsed.raisedBeds = [];
         setConfigState(parsed);
       }
     } catch {
@@ -99,7 +102,7 @@ export function useGarden() {
 
   const clearGarden = useCallback(() => {
     setConfigState((prev) => {
-      const updated = { ...prev, plantedItems: [] };
+      const updated = { ...prev, plantedItems: [], raisedBeds: [] };
       try {
         localStorage.setItem(GARDEN_STORAGE_KEY, JSON.stringify(updated));
       } catch {
@@ -108,6 +111,64 @@ export function useGarden() {
       return updated;
     });
   }, []);
+
+  const addRaisedBed = useCallback(
+    (bed: RaisedBed) => {
+      setConfigState((prev) => {
+        const updated = {
+          ...prev,
+          raisedBeds: [...(prev.raisedBeds || []), bed],
+        };
+        try {
+          localStorage.setItem(GARDEN_STORAGE_KEY, JSON.stringify(updated));
+        } catch {
+          // ignore
+        }
+        return updated;
+      });
+    },
+    []
+  );
+
+  const removeRaisedBed = useCallback(
+    (bedId: string) => {
+      setConfigState((prev) => {
+        const updated = {
+          ...prev,
+          raisedBeds: (prev.raisedBeds || []).filter((b) => b.id !== bedId),
+          // Also remove plants in that bed
+          plantedItems: prev.plantedItems.filter((p) => p.raisedBedId !== bedId),
+        };
+        try {
+          localStorage.setItem(GARDEN_STORAGE_KEY, JSON.stringify(updated));
+        } catch {
+          // ignore
+        }
+        return updated;
+      });
+    },
+    []
+  );
+
+  const updateRaisedBed = useCallback(
+    (bedId: string, partial: Partial<RaisedBed>) => {
+      setConfigState((prev) => {
+        const updated = {
+          ...prev,
+          raisedBeds: (prev.raisedBeds || []).map((b) =>
+            b.id === bedId ? { ...b, ...partial } : b
+          ),
+        };
+        try {
+          localStorage.setItem(GARDEN_STORAGE_KEY, JSON.stringify(updated));
+        } catch {
+          // ignore
+        }
+        return updated;
+      });
+    },
+    []
+  );
 
   const isSetupComplete = isLoaded && config.length > 0 && config.width > 0;
 
@@ -118,6 +179,9 @@ export function useGarden() {
     addPlant,
     removePlant,
     clearGarden,
+    addRaisedBed,
+    removeRaisedBed,
+    updateRaisedBed,
     isLoaded,
     isSetupComplete,
   };

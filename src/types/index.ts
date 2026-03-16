@@ -48,6 +48,7 @@ export interface GardenConfig {
   climateZone: ClimateZone;
   sunExposure: SunExposure;
   plantedItems: PlantedItem[];
+  raisedBeds: RaisedBed[];
 }
 
 export interface PlantedItem {
@@ -55,6 +56,29 @@ export interface PlantedItem {
   x: number;
   z: number;
   plantedDate: string;
+  raisedBedId?: string; // optional: placed inside a raised bed
+}
+
+export type RaisedBedSoilType = 'potting-mix' | 'compost' | 'loamy' | 'sandy' | 'peat-mix' | 'clay-mix';
+
+export const RAISED_BED_SOIL_LABELS: Record<RaisedBedSoilType, string> = {
+  'potting-mix': 'Potting Mix',
+  'compost': 'Compost Blend',
+  'loamy': 'Loamy Soil',
+  'sandy': 'Sandy Mix',
+  'peat-mix': 'Peat Mix',
+  'clay-mix': 'Clay Mix',
+};
+
+export interface RaisedBed {
+  id: string;
+  name: string;
+  x: number; // percent position in garden (0-100)
+  z: number;
+  widthM: number;  // meters
+  lengthM: number; // meters
+  heightM: number; // meters (typical: 0.2 - 0.8)
+  soilType: RaisedBedSoilType;
 }
 
 export interface GardenTip {

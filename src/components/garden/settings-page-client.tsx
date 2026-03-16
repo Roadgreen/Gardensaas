@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Card, CardTitle, CardContent } from '@/components/ui/card';
 import {
   CreditCard,
@@ -18,7 +19,19 @@ import {
   LogOut,
   Crown,
   Zap,
+  Ruler,
 } from 'lucide-react';
+import { useGarden } from '@/lib/hooks';
+import { SOIL_LABELS, type SoilType } from '@/types';
+
+const GARDEN_SIZE_PRESETS = [
+  { label: 'Window Box', length: 1, width: 0.5, emoji: '\uD83E\uDE9F' },
+  { label: 'Balcony', length: 2, width: 1, emoji: '\uD83C\uDFE0' },
+  { label: 'Small Plot', length: 3, width: 2, emoji: '\uD83C\uDF31' },
+  { label: 'Medium Garden', length: 5, width: 3, emoji: '\uD83C\uDF33' },
+  { label: 'Large Garden', length: 8, width: 5, emoji: '\uD83C\uDFE1' },
+  { label: 'Farm Plot', length: 12, width: 8, emoji: '\uD83C\uDF3E' },
+];
 
 export function SettingsPageClient() {
   const { data: session } = useSession();
@@ -27,6 +40,17 @@ export function SettingsPageClient() {
   const userPlan = (session?.user as Record<string, unknown>)?.plan as string || 'free';
   const isPro = userPlan === 'pro';
   const [upgrading, setUpgrading] = useState(false);
+  const { config, updateConfig, isLoaded } = useGarden();
+  const [gardenLength, setGardenLength] = useState('');
+  const [gardenWidth, setGardenWidth] = useState('');
+  const [dimensionsSaved, setDimensionsSaved] = useState(false);
+
+  useEffect(() => {
+    if (isLoaded) {
+      setGardenLength(config.length.toString());
+      setGardenWidth(config.width.toString());
+    }
+  }, [isLoaded, config.length, config.width]);
 
   const handleUpgrade = async () => {
     setUpgrading(true);
@@ -68,6 +92,107 @@ export function SettingsPageClient() {
         )}
 
         <div className="space-y-6">
+          {/* Garden Dimensions */}
+          <Card>
+            <CardTitle className="flex items-center gap-2 mb-6">
+              <Ruler className="w-5 h-5 text-green-400" />
+              Garden Dimensions
+            </CardTitle>
+            <CardContent>
+              <p className="text-sm text-green-200/60 mb-4">
+                Set the exact width and length of your garden in meters. The 3D view will render your garden at the correct proportions.
+              </p>
+
+              {/* Presets */}
+              <div className="mb-4">
+                <p className="text-xs text-green-400/50 mb-2">Quick presets:</p>
+                <div className="grid grid-cols-3 gap-2">
+                  {GARDEN_SIZE_PRESETS.map((preset) => {
+                    const isActive = gardenLength === preset.length.toString() && gardenWidth === preset.width.toString();
+                    return (
+                      <button
+                        key={preset.label}
+                        onClick={() => {
+                          setGardenLength(preset.length.toString());
+                          setGardenWidth(preset.width.toString());
+                          updateConfig({ length: preset.length, width: preset.width });
+                          setDimensionsSaved(true);
+                          setTimeout(() => setDimensionsSaved(false), 2000);
+                        }}
+                        className={`p-2 rounded-xl border text-center transition-all cursor-pointer ${
+                          isActive
+                            ? 'border-green-500 bg-green-900/30 text-green-50'
+                            : 'border-green-900/40 bg-[#0D1F17] text-green-300/70 hover:border-green-700/50'
+                        }`}
+                      >
+                        <span className="text-lg block">{preset.emoji}</span>
+                        <span className="text-xs block">{preset.label}</span>
+                        <span className="text-[10px] text-green-500/50">{preset.length}m x {preset.width}m</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Custom dimensions */}
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <Input
+                  id="garden-length"
+                  label="Length (m)"
+                  type="number"
+                  min="0.5"
+                  max="50"
+                  step="0.5"
+                  value={gardenLength}
+                  onChange={(e) => setGardenLength(e.target.value)}
+                />
+                <Input
+                  id="garden-width"
+                  label="Width (m)"
+                  type="number"
+                  min="0.5"
+                  max="50"
+                  step="0.5"
+                  value={gardenWidth}
+                  onChange={(e) => setGardenWidth(e.target.value)}
+                />
+              </div>
+
+              {parseFloat(gardenLength) > 0 && parseFloat(gardenWidth) > 0 && (
+                <p className="text-xs text-green-300/60 mb-3">
+                  Total area: <span className="text-green-200 font-bold">{(parseFloat(gardenLength) * parseFloat(gardenWidth)).toFixed(1)} m&sup2;</span>
+                  {' '} - Room for ~{Math.floor(parseFloat(gardenLength) * parseFloat(gardenWidth) * 4)} plants
+                </p>
+              )}
+
+              <Button
+                onClick={() => {
+                  const l = parseFloat(gardenLength);
+                  const w = parseFloat(gardenWidth);
+                  if (l > 0 && w > 0) {
+                    updateConfig({ length: l, width: w });
+                    setDimensionsSaved(true);
+                    setTimeout(() => setDimensionsSaved(false), 2000);
+                  }
+                }}
+                className="w-full gap-2"
+                disabled={!parseFloat(gardenLength) || !parseFloat(gardenWidth)}
+              >
+                {dimensionsSaved ? (
+                  <>
+                    <Check className="w-4 h-4" />
+                    Dimensions Saved!
+                  </>
+                ) : (
+                  <>
+                    <Ruler className="w-4 h-4" />
+                    Update Garden Size
+                  </>
+                )}
+              </Button>
+            </CardContent>
+          </Card>
+
           {/* Current Plan */}
           <Card>
             <CardTitle className="flex items-center gap-2 mb-6">

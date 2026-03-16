@@ -127,6 +127,7 @@ function generateDailyTasks(plantedItems: PlantedItem[]): DailyTask[] {
     climateZone: 'temperate',
     sunExposure: 'full-sun',
     plantedItems: [],
+    raisedBeds: [],
   });
   const plantableNow = recommended.filter((p) => p.plantingMonths.includes(currentMonth));
   const alreadyPlanted = new Set(plantedItems.map((i) => i.plantId));

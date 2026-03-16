@@ -11,11 +11,16 @@ import { Plant3D } from './plant-3d';
 import { GardenDecorations } from './garden-decorations';
 import { GardenUIOverlay } from './garden-ui-overlay';
 import { WeatherSystem } from './weather-effects';
+import { RaisedBed3D } from './raised-bed-3d';
+import { PlantSpacingRings } from './plant-spacing-rings';
 
 interface GardenSceneProps {
   config: GardenConfig;
   selectedPlantType?: string | null;
   onPlantAdded?: () => void;
+  showSpacing?: boolean;
+  selectedBedId?: string | null;
+  onSelectBed?: (bedId: string | null) => void;
 }
 
 // ===== Sound Effects Placeholder System =====
@@ -666,6 +671,9 @@ function SceneContent({
   gardenerAction,
   focusTarget,
   weather,
+  showSpacing,
+  selectedBedId,
+  onSelectBed,
 }: {
   config: GardenConfig;
   selectedPlantIndex: number | null;
@@ -686,6 +694,9 @@ function SceneContent({
   gardenerAction: 'idle' | 'walking' | 'watering' | 'digging' | 'harvesting' | 'pointing' | 'celebrating';
   focusTarget: THREE.Vector3 | null;
   weather: string;
+  showSpacing: boolean;
+  selectedBedId: string | null;
+  onSelectBed: (bedId: string | null) => void;
 }) {
   const halfL = config.length / 2;
   const halfW = config.width / 2;
@@ -770,6 +781,29 @@ function SceneContent({
         );
       })}
 
+      {/* Plant spacing visualization */}
+      <PlantSpacingRings
+        config={config}
+        plants={plants}
+        showSpacing={showSpacing}
+        selectedPlantType={isPlacementMode ? (plants.find(p => {
+          // Find the currently selected plant type from the placement mode
+          return false; // Will be passed via selectedPlantType in the overlay
+        })?.id || null) : null}
+      />
+
+      {/* Raised beds */}
+      {(config.raisedBeds || []).map((bed) => (
+        <RaisedBed3D
+          key={bed.id}
+          bed={bed}
+          gardenLength={config.length}
+          gardenWidth={config.width}
+          isSelected={selectedBedId === bed.id}
+          onSelect={() => onSelectBed(selectedBedId === bed.id ? null : bed.id)}
+        />
+      ))}
+
       {/* Ground click handler for placement */}
       <GroundClickHandler
         config={config}
@@ -842,7 +876,7 @@ function getWeather(season: string): string {
   return states[hour % states.length];
 }
 
-export function GardenScene({ config, selectedPlantType: externalSelectedPlantType }: GardenSceneProps) {
+export function GardenScene({ config, selectedPlantType: externalSelectedPlantType, showSpacing: externalShowSpacing = true, selectedBedId: externalSelectedBedId = null, onSelectBed: externalOnSelectBed }: GardenSceneProps) {
   const [selectedPlantIndex, setSelectedPlantIndex] = useState<number | null>(null);
   const [isIsometric, setIsIsometric] = useState(false);
   const [gardenerDialogue, setGardenerDialogue] = useState('');
@@ -977,6 +1011,11 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
       }, 2000);
     } else if (tool === 'info' && selectedPlantIndex !== null) {
       setGardenerAction('pointing');
+      // Dispatch info event for the plant info panel
+      const event = new CustomEvent('garden:info', {
+        detail: { index: selectedPlantIndex },
+      });
+      window.dispatchEvent(event);
     }
   }, [selectedPlantIndex]);
 
@@ -1115,6 +1154,9 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
           gardenerAction={gardenerAction}
           focusTarget={focusTarget}
           weather={weather}
+          showSpacing={externalShowSpacing}
+          selectedBedId={externalSelectedBedId}
+          onSelectBed={externalOnSelectBed || (() => {})}
         />
       </Canvas>
 
@@ -1136,6 +1178,11 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
           onRemove={handleRemoveSelectedPlant}
           onInfo={() => {
             setSelectedPlantIndex(contextMenu.index);
+            // Dispatch info event for the plant info panel
+            const event = new CustomEvent('garden:info', {
+              detail: { index: contextMenu.index },
+            });
+            window.dispatchEvent(event);
             setContextMenu(null);
           }}
           onClose={() => setContextMenu(null)}
