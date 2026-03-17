@@ -1,4 +1,5 @@
 import { getAllPlants, getPlantById } from '@/lib/garden-utils';
+import { getPlantFamily, getFeedingCategory, PLANT_FAMILIES } from '@/lib/crop-rotation';
 import type { Plant, SoilType, SunExposure, ClimateZone, GardenZone, RaisedBed } from '@/types';
 
 export interface PlantingSuggestionResult {
@@ -18,6 +19,8 @@ export interface PlantingSuggestionResult {
   canSowIndoors: boolean;
   plantingMonths: number[];
   areaNeededM2: number; // per plant
+  companionBenefits?: { en: string; fr: string }[];
+  rotationTip?: { en: string; fr: string };
 }
 
 export interface ZonePlantingPlan {

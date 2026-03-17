@@ -243,7 +243,28 @@ export function useGarden() {
     []
   );
 
-  const isSetupComplete = isLoaded && config.length > 0 && config.width > 0;
+  const isSetupComplete = isLoaded && config.setupCompleted === true;
+  const hasBasicConfig = isLoaded && config.length > 0 && config.width > 0;
+
+  const completeSetup = useCallback(() => {
+    setConfigState((prev) => {
+      const updated = { ...prev, setupCompleted: true, onboardingStep: 'inspect' as const };
+      try {
+        localStorage.setItem(GARDEN_STORAGE_KEY, JSON.stringify(updated));
+      } catch { /* ignore */ }
+      return updated;
+    });
+  }, []);
+
+  const advanceOnboarding = useCallback((step: 'setup' | 'inspect' | 'plant' | 'done') => {
+    setConfigState((prev) => {
+      const updated = { ...prev, onboardingStep: step };
+      try {
+        localStorage.setItem(GARDEN_STORAGE_KEY, JSON.stringify(updated));
+      } catch { /* ignore */ }
+      return updated;
+    });
+  }, []);
 
   return {
     config,
@@ -260,6 +281,9 @@ export function useGarden() {
     updateZone,
     isLoaded,
     isSetupComplete,
+    hasBasicConfig,
+    completeSetup,
+    advanceOnboarding,
   };
 }
 

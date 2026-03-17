@@ -85,6 +85,8 @@ export interface GardenConfig {
   latitude?: number;
   longitude?: number;
   city?: string;
+  setupCompleted?: boolean; // true after user finishes the setup wizard
+  onboardingStep?: 'setup' | 'inspect' | 'plant' | 'done'; // guided flow progress
 }
 
 export interface WateringTask {
