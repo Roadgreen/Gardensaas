@@ -85,8 +85,11 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
   }, [season, soilType, grassColor, grassDark, soilColor, length, width]);
 
   // Create terrain geometry with subtle hills for the surrounding area
+  // Extended generously to accommodate raised beds placed outside the garden
   const hillGeometry = useMemo(() => {
-    const geo = new THREE.PlaneGeometry(length + 12, width + 12, 32, 32);
+    const extent = Math.max(length, width);
+    const padding = Math.max(extent * 1.5, 8); // Ensure enough room for outside beds
+    const geo = new THREE.PlaneGeometry(length + padding + 12, width + padding + 12, 32, 32);
     const pos = geo.attributes.position;
     for (let i = 0; i < pos.count; i++) {
       const x = pos.getX(i);
@@ -250,9 +253,9 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
         />
       </mesh>
 
-      {/* Flat grass layer right under garden (to ensure flat) */}
+      {/* Flat grass layer right under garden (to ensure flat) -- extended for outside beds */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
-        <planeGeometry args={[length + 1.5, width + 1.5]} />
+        <planeGeometry args={[length + Math.max(length, 4) + 4, width + Math.max(width, 4) + 4]} />
         <meshStandardMaterial
           color={grassColor}
           map={texReady ? grassTexRef.current : null}

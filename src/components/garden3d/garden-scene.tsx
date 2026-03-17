@@ -407,23 +407,29 @@ function FlyingBirds({ gardenLength, gardenWidth }: { gardenLength: number; gard
 function CameraController({
   isIsometric,
   focusTarget,
+  gardenLength,
+  gardenWidth,
 }: {
   isIsometric: boolean;
   focusTarget: THREE.Vector3 | null;
+  gardenLength: number;
+  gardenWidth: number;
 }) {
   const { camera } = useThree();
   const targetRef = useRef({ x: 0, y: 0, z: 0 });
   const focusLerpRef = useRef(0);
 
+  // Scale camera distance to garden size
+  const maxDim = Math.max(gardenLength, gardenWidth);
+  const camScale = Math.max(1, maxDim / 5); // 5m is the reference size
+
   useEffect(() => {
     if (isIsometric) {
-      // Classic isometric-like angle: slightly tilted, warm cozy overview
-      targetRef.current = { x: 4.5, y: 5.5, z: 4.5 };
+      targetRef.current = { x: 4.5 * camScale, y: 5.5 * camScale, z: 4.5 * camScale };
     } else {
-      // Default: gentle elevated angle for a nice garden overview
-      targetRef.current = { x: 3.5, y: 4.5, z: 5.5 };
+      targetRef.current = { x: 3.5 * camScale, y: 4.5 * camScale, z: 5.5 * camScale };
     }
-  }, [isIsometric]);
+  }, [isIsometric, camScale]);
 
   useEffect(() => {
     if (focusTarget) {
@@ -567,18 +573,10 @@ function GroundClickHandler({
       onClick={(e) => {
         e.stopPropagation();
         const point = e.point;
-        // Check if within garden bounds
-        if (
-          point.x >= -halfL &&
-          point.x <= halfL &&
-          point.z >= -halfW &&
-          point.z <= halfW
-        ) {
-          // Convert to percentage coords
-          const pctX = ((point.x + halfL) / config.length) * 100;
-          const pctZ = ((point.z + halfW) / config.width) * 100;
-          onGroundClick(pctX, pctZ);
-        }
+        // Convert to percentage coords (allow values outside 0-100 for outside-garden placement)
+        const pctX = ((point.x + halfL) / config.length) * 100;
+        const pctZ = ((point.z + halfW) / config.width) * 100;
+        onGroundClick(pctX, pctZ);
       }}
       onPointerOver={() => {
         if (isPlacementMode) document.body.style.cursor = 'crosshair';
@@ -588,7 +586,7 @@ function GroundClickHandler({
       }}
       visible={false}
     >
-      <planeGeometry args={[config.length + 1, config.width + 1]} />
+      <planeGeometry args={[config.length * 3, config.width * 3]} />
       <meshBasicMaterial transparent opacity={0} />
     </mesh>
   );
@@ -698,42 +696,65 @@ function GardenDimensionLabels({ length, width }: { length: number; width: numbe
     <group>
       {/* Length label (along X axis, front) */}
       <Html
-        position={[0, 0.02, halfW + 0.25]}
+        position={[0, 0.08, halfW + 0.35]}
         center
-        distanceFactor={8}
+        distanceFactor={7}
         style={{ pointerEvents: 'none' }}
       >
         <div style={{
-          background: 'rgba(74, 222, 128, 0.15)',
-          borderRadius: '4px',
-          padding: '1px 8px',
-          fontSize: '9px',
+          background: 'rgba(74, 222, 128, 0.2)',
+          borderRadius: '6px',
+          padding: '2px 10px',
+          fontSize: '11px',
           fontFamily: '"Nunito", sans-serif',
-          color: 'rgba(134, 239, 172, 0.7)',
+          color: 'rgba(134, 239, 172, 0.9)',
           whiteSpace: 'nowrap',
           letterSpacing: '0.5px',
+          fontWeight: 'bold',
+          border: '1px solid rgba(74, 222, 128, 0.15)',
         }}>
-          {length}m
+          {'\u2194'} {length}m
         </div>
       </Html>
       {/* Width label (along Z axis, right) */}
       <Html
-        position={[halfL + 0.25, 0.02, 0]}
+        position={[halfL + 0.35, 0.08, 0]}
         center
-        distanceFactor={8}
+        distanceFactor={7}
         style={{ pointerEvents: 'none' }}
       >
         <div style={{
-          background: 'rgba(74, 222, 128, 0.15)',
-          borderRadius: '4px',
-          padding: '1px 8px',
-          fontSize: '9px',
+          background: 'rgba(74, 222, 128, 0.2)',
+          borderRadius: '6px',
+          padding: '2px 10px',
+          fontSize: '11px',
           fontFamily: '"Nunito", sans-serif',
-          color: 'rgba(134, 239, 172, 0.7)',
+          color: 'rgba(134, 239, 172, 0.9)',
           whiteSpace: 'nowrap',
           letterSpacing: '0.5px',
+          fontWeight: 'bold',
+          border: '1px solid rgba(74, 222, 128, 0.15)',
         }}>
-          {width}m
+          {'\u2195'} {width}m
+        </div>
+      </Html>
+      {/* Area label at corner */}
+      <Html
+        position={[halfL + 0.35, 0.08, halfW + 0.35]}
+        center
+        distanceFactor={9}
+        style={{ pointerEvents: 'none' }}
+      >
+        <div style={{
+          background: 'rgba(74, 222, 128, 0.1)',
+          borderRadius: '4px',
+          padding: '1px 6px',
+          fontSize: '9px',
+          fontFamily: '"Nunito", sans-serif',
+          color: 'rgba(134, 239, 172, 0.6)',
+          whiteSpace: 'nowrap',
+        }}>
+          {(length * width).toFixed(1)}m{'\u00B2'}
         </div>
       </Html>
     </group>
@@ -810,7 +831,7 @@ function SceneContent({
       <SceneLighting timeOfDay={timeOfDay} season={season} />
       <SkyDome season={season} timeOfDay={timeOfDay} />
       <CelestialBody timeOfDay={timeOfDay} season={season} />
-      <CameraController isIsometric={isIsometric} focusTarget={focusTarget} />
+      <CameraController isIsometric={isIsometric} focusTarget={focusTarget} gardenLength={config.length} gardenWidth={config.width} />
 
       <OrbitControls
         ref={controlsRef}
@@ -819,7 +840,7 @@ function SceneContent({
         enableZoom
         enableRotate
         minDistance={1.5}
-        maxDistance={12}
+        maxDistance={Math.max(12, Math.max(config.length, config.width) * 2.5)}
         maxPolarAngle={Math.PI / 2.1}
         minPolarAngle={0.15}
         target={[0, 0, 0]}
@@ -827,8 +848,10 @@ function SceneContent({
         onChange={() => {
           if (controlsRef.current) {
             const target = controlsRef.current.target;
-            target.x = Math.max(-halfL - 2, Math.min(halfL + 2, target.x));
-            target.z = Math.max(-halfW - 2, Math.min(halfW + 2, target.z));
+            // Allow panning further to see raised beds placed outside the garden
+            const panMargin = Math.max(config.length, config.width) * 0.8;
+            target.x = Math.max(-halfL - panMargin, Math.min(halfL + panMargin, target.x));
+            target.z = Math.max(-halfW - panMargin, Math.min(halfW + panMargin, target.z));
             target.y = Math.max(-0.5, Math.min(3, target.y));
           }
         }}
@@ -1183,7 +1206,7 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
         }
       }
 
-      // Check if this click lands inside a raised bed
+      // Check if this click lands inside a raised bed (including outside-garden beds)
       let raisedBedId: string | undefined;
       (config.raisedBeds || []).forEach((bed) => {
         const bedWorldX = -halfL + (bed.x / 100) * config.length;
@@ -1212,6 +1235,16 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
           zoneId = zone.id;
         }
       });
+
+      // Check if click is inside the garden bounds or inside a container (bed/zone)
+      const isInsideGarden = pctX >= 0 && pctX <= 100 && pctZ >= 0 && pctZ <= 100;
+      if (!isInsideGarden && !raisedBedId && !zoneId) {
+        // Don't allow planting in empty ground outside the garden
+        setGardenerDialogue('You can only plant in the garden or inside a raised bed!');
+        setShowGardenerDialogue(true);
+        SoundEffects.play('click');
+        return;
+      }
 
       // Dispatch custom event for plant placement (will be handled by parent)
       const event = new CustomEvent('garden:plant', {
@@ -1310,7 +1343,11 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
       <Canvas
         shadows="soft"
         camera={{
-          position: [4, 5, 5.5],
+          position: [
+            Math.max(3, config.length * 0.7),
+            Math.max(4, Math.max(config.length, config.width) * 0.9),
+            Math.max(4, config.width * 0.9),
+          ],
           fov: 38,
           near: 0.1,
           far: 100,

@@ -45,13 +45,43 @@ export function RaisedBed3D({ bed, gardenLength, gardenWidth, isSelected, onSele
     setAoTex(getCachedTexture('ao-ground', () => createAOGroundTexture()));
   }, [bed.soilType]);
 
-  // Convert percent position to world coords
-  const worldX = -halfGL + (bed.x / 100) * gardenLength;
-  const worldZ = -halfGW + (bed.z / 100) * gardenWidth;
-
   const h = bed.heightM;
   const w = bed.widthM;
   const l = bed.lengthM;
+
+  // Convert percent position to world coords
+  // For outside-garden beds (x < 0 or x > 100 or z < 0 or z > 100),
+  // position them relative to the garden boundary with proper spacing
+  const isOutside = bed.outsideGarden || bed.x < 0 || bed.x > 100 || bed.z < 0 || bed.z > 100;
+  let worldX: number;
+  let worldZ: number;
+
+  if (isOutside) {
+    // Add extra margin so beds are clearly separated from the garden fence
+    const margin = 0.8; // meters of gap between garden fence and bed
+    const rawX = -halfGL + (bed.x / 100) * gardenLength;
+    const rawZ = -halfGW + (bed.z / 100) * gardenWidth;
+
+    // Push beds further out if they're near the garden edge
+    if (bed.x > 100) {
+      worldX = halfGL + margin + (bed.x - 100) / 100 * gardenLength + l / 2;
+    } else if (bed.x < 0) {
+      worldX = -halfGL - margin + (bed.x / 100) * gardenLength - l / 2;
+    } else {
+      worldX = rawX;
+    }
+
+    if (bed.z > 100) {
+      worldZ = halfGW + margin + (bed.z - 100) / 100 * gardenWidth + w / 2;
+    } else if (bed.z < 0) {
+      worldZ = -halfGW - margin + (bed.z / 100) * gardenWidth - w / 2;
+    } else {
+      worldZ = rawZ;
+    }
+  } else {
+    worldX = -halfGL + (bed.x / 100) * gardenLength;
+    worldZ = -halfGW + (bed.z / 100) * gardenWidth;
+  }
   const wallThickness = 0.04;
 
   const soilColor = SOIL_COLORS[bed.soilType] || SOIL_COLORS.loamy;

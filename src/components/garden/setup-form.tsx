@@ -1104,15 +1104,29 @@ function ZonesStep({ config, onAddZone, onRemoveZone, onAddRaisedBed, onRemoveRa
     const name = zoneName.trim() || defaultNames[zoneType] + ' ' + (allZones.length + 1);
 
     if (zoneType === 'raised-bed') {
+      // Place raised beds outside the garden by default, distributed around the perimeter
+      const bedCount = (config.raisedBeds || []).length;
+      const outsidePositions = [
+        { x: 120, z: 25 },
+        { x: 120, z: 75 },
+        { x: 50, z: 120 },
+        { x: -20, z: 25 },
+        { x: -20, z: 75 },
+        { x: 50, z: -20 },
+        { x: 130, z: 50 },
+        { x: -30, z: 50 },
+      ];
+      const pos = outsidePositions[bedCount % outsidePositions.length];
       const bed: RaisedBed = {
         id: 'bed-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7),
         name,
-        x: 30 + (allZones.length * 15) % 40,
-        z: 30 + (allZones.length * 10) % 40,
+        x: pos.x,
+        z: pos.z,
         widthM: parseFloat(zoneWidth) || 0.8,
         lengthM: parseFloat(zoneLength) || 1.2,
         heightM: parseFloat(zoneHeight) || 0.35,
         soilType: zoneSoil === 'loamy' ? 'loamy' : zoneSoil === 'sandy' ? 'sandy' : zoneSoil === 'clay' ? 'clay-mix' : zoneSoil === 'peaty' ? 'peat-mix' : 'potting-mix',
+        outsideGarden: true,
       };
       onAddRaisedBed(bed);
     } else {

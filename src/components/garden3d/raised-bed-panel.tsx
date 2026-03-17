@@ -73,21 +73,58 @@ export function RaisedBedPanel({
   const [newWidth, setNewWidth] = useState('0.8');
   const [newHeight, setNewHeight] = useState('0.35');
   const [newSoil, setNewSoil] = useState<RaisedBedSoilType>('potting-mix');
+  const [placeOutside, setPlaceOutside] = useState(true);
 
   const handleCreate = () => {
+    // Distribute raised beds around the garden perimeter automatically
+    // Positions are percentage of the garden, >100 or <0 = outside the garden
+    const outsideBedCount = beds.filter(b => b.outsideGarden).length;
+    const insideBedCount = beds.filter(b => !b.outsideGarden).length;
+
+    let startX: number;
+    let startZ: number;
+
+    if (placeOutside) {
+      // Place outside beds around the garden in a clockwise pattern:
+      // Right side first, then bottom, then left, then top
+      const slot = outsideBedCount % 8;
+      const positions = [
+        { x: 120, z: 25 },   // right-top
+        { x: 120, z: 75 },   // right-bottom
+        { x: 50, z: 120 },   // bottom-center
+        { x: -20, z: 25 },   // left-top
+        { x: -20, z: 75 },   // left-bottom
+        { x: 50, z: -20 },   // top-center
+        { x: 130, z: 50 },   // far-right
+        { x: -30, z: 50 },   // far-left
+      ];
+      const pos = positions[slot];
+      startX = pos.x;
+      startZ = pos.z;
+    } else {
+      // Inside: distribute evenly
+      const cols = Math.ceil(Math.sqrt(insideBedCount + 1));
+      const row = Math.floor(insideBedCount / cols);
+      const col = insideBedCount % cols;
+      startX = 20 + col * (60 / Math.max(cols, 1));
+      startZ = 20 + row * 30;
+    }
+
     const bed: RaisedBed = {
       id: 'bed-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7),
       name: newName || t('defaultName'),
-      x: 50, // Center of garden
-      z: 50,
+      x: startX,
+      z: startZ,
       widthM: parseFloat(newWidth) || 0.8,
       lengthM: parseFloat(newLength) || 1.5,
       heightM: parseFloat(newHeight) || 0.35,
       soilType: newSoil,
+      outsideGarden: placeOutside,
     };
     onAddBed(bed);
     setShowCreate(false);
     setNewName(t('defaultName') + ' ' + (beds.length + 2));
+    setPlaceOutside(true);
   };
 
   const applyPreset = (preset: typeof PRESETS[0]) => {
@@ -101,9 +138,11 @@ export function RaisedBedPanel({
   const handleMoveBed = (bedId: string, dx: number, dz: number) => {
     const bed = beds.find((b) => b.id === bedId);
     if (!bed) return;
-    const newX = Math.max(5, Math.min(95, bed.x + dx));
-    const newZ = Math.max(5, Math.min(95, bed.z + dz));
-    onUpdateBed(bedId, { x: newX, z: newZ });
+    // Allow moving beds outside the garden (range -50 to 150 percent)
+    const newX = Math.max(-50, Math.min(150, bed.x + dx));
+    const newZ = Math.max(-50, Math.min(150, bed.z + dz));
+    const outsideGarden = newX < 0 || newX > 100 || newZ < 0 || newZ > 100;
+    onUpdateBed(bedId, { x: newX, z: newZ, outsideGarden });
   };
 
   return (
@@ -138,7 +177,16 @@ export function RaisedBedPanel({
                 cursor: 'pointer',
               }} onClick={() => onSelectBed(selectedBedId === bed.id ? null : bed.id)}>
                 <div>
-                  <div style={{ fontSize: '12px', color: '#D4A06C', fontWeight: 'bold' }}>{bed.name}</div>
+                  <div style={{ fontSize: '12px', color: '#D4A06C', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    {bed.name}
+                    {bed.outsideGarden && (
+                      <span style={{
+                        fontSize: '8px', padding: '1px 5px', borderRadius: '4px',
+                        background: 'rgba(96, 165, 250, 0.2)', color: '#60A5FA',
+                        border: '1px solid rgba(96, 165, 250, 0.3)',
+                      }}>Outside</span>
+                    )}
+                  </div>
                   <div style={{ fontSize: '10px', color: '#9CA3AF' }}>
                     {bed.lengthM}x{bed.widthM}x{bed.heightM}m - {RAISED_BED_SOIL_LABELS[bed.soilType]}
                   </div>
@@ -282,6 +330,49 @@ export function RaisedBedPanel({
                 </button>
               ))}
             </div>
+          </div>
+
+          {/* Placement location */}
+          <div style={{ marginBottom: '10px' }}>
+            <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '4px' }}>Placement</label>
+            <div style={{ display: 'flex', gap: '6px' }}>
+              <button
+                onClick={() => setPlaceOutside(false)}
+                style={{
+                  flex: 1, padding: '8px 4px', borderRadius: '8px', fontSize: '11px',
+                  background: !placeOutside ? 'rgba(74, 222, 128, 0.2)' : 'rgba(0,0,0,0.2)',
+                  border: !placeOutside ? '1px solid rgba(74, 222, 128, 0.5)' : '1px solid transparent',
+                  color: !placeOutside ? '#4ADE80' : '#9CA3AF',
+                  cursor: 'pointer', fontFamily: '"Nunito", system-ui, sans-serif', textAlign: 'center',
+                }}
+              >
+                <div style={{ fontSize: '16px', marginBottom: '2px' }}>{'\uD83C\uDF3F'}</div>
+                Inside Garden
+              </button>
+              <button
+                onClick={() => setPlaceOutside(true)}
+                style={{
+                  flex: 1, padding: '8px 4px', borderRadius: '8px', fontSize: '11px',
+                  background: placeOutside ? 'rgba(96, 165, 250, 0.2)' : 'rgba(0,0,0,0.2)',
+                  border: placeOutside ? '1px solid rgba(96, 165, 250, 0.5)' : '1px solid transparent',
+                  color: placeOutside ? '#60A5FA' : '#9CA3AF',
+                  cursor: 'pointer', fontFamily: '"Nunito", system-ui, sans-serif', textAlign: 'center',
+                }}
+              >
+                <div style={{ fontSize: '16px', marginBottom: '2px' }}>{'\uD83C\uDFE1'}</div>
+                Outside Garden
+              </button>
+            </div>
+            {placeOutside && (
+              <div style={{ fontSize: '9px', color: '#60A5FA', marginTop: '4px', textAlign: 'center' }}>
+                Raised beds are placed around the garden perimeter. Use arrows to reposition.
+              </div>
+            )}
+            {!placeOutside && (
+              <div style={{ fontSize: '9px', color: '#4ADE80', marginTop: '4px', textAlign: 'center' }}>
+                The bed will overlap the main garden soil. Recommended: place outside.
+              </div>
+            )}
           </div>
 
           {/* Actions */}

@@ -121,12 +121,13 @@ export const RAISED_BED_SOIL_LABELS: Record<RaisedBedSoilType, string> = {
 export interface RaisedBed {
   id: string;
   name: string;
-  x: number; // percent position in garden (0-100)
+  x: number; // percent position relative to garden (can exceed 0-100 for outside placement)
   z: number;
   widthM: number;  // meters
   lengthM: number; // meters
   heightM: number; // meters (typical: 0.2 - 0.8)
   soilType: RaisedBedSoilType;
+  outsideGarden?: boolean; // true if placed outside the main garden plot
 }
 
 export interface GardenTip {
