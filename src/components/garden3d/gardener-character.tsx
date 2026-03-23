@@ -14,109 +14,119 @@ interface GardenerCharacterProps {
   onDialogueClose?: () => void;
   walkToTarget?: THREE.Vector3 | null;
   currentAction?: 'idle' | 'walking' | 'watering' | 'digging' | 'harvesting' | 'pointing' | 'celebrating';
+  locale?: string;
 }
 
 type GardenerAction = 'idle' | 'walking' | 'watering' | 'digging' | 'harvesting' | 'pointing' | 'celebrating';
 
-// Seasonal + time-based dialogue sets
-const DIALOGUE_SETS = {
-  morning: {
-    spring: [
-      "Good morning! The spring air is perfect for planting!",
-      "Early bird gets the worm! Let's check on our seedlings!",
-      "What a beautiful spring morning! Time to tend the garden!",
-    ],
-    summer: [
-      "Rise and shine! Water the plants before it gets too hot!",
-      "Good morning! The tomatoes are looking great today!",
-      "Let's get an early start before the summer heat kicks in!",
-    ],
-    autumn: [
-      "Good morning! Time to harvest those pumpkins!",
-      "The autumn leaves are so pretty! Let's gather the harvest!",
-      "Morning! Don't forget to prepare beds for winter.",
-    ],
-    winter: [
-      "Brr! Good morning! Let's plan for spring planting!",
-      "A quiet winter morning. Perfect for garden planning!",
-      "Morning! Time to check the compost and dream of spring.",
-    ],
+// Seasonal + time-based dialogue sets (EN / FR)
+type Season = 'spring' | 'summer' | 'autumn' | 'winter';
+type TimeOfDayKey = 'morning' | 'afternoon' | 'evening';
+type DialogueSets = Record<TimeOfDayKey, Record<Season, string[]>>;
+
+const DIALOGUE_SETS: Record<string, DialogueSets> = {
+  en: {
+    morning: {
+      spring: ["Good morning! The spring air is perfect for planting!", "Early bird gets the worm! Let's check on our seedlings!", "What a beautiful spring morning! Time to tend the garden!"],
+      summer: ["Rise and shine! Water the plants before it gets too hot!", "Good morning! The tomatoes are looking great today!", "Let's get an early start before the summer heat kicks in!"],
+      autumn: ["Good morning! Time to harvest those pumpkins!", "The autumn leaves are so pretty! Let's gather the harvest!", "Morning! Don't forget to prepare beds for winter."],
+      winter: ["Brr! Good morning! Let's plan for spring planting!", "A quiet winter morning. Perfect for garden planning!", "Morning! Time to check the compost and dream of spring."],
+    },
+    afternoon: {
+      spring: ["The bees are busy! Great sign for pollination!", "Spring showers help everything grow! Keep planting!", "Lovely afternoon! The garden is coming alive!"],
+      summer: ["Hot afternoon! Make sure everything is well-watered!", "The garden is thriving in this summer sun!", "Check for pests - they love warm afternoons!"],
+      autumn: ["Beautiful autumn afternoon! The colors are amazing!", "Perfect weather for composting fallen leaves!", "Afternoon harvest time! Everything smells wonderful!"],
+      winter: ["A crisp winter afternoon. Cozy up with seed catalogs!", "The garden is sleeping. Planning time!", "Winter mulch keeps the soil happy and warm!"],
+    },
+    evening: {
+      spring: ["What a productive day! The garden looks great!", "Evening watering is perfect on dry spring days!", "The sunset over the garden is so peaceful."],
+      summer: ["The evening breeze feels so nice! Great gardening today!", "Summer evenings are the best in the garden!", "Time to relax and enjoy the garden view!"],
+      autumn: ["Golden hour in the autumn garden. Simply magical!", "What a harvest day! Time to rest, gardener!", "The evening air smells like fallen leaves. So cozy!"],
+      winter: ["Early sunset. Time to head inside and stay warm!", "A quiet winter evening. Spring will be here before we know it!", "Good night, garden! See you tomorrow!"],
+    },
   },
-  afternoon: {
-    spring: [
-      "The bees are busy! Great sign for pollination!",
-      "Spring showers help everything grow! Keep planting!",
-      "Lovely afternoon! The garden is coming alive!",
-    ],
-    summer: [
-      "Hot afternoon! Make sure everything is well-watered!",
-      "The garden is thriving in this summer sun!",
-      "Check for pests - they love warm afternoons!",
-    ],
-    autumn: [
-      "Beautiful autumn afternoon! The colors are amazing!",
-      "Perfect weather for composting fallen leaves!",
-      "Afternoon harvest time! Everything smells wonderful!",
-    ],
-    winter: [
-      "A crisp winter afternoon. Cozy up with seed catalogs!",
-      "The garden is sleeping. Planning time!",
-      "Winter mulch keeps the soil happy and warm!",
-    ],
-  },
-  evening: {
-    spring: [
-      "What a productive day! The garden looks great!",
-      "Evening watering is perfect on dry spring days!",
-      "The sunset over the garden is so peaceful.",
-    ],
-    summer: [
-      "The evening breeze feels so nice! Great gardening today!",
-      "Summer evenings are the best in the garden!",
-      "Time to relax and enjoy the garden view!",
-    ],
-    autumn: [
-      "Golden hour in the autumn garden. Simply magical!",
-      "What a harvest day! Time to rest, gardener!",
-      "The evening air smells like fallen leaves. So cozy!",
-    ],
-    winter: [
-      "Early sunset. Time to head inside and stay warm!",
-      "A quiet winter evening. Spring will be here before we know it!",
-      "Good night, garden! See you tomorrow!",
-    ],
+  fr: {
+    morning: {
+      spring: ["Bonjour ! L'air printanier est parfait pour planter !", "Le monde appartient à ceux qui se lèvent tôt ! Vérifions nos semis !", "Quelle belle matinée de printemps ! Au jardin !"],
+      summer: ["Debout ! Arrosons les plantes avant qu'il fasse trop chaud !", "Bonjour ! Les tomates ont fière allure aujourd'hui !", "Commençons tôt avant la chaleur estivale !"],
+      autumn: ["Bonjour ! C'est l'heure de récolter les citrouilles !", "Les feuilles d'automne sont si jolies ! Récoltons !", "Matin ! N'oubliez pas de préparer les plates-bandes pour l'hiver."],
+      winter: ["Brr ! Bonjour ! Planifions les plantations de printemps !", "Un matin d'hiver tranquille. Parfait pour planifier le jardin !", "Matin ! L'heure de vérifier le compost et rêver du printemps."],
+    },
+    afternoon: {
+      spring: ["Les abeilles sont occupées ! Bon signe pour la pollinisation !", "Les averses printanières font tout pousser ! Continuons à planter !", "Bel après-midi ! Le jardin prend vie !"],
+      summer: ["Après-midi chaud ! Assurez-vous que tout est bien arrosé !", "Le jardin s'épanouit sous le soleil d'été !", "Surveillez les nuisibles - ils adorent les après-midi chauds !"],
+      autumn: ["Magnifique après-midi d'automne ! Les couleurs sont incroyables !", "Temps idéal pour composter les feuilles mortes !", "L'heure de la récolte ! Tout sent bon !"],
+      winter: ["Un après-midi d'hiver frais. Feuilletons les catalogues de graines !", "Le jardin dort. C'est l'heure de planifier !", "Le paillage d'hiver garde le sol heureux et chaud !"],
+    },
+    evening: {
+      spring: ["Quelle journée productive ! Le jardin est superbe !", "L'arrosage du soir est parfait par temps sec au printemps !", "Le coucher de soleil sur le jardin est si paisible."],
+      summer: ["La brise du soir est si agréable ! Belle journée de jardinage !", "Les soirées d'été au jardin sont les meilleures !", "L'heure de se détendre et profiter du jardin !"],
+      autumn: ["L'heure dorée dans le jardin d'automne. Tout simplement magique !", "Quelle journée de récolte ! Reposez-vous, jardinier !", "L'air du soir sent les feuilles mortes. Si agréable !"],
+      winter: ["Coucher de soleil précoce. Rentrons au chaud !", "Une soirée d'hiver tranquille. Le printemps sera vite là !", "Bonne nuit, jardin ! À demain !"],
+    },
   },
 };
 
-const ADVICE_LINES = [
-  "Water early in the morning for best results!",
-  "Companion planting can boost your harvest by 20%!",
-  "Don't forget to check for pests regularly!",
-  "Mulch helps retain moisture and suppress weeds!",
-  "Rotate your crops each season to keep soil healthy!",
-  "Add compost to enrich your soil naturally!",
-  "Prune dead leaves to encourage new growth!",
-  "Harvest in the morning when veggies are crispest!",
-  "Native flowers attract helpful pollinators!",
-  "Deep, infrequent watering encourages strong roots!",
-  "Place a plant by selecting one from the toolbar below!",
-  "Click on any plant to see how it's growing!",
-  "Your tomatoes need full sun - 6+ hours a day!",
-  "Try planting basil near tomatoes - they're best friends!",
-  "Right-click a plant for quick actions!",
-  "Use the mini-map to see your whole garden at a glance!",
-];
+const ADVICE_LINES: Record<string, string[]> = {
+  en: [
+    "Water early in the morning for best results!",
+    "Companion planting can boost your harvest by 20%!",
+    "Don't forget to check for pests regularly!",
+    "Mulch helps retain moisture and suppress weeds!",
+    "Rotate your crops each season to keep soil healthy!",
+    "Add compost to enrich your soil naturally!",
+    "Prune dead leaves to encourage new growth!",
+    "Harvest in the morning when veggies are crispest!",
+    "Native flowers attract helpful pollinators!",
+    "Deep, infrequent watering encourages strong roots!",
+    "Place a plant by selecting one from the toolbar below!",
+    "Click on any plant to see how it's growing!",
+    "Your tomatoes need full sun - 6+ hours a day!",
+    "Try planting basil near tomatoes - they're best friends!",
+    "Right-click a plant for quick actions!",
+    "Use the mini-map to see your whole garden at a glance!",
+  ],
+  fr: [
+    "Arrosez tôt le matin pour de meilleurs résultats !",
+    "Le compagnonnage peut augmenter votre récolte de 20 % !",
+    "N'oubliez pas de vérifier les nuisibles régulièrement !",
+    "Le paillage retient l'humidité et supprime les mauvaises herbes !",
+    "Faites une rotation des cultures chaque saison pour garder le sol sain !",
+    "Ajoutez du compost pour enrichir votre sol naturellement !",
+    "Taillez les feuilles mortes pour encourager la repousse !",
+    "Récoltez le matin quand les légumes sont les plus croquants !",
+    "Les fleurs locales attirent les pollinisateurs !",
+    "Un arrosage profond et peu fréquent favorise des racines fortes !",
+    "Placez une plante en la sélectionnant dans la barre d'outils !",
+    "Cliquez sur une plante pour voir sa progression !",
+    "Vos tomates ont besoin de plein soleil - 6h+ par jour !",
+    "Essayez de planter du basilic près des tomates - ce sont les meilleurs amis !",
+    "Faites un clic droit sur une plante pour des actions rapides !",
+    "Utilisez la mini-carte pour voir tout votre jardin d'un coup !",
+  ],
+};
 
 // Daily tips that rotate
-const DAILY_TIPS = [
-  "Tip of the day: Eggshells add calcium to your soil!",
-  "Tip of the day: Coffee grounds repel slugs naturally!",
-  "Tip of the day: Marigolds keep aphids away from veggies!",
-  "Tip of the day: Water at the base, not the leaves!",
-  "Tip of the day: Deadhead flowers to encourage more blooms!",
-  "Tip of the day: Raised beds warm up faster in spring!",
-  "Tip of the day: Plant garlic near roses to deter pests!",
-];
+const DAILY_TIPS: Record<string, string[]> = {
+  en: [
+    "Tip of the day: Eggshells add calcium to your soil!",
+    "Tip of the day: Coffee grounds repel slugs naturally!",
+    "Tip of the day: Marigolds keep aphids away from veggies!",
+    "Tip of the day: Water at the base, not the leaves!",
+    "Tip of the day: Deadhead flowers to encourage more blooms!",
+    "Tip of the day: Raised beds warm up faster in spring!",
+    "Tip of the day: Plant garlic near roses to deter pests!",
+  ],
+  fr: [
+    "Conseil du jour : Les coquilles d'œuf apportent du calcium au sol !",
+    "Conseil du jour : Le marc de café repousse les limaces naturellement !",
+    "Conseil du jour : Les soucis éloignent les pucerons des légumes !",
+    "Conseil du jour : Arrosez à la base, pas sur les feuilles !",
+    "Conseil du jour : Supprimez les fleurs fanées pour favoriser de nouvelles !",
+    "Conseil du jour : Les bacs surélevés se réchauffent plus vite au printemps !",
+    "Conseil du jour : Plantez de l'ail près des rosiers pour éloigner les nuisibles !",
+  ],
+};
 
 export function getSeason(): 'spring' | 'summer' | 'autumn' | 'winter' {
   const month = new Date().getMonth();
@@ -133,15 +143,18 @@ export function getTimeOfDay(): 'morning' | 'afternoon' | 'evening' {
   return 'evening';
 }
 
-export function getSeasonalDialogue(): string {
+export function getSeasonalDialogue(locale: string = 'en'): string {
   const season = getSeason();
   const time = getTimeOfDay();
-  const lines = DIALOGUE_SETS[time][season];
+  const lang = DIALOGUE_SETS[locale] ? locale : 'en';
+  const lines = DIALOGUE_SETS[lang][time][season];
   return lines[Math.floor(Math.random() * lines.length)];
 }
 
-export function getRandomAdvice(): string {
-  return ADVICE_LINES[Math.floor(Math.random() * ADVICE_LINES.length)];
+export function getRandomAdvice(locale: string = 'en'): string {
+  const lang = ADVICE_LINES[locale] ? locale : 'en';
+  const lines = ADVICE_LINES[lang];
+  return lines[Math.floor(Math.random() * lines.length)];
 }
 
 // ===== TOTAL CHARACTER HEIGHT: ~1.5 units =====
@@ -208,41 +221,74 @@ function getSeasonalPalette(): typeof PALETTE {
   return { ...PALETTE, ...overrides };
 }
 
-// Seasonal gardening tips for speech bubbles
-const SEASONAL_TIPS: Record<string, string[]> = {
-  spring: [
-    "Spring is here! Time to start seeds indoors for transplanting.",
-    "Add compost to your beds now -- your plants will thank you!",
-    "Prune fruit trees before buds open for a better harvest.",
-    "Watch for late frosts! Keep row covers ready.",
-    "Plant peas and lettuce early -- they love cool weather!",
-  ],
-  summer: [
-    "Water deeply in the morning to beat the afternoon heat!",
-    "Mulch around your plants to keep roots cool and moist.",
-    "Harvest herbs regularly to encourage bushier growth.",
-    "Check under leaves for pest eggs -- early detection saves plants!",
-    "Tomatoes love consistent watering -- avoid drought stress.",
-  ],
-  autumn: [
-    "Time to plant garlic and shallots for next year!",
-    "Collect fallen leaves for composting -- free garden gold!",
-    "Plant cover crops to protect soil over winter.",
-    "Harvest root vegetables before the first hard freeze.",
-    "Clean and oil your tools for winter storage.",
-  ],
-  winter: [
-    "Plan your spring garden layout while things are quiet.",
-    "Order seeds now for the best selection!",
-    "Build raised beds during winter downtime.",
-    "Check stored vegetables for signs of spoilage.",
-    "Dream big! Sketch out new garden ideas for spring.",
-  ],
+// Seasonal gardening tips for speech bubbles (bilingual)
+const SEASONAL_TIPS: Record<string, Record<string, string[]>> = {
+  en: {
+    spring: [
+      "Spring is here! Time to start seeds indoors for transplanting.",
+      "Add compost to your beds now -- your plants will thank you!",
+      "Prune fruit trees before buds open for a better harvest.",
+      "Watch for late frosts! Keep row covers ready.",
+      "Plant peas and lettuce early -- they love cool weather!",
+    ],
+    summer: [
+      "Water deeply in the morning to beat the afternoon heat!",
+      "Mulch around your plants to keep roots cool and moist.",
+      "Harvest herbs regularly to encourage bushier growth.",
+      "Check under leaves for pest eggs -- early detection saves plants!",
+      "Tomatoes love consistent watering -- avoid drought stress.",
+    ],
+    autumn: [
+      "Time to plant garlic and shallots for next year!",
+      "Collect fallen leaves for composting -- free garden gold!",
+      "Plant cover crops to protect soil over winter.",
+      "Harvest root vegetables before the first hard freeze.",
+      "Clean and oil your tools for winter storage.",
+    ],
+    winter: [
+      "Plan your spring garden layout while things are quiet.",
+      "Order seeds now for the best selection!",
+      "Build raised beds during winter downtime.",
+      "Check stored vegetables for signs of spoilage.",
+      "Dream big! Sketch out new garden ideas for spring.",
+    ],
+  },
+  fr: {
+    spring: [
+      "Le printemps est là ! Démarrez les semis en intérieur pour le repiquage.",
+      "Ajoutez du compost dans vos bacs maintenant – vos plantes vous remercieront !",
+      "Taillez les arbres fruitiers avant le débourrement pour une meilleure récolte.",
+      "Attention aux gelées tardives ! Gardez des voiles d'hivernage prêts.",
+      "Plantez pois et laitues tôt – ils adorent le temps frais !",
+    ],
+    summer: [
+      "Arrosez en profondeur le matin pour devancer la chaleur !",
+      "Paillez autour de vos plantes pour garder les racines fraîches et humides.",
+      "Récoltez les herbes régulièrement pour stimuler une croissance touffue.",
+      "Vérifiez sous les feuilles les œufs de nuisibles – la détection précoce sauve les plantes !",
+      "Les tomates aiment un arrosage régulier – évitez le stress hydrique.",
+    ],
+    autumn: [
+      "C'est le moment de planter ail et échalotes pour l'année prochaine !",
+      "Ramassez les feuilles mortes pour le compost – de l'or gratuit pour le jardin !",
+      "Semez des engrais verts pour protéger le sol en hiver.",
+      "Récoltez les légumes-racines avant le premier gel dur.",
+      "Nettoyez et huilez vos outils pour le rangement hivernal.",
+    ],
+    winter: [
+      "Planifiez l'aménagement de votre jardin printanier au calme.",
+      "Commandez les graines maintenant pour le meilleur choix !",
+      "Construisez des bacs surélevés pendant le repos hivernal.",
+      "Vérifiez les légumes stockés pour détecter les signes de détérioration.",
+      "Voyez grand ! Dessinez de nouvelles idées de jardin pour le printemps.",
+    ],
+  },
 };
 
-export function getSeasonalTip(): string {
+export function getSeasonalTip(locale: string = 'en'): string {
   const season = getSeason();
-  const tips = SEASONAL_TIPS[season] || SEASONAL_TIPS.spring;
+  const lang = SEASONAL_TIPS[locale] ? locale : 'en';
+  const tips = SEASONAL_TIPS[lang][season] || SEASONAL_TIPS.en.spring;
   return tips[Math.floor(Math.random() * tips.length)];
 }
 
@@ -900,6 +946,7 @@ export function GardenerCharacter({
   onDialogueClose,
   walkToTarget,
   currentAction = 'idle',
+  locale = 'en',
 }: GardenerCharacterProps) {
   const groupRef = useRef<THREE.Group>(null);
   const armLeftRef = useRef<THREE.Group>(null);
@@ -972,7 +1019,9 @@ export function GardenerCharacter({
   useEffect(() => {
     const interval = setInterval(() => {
       if (!showDialogue) {
-        const tip = DAILY_TIPS[Math.floor(Math.random() * DAILY_TIPS.length)];
+        const lang = DAILY_TIPS[locale] ? locale : 'en';
+        const tips = DAILY_TIPS[lang];
+        const tip = tips[Math.floor(Math.random() * tips.length)];
         setDailyTip(tip);
         setShowDailyTip(true);
         setTimeout(() => setShowDailyTip(false), 6000);

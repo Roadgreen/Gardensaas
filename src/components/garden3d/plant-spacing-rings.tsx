@@ -3,6 +3,7 @@
 import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
+import { useTranslations } from 'next-intl';
 import * as THREE from 'three';
 import type { Plant, PlantedItem, GardenConfig } from '@/types';
 
@@ -23,6 +24,7 @@ interface SpacingConflict {
 }
 
 export function PlantSpacingRings({ config, plants, showSpacing, selectedPlantType }: PlantSpacingRingsProps) {
+  const t = useTranslations('garden3d.spacingLabels');
   const halfL = config.length / 2;
   const halfW = config.width / 2;
 
@@ -139,7 +141,7 @@ export function PlantSpacingRings({ config, plants, showSpacing, selectedPlantTy
               whiteSpace: 'nowrap',
               border: '1px solid #FCA5A5',
             }}>
-              {'\u26A0'} Bad neighbors!
+              {'\u26A0'} {t('badNeighbors')}
             </div>
           </Html>
         </group>
@@ -178,7 +180,7 @@ export function PlantSpacingRings({ config, plants, showSpacing, selectedPlantTy
                 boxShadow: '0 2px 8px rgba(239, 68, 68, 0.4)',
                 textAlign: 'center',
               }}>
-                <div>{'\u26A0'} Too close! {distCm}cm / {neededCm}cm needed</div>
+                <div>{'\u26A0'} {t('tooCloseWarning', { distCm, neededCm })}</div>
               </div>
             </Html>
           </group>
@@ -209,7 +211,7 @@ export function PlantSpacingRings({ config, plants, showSpacing, selectedPlantTy
             whiteSpace: 'nowrap',
             border: '1px solid #FCA5A5',
           }}>
-            {'\u26A0\uFE0F'} {conflicts.length} spacing conflict{conflicts.length !== 1 ? 's' : ''}
+            {'\u26A0\uFE0F'} {t('spacingConflicts', { count: conflicts.length })}
           </div>
         </Html>
       )}

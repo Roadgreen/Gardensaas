@@ -728,7 +728,15 @@
       "daily": "Quotidien",
       "every2days": "Tous les 2 jours",
       "twiceWeekly": "2 fois par semaine",
-      "weekly": "Hebdomadaire"
+      "weekly": "Hebdomadaire",
+      "soils": {
+        "clay": "Argileux",
+        "sandy": "Sablonneux",
+        "loamy": "Limoneux",
+        "silty": "Limon fin",
+        "peaty": "Tourbeux",
+        "chalky": "Calcaire"
+      }
     },
     "overlay": {
       "spring": "Printemps",
@@ -776,6 +784,104 @@
       "step3": "Cliquez sur une plante placee pour voir ses infos et compagnons",
       "tip": "Utilisez les Suggestions pour voir ce qui pousse le mieux maintenant",
       "gotIt": "Compris !"
+    },
+    "months": {
+      "jan": "Jan", "feb": "Fév", "mar": "Mar", "apr": "Avr",
+      "may": "Mai", "jun": "Juin", "jul": "Juil", "aug": "Août",
+      "sep": "Sep", "oct": "Oct", "nov": "Nov", "dec": "Déc"
+    },
+    "categories": {
+      "vegetable": "Légume",
+      "herb": "Herbe",
+      "fruit": "Fruit",
+      "root": "Racine"
+    },
+    "difficulties": {
+      "easy": "Facile",
+      "medium": "Moyen",
+      "hard": "Difficile"
+    },
+    "gardener": {
+      "morning": {
+        "spring": ["Bonjour ! L'air printanier est parfait pour planter !", "Le monde appartient à ceux qui se lèvent tôt ! Vérifions nos semis !", "Quelle belle matinée de printemps ! Au jardin !"],
+        "summer": ["Debout ! Arrosons les plantes avant qu'il fasse trop chaud !", "Bonjour ! Les tomates ont fière allure aujourd'hui !", "Commençons tôt avant la chaleur estivale !"],
+        "autumn": ["Bonjour ! C'est l'heure de récolter les citrouilles !", "Les feuilles d'automne sont si jolies ! Récoltons !", "Matin ! N'oubliez pas de préparer les plates-bandes pour l'hiver."],
+        "winter": ["Brr ! Bonjour ! Planifions les plantations de printemps !", "Un matin d'hiver tranquille. Parfait pour planifier le jardin !", "Matin ! L'heure de vérifier le compost et rêver du printemps."]
+      },
+      "afternoon": {
+        "spring": ["Les abeilles sont occupées ! Bon signe pour la pollinisation !", "Les averses printanières font tout pousser ! Continuons à planter !", "Bel après-midi ! Le jardin prend vie !"],
+        "summer": ["Après-midi chaud ! Assurez-vous que tout est bien arrosé !", "Le jardin s'épanouit sous le soleil d'été !", "Surveillez les nuisibles - ils adorent les après-midi chauds !"],
+        "autumn": ["Magnifique après-midi d'automne ! Les couleurs sont incroyables !", "Temps idéal pour composter les feuilles mortes !", "L'heure de la récolte ! Tout sent bon !"],
+        "winter": ["Un après-midi d'hiver frais. Feuilletons les catalogues de graines !", "Le jardin dort. C'est l'heure de planifier !", "Le paillage d'hiver garde le sol heureux et chaud !"]
+      },
+      "evening": {
+        "spring": ["Quelle journée productive ! Le jardin est superbe !", "L'arrosage du soir est parfait par temps sec au printemps !", "Le coucher de soleil sur le jardin est si paisible."],
+        "summer": ["La brise du soir est si agréable ! Belle journée de jardinage !", "Les soirées d'été au jardin sont les meilleures !", "L'heure de se détendre et profiter du jardin !"],
+        "autumn": ["L'heure dorée dans le jardin d'automne. Tout simplement magique !", "Quelle journée de récolte ! Reposez-vous, jardinier !", "L'air du soir sent les feuilles mortes. Si agréable !"],
+        "winter": ["Coucher de soleil précoce. Rentrons au chaud !", "Une soirée d'hiver tranquille. Le printemps sera vite là !", "Bonne nuit, jardin ! À demain !"]
+      },
+      "advice": [
+        "Arrosez tôt le matin pour de meilleurs résultats !",
+        "Le compagnonnage peut augmenter votre récolte de 20 % !",
+        "N'oubliez pas de vérifier les nuisibles régulièrement !",
+        "Le paillage retient l'humidité et supprime les mauvaises herbes !",
+        "Faites une rotation des cultures chaque saison pour garder le sol sain !",
+        "Ajoutez du compost pour enrichir votre sol naturellement !",
+        "Taillez les feuilles mortes pour encourager la repousse !",
+        "Récoltez le matin quand les légumes sont les plus croquants !",
+        "Les fleurs locales attirent les pollinisateurs !",
+        "Un arrosage profond et peu fréquent favorise des racines fortes !",
+        "Placez une plante en la sélectionnant dans la barre d'outils !",
+        "Cliquez sur une plante pour voir sa progression !",
+        "Vos tomates ont besoin de plein soleil - 6h+ par jour !",
+        "Essayez de planter du basilic près des tomates - ce sont les meilleurs amis !",
+        "Faites un clic droit sur une plante pour des actions rapides !",
+        "Utilisez la mini-carte pour voir tout votre jardin d'un coup !"
+      ],
+      "dailyTips": [
+        "Conseil du jour : Les coquilles d'œuf apportent du calcium au sol !",
+        "Conseil du jour : Le marc de café repousse les limaces naturellement !",
+        "Conseil du jour : Les soucis éloignent les pucerons des légumes !",
+        "Conseil du jour : Arrosez à la base, pas sur les feuilles !",
+        "Conseil du jour : Supprimez les fleurs fanées pour favoriser de nouvelles !",
+        "Conseil du jour : Les bacs surélevés se réchauffent plus vite au printemps !",
+        "Conseil du jour : Plantez de l'ail près des rosiers pour éloigner les nuisibles !"
+      ],
+      "seasonalTips": {
+        "spring": [
+          "Le printemps est là ! Démarrez les semis en intérieur pour le repiquage.",
+          "Ajoutez du compost dans vos bacs maintenant – vos plantes vous remercieront !",
+          "Taillez les arbres fruitiers avant le débourrement pour une meilleure récolte.",
+          "Attention aux gelées tardives ! Gardez des voiles d'hivernage prêts.",
+          "Plantez pois et laitues tôt – ils adorent le temps frais !"
+        ],
+        "summer": [
+          "Arrosez en profondeur le matin pour devancer la chaleur !",
+          "Paillez autour de vos plantes pour garder les racines fraîches et humides.",
+          "Récoltez les herbes régulièrement pour stimuler une croissance touffue.",
+          "Vérifiez sous les feuilles les œufs de nuisibles – la détection précoce sauve les plantes !",
+          "Les tomates aiment un arrosage régulier – évitez le stress hydrique."
+        ],
+        "autumn": [
+          "C'est le moment de planter ail et échalotes pour l'année prochaine !",
+          "Ramassez les feuilles mortes pour le compost – de l'or gratuit pour le jardin !",
+          "Semez des engrais verts pour protéger le sol en hiver.",
+          "Récoltez les légumes-racines avant le premier gel dur.",
+          "Nettoyez et huilez vos outils pour le rangement hivernal."
+        ],
+        "winter": [
+          "Planifiez l'aménagement de votre jardin printanier au calme.",
+          "Commandez les graines maintenant pour le meilleur choix !",
+          "Construisez des bacs surélevés pendant le repos hivernal.",
+          "Vérifiez les légumes stockés pour détecter les signes de détérioration.",
+          "Voyez grand ! Dessinez de nouvelles idées de jardin pour le printemps."
+        ]
+      }
+    },
+    "spacingLabels": {
+      "badNeighbors": "Mauvais voisins !",
+      "tooCloseWarning": "Trop proche ! {distCm}cm / {neededCm}cm requis",
+      "spacingConflicts": "{count} conflit(s) d'espacement"
     }
   },
   "locale": {

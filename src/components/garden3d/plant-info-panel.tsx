@@ -29,7 +29,7 @@ const SUN_ICONS: Record<string, string> = {
 
 // Sun and water labels are now loaded via translations (garden3d.infoPanel)
 
-const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const MONTH_KEYS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'] as const;
 
 // FR translations for common English growing tips
 const TIPS_EN_TO_FR: Record<string, string> = {
@@ -90,6 +90,9 @@ function getLocalizedTip(tip: string, locale: string): string {
 export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, gardenLength, gardenWidth, raisedBedId, raisedBeds, varietyId, zoneId, zones, onClose, onRemove }: PlantInfoPanelProps) {
   const locale = useLocale();
   const t = useTranslations('garden3d.infoPanel');
+  const tMonths = useTranslations('garden3d.months');
+  const tCat = useTranslations('garden3d.categories');
+  const tDiff = useTranslations('garden3d.difficulties');
   const daysPlanted = useMemo(() => {
     const now = new Date();
     const planted = new Date(plantedDate);
@@ -116,8 +119,8 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
   [plant.enemyPlants, allPlants, locale]);
 
   const plantingMonthsStr = useMemo(() =>
-    plant.plantingMonths.map((m) => MONTH_SHORT[m - 1]).join(', '),
-  [plant.plantingMonths]);
+    plant.plantingMonths.map((m) => tMonths(MONTH_KEYS[m - 1])).join(', '),
+  [plant.plantingMonths, tMonths]);
 
   // Compute nearby plants and warnings
   const nearbyAnalysis = useMemo(() => {
@@ -204,7 +207,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
             {plant.name.fr}
           </div>
           <div style={{ fontSize: '11px', color: '#9CA3AF', marginTop: '2px', textTransform: 'capitalize' }}>
-            {plant.category} - {plant.difficulty}
+            {tCat.has(plant.category) ? tCat(plant.category as Parameters<typeof tCat>[0]) : plant.category} - {tDiff.has(plant.difficulty) ? tDiff(plant.difficulty as Parameters<typeof tDiff>[0]) : plant.difficulty}
           </div>
         </div>
       </div>
@@ -445,18 +448,18 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
           {'\uD83D\uDCC5'} {t('bestPlantingMonths')}
         </div>
         <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-          {MONTH_SHORT.map((m, i) => {
+          {MONTH_KEYS.map((mk, i) => {
             const isActive = plant.plantingMonths.includes(i + 1);
             const isCurrentMonth = new Date().getMonth() === i;
             return (
-              <span key={m} style={{
+              <span key={mk} style={{
                 padding: '2px 6px', borderRadius: '4px', fontSize: '10px',
                 background: isActive ? 'rgba(74, 222, 128, 0.3)' : 'rgba(0,0,0,0.2)',
                 color: isActive ? '#86EFAC' : '#6B7280',
                 fontWeight: isActive ? 'bold' : 'normal',
                 border: isCurrentMonth ? '1px solid rgba(251, 191, 36, 0.5)' : '1px solid transparent',
               }}>
-                {m}
+                {tMonths(mk)}
               </span>
             );
           })}

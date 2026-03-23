@@ -728,7 +728,15 @@
       "daily": "Daily",
       "every2days": "Every 2 days",
       "twiceWeekly": "Twice weekly",
-      "weekly": "Weekly"
+      "weekly": "Weekly",
+      "soils": {
+        "clay": "Clay",
+        "sandy": "Sandy",
+        "loamy": "Loamy",
+        "silty": "Silty",
+        "peaty": "Peaty",
+        "chalky": "Chalky"
+      }
     },
     "overlay": {
       "spring": "Spring",
@@ -776,6 +784,104 @@
       "step3": "Click a placed plant to see its info and companions",
       "tip": "Use Suggestions to see what grows best in your garden right now",
       "gotIt": "Got it!"
+    },
+    "months": {
+      "jan": "Jan", "feb": "Feb", "mar": "Mar", "apr": "Apr",
+      "may": "May", "jun": "Jun", "jul": "Jul", "aug": "Aug",
+      "sep": "Sep", "oct": "Oct", "nov": "Nov", "dec": "Dec"
+    },
+    "categories": {
+      "vegetable": "Vegetable",
+      "herb": "Herb",
+      "fruit": "Fruit",
+      "root": "Root"
+    },
+    "difficulties": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    },
+    "spacingLabels": {
+      "badNeighbors": "Bad neighbors!",
+      "tooCloseWarning": "Too close! {distCm}cm / {neededCm}cm needed",
+      "spacingConflicts": "{count} spacing conflict(s)"
+    },
+    "gardener": {
+      "morning": {
+        "spring": ["Good morning! The spring air is perfect for planting!", "Early bird gets the worm! Let's check on our seedlings!", "What a beautiful spring morning! Time to tend the garden!"],
+        "summer": ["Rise and shine! Water the plants before it gets too hot!", "Good morning! The tomatoes are looking great today!", "Let's get an early start before the summer heat kicks in!"],
+        "autumn": ["Good morning! Time to harvest those pumpkins!", "The autumn leaves are so pretty! Let's gather the harvest!", "Morning! Don't forget to prepare beds for winter."],
+        "winter": ["Brr! Good morning! Let's plan for spring planting!", "A quiet winter morning. Perfect for garden planning!", "Morning! Time to check the compost and dream of spring."]
+      },
+      "afternoon": {
+        "spring": ["The bees are busy! Great sign for pollination!", "Spring showers help everything grow! Keep planting!", "Lovely afternoon! The garden is coming alive!"],
+        "summer": ["Hot afternoon! Make sure everything is well-watered!", "The garden is thriving in this summer sun!", "Check for pests - they love warm afternoons!"],
+        "autumn": ["Beautiful autumn afternoon! The colors are amazing!", "Perfect weather for composting fallen leaves!", "Afternoon harvest time! Everything smells wonderful!"],
+        "winter": ["A crisp winter afternoon. Cozy up with seed catalogs!", "The garden is sleeping. Planning time!", "Winter mulch keeps the soil happy and warm!"]
+      },
+      "evening": {
+        "spring": ["What a productive day! The garden looks great!", "Evening watering is perfect on dry spring days!", "The sunset over the garden is so peaceful."],
+        "summer": ["The evening breeze feels so nice! Great gardening today!", "Summer evenings are the best in the garden!", "Time to relax and enjoy the garden view!"],
+        "autumn": ["Golden hour in the autumn garden. Simply magical!", "What a harvest day! Time to rest, gardener!", "The evening air smells like fallen leaves. So cozy!"],
+        "winter": ["Early sunset. Time to head inside and stay warm!", "A quiet winter evening. Spring will be here before we know it!", "Good night, garden! See you tomorrow!"]
+      },
+      "advice": [
+        "Water early in the morning for best results!",
+        "Companion planting can boost your harvest by 20%!",
+        "Don't forget to check for pests regularly!",
+        "Mulch helps retain moisture and suppress weeds!",
+        "Rotate your crops each season to keep soil healthy!",
+        "Add compost to enrich your soil naturally!",
+        "Prune dead leaves to encourage new growth!",
+        "Harvest in the morning when veggies are crispest!",
+        "Native flowers attract helpful pollinators!",
+        "Deep, infrequent watering encourages strong roots!",
+        "Place a plant by selecting one from the toolbar below!",
+        "Click on any plant to see how it's growing!",
+        "Your tomatoes need full sun - 6+ hours a day!",
+        "Try planting basil near tomatoes - they're best friends!",
+        "Right-click a plant for quick actions!",
+        "Use the mini-map to see your whole garden at a glance!"
+      ],
+      "dailyTips": [
+        "Tip of the day: Eggshells add calcium to your soil!",
+        "Tip of the day: Coffee grounds repel slugs naturally!",
+        "Tip of the day: Marigolds keep aphids away from veggies!",
+        "Tip of the day: Water at the base, not the leaves!",
+        "Tip of the day: Deadhead flowers to encourage more blooms!",
+        "Tip of the day: Raised beds warm up faster in spring!",
+        "Tip of the day: Plant garlic near roses to deter pests!"
+      ],
+      "seasonalTips": {
+        "spring": [
+          "Spring is here! Time to start seeds indoors for transplanting.",
+          "Add compost to your beds now -- your plants will thank you!",
+          "Prune fruit trees before buds open for a better harvest.",
+          "Watch for late frosts! Keep row covers ready.",
+          "Plant peas and lettuce early -- they love cool weather!"
+        ],
+        "summer": [
+          "Water deeply in the morning to beat the afternoon heat!",
+          "Mulch around your plants to keep roots cool and moist.",
+          "Harvest herbs regularly to encourage bushier growth.",
+          "Check under leaves for pest eggs -- early detection saves plants!",
+          "Tomatoes love consistent watering -- avoid drought stress."
+        ],
+        "autumn": [
+          "Time to plant garlic and shallots for next year!",
+          "Collect fallen leaves for composting -- free garden gold!",
+          "Plant cover crops to protect soil over winter.",
+          "Harvest root vegetables before the first hard freeze.",
+          "Clean and oil your tools for winter storage."
+        ],
+        "winter": [
+          "Plan your spring garden layout while things are quiet.",
+          "Order seeds now for the best selection!",
+          "Build raised beds during winter downtime.",
+          "Check stored vegetables for signs of spoilage.",
+          "Dream big! Sketch out new garden ideas for spring."
+        ]
+      }
     }
   },
   "locale": {
