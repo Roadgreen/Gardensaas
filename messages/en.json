@@ -753,7 +753,21 @@
       "infoDesc": "Inspect plant details",
       "boostDesc": "Fertilize soil",
       "tapToContinue": "tap to continue",
-      "hint": "Tap plants for info | Pinch to zoom | Drag to rotate"
+      "hint": "Tap plants for info | Pinch to zoom | Drag to rotate",
+      "snowy": "Snowy",
+      "overcast": "Overcast",
+      "lightRain": "Light rain",
+      "breezy": "Breezy",
+      "clear": "Clear"
+    },
+    "popup": {
+      "stageSeed": "Seed",
+      "stageSprout": "Sprout",
+      "stageGrowing": "Growing",
+      "stageMature": "Mature",
+      "stageReady": "Ready!",
+      "day": "Day",
+      "needsWater": "Needs water"
     },
     "welcome": {
       "title": "Welcome to your 3D Garden!",

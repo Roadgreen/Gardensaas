@@ -330,7 +330,7 @@ export function GardenUIOverlay({
       {/* ===== BOTTOM: Game Hotbar Toolbar ===== */}
       <div style={{
         position: 'absolute',
-        bottom: showDialogue ? '120px' : '16px',
+        bottom: showDialogue ? '120px' : (isMobile ? '76px' : '16px'),
         left: '50%',
         transform: 'translateX(-50%)',
         zIndex: 25,
@@ -544,7 +544,7 @@ export function GardenUIOverlay({
           onClick={onDialogueClose}
           style={{
             position: 'absolute',
-            bottom: '100px',
+            bottom: isMobile ? '160px' : '100px',
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 30,

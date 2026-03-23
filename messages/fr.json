@@ -753,7 +753,21 @@
       "infoDesc": "Inspectez les details d'une plante",
       "boostDesc": "Fertilisez le sol",
       "tapToContinue": "appuyez pour continuer",
-      "hint": "Touchez les plantes pour info | Pincez pour zoomer | Glissez pour tourner"
+      "hint": "Touchez les plantes pour info | Pincez pour zoomer | Glissez pour tourner",
+      "snowy": "Enneigé",
+      "overcast": "Couvert",
+      "lightRain": "Pluie légère",
+      "breezy": "Venteux",
+      "clear": "Dégagé"
+    },
+    "popup": {
+      "stageSeed": "Graine",
+      "stageSprout": "Pousse",
+      "stageGrowing": "En croissance",
+      "stageMature": "Mature",
+      "stageReady": "Prête !",
+      "day": "Jour",
+      "needsWater": "Besoin d'eau"
     },
     "welcome": {
       "title": "Bienvenue dans votre jardin 3D !",

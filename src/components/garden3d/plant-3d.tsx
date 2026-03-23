@@ -4,6 +4,7 @@ import { useRef, useState, useMemo, useEffect, useCallback } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html, Billboard, Text } from '@react-three/drei';
 import * as THREE from 'three';
+import { useTranslations, useLocale } from 'next-intl';
 import type { Plant, Shape3D } from '@/types';
 import { createAOGroundTexture, getCachedTexture } from './procedural-textures';
 
@@ -682,6 +683,8 @@ export function Plant3D({ plant, position, plantedDate, onSelect, onContextMenu,
   const isHarvest = stage === 'harvest';
   const isThirsty = needsWater(plant.wateringFrequency);
   const isMature = stage === 'mature' || stage === 'harvest';
+  const t = useTranslations('garden3d.popup');
+  const locale = useLocale();
 
   // AO ground texture for base shadow
   const [aoTex, setAoTex] = useState<THREE.CanvasTexture | null>(null);
@@ -691,13 +694,13 @@ export function Plant3D({ plant, position, plantedDate, onSelect, onContextMenu,
 
   const stageLabel = useMemo(() => {
     switch (stage) {
-      case 'seed': return 'Seed';
-      case 'sprout': return 'Sprout';
-      case 'growing': return 'Growing';
-      case 'mature': return 'Mature';
-      case 'harvest': return 'Ready!';
+      case 'seed': return t('stageSeed');
+      case 'sprout': return t('stageSprout');
+      case 'growing': return t('stageGrowing');
+      case 'mature': return t('stageMature');
+      case 'harvest': return t('stageReady');
     }
-  }, [stage]);
+  }, [stage, t]);
 
   const stageEmoji = useMemo(() => {
     switch (stage) {
@@ -833,7 +836,7 @@ export function Plant3D({ plant, position, plantedDate, onSelect, onContextMenu,
                 background: plant.color,
                 display: 'inline-block',
               }} />
-              {plant.name.en}
+              {locale === 'fr' ? plant.name.fr : plant.name.en}
             </div>
           </Html>
         )}
@@ -864,14 +867,14 @@ export function Plant3D({ plant, position, plantedDate, onSelect, onContextMenu,
                   display: 'inline-block',
                   border: '1px solid rgba(255,255,255,0.3)',
                 }} />
-                {plant.name.en}
+                {locale === 'fr' ? plant.name.fr : plant.name.en}
               </div>
               <div style={{ fontSize: '9px', color: '#9CA3AF' }}>
-                {stageEmoji} {stageLabel} - Day {daysPlanted}/{plant.harvestDays}
+                {stageEmoji} {stageLabel} - {t('day')} {daysPlanted}/{plant.harvestDays}
               </div>
               {isThirsty && (
                 <div style={{ fontSize: '9px', color: '#60A5FA' }}>
-                  {'\u{1F4A7}'} Needs water
+                  {'\u{1F4A7}'} {t('needsWater')}
                 </div>
               )}
             </div>
@@ -879,136 +882,21 @@ export function Plant3D({ plant, position, plantedDate, onSelect, onContextMenu,
         )}
       </group>
 
-      {/* Detailed info card when selected - 3D popup style */}
+      {/* Selected indicator - small badge above plant (PlantInfoPanel handles full details) */}
       {isSelected && (
         <Html position={[0, 0.55, 0]} center distanceFactor={4} style={{ pointerEvents: 'none' }}>
           <div style={{
-            background: 'linear-gradient(145deg, #0F2818, #1A3D28)',
-            borderRadius: '16px',
-            padding: '16px 20px',
-            minWidth: '220px',
-            fontSize: '12px',
+            background: 'rgba(74, 222, 128, 0.15)',
+            borderRadius: '8px',
+            padding: '4px 10px',
+            fontSize: '11px',
             fontFamily: '"Nunito", sans-serif',
-            color: 'white',
-            boxShadow: '0 12px 40px rgba(0,0,0,0.5), 0 0 25px rgba(74, 222, 128, 0.12)',
-            border: '2px solid #4ADE80',
+            color: '#86EFAC',
+            border: '1px solid rgba(74, 222, 128, 0.4)',
+            whiteSpace: 'nowrap',
             pointerEvents: 'none',
           }}>
-            {/* Header with plant name and color */}
-            <div style={{ fontWeight: 'bold', fontSize: '15px', color: '#86EFAC', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div style={{
-                width: '24px', height: '24px', borderRadius: '8px',
-                background: `linear-gradient(135deg, ${plant.color}, ${plant.color}88)`,
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                border: '2px solid rgba(255,255,255,0.2)',
-                fontSize: '12px',
-              }}>
-                {stageEmoji}
-              </div>
-              <div>
-                <div>{plant.name.en}</div>
-                <div style={{ fontSize: '10px', color: '#6EE7B7', fontWeight: 'normal' }}>
-                  {plant.category}
-                </div>
-              </div>
-            </div>
-
-            {/* Stage and days */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-              <span style={{ color: '#9CA3AF' }}>Stage:</span>
-              <span style={{
-                color: isHarvest ? '#FFD700' : '#E5E7EB',
-                fontWeight: isHarvest ? 'bold' : 'normal',
-                display: 'flex', alignItems: 'center', gap: '4px',
-              }}>
-                {stageEmoji} {stageLabel} {isHarvest ? '!!!' : ''}
-              </span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-              <span style={{ color: '#9CA3AF' }}>Days:</span>
-              <span>{daysPlanted} / {plant.harvestDays}</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-              <span style={{ color: '#9CA3AF' }}>Water:</span>
-              <span style={{ color: isThirsty ? '#60A5FA' : '#9CA3AF' }}>
-                {plant.wateringFrequency.replace('-', ' ')}
-              </span>
-            </div>
-
-            {/* Progress bar */}
-            <div style={{
-              background: '#1F2937',
-              borderRadius: '6px',
-              height: '10px',
-              marginTop: '8px',
-              overflow: 'hidden',
-              position: 'relative',
-            }}>
-              <div style={{
-                background: isHarvest
-                  ? 'linear-gradient(90deg, #FFD700, #FFA500)'
-                  : 'linear-gradient(90deg, #4ADE80, #22C55E)',
-                height: '100%',
-                width: `${Math.min(progress * 100, 100)}%`,
-                borderRadius: '6px',
-                transition: 'width 0.3s',
-              }} />
-              <span style={{
-                position: 'absolute', right: '4px', top: '0', bottom: '0',
-                display: 'flex', alignItems: 'center',
-                fontSize: '8px', fontWeight: 'bold',
-                color: progress > 0.6 ? '#0F2818' : '#9CA3AF',
-              }}>
-                {Math.min(Math.round(progress * 100), 100)}%
-              </span>
-            </div>
-
-            {/* Next action recommendation */}
-            <div style={{
-              marginTop: '10px',
-              padding: '8px 10px',
-              borderRadius: '10px',
-              background: isHarvest ? 'rgba(255, 215, 0, 0.1)' : isThirsty ? 'rgba(96, 165, 250, 0.1)' : 'rgba(74, 222, 128, 0.08)',
-              border: `1px solid ${isHarvest ? 'rgba(255, 215, 0, 0.25)' : isThirsty ? 'rgba(96, 165, 250, 0.25)' : 'rgba(74, 222, 128, 0.15)'}`,
-            }}>
-              <div style={{ fontSize: '10px', fontWeight: 'bold', color: '#9CA3AF', marginBottom: '3px', textTransform: 'uppercase' as const, letterSpacing: '0.5px' }}>
-                Next Action
-              </div>
-              <div style={{
-                fontSize: '12px',
-                color: isHarvest ? '#FFD700' : isThirsty ? '#60A5FA' : '#86EFAC',
-                fontWeight: 'bold',
-              }}>
-                {isHarvest ? '\u{1F389} Harvest now!' :
-                 isThirsty ? '\u{1F4A7} Water this plant' :
-                 stage === 'seed' ? '\u{1F331} Wait for sprouting' :
-                 stage === 'sprout' ? '\u{2600}\u{FE0F} Ensure good sunlight' :
-                 stage === 'growing' ? '\u{1F33F} Keep watering regularly' :
-                 '\u{1F33E} Almost harvest time!'}
-              </div>
-              {!isHarvest && (
-                <div style={{ fontSize: '10px', color: '#6B7280', marginTop: '2px' }}>
-                  ~{Math.max(0, plant.harvestDays - daysPlanted)} days until harvest
-                </div>
-              )}
-            </div>
-
-            {isThirsty && !isHarvest && (
-              <div style={{ color: '#60A5FA', fontSize: '11px', marginTop: '6px', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                {'\u{1F4A7}'} Needs watering!
-              </div>
-            )}
-
-            <div style={{
-              fontSize: '9px',
-              color: '#6B7280',
-              marginTop: '8px',
-              textAlign: 'center',
-              borderTop: '1px solid rgba(74, 222, 128, 0.15)',
-              paddingTop: '6px',
-            }}>
-              Right-click for actions
-            </div>
+            {stageEmoji} {locale === 'fr' ? plant.name.fr : plant.name.en}
           </div>
         </Html>
       )}
