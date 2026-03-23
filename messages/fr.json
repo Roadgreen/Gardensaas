@@ -7,7 +7,8 @@
     "pricing": "Tarifs",
     "signIn": "Connexion",
     "startFree": "Essai Gratuit",
-    "account": "Compte"
+    "account": "Compte",
+    "settings": "Paramètres"
   },
   "hero": {
     "badge": "Planification de jardin intelligente",
@@ -226,7 +227,10 @@
       "wind": "km/h vent",
       "waterToday": "Pensez à arroser aujourd'hui - air sec",
       "rainExpected": "Pluie prévue - pas besoin d'arroser",
-      "normalConditions": "Conditions normales - arrosage selon planning"
+      "normalConditions": "Conditions normales - arrosage selon planning",
+      "weekActions": "Meilleures actions cette semaine",
+      "forecast7Day": "Prévisions 7 jours",
+      "rainfallLast7": "Précipitations (7 derniers jours)"
     },
     "seasons": {
       "spring": "Printemps",

@@ -5,34 +5,42 @@ import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Droplets, Sun, Clock, Leaf } from 'lucide-react';
 import type { Plant } from '@/types';
-import { getWateringLabel, isPlantableNow } from '@/lib/garden-utils';
-import { useLocale } from 'next-intl';
+import { isPlantableNow } from '@/lib/garden-utils';
+import { useLocale, useTranslations } from 'next-intl';
 
 interface PlantCardProps {
   plant: Plant;
   index?: number;
 }
 
-function getSeasonBadges(months: number[]): { name: string; emoji: string }[] {
-  const seasons: { name: string; emoji: string }[] = [];
-  if (months.some(m => [3,4,5].includes(m))) seasons.push({ name: 'Printemps', emoji: '\uD83C\uDF38' });
-  if (months.some(m => [6,7,8].includes(m))) seasons.push({ name: 'Ete', emoji: '\u2600\uFE0F' });
-  if (months.some(m => [9,10,11].includes(m))) seasons.push({ name: 'Automne', emoji: '\uD83C\uDF42' });
-  if (months.some(m => [12,1,2].includes(m))) seasons.push({ name: 'Hiver', emoji: '\u2744\uFE0F' });
+type SeasonKey = 'spring' | 'summer' | 'autumn' | 'winter';
+
+function getSeasonKeys(months: number[]): { key: SeasonKey; emoji: string }[] {
+  const seasons: { key: SeasonKey; emoji: string }[] = [];
+  if (months.some(m => [3,4,5].includes(m))) seasons.push({ key: 'spring', emoji: '\uD83C\uDF38' });
+  if (months.some(m => [6,7,8].includes(m))) seasons.push({ key: 'summer', emoji: '\u2600\uFE0F' });
+  if (months.some(m => [9,10,11].includes(m))) seasons.push({ key: 'autumn', emoji: '\uD83C\uDF42' });
+  if (months.some(m => [12,1,2].includes(m))) seasons.push({ key: 'winter', emoji: '\u2744\uFE0F' });
   return seasons;
 }
 
-const seasonColors: Record<string, string> = {
-  Printemps: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400',
-  Ete: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
-  Automne: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400',
-  Hiver: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400',
+const seasonColors: Record<SeasonKey, string> = {
+  spring: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400',
+  summer: 'bg-amber-100 text-amber-700 dark:bg-amber-900/40 dark:text-amber-400',
+  autumn: 'bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-400',
+  winter: 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-400',
 };
 
-const difficultyLabels: Record<string, { label: string; emoji: string; class: string }> = {
-  easy: { label: 'Facile', emoji: '\uD83D\uDE0A', class: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400' },
-  medium: { label: 'Moyen', emoji: '\uD83D\uDCAA', class: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400' },
-  hard: { label: 'Difficile', emoji: '\uD83D\uDD25', class: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400' },
+const difficultyEmoji: Record<string, string> = {
+  easy: '\uD83D\uDE0A',
+  medium: '\uD83D\uDCAA',
+  hard: '\uD83D\uDD25',
+};
+
+const difficultyClass: Record<string, string> = {
+  easy: 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-400',
+  medium: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400',
+  hard: 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400',
 };
 
 const plantEmojis: Record<string, string> = {
@@ -60,9 +68,13 @@ function getPlantEmoji(id: string): string {
 
 export function PlantCard({ plant, index = 0 }: PlantCardProps) {
   const locale = useLocale();
+  const t = useTranslations('plants');
+  const tPanel = useTranslations('garden3d.infoPanel');
+  const tCatalog = useTranslations('garden3d.catalog');
   const plantable = isPlantableNow(plant);
-  const seasons = getSeasonBadges(plant.plantingMonths);
-  const diff = difficultyLabels[plant.difficulty] || difficultyLabels.easy;
+  const seasons = getSeasonKeys(plant.plantingMonths);
+  const diffEmoji = difficultyEmoji[plant.difficulty] || difficultyEmoji.easy;
+  const diffCls = difficultyClass[plant.difficulty] || difficultyClass.easy;
   const emoji = getPlantEmoji(plant.id);
 
   return (
@@ -80,7 +92,7 @@ export function PlantCard({ plant, index = 0 }: PlantCardProps) {
             <div className="absolute top-4 right-4">
               <span className="px-2.5 py-1 text-xs font-semibold bg-green-100 dark:bg-green-600/30 text-green-700 dark:text-green-300 rounded-full border border-green-200 dark:border-green-600/40 flex items-center gap-1">
                 <Leaf className="w-3 h-3" />
-                A planter
+                {t('now')}
               </span>
             </div>
           )}
@@ -110,14 +122,14 @@ export function PlantCard({ plant, index = 0 }: PlantCardProps) {
           {/* Season badges with emojis */}
           <div className="flex flex-wrap gap-1.5 mb-4">
             {seasons.map(s => (
-              <span key={s.name} className={`px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider flex items-center gap-1 ${seasonColors[s.name]}`}>
+              <span key={s.key} className={`px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider flex items-center gap-1 ${seasonColors[s.key]}`}>
                 <span className="text-xs">{s.emoji}</span>
-                {s.name}
+                {t(s.key)}
               </span>
             ))}
-            <span className={`px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider flex items-center gap-1 ${diff.class}`}>
-              <span className="text-xs">{diff.emoji}</span>
-              {diff.label}
+            <span className={`px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider flex items-center gap-1 ${diffCls}`}>
+              <span className="text-xs">{diffEmoji}</span>
+              {t(plant.difficulty as 'easy' | 'medium' | 'hard')}
             </span>
           </div>
 
@@ -125,15 +137,19 @@ export function PlantCard({ plant, index = 0 }: PlantCardProps) {
           <div className="flex flex-wrap gap-4 text-xs text-gray-500 dark:text-green-300/70 pt-2">
             <span className="flex items-center gap-1.5">
               <Droplets className="w-3.5 h-3.5" />
-              {getWateringLabel(plant.wateringFrequency)}
+              {(() => {
+                const keyMap: Record<string, string> = { 'daily': 'daily', 'every-2-days': 'every2days', 'twice-weekly': 'twiceWeekly', 'weekly': 'weekly' };
+                const key = keyMap[plant.wateringFrequency];
+                return key ? tPanel(key as Parameters<typeof tPanel>[0]) : plant.wateringFrequency;
+              })()}
             </span>
             <span className="flex items-center gap-1.5">
               <Sun className="w-3.5 h-3.5" />
-              {plant.sunExposure[0] === 'full-sun' ? 'Plein soleil' : plant.sunExposure[0] === 'partial-shade' ? 'Mi-ombre' : 'Ombre'}
+              {plant.sunExposure[0] === 'full-sun' ? '\u2600\uFE0F\u2600\uFE0F' : plant.sunExposure[0] === 'partial-shade' ? '\u26C5' : '\uD83C\uDF27\uFE0F'}
             </span>
             <span className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5" />
-              {plant.harvestDays}j
+              {tCatalog('harvestDays', { days: plant.harvestDays })}
             </span>
           </div>
         </Card>

@@ -2,18 +2,28 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Sprout, Leaf, LayoutDashboard, Box, Settings } from 'lucide-react';
 
-const navItems = [
-  { href: '/', label: 'Home', icon: Sprout },
-  { href: '/plants', label: 'Plants', icon: Leaf },
-  { href: '/garden/dashboard', label: 'My Garden', icon: LayoutDashboard },
-  { href: '/garden/3d', label: '3D View', icon: Box },
-  { href: '/garden/settings', label: 'Settings', icon: Settings },
-];
+const navRoutes = [
+  { href: '/', labelKey: 'home', icon: Sprout },
+  { href: '/plants', labelKey: 'plants', icon: Leaf },
+  { href: '/garden/dashboard', labelKey: 'myGarden', icon: LayoutDashboard },
+  { href: '/garden/3d', labelKey: '3dView', icon: Box },
+  { href: '/garden/settings', labelKey: 'settings', icon: Settings },
+] as const;
 
 export function BottomNav() {
   const pathname = usePathname();
+  const t = useTranslations('nav');
+
+  const navLabels: Record<string, string> = {
+    home: t('home'),
+    plants: t('plants'),
+    myGarden: t('myGarden'),
+    '3dView': t('3dView'),
+    settings: t('settings'),
+  };
 
   return (
     <nav
@@ -39,10 +49,11 @@ export function BottomNav() {
         className="flex items-stretch justify-around"
         style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
-        {navItems.map(({ href, label, icon: Icon }) => {
+        {navRoutes.map(({ href, labelKey, icon: Icon }) => {
           const isActive =
             pathname === href ||
             (href !== '/' && pathname.startsWith(href));
+          const label = navLabels[labelKey] ?? labelKey;
 
           return (
             <Link

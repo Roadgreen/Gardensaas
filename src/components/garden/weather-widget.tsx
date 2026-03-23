@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { Card, CardTitle, CardContent } from '@/components/ui/card';
 import {
   Cloud,
@@ -71,6 +72,7 @@ interface WeatherWidgetProps {
 }
 
 export function WeatherWidget({ gardenId, latitude, longitude }: WeatherWidgetProps) {
+  const t = useTranslations('dashboard.weather');
   const [data, setData] = useState<WeatherWidgetData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -104,7 +106,7 @@ export function WeatherWidget({ gardenId, latitude, longitude }: WeatherWidgetPr
       fetchWeather();
     } else {
       setLoading(false);
-      setError('Set your garden location to see weather data.');
+      setError(t('unavailable'));
     }
   }, [gardenId, latitude, longitude]);
 
@@ -113,7 +115,7 @@ export function WeatherWidget({ gardenId, latitude, longitude }: WeatherWidgetPr
       <Card>
         <div className="flex items-center justify-center py-8">
           <Loader2 className="w-5 h-5 text-green-400 animate-spin" />
-          <span className="ml-2 text-green-300/60">Loading weather...</span>
+          <span className="ml-2 text-green-300/60">{t('loading')}</span>
         </div>
       </Card>
     );
@@ -124,7 +126,7 @@ export function WeatherWidget({ gardenId, latitude, longitude }: WeatherWidgetPr
       <Card>
         <CardTitle className="flex items-center gap-2">
           <Cloud className="w-5 h-5 text-green-400" />
-          Garden Weather
+          {t('gardenWeather')}
         </CardTitle>
         <CardContent>
           <p className="text-yellow-400/80 mt-4">{error}</p>
@@ -139,7 +141,7 @@ export function WeatherWidget({ gardenId, latitude, longitude }: WeatherWidgetPr
     <Card>
       <CardTitle className="flex items-center gap-2 mb-4">
         <Cloud className="w-5 h-5 text-green-400" />
-        Garden Weather
+        {t('gardenWeather')}
       </CardTitle>
 
       {/* Current weather */}
@@ -201,12 +203,12 @@ export function WeatherWidget({ gardenId, latitude, longitude }: WeatherWidgetPr
                 data.watering.shouldWater ? 'text-blue-300' : 'text-green-300'
               }`}
             >
-              {data.watering.shouldWater ? 'Water your garden' : 'No watering needed'}
+              {data.watering.shouldWater ? t('waterToday') : t('normalConditions')}
             </p>
             <p className="text-xs text-green-300/60 mt-0.5">{data.watering.reason}</p>
             {data.watering.amountMm && (
               <p className="text-xs text-blue-300/60 mt-0.5">
-                Recommended: ~{data.watering.amountMm}mm of water
+                ~{data.watering.amountMm}mm
               </p>
             )}
           </div>
@@ -218,7 +220,7 @@ export function WeatherWidget({ gardenId, latitude, longitude }: WeatherWidgetPr
         <div className="mb-4">
           <h4 className="text-sm font-medium text-green-200 mb-2 flex items-center gap-2">
             <Sprout className="w-4 h-4 text-green-400" />
-            Best actions this week
+            {t('weekActions')}
           </h4>
           <div className="space-y-1">
             {data.weekActions.slice(0, 5).map((action, i) => (
@@ -235,7 +237,7 @@ export function WeatherWidget({ gardenId, latitude, longitude }: WeatherWidgetPr
 
       {/* 7-day forecast */}
       <div>
-        <h4 className="text-sm font-medium text-green-200 mb-2">7-Day Forecast</h4>
+        <h4 className="text-sm font-medium text-green-200 mb-2">{t('forecast7Day')}</h4>
         <div className="grid grid-cols-7 gap-1">
           {data.forecast.map((day, i) => {
             const date = new Date(day.date);
@@ -273,7 +275,7 @@ export function WeatherWidget({ gardenId, latitude, longitude }: WeatherWidgetPr
       {/* Rainfall summary */}
       <div className="mt-4 pt-4 border-t border-green-900/40">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-green-300/60">Rainfall (last 7 days)</span>
+          <span className="text-green-300/60">{t('rainfallLast7')}</span>
           <span className="text-green-200 font-medium">
             {data.rainfall.last7DaysMm.toFixed(1)} mm
           </span>

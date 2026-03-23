@@ -445,7 +445,7 @@ function DailyTipBubble({ show, tip }: { show: boolean; tip: string }) {
         animation: 'fadeInUp 0.3s ease-out',
       }}>
         <div style={{ fontWeight: 'bold', fontSize: '9px', color: '#D97706', marginBottom: '2px' }}>
-          {'\u{1F4A1}'} Daily Tip
+          {'\u{1F4A1}'}
         </div>
         {tip}
       </div>

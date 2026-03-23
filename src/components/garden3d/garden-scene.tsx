@@ -606,6 +606,7 @@ function PlantContextMenu({
   onRemove,
   onInfo,
   onClose,
+  locale,
 }: {
   position: { x: number; y: number };
   plantName: string;
@@ -613,6 +614,7 @@ function PlantContextMenu({
   onRemove: () => void;
   onInfo: () => void;
   onClose: () => void;
+  locale: string;
 }) {
   useEffect(() => {
     const handler = () => onClose();
@@ -651,9 +653,9 @@ function PlantContextMenu({
         {plantName}
       </div>
       {[
-        { label: 'Inspect', icon: '\u{1F50D}', action: onInfo },
-        { label: 'Water', icon: '\u{1F4A7}', action: onWater },
-        { label: 'Remove', icon: '\u{1F5D1}\u{FE0F}', action: onRemove, danger: true },
+        { label: locale === 'fr' ? 'Inspecter' : 'Inspect', icon: '\u{1F50D}', action: onInfo },
+        { label: locale === 'fr' ? 'Arroser' : 'Water', icon: '\u{1F4A7}', action: onWater },
+        { label: locale === 'fr' ? 'Supprimer' : 'Remove', icon: '\u{1F5D1}\u{FE0F}', action: onRemove, danger: true },
       ].map((item) => (
         <button
           key={item.label}
@@ -1171,7 +1173,7 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
     if (tool === 'water' && selectedPlantIndex !== null) {
       setGardenerAction('watering');
       SoundEffects.play('water');
-      setGardenerDialogue('Watering time! Plants love a good drink.');
+      setGardenerDialogue(locale === 'fr' ? 'Arrosage ! Les plantes adorent boire !' : 'Watering time! Plants love a good drink.');
       setShowGardenerDialogue(true);
     } else if (tool === 'harvest' && selectedPlantIndex !== null) {
       setGardenerAction('harvesting');
@@ -1179,7 +1181,7 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
       // Celebrate after harvest animation
       setTimeout(() => {
         setGardenerAction('celebrating');
-        setGardenerDialogue('Great harvest! Your garden is producing well!');
+        setGardenerDialogue(locale === 'fr' ? 'Belle récolte ! Votre jardin produit bien !' : 'Great harvest! Your garden is producing well!');
         setShowGardenerDialogue(true);
       }, 2000);
     } else if (tool === 'info' && selectedPlantIndex !== null) {
@@ -1228,7 +1230,10 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
           }
         }
         if (tooClose) {
-          setGardenerDialogue(`Too close! ${newPlantData.name.en} needs ${newPlantData.spacingCm}cm spacing.`);
+          const plantName = locale === 'fr' ? newPlantData.name.fr : newPlantData.name.en;
+          setGardenerDialogue(locale === 'fr'
+            ? `Trop proche ! ${plantName} nécessite ${newPlantData.spacingCm}cm d'espacement.`
+            : `Too close! ${plantName} needs ${newPlantData.spacingCm}cm spacing.`);
           setShowGardenerDialogue(true);
           SoundEffects.play('click');
           return;
@@ -1269,7 +1274,9 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
       const isInsideGarden = pctXFinal >= 0 && pctXFinal <= 100 && pctZFinal >= 0 && pctZFinal <= 100;
       if (!isInsideGarden && !raisedBedId && !zoneId) {
         // Don't allow planting in empty ground outside the garden
-        setGardenerDialogue('You can only plant in the garden or inside a raised bed!');
+        setGardenerDialogue(locale === 'fr'
+          ? 'Vous ne pouvez planter que dans le jardin ou dans un bac !'
+          : 'You can only plant in the garden or inside a raised bed!');
         setShowGardenerDialogue(true);
         SoundEffects.play('click');
         return;
@@ -1421,12 +1428,11 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
       {contextMenu && (
         <PlantContextMenu
           position={{ x: contextMenu.x, y: contextMenu.y }}
-          plantName={
-            plants.find(
-              (p) =>
-                p.id === config.plantedItems[contextMenu.index]?.plantId
-            )?.name.en || 'Plant'
-          }
+          plantName={(() => {
+            const p = plants.find((pl) => pl.id === config.plantedItems[contextMenu.index]?.plantId);
+            return p ? (locale === 'fr' ? p.name.fr : p.name.en) : (locale === 'fr' ? 'Plante' : 'Plant');
+          })()}
+          locale={locale}
           onWater={() => {
             setActiveTool('water');
             setGardenerAction('watering');

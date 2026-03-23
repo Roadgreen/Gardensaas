@@ -7,7 +7,8 @@
     "pricing": "Pricing",
     "signIn": "Sign In",
     "startFree": "Start Free",
-    "account": "Account"
+    "account": "Account",
+    "settings": "Settings"
   },
   "hero": {
     "badge": "Smart Garden Planning Made Easy",
@@ -226,7 +227,10 @@
       "wind": "km/h wind",
       "waterToday": "Consider watering today - dry air",
       "rainExpected": "Rain expected - no need to water",
-      "normalConditions": "Normal conditions - water per schedule"
+      "normalConditions": "Normal conditions - water per schedule",
+      "weekActions": "Best actions this week",
+      "forecast7Day": "7-Day Forecast",
+      "rainfallLast7": "Rainfall (last 7 days)"
     },
     "seasons": {
       "spring": "Spring",
