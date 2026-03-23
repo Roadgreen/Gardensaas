@@ -343,7 +343,10 @@
     "createAccountBtn": "Créer le compte",
     "freeIncludes": "Le plan gratuit inclut 1 jardin, 5 plantes et des conseils quotidiens.",
     "upgradeAnytime": "Passez au Pro à tout moment pour le conseiller IA et des jardins illimités.",
-    "alreadyHaveAccount": "Déjà un compte ?"
+    "alreadyHaveAccount": "Déjà un compte ?",
+    "illustrationTitle": "Cultivez le jardin de vos rêves",
+    "illustrationDesc": "Planifiez, suivez et récoltez avec des outils intelligents conçus pour chaque jardinier.",
+    "socialProof": "Adopté par plus de 2 000 jardiniers"
   },
   "settings": {
     "title": "Facturation & Paramètres",

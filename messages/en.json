@@ -343,7 +343,10 @@
     "createAccountBtn": "Create Account",
     "freeIncludes": "Free plan includes 1 garden, 5 plants, and daily tips.",
     "upgradeAnytime": "Upgrade to Pro anytime for AI advisor and unlimited gardens.",
-    "alreadyHaveAccount": "Already have an account?"
+    "alreadyHaveAccount": "Already have an account?",
+    "illustrationTitle": "Grow Your Dream Garden",
+    "illustrationDesc": "Plan, track, and harvest with smart tools designed for every gardener.",
+    "socialProof": "Loved by 2,000+ gardeners"
   },
   "settings": {
     "title": "Billing & Settings",
