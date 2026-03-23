@@ -765,8 +765,12 @@
       "snowy": "Enneigé",
       "overcast": "Couvert",
       "lightRain": "Pluie légère",
+      "sunny": "Ensoleillé",
+      "partlyCloudy": "Partiellement nuageux",
+      "cloudy": "Nuageux",
       "breezy": "Venteux",
-      "clear": "Dégagé"
+      "clear": "Dégagé",
+      "sproutName": "Pousse"
     },
     "popup": {
       "stageSeed": "Graine",

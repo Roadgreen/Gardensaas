@@ -765,8 +765,12 @@
       "snowy": "Snowy",
       "overcast": "Overcast",
       "lightRain": "Light rain",
+      "sunny": "Sunny",
+      "partlyCloudy": "Partly cloudy",
+      "cloudy": "Cloudy",
       "breezy": "Breezy",
-      "clear": "Clear"
+      "clear": "Clear",
+      "sproutName": "Sprout"
     },
     "popup": {
       "stageSeed": "Seed",

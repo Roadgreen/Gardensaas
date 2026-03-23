@@ -577,7 +577,7 @@ export function GardenUIOverlay({
               border: '2px solid #4ADE80',
               boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
             }}>
-              Sprout
+              {t('sproutName')}
             </div>
 
             <div style={{ marginTop: '6px', fontSize: '14px', lineHeight: '1.6' }}>
