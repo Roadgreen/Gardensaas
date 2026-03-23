@@ -111,7 +111,7 @@ export function PlantCard({ plant, index = 0 }: PlantCardProps) {
               <h3 className="text-base sm:text-lg font-semibold group-hover:text-green-600 dark:group-hover:text-green-300 transition-colors truncate" style={{ color: 'var(--on-surface)' }}>
                 {locale === 'fr' ? plant.name.fr : plant.name.en}
               </h3>
-              <p className="text-xs sm:text-sm text-gray-500 dark:text-green-400/60 italic font-medium">{plant.name.fr}</p>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-green-400/60 italic font-medium">{locale === 'fr' ? plant.name.en : plant.name.fr}</p>
             </div>
           </div>
 
