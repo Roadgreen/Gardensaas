@@ -134,7 +134,7 @@ export function PlantCard({ plant, index = 0 }: PlantCardProps) {
           </div>
 
           {/* Plant info row */}
-          <div className="flex flex-wrap gap-4 text-xs text-gray-500 dark:text-green-300/70 pt-2">
+          <div className="flex flex-wrap gap-2 sm:gap-4 text-xs text-gray-500 dark:text-green-300/70 pt-2">
             <span className="flex items-center gap-1.5">
               <Droplets className="w-3.5 h-3.5" />
               {(() => {
