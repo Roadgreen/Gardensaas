@@ -4,6 +4,7 @@ import { SessionProvider } from "@/components/providers/session-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { BottomNav } from "@/components/layout/bottom-nav";
 import { ScrollToTop } from "@/components/ui/scroll-to-top";
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
@@ -67,6 +68,9 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} className="dark" suppressHydrationWarning>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+      </head>
       <body
         className={`${plusJakarta.variable} ${geistMono.variable} antialiased`}
         style={{ background: 'var(--surface)', color: 'var(--on-surface)' }}
@@ -75,8 +79,14 @@ export default async function RootLayout({
           <SessionProvider>
             <ThemeProvider>
               <Navbar />
-              <main className="pt-16">{children}</main>
-              <Footer />
+              {/* pt-safe-top accounts for status bar on native; pb-safe-bottom leaves room for bottom nav + home indicator */}
+              <main className="pt-16 pb-[calc(env(safe-area-inset-bottom,0px)+64px)] md:pb-0">
+                {children}
+              </main>
+              <div className="hidden md:block">
+                <Footer />
+              </div>
+              <BottomNav />
               <ScrollToTop />
             </ThemeProvider>
           </SessionProvider>

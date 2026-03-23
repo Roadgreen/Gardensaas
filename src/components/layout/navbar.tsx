@@ -1,18 +1,15 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Sprout, Menu, X, LogOut, User, Sun, Moon } from 'lucide-react';
+import { Sprout, LogOut, User, Sun, Moon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/components/providers/theme-provider';
 import { LocaleSwitcher } from '@/components/locale-switcher';
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const { data: session } = useSession();
   const { theme, toggleTheme } = useTheme();
@@ -103,7 +100,7 @@ export function Navbar() {
             )}
           </div>
 
-          {/* Mobile: theme + locale + menu */}
+          {/* Mobile: theme + locale only (nav handled by BottomNav) */}
           <div className="md:hidden flex items-center gap-1">
             <LocaleSwitcher />
             <button
@@ -114,76 +111,11 @@ export function Navbar() {
             >
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="p-2.5 rounded-lg transition-colors cursor-pointer touch-target"
-              style={{ color: 'var(--on-surface)' }}
-            >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden backdrop-blur-[20px] overflow-hidden"
-            style={{ background: 'var(--nav-bg)' }}
-          >
-            <div className="px-4 py-4 space-y-1">
-              {navLinks.map((link) => {
-                const isActive = pathname === link.href;
-                return (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setIsOpen(false)}
-                    className="block px-4 py-3 rounded-xl text-sm font-medium transition-colors touch-target"
-                    style={{
-                      color: isActive ? 'var(--primary)' : 'var(--on-surface)',
-                      background: isActive ? 'var(--surface-container-high)' : 'transparent',
-                    }}
-                  >
-                    {link.label}
-                  </Link>
-                );
-              })}
-              <div className="pt-3 flex gap-3">
-                {session ? (
-                  <>
-                    <Link href="/garden/settings" className="flex-1" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" size="sm" className="w-full touch-target">{t('account')}</Button>
-                    </Link>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => { signOut({ callbackUrl: '/' }); setIsOpen(false); }}
-                      className="gap-2 touch-target"
-                    >
-                      <LogOut className="w-4 h-4" />
-                    </Button>
-                  </>
-                ) : (
-                  <>
-                    <Link href="/auth/login" className="flex-1" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" size="sm" className="w-full touch-target">{t('signIn')}</Button>
-                    </Link>
-                    <Link href="/auth/register" className="flex-1" onClick={() => setIsOpen(false)}>
-                      <Button size="sm" className="w-full touch-target">{t('startFree')}</Button>
-                    </Link>
-                  </>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Mobile menu removed — navigation is handled by the BottomNav component */}
     </nav>
   );
 }
