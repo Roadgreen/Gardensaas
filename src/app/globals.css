@@ -152,6 +152,11 @@ body {
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;
+  height: 100dvh;
+}
+
+body {
+  min-height: 100dvh;
 }
 
 /* Game-like animations */

@@ -43,6 +43,7 @@ export function Garden3DView() {
   const [selectedZoneId, setSelectedZoneId] = useState<string | null>(null);
   const [infoPanelPlantIndex, setInfoPanelPlantIndex] = useState<number | null>(null);
   const [showSizeSelector, setShowSizeSelector] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   // Variety picker state
   const [varietyPickerPlant, setVarietyPickerPlant] = useState<{ plantId: string; x: number; z: number; raisedBedId?: string; zoneId?: string } | null>(null);
 
@@ -51,6 +52,14 @@ export function Garden3DView() {
     if (!selectedPlantType) return null;
     return plants.find(p => p.id === selectedPlantType) || null;
   }, [selectedPlantType, plants]);
+
+  // Detect mobile for label clip logic
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   // Handler for garden resize
   const handleGardenResize = useCallback((length: number, width: number) => {
@@ -252,7 +261,15 @@ export function Garden3DView() {
       </div>
 
       {/* 3D Canvas + Sidebar */}
-      <div className="flex-1 relative overflow-hidden">
+      {/* On mobile with info panel open, clip the Three.js Html labels so they don't bleed over the bottom sheet */}
+      <div
+        className="flex-1 relative overflow-hidden"
+        style={
+          isMobile && infoPanelPlant && infoPanelItem && !showSuggestions
+            ? { clipPath: 'inset(0 0 60dvh 0)' }
+            : undefined
+        }
+      >
         {/* Plant catalog sidebar — hidden on mobile when info panel is open */}
         <div className={infoPanelPlant && infoPanelItem && !showSuggestions ? 'sidebar-hidden-mobile' : ''}>
           <PlantCatalogSidebar
