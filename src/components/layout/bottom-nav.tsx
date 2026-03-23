@@ -19,6 +19,10 @@ export function BottomNav() {
     <nav
       className="fixed bottom-0 left-0 right-0 z-[60] md:hidden backdrop-blur-[20px]"
       style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
         background: 'var(--nav-bg)',
         borderTop: '1px solid var(--outline-variant)',
         paddingBottom: 'env(safe-area-inset-bottom, 0px)',
@@ -27,6 +31,8 @@ export function BottomNav() {
         WebkitTransform: 'translateZ(0)',
         backfaceVisibility: 'hidden',
         WebkitBackfaceVisibility: 'hidden',
+        contain: 'layout style',
+        isolation: 'isolate',
       }}
     >
       <div
