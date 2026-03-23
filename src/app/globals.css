@@ -1,51 +1,70 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f8faf8;
-  --foreground: #1a2e1a;
+  /* Terra Bloom / Living Herbarium Design System */
+  --primary: #23422a;
+  --primary-container: #3a5a40;
+  --secondary: #805533;
+  --tertiary: #682812;
+  --on-primary: #ffffff;
+  --on-surface: #1b1c17;
+  --surface: #fbf9f1;
+  --surface-bright: #fbf9f1;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f6f4ec;
+  --surface-container: #f0ede6;
+  --surface-container-high: #eae8e0;
+  --surface-container-highest: #e4e2db;
+  --outline-variant: #c2c8bf;
+  --secondary-container: #e8d5c0;
+  --secondary-fixed-dim: #c9a97a;
+
+  /* Mapped aliases for existing usage */
+  --background: #fbf9f1;
+  --foreground: #1b1c17;
   --card-bg: #ffffff;
-  --card-border: #e2e8e0;
-  --card-bg-hover: #f0f5f0;
-  --surface: #f0f4f0;
-  --muted: #6b7c6b;
-  --accent: #22c55e;
-  --accent-hover: #16a34a;
-  --accent-muted: rgba(34, 197, 94, 0.1);
-  --heading: #0f1f0f;
-  --body-text: #374937;
-  --nav-bg: rgba(248, 250, 248, 0.85);
-  --nav-border: rgba(226, 232, 224, 0.6);
-  --section-alt: #f2f6f2;
+  --card-border: #eae8e0;
+  --card-bg-hover: #f0ede6;
+  --muted: #805533;
+  --accent: #23422a;
+  --accent-hover: #3a5a40;
+  --accent-muted: rgba(35, 66, 42, 0.1);
+  --heading: #1b1c17;
+  --body-text: #1b1c17;
+  --nav-bg: rgba(251, 249, 241, 0.7);
+  --nav-border: transparent;
+  --section-alt: #f6f4ec;
   --input-bg: #ffffff;
-  --input-border: #d4dcd4;
-  --badge-bg: rgba(34, 197, 94, 0.08);
-  --badge-border: rgba(34, 197, 94, 0.15);
-  --badge-text: #15803d;
-  --shadow-color: rgba(0, 30, 0, 0.06);
-  --shadow-lg: rgba(0, 30, 0, 0.1);
+  --input-border: rgba(194, 200, 191, 0.2);
+  --badge-bg: rgba(35, 66, 42, 0.08);
+  --badge-border: rgba(35, 66, 42, 0.15);
+  --badge-text: #23422a;
+  --shadow-color: rgba(27, 28, 23, 0.06);
+  --shadow-lg: rgba(27, 28, 23, 0.1);
+  --ambient-shadow: 0 8px 24px rgba(27, 28, 23, 0.06);
+  --cta-gradient: linear-gradient(135deg, #23422a, #3a5a40);
 }
 
 .dark {
-  --background: #0D1F17;
-  --foreground: #E8F5E8;
-  --card-bg: #142A1E;
-  --card-border: #1e3a28;
-  --card-bg-hover: #1a3528;
-  --surface: #0f2519;
-  --muted: #6b8c6b;
-  --accent: #4ade80;
-  --accent-hover: #22c55e;
-  --accent-muted: rgba(74, 222, 128, 0.1);
-  --heading: #e8f5e8;
-  --body-text: #a3c4a3;
-  --nav-bg: rgba(13, 31, 23, 0.9);
-  --nav-border: rgba(30, 58, 40, 0.6);
-  --section-alt: #0a1a10;
-  --input-bg: #0f2519;
-  --input-border: #1e3a28;
-  --badge-bg: rgba(74, 222, 128, 0.08);
-  --badge-border: rgba(74, 222, 128, 0.2);
-  --badge-text: #4ade80;
+  --background: #1b1c17;
+  --foreground: #e4e2db;
+  --card-bg: #23422a;
+  --card-border: #3a5a40;
+  --card-bg-hover: #3a5a40;
+  --muted: #c9a97a;
+  --accent: #3a5a40;
+  --accent-hover: #23422a;
+  --accent-muted: rgba(58, 90, 64, 0.2);
+  --heading: #e4e2db;
+  --body-text: #c2c8bf;
+  --nav-bg: rgba(27, 28, 23, 0.7);
+  --nav-border: transparent;
+  --section-alt: #23422a;
+  --input-bg: #23422a;
+  --input-border: rgba(194, 200, 191, 0.2);
+  --badge-bg: rgba(58, 90, 64, 0.2);
+  --badge-border: rgba(58, 90, 64, 0.3);
+  --badge-text: #c9a97a;
   --shadow-color: rgba(0, 0, 0, 0.2);
   --shadow-lg: rgba(0, 0, 0, 0.3);
 }
@@ -53,18 +72,66 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-garden-dark: #0D1F17;
+  --color-primary: var(--primary);
+  --color-primary-container: var(--primary-container);
+  --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
+  --color-on-primary: var(--on-primary);
+  --color-on-surface: var(--on-surface);
+  --color-surface: var(--surface);
+  --color-surface-bright: var(--surface-bright);
+  --color-surface-container-lowest: var(--surface-container-lowest);
+  --color-surface-container-low: var(--surface-container-low);
+  --color-surface-container: var(--surface-container);
+  --color-surface-container-high: var(--surface-container-high);
+  --color-surface-container-highest: var(--surface-container-highest);
+  --color-outline-variant: var(--outline-variant);
+  --color-secondary-container: var(--secondary-container);
+  --color-secondary-fixed-dim: var(--secondary-fixed-dim);
+  --color-garden-dark: #23422a;
   --color-garden-card: var(--card-bg);
   --color-garden-border: var(--card-border);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-jakarta);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  background: var(--surface);
+  color: var(--on-surface);
+  font-family: var(--font-sans), 'Plus Jakarta Sans', Arial, Helvetica, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Typography scale */
+.text-display {
+  font-size: 3.5rem;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+}
+
+.text-headline {
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.text-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* Primary CTA button */
+.btn-cta {
+  background: linear-gradient(135deg, #23422a, #3a5a40);
+  color: #ffffff;
+  border-radius: 1.5rem;
+  border: none;
+}
+
+.btn-cta:hover {
+  background: linear-gradient(135deg, #3a5a40, #23422a);
 }
 
 /* Custom scrollbar */
@@ -233,23 +300,25 @@ html {
 
 /* Glass morphism card */
 .glass-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(251, 249, 241, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 .dark .glass-card {
-  background: rgba(20, 42, 30, 0.7);
+  background: rgba(27, 28, 23, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 /* Text gradient helper */
 .text-gradient {
-  background: linear-gradient(135deg, #22c55e 0%, #10b981 50%, #84cc16 100%);
+  background: linear-gradient(135deg, #23422a 0%, #3a5a40 50%, #805533 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 .dark .text-gradient {
-  background: linear-gradient(135deg, #4ade80 0%, #34d399 50%, #a3e635 100%);
+  background: linear-gradient(135deg, #3a5a40 0%, #c9a97a 50%, #e8d5c0 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -273,7 +342,7 @@ html {
 
 /* Focus visible for accessibility */
 *:focus-visible {
-  outline: 2px solid var(--accent);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
   border-radius: 4px;
 }

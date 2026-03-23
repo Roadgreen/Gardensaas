@@ -14,15 +14,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       <button
         ref={ref}
         className={clsx(
-          'inline-flex items-center justify-center rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-[#0D1F17] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer',
+          'inline-flex items-center justify-center rounded-xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer',
           {
-            'bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:from-green-500 hover:to-emerald-500 active:from-green-700 active:to-emerald-700 shadow-lg shadow-green-600/20 dark:shadow-green-900/30':
+            'text-white hover:opacity-90 active:opacity-80':
               variant === 'primary',
-            'bg-green-50 dark:bg-[#1A2F23] text-green-800 dark:text-green-100 hover:bg-green-100 dark:hover:bg-[#243D2E] border border-green-200 dark:border-green-800/50':
+            'bg-secondary-container text-on-surface hover:opacity-90':
               variant === 'secondary',
-            'text-gray-600 dark:text-green-300 hover:text-green-700 dark:hover:text-green-100 hover:bg-green-50 dark:hover:bg-green-900/30':
+            'hover:bg-surface-container-high':
               variant === 'ghost',
-            'border-2 border-green-500 dark:border-green-600 text-green-600 dark:text-green-400 hover:bg-green-600 hover:text-white':
+            'border-2 border-outline-variant hover:bg-surface-container-high':
               variant === 'outline',
           },
           {
@@ -32,6 +32,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           },
           className
         )}
+        style={variant === 'primary' ? {
+          background: 'linear-gradient(135deg, #23422a, #3a5a40)',
+          color: '#ffffff',
+        } : {
+          color: 'var(--on-surface)',
+        }}
         {...props}
       >
         {children}

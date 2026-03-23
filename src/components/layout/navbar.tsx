@@ -27,17 +27,18 @@ export function Navbar() {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b transition-colors duration-300"
-      style={{ background: 'var(--nav-bg)', borderColor: 'var(--nav-border)' }}
+    <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-[20px] transition-colors duration-300"
+      style={{ background: 'var(--nav-bg)' }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-sm group-hover:shadow-md group-hover:shadow-green-500/20 transition-all duration-300">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-300"
+              style={{ background: 'linear-gradient(135deg, #23422a, #3a5a40)' }}>
               <Sprout className="w-4.5 h-4.5 text-white" />
             </div>
-            <span className="text-lg font-bold" style={{ color: 'var(--heading)' }}>
+            <span className="text-lg font-bold" style={{ color: 'var(--on-surface)' }}>
               Garden<span className="text-gradient">Saas</span>
             </span>
           </Link>
@@ -50,11 +51,11 @@ export function Navbar() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                    isActive
-                      ? 'text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/40'
-                      : 'text-gray-600 dark:text-green-300/60 hover:text-green-700 dark:hover:text-green-200 hover:bg-green-50 dark:hover:bg-green-900/20'
-                  }`}
+                  className="px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200"
+                  style={{
+                    color: isActive ? 'var(--primary)' : 'var(--on-surface)',
+                    background: isActive ? 'var(--surface-container-high)' : 'transparent',
+                  }}
                 >
                   {link.label}
                 </Link>
@@ -67,7 +68,8 @@ export function Navbar() {
             <LocaleSwitcher />
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg text-gray-500 dark:text-green-400/60 hover:text-green-600 dark:hover:text-green-300 hover:bg-green-50 dark:hover:bg-green-900/20 transition-all duration-200 cursor-pointer"
+              className="p-2 rounded-lg transition-all duration-200 cursor-pointer"
+              style={{ color: 'var(--on-surface)' }}
               aria-label="Toggle theme"
             >
               {theme === 'dark' ? <Sun className="w-4.5 h-4.5" /> : <Moon className="w-4.5 h-4.5" />}
@@ -84,7 +86,7 @@ export function Navbar() {
                   variant="ghost"
                   size="sm"
                   onClick={() => signOut({ callbackUrl: '/' })}
-                  className="gap-2 text-gray-400 dark:text-green-400/60 hover:text-red-500 dark:hover:text-red-400"
+                  className="gap-2"
                 >
                   <LogOut className="w-4 h-4" />
                 </Button>
@@ -106,14 +108,16 @@ export function Navbar() {
             <LocaleSwitcher />
             <button
               onClick={toggleTheme}
-              className="p-2.5 rounded-lg text-gray-500 dark:text-green-400/60 hover:text-green-600 dark:hover:text-green-300 transition-colors cursor-pointer touch-target"
+              className="p-2.5 rounded-lg transition-colors cursor-pointer touch-target"
+              style={{ color: 'var(--on-surface)' }}
               aria-label="Toggle theme"
             >
               {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2.5 rounded-lg text-gray-600 dark:text-green-300 hover:text-green-700 dark:hover:text-green-100 transition-colors cursor-pointer touch-target"
+              className="p-2.5 rounded-lg transition-colors cursor-pointer touch-target"
+              style={{ color: 'var(--on-surface)' }}
             >
               {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -129,8 +133,8 @@ export function Navbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="md:hidden border-t backdrop-blur-xl overflow-hidden"
-            style={{ borderColor: 'var(--nav-border)', background: 'var(--nav-bg)' }}
+            className="md:hidden backdrop-blur-[20px] overflow-hidden"
+            style={{ background: 'var(--nav-bg)' }}
           >
             <div className="px-4 py-4 space-y-1">
               {navLinks.map((link) => {
@@ -140,11 +144,11 @@ export function Navbar() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setIsOpen(false)}
-                    className={`block px-4 py-3 rounded-xl text-sm font-medium transition-colors touch-target ${
-                      isActive
-                        ? 'text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900/40'
-                        : 'text-gray-600 dark:text-green-300/60 hover:text-green-700 dark:hover:text-green-200 hover:bg-green-50 dark:hover:bg-green-900/20'
-                    }`}
+                    className="block px-4 py-3 rounded-xl text-sm font-medium transition-colors touch-target"
+                    style={{
+                      color: isActive ? 'var(--primary)' : 'var(--on-surface)',
+                      background: isActive ? 'var(--surface-container-high)' : 'transparent',
+                    }}
                   >
                     {link.label}
                   </Link>

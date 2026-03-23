@@ -13,7 +13,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="space-y-1.5">
         {label && (
-          <label htmlFor={id} className="block text-sm font-medium text-green-200">
+          <label htmlFor={id} className="block text-sm font-medium" style={{ color: 'var(--on-surface)' }}>
             {label}
           </label>
         )}
@@ -21,10 +21,15 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={id}
           className={clsx(
-            'w-full rounded-xl bg-[#0D1F17] border border-green-800/50 px-4 py-2.5 text-green-50 placeholder-green-700 transition-colors focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500',
+            'w-full rounded-xl px-4 py-2.5 transition-colors focus:outline-none focus:ring-1',
             error && 'border-red-500 focus:border-red-500 focus:ring-red-500',
             className
           )}
+          style={{
+            background: 'var(--surface-container-lowest)',
+            border: '1px solid rgba(194, 200, 191, 0.2)',
+            color: 'var(--on-surface)',
+          }}
           {...props}
         />
         {error && <p className="text-sm text-red-400">{error}</p>}
@@ -45,7 +50,7 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     return (
       <div className="space-y-1.5">
         {label && (
-          <label htmlFor={id} className="block text-sm font-medium text-green-200">
+          <label htmlFor={id} className="block text-sm font-medium" style={{ color: 'var(--on-surface)' }}>
             {label}
           </label>
         )}
@@ -53,9 +58,14 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ref={ref}
           id={id}
           className={clsx(
-            'w-full rounded-xl bg-[#0D1F17] border border-green-800/50 px-4 py-2.5 text-green-50 transition-colors focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 cursor-pointer',
+            'w-full rounded-xl px-4 py-2.5 transition-colors focus:outline-none focus:ring-1 cursor-pointer',
             className
           )}
+          style={{
+            background: 'var(--surface-container-lowest)',
+            border: '1px solid rgba(194, 200, 191, 0.2)',
+            color: 'var(--on-surface)',
+          }}
           {...props}
         >
           {options.map((opt) => (

@@ -10,11 +10,11 @@ export function Card({ className, hover = false, children, ...props }: CardProps
   return (
     <div
       className={clsx(
-        'rounded-2xl p-6 border transition-colors duration-200',
-        'bg-white dark:bg-[#142A1E] border-gray-200 dark:border-green-900/40',
-        hover && 'transition-all duration-300 hover:border-green-300 dark:hover:border-green-700/60 hover:shadow-lg hover:shadow-green-100 dark:hover:shadow-green-900/20 hover:-translate-y-0.5',
+        'rounded-xl p-6 transition-colors duration-200',
+        hover && 'transition-all duration-300 hover:-translate-y-0.5',
         className
       )}
+      style={{ background: 'var(--surface-container-low)' }}
       {...props}
     >
       {children}
@@ -32,7 +32,7 @@ export function CardHeader({ className, children, ...props }: React.HTMLAttribut
 
 export function CardTitle({ className, children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
-    <h3 className={clsx('text-lg font-semibold text-gray-900 dark:text-green-50', className)} {...props}>
+    <h3 className={clsx('text-lg font-semibold', className)} style={{ color: 'var(--on-surface)' }} {...props}>
       {children}
     </h3>
   );
@@ -40,7 +40,7 @@ export function CardTitle({ className, children, ...props }: React.HTMLAttribute
 
 export function CardContent({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={clsx('text-gray-600 dark:text-green-200/80', className)} {...props}>
+    <div className={clsx(className)} style={{ color: 'var(--on-surface)' }} {...props}>
       {children}
     </div>
   );
