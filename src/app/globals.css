@@ -482,26 +482,29 @@ button, [role="button"], a {
 }
 
 @media (max-width: 639px) {
-  /* Show semi-transparent backdrop on mobile */
+  /* Show semi-transparent backdrop on mobile — stops above the bottom nav */
   .plant-info-backdrop {
     display: block;
     position: fixed;
-    inset: 0;
-    z-index: 64;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 68px; /* stop above bottom nav */
+    z-index: 44; /* below bottom nav (z-60) */
     background: rgba(0, 0, 0, 0.35);
   }
 
-  /* Bottom sheet */
+  /* Bottom sheet — sits just above the bottom nav */
   .plant-info-panel {
     position: fixed !important;
-    bottom: 0 !important;
+    bottom: 68px !important; /* sit above bottom nav */
     left: 0 !important;
     right: 0 !important;
     top: auto !important;
     width: 100% !important;
-    max-height: var(--plant-panel-height) !important;
+    max-height: 55dvh !important;
     overflow-y: auto !important;
-    z-index: 65 !important;
+    z-index: 45 !important; /* below bottom nav (z-60) */
     background: linear-gradient(145deg, rgba(10, 30, 18, 0.99), rgba(15, 45, 25, 0.99)) !important;
     backdrop-filter: blur(16px) !important;
     border-radius: 20px 20px 0 0 !important;
@@ -509,7 +512,7 @@ button, [role="button"], a {
     border-left: 2px solid rgba(74, 222, 128, 0.4) !important;
     border-right: 2px solid rgba(74, 222, 128, 0.4) !important;
     border-bottom: none !important;
-    padding: 16px 16px 80px 16px !important;
+    padding: 16px !important;
     box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.5) !important;
     scrollbar-width: thin;
     scrollbar-color: rgba(74, 222, 128, 0.3) transparent;
