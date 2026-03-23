@@ -26,9 +26,15 @@ const SOIL_COLORS: Record<string, string> = {
 };
 
 // Warmer, more cartoon-like wood tones with more grain variation
-const WOOD_COLORS = ['#A07028', '#B88848', '#946830', '#8A5E28', '#C09858'];
+const WOOD_COLORS = ['#A07028', '#B88848', '#946830', '#8A5E28', '#C09858', '#AA7838', '#9C6C30'];
 const WOOD_DARK = '#503818';
 const WOOD_HIGHLIGHT = '#C8A868';
+
+// Deterministic pseudo-random from seed
+function plankRng(seed: number): number {
+  const x = Math.sin(seed * 127.1 + 311.7) * 43758.5453123;
+  return x - Math.floor(x);
+}
 
 export function RaisedBed3D({ bed, gardenLength, gardenWidth, isSelected, onSelect }: RaisedBed3DProps) {
   const groupRef = useRef<THREE.Group>(null);
@@ -59,8 +65,6 @@ export function RaisedBed3D({ bed, gardenLength, gardenWidth, isSelected, onSele
   if (isOutside) {
     // Add extra margin so beds are clearly separated from the garden fence
     const margin = 0.8; // meters of gap between garden fence and bed
-    const rawX = -halfGL + (bed.x / 100) * gardenLength;
-    const rawZ = -halfGW + (bed.z / 100) * gardenWidth;
 
     // Push beds further out if they're near the garden edge
     if (bed.x > 100) {
@@ -68,7 +72,8 @@ export function RaisedBed3D({ bed, gardenLength, gardenWidth, isSelected, onSele
     } else if (bed.x < 0) {
       worldX = -halfGL - margin + (bed.x / 100) * gardenLength - l / 2;
     } else {
-      worldX = rawX;
+      // outsideGarden flag is set but x is within 0-100 — push to right side of garden
+      worldX = halfGL + margin + l / 2;
     }
 
     if (bed.z > 100) {
@@ -76,7 +81,8 @@ export function RaisedBed3D({ bed, gardenLength, gardenWidth, isSelected, onSele
     } else if (bed.z < 0) {
       worldZ = -halfGW - margin + (bed.z / 100) * gardenWidth - w / 2;
     } else {
-      worldZ = rawZ;
+      // outsideGarden flag is set but z is within 0-100 — keep z as a relative offset along the right edge
+      worldZ = -halfGW + (bed.z / 100) * gardenWidth;
     }
   } else {
     worldX = -halfGL + (bed.x / 100) * gardenLength;
@@ -86,13 +92,14 @@ export function RaisedBed3D({ bed, gardenLength, gardenWidth, isSelected, onSele
 
   const soilColor = SOIL_COLORS[bed.soilType] || SOIL_COLORS.loamy;
 
-  // Wood plank texture via multiple strips
+  // Wood plank texture via multiple strips - with per-plank color/size variation
   const planks = useMemo(() => {
     const items: Array<{
       side: 'front' | 'back' | 'left' | 'right';
       x: number; y: number; z: number;
       width: number; height: number; depth: number;
       color: string;
+      yOffset: number; // slight vertical displacement for organic feel
     }> = [];
 
     const plankHeight = 0.06;
@@ -101,18 +108,38 @@ export function RaisedBed3D({ bed, gardenLength, gardenWidth, isSelected, onSele
 
     for (let i = 0; i < numPlanks; i++) {
       const y = actualPlankH / 2 + i * actualPlankH;
-      const color = WOOD_COLORS[i % WOOD_COLORS.length];
+      // Each side gets a different color seed for variation
+      const sides: Array<{ side: 'front' | 'back' | 'left' | 'right'; sx: number; sz: number; sw: number; sd: number }> = [
+        { side: 'front', sx: 0, sz: -w / 2, sw: l, sd: wallThickness },
+        { side: 'back', sx: 0, sz: w / 2, sw: l, sd: wallThickness },
+        { side: 'left', sx: -l / 2, sz: 0, sw: wallThickness, sd: w },
+        { side: 'right', sx: l / 2, sz: 0, sw: wallThickness, sd: w },
+      ];
 
-      // Front & back
-      items.push({ side: 'front', x: 0, y, z: -w / 2, width: l, height: actualPlankH, depth: wallThickness, color });
-      items.push({ side: 'back', x: 0, y, z: w / 2, width: l, height: actualPlankH, depth: wallThickness, color });
-      // Left & right
-      items.push({ side: 'left', x: -l / 2, y, z: 0, width: wallThickness, height: actualPlankH, depth: w, color });
-      items.push({ side: 'right', x: l / 2, y, z: 0, width: wallThickness, height: actualPlankH, depth: w, color });
+      for (let s = 0; s < sides.length; s++) {
+        const sideInfo = sides[s];
+        // Deterministic color pick per plank per side
+        const colorIdx = Math.floor(plankRng(i * 4.7 + s * 13.3 + bed.x * 5.1 + bed.z * 3.7) * WOOD_COLORS.length);
+        const color = WOOD_COLORS[colorIdx];
+        // Slight y jitter for organic plank placement
+        const yOffset = (plankRng(i * 7.1 + s * 19.3) - 0.5) * 0.003;
+
+        items.push({
+          side: sideInfo.side,
+          x: sideInfo.sx,
+          y,
+          z: sideInfo.sz,
+          width: sideInfo.sw,
+          height: actualPlankH,
+          depth: sideInfo.sd,
+          color,
+          yOffset,
+        });
+      }
     }
 
     return items;
-  }, [h, w, l]);
+  }, [h, w, l, bed.x, bed.z]);
 
   // Corner posts
   const corners = useMemo(() => [
@@ -169,11 +196,11 @@ export function RaisedBed3D({ bed, gardenLength, gardenWidth, isSelected, onSele
         />
       </mesh>
 
-      {/* Wooden walls - planks */}
+      {/* Wooden walls - planks with per-plank variation */}
       {planks.map((p, i) => (
-        <mesh key={`plank-${i}`} position={[p.x, p.y, p.z]} castShadow>
+        <mesh key={`plank-${i}`} position={[p.x, p.y + p.yOffset, p.z]} castShadow>
           <boxGeometry args={[p.width, p.height * 0.93, p.depth]} />
-          <meshStandardMaterial color={p.color} map={woodTex} roughness={0.85} />
+          <meshStandardMaterial color={p.color} map={woodTex} roughness={0.82 + plankRng(i * 3.3) * 0.08} />
         </mesh>
       ))}
 
@@ -199,6 +226,24 @@ export function RaisedBed3D({ bed, gardenLength, gardenWidth, isSelected, onSele
           </mesh>
         </group>
       ))}
+
+      {/* Nail heads on corners for construction detail */}
+      {corners.map((c, ci) => {
+        const plankHeight = 0.06;
+        const numPlanks = Math.max(2, Math.ceil(h / plankHeight));
+        const actualPlankH = h / numPlanks;
+        return Array.from({ length: Math.min(numPlanks, 4) }, (_, pi) => {
+          const ny = actualPlankH / 2 + pi * actualPlankH;
+          return (
+            <group key={`nail-${ci}-${pi}`}>
+              <mesh position={[c.x + (c.x > 0 ? -0.02 : 0.02), ny, c.z + (c.z > 0 ? -0.005 : 0.005)]}>
+                <sphereGeometry args={[0.004, 4, 3]} />
+                <meshStandardMaterial color="#5A5A60" metalness={0.6} roughness={0.3} />
+              </mesh>
+            </group>
+          );
+        });
+      })}
 
       {/* Top trim rails - wider decorative cap for finished look */}
       {topRails.map((rail, i) => (
