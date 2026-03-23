@@ -73,11 +73,7 @@ export function PlantCard({ plant, index = 0 }: PlantCardProps) {
     >
       <Link href={`/plants/${plant.id}`}>
         <Card hover className="relative overflow-hidden group cursor-pointer h-full">
-          {/* Color accent bar */}
-          <div
-            className="absolute top-0 left-0 right-0 h-1.5 rounded-t-2xl"
-            style={{ backgroundColor: plant.color }}
-          />
+          {/* No color accent bar - removed per design guidelines */}
 
           {/* Plantable badge */}
           {plantable && (
@@ -100,14 +96,14 @@ export function PlantCard({ plant, index = 0 }: PlantCardProps) {
               <span className="text-xl sm:text-2xl">{emoji}</span>
             </motion.div>
             <div className="min-w-0 pt-0.5 sm:pt-1">
-              <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-green-50 group-hover:text-green-600 dark:group-hover:text-green-300 transition-colors truncate">
+              <h3 className="text-base sm:text-lg font-semibold group-hover:text-green-600 dark:group-hover:text-green-300 transition-colors truncate" style={{ color: 'var(--on-surface)' }}>
                 {locale === 'fr' ? plant.name.fr : plant.name.en}
               </h3>
-              <p className="text-xs sm:text-sm text-gray-400 dark:text-green-400/60 italic">{plant.name.fr}</p>
+              <p className="text-xs sm:text-sm text-gray-500 dark:text-green-400/60 italic font-medium">{plant.name.fr}</p>
             </div>
           </div>
 
-          <p className="text-sm text-gray-500 dark:text-green-200/60 mb-4 line-clamp-2 leading-relaxed">
+          <p className="text-sm mb-4 line-clamp-2 leading-relaxed" style={{ color: 'var(--on-surface)', opacity: 0.7 }}>
             {locale === 'fr' ? plant.description.fr : plant.description.en}
           </p>
 
@@ -126,7 +122,7 @@ export function PlantCard({ plant, index = 0 }: PlantCardProps) {
           </div>
 
           {/* Plant info row */}
-          <div className="flex flex-wrap gap-4 text-xs text-gray-500 dark:text-green-300/70 pt-3 border-t border-gray-100 dark:border-green-900/30">
+          <div className="flex flex-wrap gap-4 text-xs text-gray-500 dark:text-green-300/70 pt-2">
             <span className="flex items-center gap-1.5">
               <Droplets className="w-3.5 h-3.5" />
               {getWateringLabel(plant.wateringFrequency)}

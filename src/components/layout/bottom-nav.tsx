@@ -34,7 +34,7 @@ export function BottomNav() {
             <Link
               key={href}
               href={href}
-              className="flex flex-col items-center justify-center gap-0.5 flex-1 py-2 min-h-[56px] transition-all duration-200 active:scale-95"
+              className="flex flex-col items-center justify-center gap-1 flex-1 py-3 min-h-[68px] transition-all duration-200 active:scale-95"
               style={{
                 color: isActive ? 'var(--primary)' : 'var(--body-text)',
                 opacity: isActive ? 1 : 0.6,
@@ -43,18 +43,18 @@ export function BottomNav() {
               aria-current={isActive ? 'page' : undefined}
             >
               <div
-                className="relative flex items-center justify-center w-10 h-6 rounded-full transition-all duration-200"
+                className="relative flex items-center justify-center w-12 h-8 rounded-full transition-all duration-200"
                 style={{
                   background: isActive ? 'var(--accent-muted)' : 'transparent',
                 }}
               >
                 <Icon
-                  className="w-5 h-5"
+                  className="w-6 h-6"
                   strokeWidth={isActive ? 2.2 : 1.8}
                 />
               </div>
               <span
-                className="text-[10px] font-medium leading-none tracking-wide"
+                className="text-xs font-medium leading-none tracking-wide"
                 style={{ color: isActive ? 'var(--primary)' : 'inherit' }}
               >
                 {label}

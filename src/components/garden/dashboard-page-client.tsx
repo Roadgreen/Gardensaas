@@ -1094,8 +1094,8 @@ export function DashboardPageClient() {
                   {'\uD83D\uDCA1'}
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-green-300 mb-1">{t('tipOfTheDay')}</h3>
-                  <p className="text-green-100">{tip}</p>
+                  <h3 className="text-sm font-semibold text-green-300 mb-1">{t('tipOfTheDay')}</h3>
+                  <p className="text-green-100 italic leading-relaxed" style={{ fontFamily: 'var(--font-jakarta, "Plus Jakarta Sans", sans-serif)', fontStyle: 'italic' }}>{tip}</p>
                 </div>
               </div>
             </Card>

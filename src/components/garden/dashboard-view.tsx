@@ -392,8 +392,8 @@ export function DashboardView() {
                 <Lightbulb className="w-5 h-5 text-yellow-500 dark:text-yellow-400" />
               </div>
               <div>
-                <h3 className="text-sm font-medium text-yellow-800 dark:text-green-300 mb-1">Daily Tip</h3>
-                <p className="text-sm text-yellow-900/80 dark:text-green-100">{tip}</p>
+                <h3 className="text-sm font-semibold text-yellow-800 dark:text-green-300 mb-1">Daily Tip</h3>
+                <p className="text-sm text-yellow-900/80 dark:text-green-100 italic leading-relaxed" style={{ fontFamily: 'var(--font-jakarta, "Plus Jakarta Sans", sans-serif)', fontStyle: 'italic' }}>{tip}</p>
               </div>
             </div>
           </Card>

@@ -334,8 +334,8 @@ export function TipsPageClient() {
                               <CatIcon className="w-4 h-4 text-green-400" />
                             </div>
                             <div className="flex-1 min-w-0">
-                              <p className="text-green-100 text-sm leading-relaxed">{tip.en}</p>
-                              <p className="text-green-500/40 text-xs mt-1 leading-relaxed">{tip.fr}</p>
+                              <p className="text-green-100 text-sm leading-relaxed font-medium">{tip.en}</p>
+                              <p className="text-green-400/50 text-xs mt-1 leading-relaxed italic" style={{ fontFamily: 'var(--font-jakarta, "Plus Jakarta Sans", sans-serif)', fontStyle: 'italic', fontWeight: 400 }}>{tip.fr}</p>
                             </div>
                           </div>
                         </Card>
