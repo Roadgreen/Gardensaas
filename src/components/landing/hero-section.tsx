@@ -101,7 +101,7 @@ export function HeroSection() {
               </span>
             </motion.div>
 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-bold mb-5 sm:mb-7 leading-[1.08] tracking-tight">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-bold mb-5 sm:mb-7 leading-[1.18] sm:leading-[1.08] tracking-tight">
               <span className="text-gray-900 dark:text-green-50">{t('title1')}</span>
               <span className="block text-gradient animate-gradient-flow mt-1" style={{ backgroundSize: '200% 200%' }}>
                 {t('title2')}
