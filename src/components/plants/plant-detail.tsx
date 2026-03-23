@@ -26,6 +26,7 @@ import {
   getEnemyPlants,
 } from '@/lib/garden-utils';
 import { MONTH_NAMES } from '@/types';
+import { useLocale } from 'next-intl';
 
 interface PlantDetailProps {
   plant: Plant;
@@ -58,6 +59,7 @@ const difficultyMeta: Record<string, { label: string; emoji: string }> = {
 };
 
 export function PlantDetail({ plant }: PlantDetailProps) {
+  const locale = useLocale();
   const plantable = isPlantableNow(plant);
   const companions = getCompanionPlants(plant.id);
   const enemies = getEnemyPlants(plant.id);
@@ -94,7 +96,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
             </motion.div>
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-green-50 mb-1">
-                {plant.name.en}
+                {locale === 'fr' ? plant.name.fr : plant.name.en}
               </h1>
               <p className="text-green-400/60 text-lg italic mb-3">{plant.name.fr}</p>
               <div className="flex flex-wrap gap-2">
@@ -123,7 +125,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
           {/* Description */}
           <Card className="mb-6">
             <CardContent>
-              <p className="text-green-100 text-lg leading-relaxed">{plant.description.en}</p>
+              <p className="text-green-100 text-lg leading-relaxed">{locale === 'fr' ? plant.description.fr : plant.description.en}</p>
             </CardContent>
           </Card>
 
@@ -231,7 +233,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
                           whileHover={{ scale: 1.03 }}
                         >
                           <span className="text-lg">{getPlantEmoji(c.id)}</span>
-                          <span className="text-sm text-green-200 truncate">{c.name.en}</span>
+                          <span className="text-sm text-green-200 truncate">{locale === 'fr' ? c.name.fr : c.name.en}</span>
                         </motion.div>
                       </Link>
                     ))}
@@ -267,7 +269,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
                           whileHover={{ scale: 1.03 }}
                         >
                           <span className="text-lg">{getPlantEmoji(e.id)}</span>
-                          <span className="text-sm text-red-200 truncate">{e.name.en}</span>
+                          <span className="text-sm text-red-200 truncate">{locale === 'fr' ? e.name.fr : e.name.en}</span>
                         </motion.div>
                       </Link>
                     ))}

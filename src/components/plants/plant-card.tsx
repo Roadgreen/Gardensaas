@@ -6,6 +6,7 @@ import { Card } from '@/components/ui/card';
 import { Droplets, Sun, Clock, Leaf } from 'lucide-react';
 import type { Plant } from '@/types';
 import { getWateringLabel, isPlantableNow } from '@/lib/garden-utils';
+import { useLocale } from 'next-intl';
 
 interface PlantCardProps {
   plant: Plant;
@@ -58,6 +59,7 @@ function getPlantEmoji(id: string): string {
 }
 
 export function PlantCard({ plant, index = 0 }: PlantCardProps) {
+  const locale = useLocale();
   const plantable = isPlantableNow(plant);
   const seasons = getSeasonBadges(plant.plantingMonths);
   const diff = difficultyLabels[plant.difficulty] || difficultyLabels.easy;
@@ -99,14 +101,14 @@ export function PlantCard({ plant, index = 0 }: PlantCardProps) {
             </motion.div>
             <div className="min-w-0 pt-0.5 sm:pt-1">
               <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-green-50 group-hover:text-green-600 dark:group-hover:text-green-300 transition-colors truncate">
-                {plant.name.en}
+                {locale === 'fr' ? plant.name.fr : plant.name.en}
               </h3>
               <p className="text-xs sm:text-sm text-gray-400 dark:text-green-400/60 italic">{plant.name.fr}</p>
             </div>
           </div>
 
           <p className="text-sm text-gray-500 dark:text-green-200/60 mb-4 line-clamp-2 leading-relaxed">
-            {plant.description.en}
+            {locale === 'fr' ? plant.description.fr : plant.description.en}
           </p>
 
           {/* Season badges with emojis */}

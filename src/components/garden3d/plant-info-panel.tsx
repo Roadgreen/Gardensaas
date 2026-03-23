@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { useLocale } from 'next-intl';
 import type { Plant, PlantedItem, RaisedBed, GardenZone } from '@/types';
 import { RAISED_BED_SOIL_LABELS, SOIL_LABELS } from '@/types';
 
@@ -42,6 +43,7 @@ const WATER_LABELS: Record<string, string> = {
 const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, gardenLength, gardenWidth, raisedBedId, raisedBeds, varietyId, zoneId, zones, onClose, onRemove }: PlantInfoPanelProps) {
+  const locale = useLocale();
   const daysPlanted = useMemo(() => {
     const now = new Date();
     const planted = new Date(plantedDate);
@@ -56,16 +58,16 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
   const companionNames = useMemo(() =>
     plant.companionPlants.map((id) => {
       const p = allPlants.find((ap) => ap.id === id);
-      return p ? p.name.en : id;
+      return p ? (locale === 'fr' ? p.name.fr : p.name.en) : id;
     }),
-  [plant.companionPlants, allPlants]);
+  [plant.companionPlants, allPlants, locale]);
 
   const enemyNames = useMemo(() =>
     plant.enemyPlants.map((id) => {
       const p = allPlants.find((ap) => ap.id === id);
-      return p ? p.name.en : id;
+      return p ? (locale === 'fr' ? p.name.fr : p.name.en) : id;
     }),
-  [plant.enemyPlants, allPlants]);
+  [plant.enemyPlants, allPlants, locale]);
 
   const plantingMonthsStr = useMemo(() =>
     plant.plantingMonths.map((m) => MONTH_SHORT[m - 1]).join(', '),
@@ -100,7 +102,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
       if (distance < 2) {
         const requiredDist = (plant.spacingCm + otherPlant.spacingCm) / 100 / 2;
         nearby.push({
-          name: otherPlant.name.en,
+          name: locale === 'fr' ? otherPlant.name.fr : otherPlant.name.en,
           distance: Math.round(distance * 100),
           isCompanion: plant.companionPlants.includes(otherPlant.id),
           isEnemy: plant.enemyPlants.includes(otherPlant.id),
@@ -170,7 +172,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
         </div>
         <div>
           <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#86EFAC' }}>
-            {plant.name.en}
+            {locale === 'fr' ? plant.name.fr : plant.name.en}
           </div>
           <div style={{ fontSize: '13px', color: '#6EE7B7', opacity: 0.7 }}>
             {plant.name.fr}
@@ -188,7 +190,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
         background: 'rgba(0,0,0,0.2)',
         marginBottom: '14px',
       }}>
-        {plant.description.en}
+        {locale === 'fr' ? plant.description.fr : plant.description.en}
       </div>
 
       {/* Variety indicator */}
@@ -209,11 +211,11 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
             }} />
             <div>
               <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#C084FC' }}>
-                Variety: {variety.name.en}
+                Variety: {locale === 'fr' ? variety.name.fr : variety.name.en}
               </div>
               {variety.description && (
                 <div style={{ fontSize: '9px', color: '#9CA3AF' }}>
-                  {variety.description.en}
+                  {locale === 'fr' ? variety.description.fr : variety.description.en}
                 </div>
               )}
               {variety.harvestDays && variety.harvestDays !== plant.harvestDays && (

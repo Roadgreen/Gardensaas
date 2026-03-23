@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { PlantDetail } from '@/components/plants/plant-detail';
 import { getPlantById, getAllPlants } from '@/lib/garden-utils';
+import { getLocale } from 'next-intl/server';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -16,9 +17,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
   const plant = getPlantById(id);
   if (!plant) return { title: 'Plant Not Found' };
+  const locale = await getLocale();
   return {
-    title: `${plant.name.en} - Growing Guide`,
-    description: plant.description.en,
+    title: `${locale === 'fr' ? plant.name.fr : plant.name.en} - Growing Guide`,
+    description: locale === 'fr' ? plant.description.fr : plant.description.en,
   };
 }
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { useLocale } from 'next-intl';
 import type { Plant } from '@/types';
 
 interface PlantCatalogSidebarProps {
@@ -38,6 +39,7 @@ export function PlantCatalogSidebar({
   selectedPlantType,
   onSelectPlant,
 }: PlantCatalogSidebarProps) {
+  const locale = useLocale();
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [hoveredPlant, setHoveredPlant] = useState<string | null>(null);
@@ -304,7 +306,7 @@ export function PlantCatalogSidebar({
                     textOverflow: 'ellipsis',
                   }}
                 >
-                  {plant.name.en}
+                  {locale === 'fr' ? plant.name.fr : plant.name.en}
                 </div>
                 <div
                   style={{
@@ -375,6 +377,7 @@ export function PlantCatalogSidebar({
 }
 
 function SelectedPlantPreview({ plant }: { plant: Plant | null }) {
+  const locale = useLocale();
   if (!plant) return null;
 
   return (
@@ -404,7 +407,7 @@ function SelectedPlantPreview({ plant }: { plant: Plant | null }) {
         />
         <div>
           <div style={{ color: '#86EFAC', fontSize: '13px', fontWeight: 'bold' }}>
-            {plant.name.en}
+            {locale === 'fr' ? plant.name.fr : plant.name.en}
           </div>
           <div style={{ color: '#6B7280', fontSize: '10px' }}>{plant.name.fr}</div>
         </div>
