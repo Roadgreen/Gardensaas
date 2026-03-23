@@ -98,7 +98,7 @@ export function PlantCard({ plant, index = 0 }: PlantCardProps) {
           )}
 
           {/* Plant emoji + name */}
-          <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4 mt-1">
+          <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4 mt-1 pr-16 sm:pr-0">
             <motion.div
               className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
               style={{ backgroundColor: plant.color + '20', border: `2px solid ${plant.color}30` }}
