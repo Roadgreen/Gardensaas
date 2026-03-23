@@ -470,7 +470,13 @@ button, [role="button"], a {
    65: plant info panel — above bottom nav
    ============================================================ */
 
-/* Plant info panel — bottom sheet on mobile, floating panel on desktop */
+/* Plant info panel — bottom sheet on mobile, floating panel on desktop.
+   --plant-panel-height is shared with the clipPath inset in garden-3d-view.tsx
+   so 3D Html labels are clipped exactly behind the panel. */
+:root {
+  --plant-panel-height: 50dvh;
+}
+
 .plant-info-backdrop {
   display: none;
 }
@@ -493,7 +499,7 @@ button, [role="button"], a {
     right: 0 !important;
     top: auto !important;
     width: 100% !important;
-    max-height: 50dvh !important;
+    max-height: var(--plant-panel-height) !important;
     overflow-y: auto !important;
     z-index: 65 !important;
     background: linear-gradient(145deg, rgba(10, 30, 18, 0.99), rgba(15, 45, 25, 0.99)) !important;
