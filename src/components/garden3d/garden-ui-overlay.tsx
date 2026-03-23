@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useTranslations, useLocale } from 'next-intl';
 import type { Plant } from '@/types';
 
 interface GardenUIOverlayProps {
@@ -35,12 +36,7 @@ const SEASON_ICONS: Record<string, string> = {
   winter: '\u{2744}\u{FE0F}',
 };
 
-const SEASON_LABELS: Record<string, string> = {
-  spring: 'Spring',
-  summer: 'Summer',
-  autumn: 'Autumn',
-  winter: 'Winter',
-};
+// Season labels are now loaded via translations
 
 const TIME_ICONS: Record<string, string> = {
   morning: '\u{1F305}',
@@ -56,33 +52,36 @@ const CATEGORY_ICONS: Record<string, string> = {
   all: '\u{1F331}',
 };
 
-function getWeather(season: string): string {
+// Weather state keys (used as i18n keys)
+type WeatherKey = 'snowy' | 'overcast' | 'lightRain' | 'partlyCloudy' | 'cloudy' | 'breezy' | 'sunny' | 'clear';
+
+function getWeatherKey(season: string): WeatherKey {
   const hour = new Date().getHours();
-  if (season === 'winter') return hour % 3 === 0 ? 'Snowy' : 'Overcast';
-  if (season === 'spring') return hour % 4 === 0 ? 'Light Rain' : 'Partly Cloudy';
-  if (season === 'autumn') return hour % 3 === 0 ? 'Cloudy' : 'Breezy';
-  const states = ['Sunny', 'Partly Cloudy', 'Cloudy', 'Light Rain', 'Clear'];
+  if (season === 'winter') return hour % 3 === 0 ? 'snowy' : 'overcast';
+  if (season === 'spring') return hour % 4 === 0 ? 'lightRain' : 'partlyCloudy';
+  if (season === 'autumn') return hour % 3 === 0 ? 'cloudy' : 'breezy';
+  const states: WeatherKey[] = ['sunny', 'partlyCloudy', 'cloudy', 'lightRain', 'clear'];
   return states[hour % states.length];
 }
 
 const WEATHER_ICONS: Record<string, string> = {
-  Sunny: '\u{2600}\u{FE0F}',
-  'Partly Cloudy': '\u{26C5}',
-  Cloudy: '\u{2601}\u{FE0F}',
-  'Light Rain': '\u{1F327}\u{FE0F}',
-  Clear: '\u{1F31F}',
-  Snowy: '\u{1F328}\u{FE0F}',
-  Overcast: '\u{2601}\u{FE0F}',
-  Breezy: '\u{1F343}',
+  snowy: '\u{1F328}\u{FE0F}',
+  overcast: '\u{2601}\u{FE0F}',
+  lightRain: '\u{1F327}\u{FE0F}',
+  partlyCloudy: '\u{26C5}',
+  cloudy: '\u{2601}\u{FE0F}',
+  breezy: '\u{1F343}',
+  sunny: '\u{2600}\u{FE0F}',
+  clear: '\u{1F31F}',
 };
 
-// Game toolbar tools
-const TOOLS = [
-  { id: 'water', icon: '\u{1F4A7}', label: 'Water', color: '#60A5FA', description: 'Water your plants' },
-  { id: 'plant', icon: '\u{1F331}', label: 'Plant', color: '#4ADE80', description: 'Place a new plant' },
-  { id: 'harvest', icon: '\u{1F33E}', label: 'Harvest', color: '#FFD700', description: 'Harvest ripe crops' },
-  { id: 'info', icon: '\u{1F50D}', label: 'Info', color: '#A78BFA', description: 'Inspect plant details' },
-  { id: 'fertilize', icon: '\u{2728}', label: 'Boost', color: '#F59E0B', description: 'Fertilize soil' },
+// Game toolbar tool ids - labels/descriptions come from translations
+const TOOL_IDS = [
+  { id: 'water', icon: '\u{1F4A7}', color: '#60A5FA' },
+  { id: 'plant', icon: '\u{1F331}', color: '#4ADE80' },
+  { id: 'harvest', icon: '\u{1F33E}', color: '#FFD700' },
+  { id: 'info', icon: '\u{1F50D}', color: '#A78BFA' },
+  { id: 'fertilize', icon: '\u{2728}', color: '#F59E0B' },
 ];
 
 const overlayBase: React.CSSProperties = {
@@ -118,22 +117,34 @@ export function GardenUIOverlay({
   onToolSelect,
   gardenHealth = 100,
 }: GardenUIOverlayProps) {
-  const [weather, setWeather] = useState('Sunny');
+  const t = useTranslations('garden3d.overlay');
+  const tCatalog = useTranslations('garden3d.catalog');
+  const locale = useLocale();
+  const [weatherKey, setWeatherKey] = useState<WeatherKey>('sunny');
   const [currentDate, setCurrentDate] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [showToolbar, setShowToolbar] = useState(false);
   const [toolTooltip, setToolTooltip] = useState<string | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
+  // Build TOOLS array with translated labels/descriptions
+  const TOOLS = useMemo(() => [
+    { id: 'water', icon: '\u{1F4A7}', label: t('water'), color: '#60A5FA', description: t('waterDesc') },
+    { id: 'plant', icon: '\u{1F331}', label: t('plant'), color: '#4ADE80', description: t('plantDesc') },
+    { id: 'harvest', icon: '\u{1F33E}', label: t('harvest'), color: '#FFD700', description: t('harvestDesc') },
+    { id: 'info', icon: '\u{1F50D}', label: t('info'), color: '#A78BFA', description: t('infoDesc') },
+    { id: 'fertilize', icon: '\u{2728}', label: t('boost'), color: '#F59E0B', description: t('boostDesc') },
+  ], [t]);
+
   useEffect(() => {
-    setWeather(getWeather(season));
+    setWeatherKey(getWeatherKey(season));
     const now = new Date();
-    setCurrentDate(now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }));
+    setCurrentDate(now.toLocaleDateString(locale === 'fr' ? 'fr-FR' : 'en-US', { weekday: 'short', month: 'short', day: 'numeric' }));
     setIsMobile(window.innerWidth < 640);
     const handleResize = () => setIsMobile(window.innerWidth < 640);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [season]);
+  }, [season, locale]);
 
   const filteredPlants = useMemo(() => {
     if (categoryFilter === 'all') return plants;
@@ -193,7 +204,7 @@ export function GardenUIOverlay({
           <span style={{ fontSize: '20px' }}>{SEASON_ICONS[season]}</span>
           <div>
             <div style={{ fontWeight: 'bold', color: '#86EFAC', fontSize: '14px' }}>
-              {SEASON_LABELS[season]}
+              {t(season as 'spring' | 'summer' | 'autumn' | 'winter')}
             </div>
             <div style={{ fontSize: '11px', color: '#9CA3AF' }}>
               {currentDate} {TIME_ICONS[timeOfDay]}
@@ -202,8 +213,8 @@ export function GardenUIOverlay({
         </div>
 
         <div style={{ ...overlayBase, display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px' }}>
-          <span style={{ fontSize: '16px' }}>{WEATHER_ICONS[weather] || '\u{2600}\u{FE0F}'}</span>
-          <span>{weather}</span>
+          <span style={{ fontSize: '16px' }}>{WEATHER_ICONS[weatherKey] || '\u{2600}\u{FE0F}'}</span>
+          <span>{t(weatherKey as Parameters<typeof t>[0])}</span>
         </div>
       </div>
 
@@ -221,26 +232,26 @@ export function GardenUIOverlay({
             animation: 'pulse 2s ease-in-out infinite',
           }}>
             <span>{'\u{1F4CB}'}</span>
-            {taskCount} task{taskCount !== 1 ? 's' : ''}
+            {t('tasks', { count: taskCount })}
           </div>
         )}
 
         <div style={{ ...overlayBase, fontSize: '12px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
             <span>{'\u{1F331}'}</span>
-            <span>{plantCount} plant{plantCount !== 1 ? 's' : ''}</span>
+            <span>{t('plants', { count: plantCount })}</span>
           </div>
           {harvestReadyCount > 0 && (
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px', color: '#FFD700' }}>
               <span>{'\u{2728}'}</span>
-              <span>{harvestReadyCount} ready!</span>
+              <span>{t('harvestReady', { count: harvestReadyCount })}</span>
             </div>
           )}
           {/* Garden Health Bar */}
           <div style={{ marginTop: '6px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '3px' }}>
               <span style={{ fontSize: '10px', color: '#9CA3AF' }}>
-                {gardenHealth >= 80 ? '\u{1F49A}' : gardenHealth >= 50 ? '\u{1F49B}' : '\u{2764}\u{FE0F}'} Health
+                {gardenHealth >= 80 ? '\u{1F49A}' : gardenHealth >= 50 ? '\u{1F49B}' : '\u{2764}\u{FE0F}'} {t('health')}
               </span>
               <span style={{
                 fontSize: '10px',
@@ -291,7 +302,7 @@ export function GardenUIOverlay({
           }}
         >
           <span>{'\u{1F3AE}'}</span>
-          {isIsometric ? 'Isometric' : 'Free Cam'}
+          {isIsometric ? t('isometric') : t('freeCam')}
         </button>
 
         {/* Remove selected plant */}
@@ -311,7 +322,7 @@ export function GardenUIOverlay({
             }}
           >
             <span>{'\u{1F5D1}'}</span>
-            Remove Plant
+            {t('removePlant')}
           </button>
         )}
       </div>
@@ -370,7 +381,7 @@ export function GardenUIOverlay({
                     transition: 'all 0.15s',
                   }}
                 >
-                  {CATEGORY_ICONS[cat] || '\u{1F33F}'} {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                  {CATEGORY_ICONS[cat] || '\u{1F33F}'} {tCatalog((cat as Parameters<typeof tCatalog>[0]) || 'all')}
                 </button>
               ))}
             </div>
@@ -425,7 +436,7 @@ export function GardenUIOverlay({
                     color: selectedPlantType === plant.id ? '#86EFAC' : '#D1D5DB',
                     fontWeight: selectedPlantType === plant.id ? 'bold' : 'normal',
                   }}>
-                    {plant.name.en}
+                    {locale === 'fr' ? plant.name.fr : plant.name.en}
                   </span>
                 </button>
               ))}
@@ -580,7 +591,7 @@ export function GardenUIOverlay({
               marginTop: '10px',
               animation: 'pulse 1.5s ease-in-out infinite',
             }}>
-              {'tap to continue \u{25BC}'}
+              {t('tapToContinue') + ' \u{25BC}'}
             </div>
           </div>
         </div>
@@ -600,7 +611,7 @@ export function GardenUIOverlay({
           pointerEvents: 'none',
         }}
       >
-        Tap plants for info | Pinch to zoom | Drag to rotate
+        {t('hint')}
       </div>
     </>
   );

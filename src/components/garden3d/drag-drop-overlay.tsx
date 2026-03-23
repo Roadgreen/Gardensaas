@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface DragDropOverlayProps {
   isDragging: boolean;
@@ -8,6 +9,7 @@ interface DragDropOverlayProps {
 }
 
 export function DragDropOverlay({ isDragging, onDrop }: DragDropOverlayProps) {
+  const t = useTranslations('garden3d.catalog');
   const overlayRef = useRef<HTMLDivElement>(null);
   const [isOver, setIsOver] = useState(false);
 
@@ -74,7 +76,7 @@ export function DragDropOverlay({ isDragging, onDrop }: DragDropOverlayProps) {
           }}
         >
           <div style={{ fontSize: '32px', marginBottom: '4px' }}>{'\uD83C\uDF31'}</div>
-          Drop to plant here!
+          {t('dropToPlant')}
         </div>
       )}
     </div>

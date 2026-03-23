@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import type { Plant, GardenConfig, PlantingSuggestion, GardenZone, RaisedBed } from '@/types';
 
 interface PlantingSuggestionsProps {
@@ -31,7 +31,20 @@ const panelStyle: React.CSSProperties = {
   scrollbarColor: 'rgba(251, 191, 36, 0.3) transparent',
 };
 
-function computeSuggestions(config: GardenConfig, plants: Plant[]): PlantingSuggestion[] {
+interface SuggestionsLabels {
+  canPlantThisMonth: string;
+  plantingSoonLabel: string;
+  matchesSoil: string;
+  matchesSun: string;
+  easyToGrow: string;
+  goodCompanionWith: string;
+  conflictsWithPlants: string;
+  notYetInGarden: string;
+  betweenPlants: string;
+  betweenRows: string;
+}
+
+function computeSuggestions(config: GardenConfig, plants: Plant[], locale: string, labels: SuggestionsLabels): PlantingSuggestion[] {
   const currentMonth = new Date().getMonth() + 1;
   const totalAreaM2 = config.length * config.width;
 
@@ -58,10 +71,10 @@ function computeSuggestions(config: GardenConfig, plants: Plant[]): PlantingSugg
     // Season match (can plant now)
     if (plant.plantingMonths.includes(currentMonth)) {
       score += 30;
-      reasons.push('Can be planted this month');
+      reasons.push(labels.canPlantThisMonth);
     } else if (plant.plantingMonths.includes(currentMonth + 1) || plant.plantingMonths.includes(currentMonth - 1)) {
       score += 15;
-      reasons.push('Planting season coming soon');
+      reasons.push(labels.plantingSoonLabel);
     } else {
       score -= 10;
     }
@@ -69,7 +82,7 @@ function computeSuggestions(config: GardenConfig, plants: Plant[]): PlantingSugg
     // Soil compatibility
     if (plant.soilTypes.includes(config.soilType)) {
       score += 20;
-      reasons.push('Matches your soil type');
+      reasons.push(labels.matchesSoil);
     } else {
       score -= 5;
     }
@@ -77,13 +90,13 @@ function computeSuggestions(config: GardenConfig, plants: Plant[]): PlantingSugg
     // Sun compatibility
     if (plant.sunExposure.includes(config.sunExposure)) {
       score += 15;
-      reasons.push('Matches your sun exposure');
+      reasons.push(labels.matchesSun);
     }
 
     // Difficulty bonus for easy plants
     if (plant.difficulty === 'easy') {
       score += 10;
-      reasons.push('Easy to grow');
+      reasons.push(labels.easyToGrow);
     }
 
     // Companion planting bonus
@@ -92,21 +105,24 @@ function computeSuggestions(config: GardenConfig, plants: Plant[]): PlantingSugg
       score += companionBonus * 10;
       const companionNames = plant.companionPlants
         .filter((c) => plantedIds.has(c))
-        .map((c) => plants.find((p) => p.id === c)?.name.en || c);
-      reasons.push(`Good companion with: ${companionNames.join(', ')}`);
+        .map((c) => {
+          const p = plants.find((p) => p.id === c);
+          return p ? (locale === 'fr' ? p.name.fr : p.name.en) : c;
+        });
+      reasons.push(`${labels.goodCompanionWith}: ${companionNames.join(', ')}`);
     }
 
     // Enemy plant penalty
     const enemyCount = plant.enemyPlants.filter((e) => plantedIds.has(e)).length;
     if (enemyCount > 0) {
       score -= enemyCount * 15;
-      reasons.push('Conflicts with existing plants');
+      reasons.push(labels.conflictsWithPlants);
     }
 
     // Not already planted bonus
     if (!plantedIds.has(plant.id)) {
       score += 5;
-      reasons.push('Not yet in your garden');
+      reasons.push(labels.notYetInGarden);
     }
 
     // Already too many of this plant penalty
@@ -126,14 +142,17 @@ function computeSuggestions(config: GardenConfig, plants: Plant[]): PlantingSugg
     if (score > 0) {
       suggestions.push({
         plantId: plant.id,
-        plantName: plant.name.en,
+        plantName: locale === 'fr' ? plant.name.fr : plant.name.en,
         quantity: quantity - existing,
         reason: reasons.slice(0, 3).join('. '),
         score: Math.min(100, Math.max(0, score)),
         companions: plant.companionPlants
           .slice(0, 3)
-          .map((c) => plants.find((p) => p.id === c)?.name.en || c),
-        spacingNote: `${plant.spacingCm}cm between plants, ${plant.rowSpacingCm || Math.round(plant.spacingCm * 1.5)}cm between rows`,
+          .map((c) => {
+            const p = plants.find((p) => p.id === c);
+            return p ? (locale === 'fr' ? p.name.fr : p.name.en) : c;
+          }),
+        spacingNote: `${plant.spacingCm}cm ${labels.betweenPlants}, ${plant.rowSpacingCm || Math.round(plant.spacingCm * 1.5)}cm ${labels.betweenRows}`,
       });
     }
   }
@@ -145,13 +164,28 @@ function computeSuggestions(config: GardenConfig, plants: Plant[]): PlantingSugg
 
 export function PlantingSuggestions({ config, plants, onClose, onSelectPlant }: PlantingSuggestionsProps) {
   const t = useTranslations('garden3d.suggestions');
+  const tInfo = useTranslations('garden3d.infoPanel');
+  const locale = useLocale();
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
   const totalArea = config.length * config.width;
   const zoneArea = (config.zones || []).reduce((s: number, z: GardenZone) => s + z.lengthM * z.widthM, 0);
   const bedArea = (config.raisedBeds || []).reduce((s: number, b: RaisedBed) => s + b.lengthM * b.widthM, 0);
 
-  const suggestions = useMemo(() => computeSuggestions(config, plants), [config, plants]);
+  const suggestionLabels: SuggestionsLabels = useMemo(() => ({
+    canPlantThisMonth: t('canPlantThisMonth'),
+    plantingSoonLabel: t('plantingSoon'),
+    matchesSoil: t('matchesSoil'),
+    matchesSun: t('matchesSun'),
+    easyToGrow: t('easyToGrow'),
+    goodCompanionWith: t('goodCompanionWith'),
+    conflictsWithPlants: t('conflictsWithPlants'),
+    notYetInGarden: t('notYetInGarden'),
+    betweenPlants: tInfo('betweenPlants'),
+    betweenRows: tInfo('betweenRows'),
+  }), [t, tInfo]);
+
+  const suggestions = useMemo(() => computeSuggestions(config, plants, locale, suggestionLabels), [config, plants, locale, suggestionLabels]);
 
   const scoreColor = (score: number) => {
     if (score >= 70) return '#4ADE80';
@@ -298,7 +332,7 @@ export function PlantingSuggestions({ config, plants, onClose, onSelectPlant }: 
                               fontSize: '10px', background: 'rgba(168, 85, 247, 0.1)',
                               color: '#C084FC',
                             }}>
-                              {v.name.en}
+                              {locale === 'fr' ? v.name.fr : v.name.en}
                             </span>
                           ))}
                         </div>

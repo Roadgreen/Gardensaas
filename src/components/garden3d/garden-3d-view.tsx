@@ -22,7 +22,7 @@ const GardenScene = dynamic(() => import('./garden-scene').then(m => ({ default:
   ssr: false,
   loading: () => (
     <div className="w-full h-full flex items-center justify-center bg-[#0D1F17]">
-      <div className="animate-pulse text-green-400">Loading...</div>
+      <div className="animate-pulse text-green-400" suppressHydrationWarning>...</div>
     </div>
   ),
 });
@@ -361,7 +361,7 @@ export function Garden3DView() {
 
         <Suspense fallback={
           <div className="w-full h-full flex items-center justify-center">
-            <div className="animate-pulse text-green-400">Loading...</div>
+            <div className="animate-pulse text-green-400">{t('loading3d')}</div>
           </div>
         }>
           <GardenScene

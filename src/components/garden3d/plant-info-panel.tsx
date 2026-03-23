@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import type { Plant, PlantedItem, RaisedBed, GardenZone } from '@/types';
 import { RAISED_BED_SOIL_LABELS, SOIL_LABELS } from '@/types';
 
@@ -27,23 +27,13 @@ const SUN_ICONS: Record<string, string> = {
   'full-shade': '\uD83C\uDF27\uFE0F',
 };
 
-const SUN_LABELS: Record<string, string> = {
-  'full-sun': 'Full Sun (6+ hrs)',
-  'partial-shade': 'Partial Shade (3-6 hrs)',
-  'full-shade': 'Full Shade (<3 hrs)',
-};
-
-const WATER_LABELS: Record<string, string> = {
-  'daily': 'Daily',
-  'every-2-days': 'Every 2 days',
-  'twice-weekly': 'Twice weekly',
-  'weekly': 'Weekly',
-};
+// Sun and water labels are now loaded via translations (garden3d.infoPanel)
 
 const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, gardenLength, gardenWidth, raisedBedId, raisedBeds, varietyId, zoneId, zones, onClose, onRemove }: PlantInfoPanelProps) {
   const locale = useLocale();
+  const t = useTranslations('garden3d.infoPanel');
   const daysPlanted = useMemo(() => {
     const now = new Date();
     const planted = new Date(plantedDate);
@@ -211,7 +201,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
             }} />
             <div>
               <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#C084FC' }}>
-                Variety: {locale === 'fr' ? variety.name.fr : variety.name.en}
+                {t('variety', { name: locale === 'fr' ? variety.name.fr : variety.name.en })}
               </div>
               {variety.description && (
                 <div style={{ fontSize: '9px', color: '#9CA3AF' }}>
@@ -220,7 +210,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
               )}
               {variety.harvestDays && variety.harvestDays !== plant.harvestDays && (
                 <div style={{ fontSize: '9px', color: '#A78BFA' }}>
-                  Harvest: {variety.harvestDays} days
+                  {t('harvest', { days: variety.harvestDays })}
                 </div>
               )}
             </div>
@@ -245,7 +235,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
             }} />
             <div>
               <div style={{ fontSize: '11px', fontWeight: 'bold', color: zone.color }}>
-                Zone: {zone.name}
+                {t('zone', { name: zone.name })}
               </div>
               <div style={{ fontSize: '9px', color: '#9CA3AF' }}>
                 {zone.lengthM}x{zone.widthM}m - {SOIL_LABELS[zone.soilType]}
@@ -269,7 +259,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
             <span style={{ fontSize: '16px' }}>{'\uD83E\uDDF1'}</span>
             <div>
               <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#D4A06C' }}>
-                Planted in: {bed.name}
+                {t('plantedIn', { name: bed.name })}
               </div>
               <div style={{ fontSize: '9px', color: '#9CA3AF' }}>
                 {bed.lengthM}x{bed.widthM}m - {RAISED_BED_SOIL_LABELS[bed.soilType]}
@@ -282,9 +272,9 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
       {/* Progress bar */}
       <div style={{ marginBottom: '14px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
-          <span style={{ fontSize: '11px', color: '#9CA3AF' }}>Growth Progress</span>
+          <span style={{ fontSize: '11px', color: '#9CA3AF' }}>{t('growthProgress')}</span>
           <span style={{ fontSize: '11px', fontWeight: 'bold', color: isHarvest ? '#FFD700' : '#4ADE80' }}>
-            {Math.round(progress * 100)}% - Day {daysPlanted}/{plant.harvestDays}
+            {Math.round(progress * 100)}% - {t('day', { current: daysPlanted, total: plant.harvestDays })}
           </span>
         </div>
         <div style={{
@@ -309,7 +299,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
         border: '1px solid rgba(168, 85, 247, 0.25)',
       }}>
         <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#C084FC', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-          {'\uD83D\uDCCF'} Spacing Requirements
+          {'\uD83D\uDCCF'} {t('spacingReqs')}
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
           <div style={{
@@ -317,18 +307,18 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
             textAlign: 'center',
           }}>
             <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#C084FC' }}>{plant.spacingCm} cm</div>
-            <div style={{ fontSize: '9px', color: '#9CA3AF' }}>Between plants</div>
+            <div style={{ fontSize: '9px', color: '#9CA3AF' }}>{t('betweenPlants')}</div>
           </div>
           <div style={{
             padding: '8px', borderRadius: '8px', background: 'rgba(168, 85, 247, 0.1)',
             textAlign: 'center',
           }}>
             <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#A78BFA' }}>{rowSpacing} cm</div>
-            <div style={{ fontSize: '9px', color: '#9CA3AF' }}>Between rows</div>
+            <div style={{ fontSize: '9px', color: '#9CA3AF' }}>{t('betweenRows')}</div>
           </div>
         </div>
         <div style={{ marginTop: '6px', fontSize: '10px', color: '#9CA3AF', textAlign: 'center' }}>
-          Plant depth: {plant.depthCm} cm | Max height: {plant.heightCm} cm
+          {t('plantDepth', { depth: plant.depthCm, height: plant.heightCm })}
         </div>
       </div>
 
@@ -345,9 +335,13 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
           <div style={{ fontSize: '18px', marginBottom: '4px' }}>
             {SUN_ICONS[plant.sunExposure[0]] || '\u2600\uFE0F'}
           </div>
-          <div style={{ fontSize: '9px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Sun needs</div>
+          <div style={{ fontSize: '9px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{t('sunNeeds')}</div>
           <div style={{ fontSize: '11px', color: '#FBBF24', fontWeight: 'bold' }}>
-            {plant.sunExposure.map(s => SUN_LABELS[s] || s.replace(/-/g, ' ')).join(', ')}
+            {plant.sunExposure.map(s => {
+              const keyMap: Record<string, string> = { 'full-sun': 'fullSun', 'partial-shade': 'partialShade', 'full-shade': 'fullShade' };
+              const key = keyMap[s];
+              return key ? t(key as Parameters<typeof t>[0]) : s.replace(/-/g, ' ');
+            }).join(', ')}
           </div>
         </div>
         <div style={{
@@ -356,9 +350,13 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
           border: '1px solid rgba(96, 165, 250, 0.15)',
         }}>
           <div style={{ fontSize: '18px', marginBottom: '4px' }}>{'\uD83D\uDCA7'}</div>
-          <div style={{ fontSize: '9px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Watering</div>
+          <div style={{ fontSize: '9px', color: '#6B7280', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{t('waterNeeds')}</div>
           <div style={{ fontSize: '11px', color: '#60A5FA', fontWeight: 'bold' }}>
-            {WATER_LABELS[plant.wateringFrequency] || plant.wateringFrequency.replace(/-/g, ' ')}
+            {(() => {
+              const keyMap: Record<string, string> = { 'daily': 'daily', 'every-2-days': 'every2days', 'twice-weekly': 'twiceWeekly', 'weekly': 'weekly' };
+              const key = keyMap[plant.wateringFrequency];
+              return key ? t(key as Parameters<typeof t>[0]) : plant.wateringFrequency.replace(/-/g, ' ');
+            })()}
           </div>
         </div>
       </div>
@@ -371,7 +369,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
           border: '1px solid rgba(255,255,255,0.05)',
         }}>
           <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#9CA3AF', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            {'\uD83D\uDC40'} Nearby Plants
+            {'\uD83D\uDC40'} {t('nearbyPlants')}
           </div>
           {nearbyAnalysis.map((n, i) => (
             <div key={i} style={{
@@ -392,7 +390,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 {n.tooClose && (
-                  <span style={{ fontSize: '9px', color: '#F87171', fontWeight: 'bold' }}>TOO CLOSE</span>
+                  <span style={{ fontSize: '9px', color: '#F87171', fontWeight: 'bold' }}>{t('tooClose')}</span>
                 )}
                 <span style={{ fontSize: '10px', color: '#6B7280' }}>{n.distance}cm</span>
               </div>
@@ -408,7 +406,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
         border: '1px solid rgba(74, 222, 128, 0.15)',
       }}>
         <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#9CA3AF', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-          {'\uD83D\uDCC5'} Best Planting Months
+          {'\uD83D\uDCC5'} {t('bestPlantingMonths')}
         </div>
         <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
           {MONTH_SHORT.map((m, i) => {
@@ -436,7 +434,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
         border: '1px solid rgba(139, 105, 20, 0.2)',
       }}>
         <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#9CA3AF', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-          {'\uD83E\uDEA8'} Preferred Soils
+          {'\uD83E\uDEA8'} {t('preferredSoils')}
         </div>
         <div style={{ fontSize: '12px', color: '#D4A06C' }}>
           {plant.soilTypes.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ')}
@@ -451,7 +449,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
           border: '1px solid rgba(34, 197, 94, 0.15)',
         }}>
           <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#9CA3AF', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            {'\uD83E\uDD1D'} Companion Plants
+            {'\uD83E\uDD1D'} {t('companionPlants')}
           </div>
           <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
             {companionNames.map((name) => (
@@ -475,7 +473,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
           border: '1px solid rgba(239, 68, 68, 0.15)',
         }}>
           <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#9CA3AF', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            {'\u26A0\uFE0F'} Keep Away From
+            {'\u26A0\uFE0F'} {t('keepAwayFrom')}
           </div>
           <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
             {enemyNames.map((name) => (
@@ -500,7 +498,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
           marginBottom: onRemove ? '14px' : '0',
         }}>
           <div style={{ fontSize: '11px', fontWeight: 'bold', color: '#9CA3AF', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-            {'\uD83D\uDCA1'} Growing Tips
+            {'\uD83D\uDCA1'} {t('growingTips')}
           </div>
           <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '11px', color: '#FBBF24', lineHeight: '1.6' }}>
             {plant.tips.map((tip, i) => (
@@ -524,7 +522,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
             transition: 'all 0.15s',
           }}
         >
-          {'\uD83D\uDDD1\uFE0F'} Remove Plant
+          {'\uD83D\uDDD1\uFE0F'} {t('removePlant')}
         </button>
       )}
     </div>

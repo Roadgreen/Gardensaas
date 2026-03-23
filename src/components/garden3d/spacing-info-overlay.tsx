@@ -1,5 +1,6 @@
 'use client';
 
+import { useTranslations, useLocale } from 'next-intl';
 import type { Plant } from '@/types';
 
 interface SpacingInfoOverlayProps {
@@ -8,6 +9,9 @@ interface SpacingInfoOverlayProps {
 }
 
 export function SpacingInfoOverlay({ plant, isVisible }: SpacingInfoOverlayProps) {
+  const t = useTranslations('garden3d.catalog');
+  const tInfo = useTranslations('garden3d.infoPanel');
+  const locale = useLocale();
   if (!isVisible || !plant) return null;
 
   const rowSpacing = plant.rowSpacingCm || Math.round(plant.spacingCm * 1.5);
@@ -53,10 +57,10 @@ export function SpacingInfoOverlay({ plant, isVisible }: SpacingInfoOverlayProps
       {/* Plant name */}
       <div style={{ flexShrink: 0 }}>
         <div style={{ fontSize: '14px', fontWeight: 'bold', color: '#C084FC' }}>
-          {plant.name.en}
+          {locale === 'fr' ? plant.name.fr : plant.name.en}
         </div>
         <div style={{ fontSize: '10px', color: '#9CA3AF' }}>
-          Placing plant...
+          {t('placingPlant')}
         </div>
       </div>
 
@@ -67,7 +71,7 @@ export function SpacingInfoOverlay({ plant, isVisible }: SpacingInfoOverlayProps
       <div style={{ display: 'flex', gap: '12px', flexShrink: 0 }}>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '9px', color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '2px' }}>
-            Between plants
+            {tInfo('betweenPlants')}
           </div>
           <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#C084FC' }}>
             {plant.spacingCm} cm
@@ -75,7 +79,7 @@ export function SpacingInfoOverlay({ plant, isVisible }: SpacingInfoOverlayProps
         </div>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '9px', color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '2px' }}>
-            Between rows
+            {tInfo('betweenRows')}
           </div>
           <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#A78BFA' }}>
             {rowSpacing} cm
@@ -83,7 +87,7 @@ export function SpacingInfoOverlay({ plant, isVisible }: SpacingInfoOverlayProps
         </div>
         <div style={{ textAlign: 'center' }}>
           <div style={{ fontSize: '9px', color: '#9CA3AF', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '2px' }}>
-            Depth
+            {t('depthLabel')}
           </div>
           <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#818CF8' }}>
             {plant.depthCm} cm
@@ -98,7 +102,7 @@ export function SpacingInfoOverlay({ plant, isVisible }: SpacingInfoOverlayProps
         border: '1px solid rgba(168, 85, 247, 0.3)',
         fontSize: '9px', color: '#C084FC', textAlign: 'center',
       }}>
-        <div>{'\uD83E\uDDF2'} Grid snap</div>
+        <div>{'\uD83E\uDDF2'} {t('gridSnap')}</div>
         <div style={{ fontWeight: 'bold' }}>{plant.spacingCm}cm</div>
       </div>
     </div>

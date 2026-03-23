@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import type { Plant } from '@/types';
 
 interface PlantCatalogSidebarProps {
@@ -40,6 +40,7 @@ export function PlantCatalogSidebar({
   onSelectPlant,
 }: PlantCatalogSidebarProps) {
   const locale = useLocale();
+  const t = useTranslations('garden3d.catalog');
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [hoveredPlant, setHoveredPlant] = useState<string | null>(null);
@@ -111,7 +112,7 @@ export function PlantCatalogSidebar({
       >
         <span>{isOpen ? '\u25C0' : '\u25B6'}</span>
         <span style={{ fontSize: '9px', writingMode: 'vertical-lr', letterSpacing: '1px' }}>
-          {isOpen ? '' : 'PLANTS'}
+          {isOpen ? '' : t('title')}
         </span>
       </button>
 
@@ -154,7 +155,7 @@ export function PlantCatalogSidebar({
             }}
           >
             <span style={{ fontSize: '20px' }}>{'\uD83C\uDF3B'}</span>
-            Plant Catalog
+            {t('title')}
           </h3>
           <p
             style={{
@@ -163,13 +164,13 @@ export function PlantCatalogSidebar({
               margin: '0 0 10px 0',
             }}
           >
-            Drag plants onto your garden or click to select
+            {t('subtitle')}
           </p>
 
           {/* Search */}
           <input
             type="text"
-            placeholder="Search plants..."
+            placeholder={t('searchPlaceholder')}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             style={{
@@ -220,7 +221,7 @@ export function PlantCatalogSidebar({
               }}
             >
               {CATEGORY_ICONS[cat] || '\uD83C\uDF3F'}{' '}
-              {cat.charAt(0).toUpperCase() + cat.slice(1)}
+              {t((cat as Parameters<typeof t>[0]) || 'all')}
             </button>
           ))}
         </div>
@@ -236,7 +237,7 @@ export function PlantCatalogSidebar({
           }}
         >
           <div style={{ fontSize: '10px', color: '#6B7280', padding: '4px 8px', marginBottom: '4px' }}>
-            {filteredPlants.length} plants found
+            {t('plantsFound', { count: filteredPlants.length })}
           </div>
           {filteredPlants.map((plant) => (
             <div
@@ -378,6 +379,7 @@ export function PlantCatalogSidebar({
 
 function SelectedPlantPreview({ plant }: { plant: Plant | null }) {
   const locale = useLocale();
+  const t = useTranslations('garden3d.catalog');
   if (!plant) return null;
 
   return (
@@ -427,10 +429,10 @@ function SelectedPlantPreview({ plant }: { plant: Plant | null }) {
           {'\uD83D\uDCA7'} {plant.wateringFrequency.replace(/-/g, ' ')}
         </div>
         <div style={{ color: '#9CA3AF' }}>
-          {'\uD83D\uDCC5'} {plant.harvestDays} days
+          {'\uD83D\uDCC5'} {t('daysToHarvest', { days: plant.harvestDays })}
         </div>
         <div style={{ color: '#9CA3AF' }}>
-          {'\uD83D\uDCC8'} {plant.heightCm}cm tall
+          {'\uD83D\uDCC8'} {t('heightLabel', { cm: plant.heightCm })}
         </div>
       </div>
       {/* Spacing info */}
@@ -442,12 +444,12 @@ function SelectedPlantPreview({ plant }: { plant: Plant | null }) {
       }}>
         <div style={{ flex: 1, textAlign: 'center' }}>
           <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#C084FC' }}>{plant.spacingCm}cm</div>
-          <div style={{ fontSize: '8px', color: '#9CA3AF' }}>between plants</div>
+          <div style={{ fontSize: '8px', color: '#9CA3AF' }}>{t('betweenPlants')}</div>
         </div>
         <div style={{ width: '1px', background: 'rgba(168, 85, 247, 0.2)' }} />
         <div style={{ flex: 1, textAlign: 'center' }}>
           <div style={{ fontSize: '12px', fontWeight: 'bold', color: '#A78BFA' }}>{plant.rowSpacingCm || Math.round(plant.spacingCm * 1.5)}cm</div>
-          <div style={{ fontSize: '8px', color: '#9CA3AF' }}>between rows</div>
+          <div style={{ fontSize: '8px', color: '#9CA3AF' }}>{t('betweenRows')}</div>
         </div>
       </div>
       <div
@@ -461,7 +463,7 @@ function SelectedPlantPreview({ plant }: { plant: Plant | null }) {
           borderRadius: '6px',
         }}
       >
-        Click on garden soil to plant!
+        {t('clickToPlant')}
       </div>
     </div>
   );

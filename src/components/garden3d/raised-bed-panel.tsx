@@ -15,20 +15,20 @@ interface RaisedBedPanelProps {
   onClose: () => void;
 }
 
-const SOIL_OPTIONS: { value: RaisedBedSoilType; label: string; emoji: string }[] = [
-  { value: 'potting-mix', label: 'Potting Mix', emoji: '\uD83C\uDF31' },
-  { value: 'compost', label: 'Compost Blend', emoji: '\u267B\uFE0F' },
-  { value: 'loamy', label: 'Loamy Soil', emoji: '\u2B50' },
-  { value: 'sandy', label: 'Sandy Mix', emoji: '\uD83C\uDFD6' },
-  { value: 'peat-mix', label: 'Peat Mix', emoji: '\uD83C\uDF33' },
-  { value: 'clay-mix', label: 'Clay Mix', emoji: '\uD83E\uDDF1' },
+const SOIL_OPTIONS: { value: RaisedBedSoilType; labelKey: string; emoji: string }[] = [
+  { value: 'potting-mix', labelKey: 'pottingMix', emoji: '\uD83C\uDF31' },
+  { value: 'compost', labelKey: 'compostBlend', emoji: '\u267B\uFE0F' },
+  { value: 'loamy', labelKey: 'loamySoil', emoji: '\u2B50' },
+  { value: 'sandy', labelKey: 'sandyMix', emoji: '\uD83C\uDFD6' },
+  { value: 'peat-mix', labelKey: 'peatMix', emoji: '\uD83C\uDF33' },
+  { value: 'clay-mix', labelKey: 'clayMix', emoji: '\uD83E\uDDF1' },
 ];
 
 const PRESETS = [
-  { label: 'Small (1x0.5m)', lengthM: 1, widthM: 0.5, heightM: 0.3 },
-  { label: 'Medium (1.5x0.8m)', lengthM: 1.5, widthM: 0.8, heightM: 0.35 },
-  { label: 'Large (2x1m)', lengthM: 2, widthM: 1, heightM: 0.4 },
-  { label: 'XL (3x1.2m)', lengthM: 3, widthM: 1.2, heightM: 0.45 },
+  { labelKey: 'presetSmall', lengthM: 1, widthM: 0.5, heightM: 0.3 },
+  { labelKey: 'presetMedium', lengthM: 1.5, widthM: 0.8, heightM: 0.35 },
+  { labelKey: 'presetLarge', lengthM: 2, widthM: 1, heightM: 0.4 },
+  { labelKey: 'presetXL', lengthM: 3, widthM: 1.2, heightM: 0.45 },
 ];
 
 const moveBtnStyle: React.CSSProperties = {
@@ -168,7 +168,7 @@ export function RaisedBedPanel({
                         fontSize: '8px', padding: '1px 5px', borderRadius: '4px',
                         background: 'rgba(96, 165, 250, 0.2)', color: '#60A5FA',
                         border: '1px solid rgba(96, 165, 250, 0.3)',
-                      }}>Outside</span>
+                      }}>{t('outside')}</span>
                     )}
                   </div>
                   <div style={{ fontSize: '10px', color: '#9CA3AF' }}>
@@ -243,7 +243,7 @@ export function RaisedBedPanel({
             <label style={{ fontSize: '10px', color: '#9CA3AF', display: 'block', marginBottom: '4px' }}>{t('quickSize')}</label>
             <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
               {PRESETS.map((p) => (
-                <button key={p.label} onClick={() => applyPreset(p)} style={{
+                <button key={p.labelKey} onClick={() => applyPreset(p)} style={{
                   padding: '4px 8px', borderRadius: '6px', fontSize: '10px',
                   background: newLength === p.lengthM.toString() && newWidth === p.widthM.toString()
                     ? 'rgba(210, 160, 108, 0.3)' : 'rgba(0,0,0,0.2)',
@@ -251,7 +251,7 @@ export function RaisedBedPanel({
                     ? '1px solid rgba(210, 160, 108, 0.5)' : '1px solid transparent',
                   color: '#D4A06C', cursor: 'pointer',
                   fontFamily: '"Nunito", system-ui, sans-serif',
-                }}>{p.label}</button>
+                }}>{t(p.labelKey as Parameters<typeof t>[0])}</button>
               ))}
             </div>
           </div>
@@ -310,7 +310,7 @@ export function RaisedBedPanel({
                   textAlign: 'center',
                 }}>
                   <div style={{ fontSize: '14px' }}>{opt.emoji}</div>
-                  <div>{opt.label}</div>
+                  <div>{t(opt.labelKey as Parameters<typeof t>[0])}</div>
                 </button>
               ))}
             </div>
@@ -318,7 +318,7 @@ export function RaisedBedPanel({
 
           {/* Info */}
           <div style={{ fontSize: '9px', color: '#60A5FA', marginBottom: '10px', textAlign: 'center' }}>
-            Raised beds are placed around the garden perimeter. Use arrows to reposition.
+            {t('perimeterInfo')}
           </div>
 
           {/* Actions */}

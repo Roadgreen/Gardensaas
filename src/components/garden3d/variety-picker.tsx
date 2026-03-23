@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import type { Plant, PlantVariety, GardenZone, RaisedBed } from '@/types';
 
 interface VarietyPickerProps {
@@ -35,6 +35,7 @@ const panelStyle: React.CSSProperties = {
 
 export function VarietyPicker({ plant, zones, raisedBeds, onConfirm, onCancel }: VarietyPickerProps) {
   const t = useTranslations('garden3d.varietyPicker');
+  const locale = useLocale();
   const [selectedVariety, setSelectedVariety] = useState<string | undefined>(undefined);
   const [selectedTarget, setSelectedTarget] = useState<string>('ground'); // 'ground' | 'zone-{id}' | 'bed-{id}'
 
@@ -82,7 +83,7 @@ export function VarietyPicker({ plant, zones, raisedBeds, onConfirm, onCancel }:
           </div>
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#86EFAC' }}>
-              {t('plantingTitle', { name: plant.name.en })}
+              {t('plantingTitle', { name: locale === 'fr' ? plant.name.fr : plant.name.en })}
             </div>
             <div style={{ fontSize: '11px', color: '#6EE7B7', opacity: 0.7 }}>
               {plant.name.fr}
@@ -149,11 +150,11 @@ export function VarietyPicker({ plant, zones, raisedBeds, onConfirm, onCancel }:
                 }} />
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ fontSize: '12px', color: selectedVariety === v.id ? '#86EFAC' : '#D1D5DB', fontWeight: selectedVariety === v.id ? 'bold' : 'normal' }}>
-                    {v.name.en}
+                    {locale === 'fr' ? v.name.fr : v.name.en}
                   </div>
                   <div style={{ fontSize: '9px', color: '#6EE7B7', opacity: 0.7 }}>{v.name.fr}</div>
                   {v.description && (
-                    <div style={{ fontSize: '9px', color: '#9CA3AF', marginTop: '2px' }}>{v.description.en}</div>
+                    <div style={{ fontSize: '9px', color: '#9CA3AF', marginTop: '2px' }}>{locale === 'fr' ? v.description.fr : v.description.en}</div>
                   )}
                 </div>
                 <div style={{ fontSize: '10px', color: '#9CA3AF', whiteSpace: 'nowrap' }}>
