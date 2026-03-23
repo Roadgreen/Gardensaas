@@ -204,24 +204,47 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
     return items;
   }, [length, width, season, halfL, halfW]);
 
-  // Garden grid for placement - snaps to plant spacing when available
-  const gridCells = useMemo(() => {
-    if (!showGrid) return [];
-    const cellSize = gridSpacingCm ? gridSpacingCm / 100 : 0.5; // Use plant spacing or default 50cm
-    const clampedSize = Math.max(0.1, Math.min(cellSize, 2)); // Clamp to reasonable values
+  // Permanent 30cm base grid (carre potager / square foot gardening)
+  const BASE_CELL_M = 0.3; // 30cm
+  const baseGridCells = useMemo(() => {
     const cells: Array<{ x: number; z: number; cx: number; cz: number }> = [];
-    for (let ix = 0; ix < Math.floor(length / clampedSize); ix++) {
-      for (let iz = 0; iz < Math.floor(width / clampedSize); iz++) {
-        const x = -halfL + clampedSize / 2 + ix * clampedSize;
-        const z = -halfW + clampedSize / 2 + iz * clampedSize;
-        // Convert to percent coords for storage
+    const colCount = Math.floor(length / BASE_CELL_M);
+    const rowCount = Math.floor(width / BASE_CELL_M);
+    for (let ix = 0; ix < colCount; ix++) {
+      for (let iz = 0; iz < rowCount; iz++) {
+        const x = -halfL + BASE_CELL_M / 2 + ix * BASE_CELL_M;
+        const z = -halfW + BASE_CELL_M / 2 + iz * BASE_CELL_M;
         const cx = ((x + halfL) / length) * 100;
         const cz = ((z + halfW) / width) * 100;
         cells.push({ x, z, cx, cz });
       }
     }
     return cells;
-  }, [showGrid, length, width, halfL, halfW, gridSpacingCm]);
+  }, [length, width, halfL, halfW]);
+
+  // How many 30cm cells a plant occupies (N x N)
+  const plantCellSpan = useMemo(() => {
+    if (!gridSpacingCm) return 1;
+    return Math.max(1, Math.ceil(gridSpacingCm / 30));
+  }, [gridSpacingCm]);
+
+  // Base grid line geometry (horizontal + vertical lines for subtle dividers)
+  const baseGridLines = useMemo(() => {
+    const lines: Array<{ x: number; z: number; isHorizontal: boolean; len: number }> = [];
+    const colCount = Math.floor(length / BASE_CELL_M);
+    const rowCount = Math.floor(width / BASE_CELL_M);
+    // Vertical lines
+    for (let ix = 0; ix <= colCount; ix++) {
+      const x = -halfL + ix * BASE_CELL_M;
+      lines.push({ x, z: 0, isHorizontal: false, len: rowCount * BASE_CELL_M });
+    }
+    // Horizontal lines
+    for (let iz = 0; iz <= rowCount; iz++) {
+      const z = -halfW + iz * BASE_CELL_M;
+      lines.push({ x: 0, z, isHorizontal: true, len: colCount * BASE_CELL_M });
+    }
+    return lines;
+  }, [length, width, halfL, halfW]);
 
   // Stepping stones path leading to the garden
   const steppingStones = useMemo(() => {
@@ -389,27 +412,39 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
         </mesh>
       ))}
 
-      {/* Placement grid overlay when in placement mode */}
-      {showGrid && gridCells.map((cell, i) => (
+      {/* Permanent 30cm base grid lines (carre potager style) */}
+      {baseGridLines.map((line, i) => (
         <mesh
-          key={`grid-${i}`}
-          position={[cell.x, 0.051, cell.z]}
+          key={`gridline-${i}`}
+          position={[line.isHorizontal ? 0 : line.x, 0.049, line.isHorizontal ? line.z : 0]}
           rotation={[-Math.PI / 2, 0, 0]}
-          onClick={(e) => {
-            e.stopPropagation();
-            onGroundClick?.(cell.cx, cell.cz);
-          }}
-          onPointerOver={() => { document.body.style.cursor = 'crosshair'; }}
-          onPointerOut={() => { document.body.style.cursor = 'auto'; }}
         >
-          <planeGeometry args={[0.45, 0.45]} />
-          <meshStandardMaterial
-            color="#4ADE80"
-            transparent
-            opacity={0.15}
-            wireframe={false}
-          />
+          <planeGeometry args={line.isHorizontal ? [line.len, 0.005] : [0.005, line.len]} />
+          <meshStandardMaterial color="#8B7355" transparent opacity={0.25} />
         </mesh>
+      ))}
+
+      {/* Plant placement overlay grid - clickable cells with highlight for plant size */}
+      {showGrid && baseGridCells.map((cell, i) => (
+          <mesh
+            key={`grid-${i}`}
+            position={[cell.x, 0.051, cell.z]}
+            rotation={[-Math.PI / 2, 0, 0]}
+            onClick={(e) => {
+              e.stopPropagation();
+              onGroundClick?.(cell.cx, cell.cz);
+            }}
+            onPointerOver={() => { document.body.style.cursor = 'crosshair'; }}
+            onPointerOut={() => { document.body.style.cursor = 'auto'; }}
+          >
+            <planeGeometry args={[BASE_CELL_M * plantCellSpan - 0.01, BASE_CELL_M * plantCellSpan - 0.01]} />
+            <meshStandardMaterial
+              color="#4ADE80"
+              transparent
+              opacity={0.18}
+              wireframe={false}
+            />
+          </mesh>
       ))}
 
       {/* Fence posts -- rounded for cozy cartoon look */}

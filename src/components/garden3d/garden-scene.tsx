@@ -573,9 +573,13 @@ function GroundClickHandler({
       onClick={(e) => {
         e.stopPropagation();
         const point = e.point;
-        // Convert to percentage coords (allow values outside 0-100 for outside-garden placement)
-        const pctX = ((point.x + halfL) / config.length) * 100;
-        const pctZ = ((point.z + halfW) / config.width) * 100;
+        // Convert to percentage coords and snap to 30cm grid
+        const cellPctX = (0.3 / config.length) * 100;
+        const cellPctZ = (0.3 / config.width) * 100;
+        const rawPctX = ((point.x + halfL) / config.length) * 100;
+        const rawPctZ = ((point.z + halfW) / config.width) * 100;
+        const pctX = Math.round(rawPctX / cellPctX) * cellPctX;
+        const pctZ = Math.round(rawPctZ / cellPctZ) * cellPctZ;
         onGroundClick(pctX, pctZ);
       }}
       onPointerOver={() => {
@@ -1178,8 +1182,19 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
     if (isPlacementMode && selectedPlantType) {
       const halfL = config.length / 2;
       const halfW = config.width / 2;
-      const worldX = -halfL + (pctX / 100) * config.length;
-      const worldZ = -halfW + (pctZ / 100) * config.width;
+
+      // Snap to 30cm grid cell centers
+      const cellPctX = (0.3 / config.length) * 100;
+      const cellPctZ = (0.3 / config.width) * 100;
+      const snappedPctX = Math.round(pctX / cellPctX) * cellPctX;
+      const snappedPctZ = Math.round(pctZ / cellPctZ) * cellPctZ;
+
+      // Use snapped coordinates
+      const worldX = -halfL + (snappedPctX / 100) * config.length;
+      const worldZ = -halfW + (snappedPctZ / 100) * config.width;
+      // Override pctX/pctZ with snapped values for the rest of the function
+      const pctXFinal = snappedPctX;
+      const pctZFinal = snappedPctZ;
 
       // Enforce minimum spacing rules
       const newPlantData = plants.find((p) => p.id === selectedPlantType);
@@ -1237,7 +1252,7 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
       });
 
       // Check if click is inside the garden bounds or inside a container (bed/zone)
-      const isInsideGarden = pctX >= 0 && pctX <= 100 && pctZ >= 0 && pctZ <= 100;
+      const isInsideGarden = pctXFinal >= 0 && pctXFinal <= 100 && pctZFinal >= 0 && pctZFinal <= 100;
       if (!isInsideGarden && !raisedBedId && !zoneId) {
         // Don't allow planting in empty ground outside the garden
         setGardenerDialogue('You can only plant in the garden or inside a raised bed!');
@@ -1248,7 +1263,7 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
 
       // Dispatch custom event for plant placement (will be handled by parent)
       const event = new CustomEvent('garden:plant', {
-        detail: { plantId: selectedPlantType, x: pctX, z: pctZ, raisedBedId, zoneId },
+        detail: { plantId: selectedPlantType, x: pctXFinal, z: pctZFinal, raisedBedId, zoneId },
       });
       window.dispatchEvent(event);
       SoundEffects.play('plant');
