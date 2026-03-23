@@ -301,7 +301,7 @@ export function SettingsPageClient() {
                     </div>
                   </div>
                   {isPro && (
-                    <span className="px-3 py-1 text-xs font-semibold rounded-full flex items-center gap-1" style={{ background: 'rgba(180,130,40,0.15)', color: '#8a6010' }}>
+                    <span className="px-3 py-1 text-xs font-semibold rounded-full flex items-center gap-1" style={{ background: 'rgba(180,130,40,0.15)', color: 'var(--on-surface)' }}>
                       <Sparkles className="w-3 h-3" />
                       {t('active')}
                     </span>
