@@ -24,6 +24,7 @@ interface GardenSceneProps {
   onSelectBed?: (bedId: string | null) => void;
   selectedZoneId?: string | null;
   onSelectZone?: (zoneId: string | null) => void;
+  locale?: string;
 }
 
 // ===== Sound Effects Placeholder System =====
@@ -984,6 +985,7 @@ function SceneContent({
         onDialogueClose={onDialogueClose}
         walkToTarget={gardenerTarget}
         currentAction={gardenerAction}
+        locale={locale}
       />
 
       {/* Weather effects (rain, snow, sun rays, wind) */}
@@ -1039,7 +1041,7 @@ function getWeather(season: string): string {
   return states[hour % states.length];
 }
 
-export function GardenScene({ config, selectedPlantType: externalSelectedPlantType, showSpacing: externalShowSpacing = true, selectedBedId: externalSelectedBedId = null, onSelectBed: externalOnSelectBed, selectedZoneId: externalSelectedZoneId = null, onSelectZone: externalOnSelectZone }: GardenSceneProps) {
+export function GardenScene({ config, selectedPlantType: externalSelectedPlantType, showSpacing: externalShowSpacing = true, selectedBedId: externalSelectedBedId = null, onSelectBed: externalOnSelectBed, selectedZoneId: externalSelectedZoneId = null, onSelectZone: externalOnSelectZone, locale = 'en' }: GardenSceneProps) {
   const [selectedPlantIndex, setSelectedPlantIndex] = useState<number | null>(null);
   const [isIsometric, setIsIsometric] = useState(false);
   const [gardenerDialogue, setGardenerDialogue] = useState('');
@@ -1078,7 +1080,7 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
 
   // Show greeting on mount
   useEffect(() => {
-    const greeting = getSeasonalDialogue();
+    const greeting = getSeasonalDialogue(locale);
     setGardenerDialogue(greeting);
     setShowGardenerDialogue(true);
 
@@ -1124,7 +1126,7 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
           if (daysPassed >= plantData.harvestDays) {
             const celebrateTimer = setTimeout(() => {
               setGardenerAction('celebrating');
-              setGardenerDialogue('This one is ready to harvest! Great work!');
+              setGardenerDialogue(locale === 'fr' ? 'Celle-ci est prête à récolter ! Bravo !' : 'This one is ready to harvest! Great work!');
               setShowGardenerDialogue(true);
             }, 2500);
             return () => {
@@ -1143,7 +1145,7 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
   }, [selectedPlantIndex, config, plants]);
 
   const handleGardenerClick = useCallback(() => {
-    const advice = getRandomAdvice();
+    const advice = getRandomAdvice(locale);
     setGardenerDialogue(advice);
     setShowGardenerDialogue(true);
   }, []);

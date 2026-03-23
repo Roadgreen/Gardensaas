@@ -476,7 +476,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
           {'\uD83E\uDEA8'} {t('preferredSoils')}
         </div>
         <div style={{ fontSize: '12px', color: '#D4A06C' }}>
-          {plant.soilTypes.map(s => s.charAt(0).toUpperCase() + s.slice(1)).join(', ')}
+          {plant.soilTypes.map(s => t.has(`soils.${s}` as Parameters<typeof t>[0]) ? t(`soils.${s}` as Parameters<typeof t>[0]) : s.charAt(0).toUpperCase() + s.slice(1)).join(', ')}
         </div>
       </div>
 

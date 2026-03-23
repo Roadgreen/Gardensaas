@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Grid3x3 } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useGarden, usePlants } from '@/lib/hooks';
 import { PlantCatalogSidebar } from './plant-catalog-sidebar';
 import { DragDropOverlay } from './drag-drop-overlay';
@@ -31,6 +31,7 @@ export function Garden3DView() {
   const { config, isLoaded, addPlant, removePlant, addRaisedBed, removeRaisedBed, updateRaisedBed, addZone, removeZone, updateZone, updateConfig } = useGarden();
   const { plants } = usePlants();
   const t = useTranslations('garden3d');
+  const locale = useLocale();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [draggingPlantId, setDraggingPlantId] = useState<string | null>(null);
@@ -159,7 +160,7 @@ export function Garden3DView() {
   }
 
   return (
-    <div className="h-[calc(100svh-64px-68px)] md:h-[calc(100svh-64px)] bg-[#0D1F17] flex flex-col">
+    <div className="h-[calc(100dvh-64px-68px)] md:h-[calc(100dvh-64px)] bg-[#0D1F17] flex flex-col">
       {/* Top bar */}
       <div className="flex items-center justify-between px-2 sm:px-4 py-2 sm:py-3 border-b border-green-900/30 bg-[#0D1F17]/80 backdrop-blur-sm z-10">
         <div className="flex items-center gap-2 sm:gap-3">
@@ -370,6 +371,7 @@ export function Garden3DView() {
             onSelectBed={setSelectedBedId}
             selectedZoneId={selectedZoneId}
             onSelectZone={setSelectedZoneId}
+            locale={locale}
             onPlantAdded={() => {
               // Plant was placed via click, handled through events
             }}
