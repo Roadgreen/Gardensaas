@@ -987,12 +987,12 @@ export function GardenerCharacter({
         const bW = gardenBounds?.halfW ?? 3;
         const angle = Math.random() * Math.PI * 2;
         const dist = 0.5 + Math.random() * Math.min(bL, bW) * 0.7;
-        const tx = Math.cos(angle) * dist;
-        const tz = Math.sin(angle) * dist;
+        const tx = startPos.x + Math.cos(angle) * dist;
+        const tz = startPos.z + Math.sin(angle) * dist;
         walkTarget.current.set(
-          Math.max(-bL, Math.min(bL, tx)),
+          Math.max(-bL - 1, Math.min(bL + 1, tx)),
           startPos.y,
-          Math.max(-bW, Math.min(bW, tz))
+          Math.max(-bW - 1, Math.min(bW + 1, tz))
         );
         setIsWalking(true);
         idleTimerRef.current = 0;
