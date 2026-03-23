@@ -27,7 +27,6 @@ export function BottomNav() {
         WebkitTransform: 'translateZ(0)',
         backfaceVisibility: 'hidden',
         WebkitBackfaceVisibility: 'hidden',
-        isolation: 'isolate',
       }}
     >
       <div
