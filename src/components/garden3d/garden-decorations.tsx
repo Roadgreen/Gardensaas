@@ -575,6 +575,55 @@ function WaterDroplets({ position, active }: { position: [number, number, number
   );
 }
 
+// Dragonfly - iridescent darting insect for summer scenes
+function Dragonfly({ startPosition, speed }: { startPosition: [number, number, number]; speed: number }) {
+  const ref = useRef<THREE.Group>(null);
+  const bodyColor = useMemo(() => {
+    const colors = ['#2196F3', '#00BCD4', '#4CAF50', '#9C27B0'];
+    return colors[Math.floor(Math.random() * colors.length)];
+  }, []);
+
+  useFrame(() => {
+    if (!ref.current) return;
+    const t = performance.now() * 0.001;
+    // Dragonflies dart quickly then hover
+    const dartPhase = Math.sin(t * speed * 0.4);
+    const hoverPause = Math.abs(dartPhase) < 0.3 ? 0 : 1;
+    ref.current.position.x = startPosition[0] + Math.sin(t * speed * 0.6) * 1.2 * hoverPause;
+    ref.current.position.z = startPosition[2] + Math.cos(t * speed * 0.4) * 0.8 * hoverPause;
+    ref.current.position.y = startPosition[1] + 0.4 + Math.sin(t * 1.5) * 0.1;
+    ref.current.rotation.y = t * speed * 0.6;
+  });
+
+  return (
+    <group ref={ref} position={startPosition}>
+      {/* Long thin body */}
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <capsuleGeometry args={[0.004, 0.04, 3, 4]} />
+        <meshStandardMaterial color={bodyColor} metalness={0.4} roughness={0.3} />
+      </mesh>
+      {/* Head */}
+      <mesh position={[0, 0, 0.025]}>
+        <sphereGeometry args={[0.007, 5, 4]} />
+        <meshStandardMaterial color={bodyColor} metalness={0.3} />
+      </mesh>
+      {/* Wings - two pairs, translucent */}
+      {[-1, 1].map((side) => (
+        <group key={`dw-${side}`}>
+          <mesh position={[side * 0.015, 0.004, 0.01]} rotation={[0, 0, side * 0.15]}>
+            <boxGeometry args={[0.025, 0.001, 0.008]} />
+            <meshStandardMaterial color="#E0F7FA" transparent opacity={0.4} metalness={0.5} side={THREE.DoubleSide} />
+          </mesh>
+          <mesh position={[side * 0.013, 0.004, -0.005]} rotation={[0, 0, side * 0.1]}>
+            <boxGeometry args={[0.022, 0.001, 0.007]} />
+            <meshStandardMaterial color="#E0F7FA" transparent opacity={0.35} metalness={0.5} side={THREE.DoubleSide} />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  );
+}
+
 // Floating pollen / dust motes -- more abundant and dreamy
 function AmbientParticles({ gardenLength, gardenWidth, season }: { gardenLength: number; gardenWidth: number; season: string }) {
   const ref = useRef<THREE.Group>(null);
@@ -825,25 +874,40 @@ export function GardenDecorations({ gardenLength, gardenWidth, season }: GardenD
 
   const butterflyPositions = useMemo(() => {
     if (season === 'winter') return [];
-    return Array.from({ length: season === 'spring' ? 5 : 3 }, (_, i) => ({
+    const count = season === 'spring' ? 6 : season === 'summer' ? 5 : 3;
+    return Array.from({ length: count }, (_, i) => ({
       pos: [
         Math.sin(i * 1.7 + 0.5) * 0.4 * gardenLength,
         0.2,
         Math.cos(i * 2.3 + 1) * 0.4 * gardenWidth,
       ] as [number, number, number],
-      speed: 0.5 + i * 0.15,
+      speed: 0.5 + i * 0.12,
     }));
   }, [gardenLength, gardenWidth, season]);
 
   const beePositions = useMemo(() => {
     if (season === 'winter') return [];
-    return Array.from({ length: season === 'summer' ? 4 : 2 }, (_, i) => ({
+    const count = season === 'summer' ? 5 : season === 'spring' ? 4 : 2;
+    return Array.from({ length: count }, (_, i) => ({
       pos: [
         Math.sin(i * 2.5 + 3) * 0.3 * gardenLength,
         0.15,
         Math.cos(i * 1.8 + 2) * 0.3 * gardenWidth,
       ] as [number, number, number],
       speed: 0.6 + i * 0.2,
+    }));
+  }, [gardenLength, gardenWidth, season]);
+
+  const dragonflyPositions = useMemo(() => {
+    if (season === 'winter' || season === 'autumn') return [];
+    const count = season === 'summer' ? 3 : 1;
+    return Array.from({ length: count }, (_, i) => ({
+      pos: [
+        Math.sin(i * 3.1 + 1.5) * 0.35 * gardenLength,
+        0.25,
+        Math.cos(i * 2.7 + 0.8) * 0.35 * gardenWidth,
+      ] as [number, number, number],
+      speed: 0.8 + i * 0.25,
     }));
   }, [gardenLength, gardenWidth, season]);
 
@@ -886,6 +950,11 @@ export function GardenDecorations({ gardenLength, gardenWidth, season }: GardenD
       {/* Bees */}
       {beePositions.map((bee, i) => (
         <Bee key={`bee-${i}`} startPosition={bee.pos} speed={bee.speed} />
+      ))}
+
+      {/* Dragonflies */}
+      {dragonflyPositions.map((df, i) => (
+        <Dragonfly key={`df-${i}`} startPosition={df.pos} speed={df.speed} />
       ))}
 
       {/* Mushrooms */}

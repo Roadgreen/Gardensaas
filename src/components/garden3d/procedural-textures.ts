@@ -92,6 +92,37 @@ export function createGrassTexture(
     }
     ctx.globalAlpha = 1;
 
+    // Clover-like patches for natural grass variation
+    for (let i = 0; i < 18; i++) {
+      const cx = rng() * w;
+      const cy = rng() * h;
+      const cloverSize = 3 + rng() * 5;
+      for (let j = 0; j < 3; j++) {
+        const angle = (j / 3) * Math.PI * 2 + rng() * 0.3;
+        const lx = cx + Math.cos(angle) * cloverSize * 0.5;
+        const ly = cy + Math.sin(angle) * cloverSize * 0.5;
+        ctx.beginPath();
+        ctx.arc(lx, ly, cloverSize * 0.45, 0, Math.PI * 2);
+        ctx.fillStyle = season === 'winter' ? '#B8C8B0' : '#3D8B3D';
+        ctx.globalAlpha = 0.12 + rng() * 0.1;
+        ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+
+    // Subtle mowed-stripe pattern for a tended lawn look
+    if (season !== 'winter') {
+      for (let row = 0; row < h; row += 16) {
+        const stripeAlpha = (row / 16) % 2 === 0 ? 0.06 : 0;
+        if (stripeAlpha > 0) {
+          ctx.fillStyle = '#FFFFFF';
+          ctx.globalAlpha = stripeAlpha;
+          ctx.fillRect(0, row, w, 8);
+        }
+      }
+      ctx.globalAlpha = 1;
+    }
+
     // Tiny wildflowers in spring
     if (season === 'spring') {
       const flowerColors = ['#FFB7D5', '#DDA0DD', '#FFEB3B', '#FFD700'];
@@ -243,6 +274,38 @@ export function createWoodTexture(
       ctx.globalAlpha = 0.25;
       ctx.lineWidth = 1.5;
       ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+
+    // Weathering / age spots for realism
+    for (let i = 0; i < 8; i++) {
+      const wx = rng() * w;
+      const wy = rng() * h;
+      const wRadius = 6 + rng() * 14;
+      const grad = ctx.createRadialGradient(wx, wy, 0, wx, wy, wRadius);
+      grad.addColorStop(0, rng() > 0.5 ? '#6B5030' : '#A08860');
+      grad.addColorStop(1, 'transparent');
+      ctx.fillStyle = grad;
+      ctx.globalAlpha = 0.08 + rng() * 0.06;
+      ctx.fillRect(0, 0, w, h);
+    }
+    ctx.globalAlpha = 1;
+
+    // Nail head marks
+    for (let i = 0; i < 6; i++) {
+      const nx = rng() * w;
+      const ny = rng() * h;
+      ctx.beginPath();
+      ctx.arc(nx, ny, 1.5 + rng(), 0, Math.PI * 2);
+      ctx.fillStyle = '#4A4A50';
+      ctx.globalAlpha = 0.2 + rng() * 0.15;
+      ctx.fill();
+      // Small shadow under nail
+      ctx.beginPath();
+      ctx.arc(nx + 0.5, ny + 0.5, 2, 0, Math.PI * 2);
+      ctx.fillStyle = '#2A1A0A';
+      ctx.globalAlpha = 0.08;
+      ctx.fill();
     }
     ctx.globalAlpha = 1;
   });

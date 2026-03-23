@@ -141,21 +141,28 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
     });
   }, [plantPositions, halfL, halfW, length, width]);
 
-  // Fence configuration
+  // Fence configuration with gate opening on the front (positive Z) side
+  const gateWidth = 0.6; // gate opening width in meters
   const fencePosts = useMemo(() => {
-    const posts: Array<{ x: number; z: number; isCorner: boolean }> = [];
+    const posts: Array<{ x: number; z: number; isCorner: boolean; isGatePost: boolean }> = [];
     const fL = halfL + 0.4;
     const fW = halfW + 0.4;
     const spacing = 0.7;
 
-    // All 4 edges
+    // Front and back edges (along X)
     for (let x = -fL; x <= fL + 0.01; x += spacing) {
-      posts.push({ x: Math.min(x, fL), z: -fW, isCorner: false });
-      posts.push({ x: Math.min(x, fL), z: fW, isCorner: false });
+      const px = Math.min(x, fL);
+      // Skip posts in the gate opening on the front (positive Z) side
+      const inGate = Math.abs(px) < gateWidth / 2 + 0.05;
+      if (!inGate) {
+        posts.push({ x: px, z: fW, isCorner: false, isGatePost: false });
+      }
+      posts.push({ x: px, z: -fW, isCorner: false, isGatePost: false });
     }
+    // Left and right edges (along Z)
     for (let z = -fW + spacing; z < fW; z += spacing) {
-      posts.push({ x: -fL, z, isCorner: false });
-      posts.push({ x: fL, z, isCorner: false });
+      posts.push({ x: -fL, z, isCorner: false, isGatePost: false });
+      posts.push({ x: fL, z, isCorner: false, isGatePost: false });
     }
     // Corners
     [
@@ -163,21 +170,33 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
       { x: fL, z: -fW },
       { x: -fL, z: fW },
       { x: fL, z: fW },
-    ].forEach((c) => posts.push({ ...c, isCorner: true }));
+    ].forEach((c) => posts.push({ ...c, isCorner: true, isGatePost: false }));
+
+    // Gate posts (taller, flanking the opening)
+    posts.push({ x: -gateWidth / 2 - 0.03, z: fW, isCorner: false, isGatePost: true });
+    posts.push({ x: gateWidth / 2 + 0.03, z: fW, isCorner: false, isGatePost: true });
 
     return posts;
-  }, [halfL, halfW]);
+  }, [halfL, halfW, gateWidth]);
 
   const fenceRails = useMemo(() => {
     const fL = halfL + 0.4;
     const fW = halfW + 0.4;
+    // Split front rail into two segments around the gate
+    const halfFrontLen = (length + 0.8 - gateWidth) / 2;
+    const gateOffset = (gateWidth + halfFrontLen) / 2;
     return [
+      // Back rail (full width)
       { x: 0, z: -fW, rotY: 0, len: length + 0.8 },
-      { x: 0, z: fW, rotY: 0, len: length + 0.8 },
+      // Front rail - left segment
+      { x: -gateOffset / 2 - gateWidth / 4, z: fW, rotY: 0, len: halfFrontLen },
+      // Front rail - right segment
+      { x: gateOffset / 2 + gateWidth / 4, z: fW, rotY: 0, len: halfFrontLen },
+      // Side rails
       { x: -fL, z: 0, rotY: Math.PI / 2, len: width + 0.8 },
       { x: fL, z: 0, rotY: Math.PI / 2, len: width + 0.8 },
     ];
-  }, [halfL, halfW, length, width]);
+  }, [halfL, halfW, length, width, gateWidth]);
 
   // Seasonal decorations
   const seasonalDecor = useMemo(() => {
@@ -448,30 +467,66 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
       ))}
 
       {/* Fence posts -- rounded for cozy cartoon look */}
-      {fencePosts.map((post, i) => (
-        <group key={`fp-${i}`}>
-          {/* Post body -- slightly tapered cylinder for softer look */}
-          <mesh position={[post.x, 0.15, post.z]} castShadow>
-            <cylinderGeometry args={[0.025, 0.032, 0.34, 6]} />
-            <meshStandardMaterial color="#C49060" map={texReady ? woodTexRef.current : null} roughness={0.82} />
-          </mesh>
-          {/* Post cap - rounded dome for cute look */}
-          <mesh position={[post.x, 0.33, post.z]} castShadow>
-            <sphereGeometry args={[0.035, 6, 4, 0, Math.PI * 2, 0, Math.PI / 2]} />
-            <meshStandardMaterial color="#D8B080" map={texReady ? woodTexRef.current : null} roughness={0.75} />
-          </mesh>
-          {/* AO shadow at base of post */}
-          <mesh position={[post.x, 0.002, post.z]} rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[0.12, 0.12]} />
-            <meshBasicMaterial
-              map={texReady ? aoTexRef.current : null}
-              transparent
-              opacity={0.35}
-              depthWrite={false}
-            />
-          </mesh>
-        </group>
-      ))}
+      {fencePosts.map((post, i) => {
+        const postHeight = post.isGatePost ? 0.48 : 0.34;
+        const postRadius = post.isGatePost ? 0.032 : 0.025;
+        const capRadius = post.isGatePost ? 0.042 : 0.035;
+        // Deterministic color variation per post
+        const colorSeed = Math.sin(post.x * 127.1 + post.z * 311.7 + i * 7.3) * 43758.5453;
+        const variation = (colorSeed - Math.floor(colorSeed));
+        const postColor = variation > 0.6 ? '#C49060' : variation > 0.3 ? '#B88550' : '#D0A070';
+        return (
+          <group key={`fp-${i}`}>
+            {/* Post body -- slightly tapered cylinder for softer look */}
+            <mesh position={[post.x, postHeight / 2, post.z]} castShadow>
+              <cylinderGeometry args={[postRadius, postRadius + 0.007, postHeight, 6]} />
+              <meshStandardMaterial color={postColor} map={texReady ? woodTexRef.current : null} roughness={0.82} />
+            </mesh>
+            {/* Post cap - rounded dome for cute look */}
+            <mesh position={[post.x, postHeight + 0.005, post.z]} castShadow>
+              <sphereGeometry args={[capRadius, 6, 4, 0, Math.PI * 2, 0, Math.PI / 2]} />
+              <meshStandardMaterial color="#D8B080" map={texReady ? woodTexRef.current : null} roughness={0.75} />
+            </mesh>
+            {/* Gate post finial - decorative ball on top */}
+            {post.isGatePost && (
+              <mesh position={[post.x, postHeight + capRadius + 0.01, post.z]} castShadow>
+                <sphereGeometry args={[0.022, 6, 5]} />
+                <meshStandardMaterial color="#A07848" roughness={0.7} />
+              </mesh>
+            )}
+            {/* AO shadow at base of post */}
+            <mesh position={[post.x, 0.002, post.z]} rotation={[-Math.PI / 2, 0, 0]}>
+              <planeGeometry args={[0.12, 0.12]} />
+              <meshBasicMaterial
+                map={texReady ? aoTexRef.current : null}
+                transparent
+                opacity={0.35}
+                depthWrite={false}
+              />
+            </mesh>
+          </group>
+        );
+      })}
+
+      {/* Gate arch - decorative wooden arch over the gate opening */}
+      {(() => {
+        const fW = halfW + 0.4;
+        const archY = 0.48;
+        return (
+          <group>
+            {/* Arch crossbar */}
+            <mesh position={[0, archY + 0.01, fW]} rotation={[0, 0, Math.PI / 2]} castShadow>
+              <capsuleGeometry args={[0.016, gateWidth + 0.04, 4, 6]} />
+              <meshStandardMaterial color="#B89060" map={texReady ? woodTexRef.current : null} roughness={0.78} />
+            </mesh>
+            {/* Arch top trim */}
+            <mesh position={[0, archY + 0.035, fW]} rotation={[0, 0, Math.PI / 2]} castShadow>
+              <boxGeometry args={[0.02, gateWidth + 0.08, 0.04]} />
+              <meshStandardMaterial color="#C8A070" map={texReady ? woodTexRef.current : null} roughness={0.72} />
+            </mesh>
+          </group>
+        );
+      })()}
 
       {/* Fence rails - rounded cylinders for cozy cartoon look */}
       {fenceRails.map((rail, i) => (

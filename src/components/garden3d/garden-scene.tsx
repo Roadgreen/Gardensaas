@@ -888,13 +888,23 @@ function SceneContent({
         onGroundClick={(cx, cz) => onGroundClick(cx, cz)}
       />
 
-      {/* Plants */}
+      {/* Plants - with slight position jitter for natural look */}
       {config.plantedItems.map((item, index) => {
         const plantData = plants.find((p) => p.id === item.plantId);
         if (!plantData) return null;
 
         const worldX = -halfL + (item.x / 100) * config.length;
         const worldZ = -halfW + (item.z / 100) * config.width;
+
+        // Deterministic jitter based on plant position for natural feel
+        // Uses seeded hash so positions stay stable across renders
+        const jitterSeed = item.x * 127.1 + item.z * 311.7 + index * 43.3;
+        const jitterHash = (s: number) => {
+          const x = Math.sin(s) * 43758.5453123;
+          return x - Math.floor(x);
+        };
+        const jitterX = (jitterHash(jitterSeed) - 0.5) * 0.04; // +/- 2cm
+        const jitterZ = (jitterHash(jitterSeed + 77.7) - 0.5) * 0.04;
 
         // Elevate plant if inside a raised bed
         let yOffset = 0;
@@ -909,7 +919,7 @@ function SceneContent({
           <Plant3D
             key={`plant-${index}`}
             plant={plantData}
-            position={[worldX, yOffset, worldZ]}
+            position={[worldX + jitterX, yOffset, worldZ + jitterZ]}
             plantedDate={item.plantedDate}
             isSelected={selectedPlantIndex === index}
             isWatering={activeTool === 'water' && selectedPlantIndex === index}
