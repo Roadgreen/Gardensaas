@@ -493,7 +493,7 @@ button, [role="button"], a {
     right: 0 !important;
     top: auto !important;
     width: 100% !important;
-    max-height: 60dvh !important;
+    max-height: 50dvh !important;
     overflow-y: auto !important;
     z-index: 65 !important;
     background: linear-gradient(145deg, rgba(10, 30, 18, 0.99), rgba(15, 45, 25, 0.99)) !important;

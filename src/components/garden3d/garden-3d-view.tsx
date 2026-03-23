@@ -267,7 +267,7 @@ export function Garden3DView() {
         className="flex-1 relative overflow-hidden"
         style={
           isMobile && infoPanelPlant && infoPanelItem && !showSuggestions
-            ? { clipPath: 'inset(0 0 60dvh 0)' }
+            ? { clipPath: 'inset(0 0 50dvh 0)' }
             : undefined
         }
       >
