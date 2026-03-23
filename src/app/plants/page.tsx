@@ -96,7 +96,7 @@ export default function PlantsPage() {
   const [difficulty, setDifficulty] = useState<Difficulty | 'all'>('all');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [sortBy, setSortBy] = useState<SortOption>('name');
-  const [showFilters, setShowFilters] = useState(true);
+  const [showFilters, setShowFilters] = useState(false);
   const t = useTranslations('plants');
   const locale = useLocale();
 
