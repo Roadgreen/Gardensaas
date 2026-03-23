@@ -26,7 +26,10 @@ export function BottomNav() {
         transform: 'translateZ(0)',
       }}
     >
-      <div className="flex items-stretch justify-around">
+      <div
+        className="flex items-stretch justify-around"
+        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+      >
         {navItems.map(({ href, label, icon: Icon }) => {
           const isActive =
             pathname === href ||

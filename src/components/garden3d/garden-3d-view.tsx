@@ -159,7 +159,7 @@ export function Garden3DView() {
   }
 
   return (
-    <div className="h-[calc(100svh-64px)] bg-[#0D1F17] flex flex-col">
+    <div className="h-[calc(100svh-64px-68px)] md:h-[calc(100svh-64px)] bg-[#0D1F17] flex flex-col">
       {/* Top bar */}
       <div className="flex items-center justify-between px-2 sm:px-4 py-2 sm:py-3 border-b border-green-900/30 bg-[#0D1F17]/80 backdrop-blur-sm z-10">
         <div className="flex items-center gap-2 sm:gap-3">
