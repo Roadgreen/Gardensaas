@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
+import { useTranslations, useLocale } from 'next-intl';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
 import * as THREE from 'three';
@@ -820,6 +821,7 @@ function SceneContent({
   onSelectZone: (zoneId: string | null) => void;
   selectedPlantType: string | null;
 }) {
+  const locale = useLocale();
   const halfL = config.length / 2;
   const halfW = config.width / 2;
   const controlsRef = useRef<any>(null);
