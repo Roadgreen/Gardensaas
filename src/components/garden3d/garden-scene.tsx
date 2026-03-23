@@ -578,8 +578,8 @@ function GroundClickHandler({
         const cellPctZ = (0.3 / config.width) * 100;
         const rawPctX = ((point.x + halfL) / config.length) * 100;
         const rawPctZ = ((point.z + halfW) / config.width) * 100;
-        const pctX = Math.round(rawPctX / cellPctX) * cellPctX;
-        const pctZ = Math.round(rawPctZ / cellPctZ) * cellPctZ;
+        const pctX = (Math.floor(rawPctX / cellPctX) + 0.5) * cellPctX;
+        const pctZ = (Math.floor(rawPctZ / cellPctZ) + 0.5) * cellPctZ;
         onGroundClick(pctX, pctZ);
       }}
       onPointerOver={() => {
@@ -976,7 +976,7 @@ function SceneContent({
 
       {/* Gardener character */}
       <GardenerCharacter
-        position={[halfL + 0.5, 0, 0]}
+        position={[halfL + 1.5, 0, -halfW - 1.0]}
         gardenBounds={{ halfL, halfW }}
         dialogue={gardenerDialogue}
         showDialogue={showGardenerDialogue}
@@ -1196,8 +1196,8 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
       // Snap to 30cm grid cell centers
       const cellPctX = (0.3 / config.length) * 100;
       const cellPctZ = (0.3 / config.width) * 100;
-      const snappedPctX = Math.round(pctX / cellPctX) * cellPctX;
-      const snappedPctZ = Math.round(pctZ / cellPctZ) * cellPctZ;
+      const snappedPctX = (Math.floor(pctX / cellPctX) + 0.5) * cellPctX;
+      const snappedPctZ = (Math.floor(pctZ / cellPctZ) + 0.5) * cellPctZ;
 
       // Use snapped coordinates
       const worldX = -halfL + (snappedPctX / 100) * config.length;

@@ -447,7 +447,7 @@ export function GardenTerrain({ length, width, soilType, plantPositions, season,
       {showGrid && baseGridCells.map((cell, i) => (
           <mesh
             key={`grid-${i}`}
-            position={[cell.x, 0.051, cell.z]}
+            position={[cell.x, 0.062, cell.z]}
             rotation={[-Math.PI / 2, 0, 0]}
             onClick={(e) => {
               e.stopPropagation();
