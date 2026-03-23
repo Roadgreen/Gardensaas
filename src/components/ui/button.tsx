@@ -22,7 +22,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
               variant === 'secondary',
             'hover:bg-surface-container-high':
               variant === 'ghost',
-            'border-2 border-outline-variant hover:bg-surface-container-high':
+            'border-2 border-outline-variant hover:opacity-90 active:opacity-80':
               variant === 'outline',
           },
           {
@@ -34,6 +34,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         style={variant === 'primary' ? {
           background: 'linear-gradient(135deg, #23422a, #3a5a40)',
+          color: '#ffffff',
+        } : variant === 'outline' ? {
+          background: '#805533',
+          borderColor: '#805533',
           color: '#ffffff',
         } : {
           color: 'var(--on-surface)',
