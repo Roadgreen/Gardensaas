@@ -24,6 +24,10 @@ export function BottomNav() {
         paddingBottom: 'env(safe-area-inset-bottom, 0px)',
         willChange: 'transform',
         transform: 'translateZ(0)',
+        WebkitTransform: 'translateZ(0)',
+        backfaceVisibility: 'hidden',
+        WebkitBackfaceVisibility: 'hidden',
+        isolation: 'isolate',
       }}
     >
       <div
