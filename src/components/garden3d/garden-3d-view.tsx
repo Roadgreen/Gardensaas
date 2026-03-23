@@ -302,29 +302,8 @@ export function Garden3DView() {
           />
         )}
 
-        {/* Plant info panel */}
-        {infoPanelPlant && infoPanelItem && !showSuggestions && (
-          <PlantInfoPanel
-            plant={infoPanelPlant}
-            plantedDate={infoPanelItem.plantedDate}
-            allPlants={plants}
-            plantedItems={config.plantedItems}
-            gardenLength={config.length}
-            gardenWidth={config.width}
-            raisedBedId={infoPanelItem.raisedBedId}
-            raisedBeds={config.raisedBeds}
-            varietyId={infoPanelItem.varietyId}
-            zoneId={infoPanelItem.zoneId}
-            zones={config.zones || []}
-            onClose={() => setInfoPanelPlantIndex(null)}
-            onRemove={() => {
-              if (infoPanelPlantIndex !== null) {
-                removePlant(infoPanelPlantIndex);
-                setInfoPanelPlantIndex(null);
-              }
-            }}
-          />
-        )}
+        {/* Plant info panel — rendered as a sibling below the clipped canvas container
+            so the clipPath on the canvas wrapper does not clip the fixed bottom sheet */}
 
         {/* Planting suggestions panel */}
         {showSuggestions && (
@@ -397,6 +376,31 @@ export function Garden3DView() {
           />
         </Suspense>
       </div>
+
+      {/* Plant info panel — outside the clipped canvas container so the clipPath
+          applied to that wrapper on mobile never hides the fixed bottom sheet */}
+      {infoPanelPlant && infoPanelItem && !showSuggestions && (
+        <PlantInfoPanel
+          plant={infoPanelPlant}
+          plantedDate={infoPanelItem.plantedDate}
+          allPlants={plants}
+          plantedItems={config.plantedItems}
+          gardenLength={config.length}
+          gardenWidth={config.width}
+          raisedBedId={infoPanelItem.raisedBedId}
+          raisedBeds={config.raisedBeds}
+          varietyId={infoPanelItem.varietyId}
+          zoneId={infoPanelItem.zoneId}
+          zones={config.zones || []}
+          onClose={() => setInfoPanelPlantIndex(null)}
+          onRemove={() => {
+            if (infoPanelPlantIndex !== null) {
+              removePlant(infoPanelPlantIndex);
+              setInfoPanelPlantIndex(null);
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

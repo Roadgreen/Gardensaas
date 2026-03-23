@@ -463,9 +463,9 @@ button, [role="button"], a {
    40: spacing rings / 3D Html labels
    42: spacing info overlay (top-center banner)
    43: plant catalog sidebar
-   44: plant info panel backdrop (mobile)
-   45: plant info panel
-   60: bottom nav (fixed, always on top)
+   60: bottom nav (fixed)
+   64: plant info panel backdrop (mobile) — above bottom nav
+   65: plant info panel — above bottom nav
    ============================================================ */
 
 /* Plant info panel — bottom sheet on mobile, floating panel on desktop */
@@ -479,7 +479,7 @@ button, [role="button"], a {
     display: block;
     position: fixed;
     inset: 0;
-    z-index: 44;
+    z-index: 64;
     background: rgba(0, 0, 0, 0.35);
   }
 
@@ -493,7 +493,7 @@ button, [role="button"], a {
     width: 100% !important;
     max-height: 60dvh !important;
     overflow-y: auto !important;
-    z-index: 45 !important;
+    z-index: 65 !important;
     background: linear-gradient(145deg, rgba(10, 30, 18, 0.99), rgba(15, 45, 25, 0.99)) !important;
     backdrop-filter: blur(16px) !important;
     border-radius: 20px 20px 0 0 !important;
@@ -529,7 +529,7 @@ button, [role="button"], a {
     width: 340px !important;
     max-height: calc(100vh - 120px) !important;
     overflow-y: auto !important;
-    z-index: 45 !important;
+    z-index: 65 !important;
     background: linear-gradient(145deg, rgba(10, 30, 18, 0.97), rgba(15, 45, 25, 0.97)) !important;
     backdrop-filter: blur(16px) !important;
     border-radius: 16px !important;
