@@ -142,7 +142,7 @@ export function SproutMascot({ page = 'default', className = '' }: SproutMascotP
                     ? 'bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-cyan-400 text-cyan-900'
                     : 'bg-white border-2 border-green-400 text-[#1a1a1a]'
                 }`}
-                style={{ fontFamily: '"Nunito", "Comic Sans MS", cursive, sans-serif', lineHeight: 1.5 }}
+                style={{ fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif', lineHeight: 1.5 }}
               >
                 {/* Header with type badge */}
                 <div className="flex items-center justify-between mb-1">
