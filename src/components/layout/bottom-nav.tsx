@@ -17,7 +17,7 @@ export function BottomNav() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 md:hidden backdrop-blur-[20px]"
+      className="fixed bottom-0 left-0 right-0 z-[60] md:hidden backdrop-blur-[20px]"
       style={{
         background: 'var(--nav-bg)',
         borderTop: '1px solid var(--outline-variant)',

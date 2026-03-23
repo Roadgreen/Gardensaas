@@ -23,7 +23,7 @@ export function SpacingInfoOverlay({ plant, isVisible }: SpacingInfoOverlayProps
         top: '12px',
         left: '50%',
         transform: 'translateX(-50%)',
-        zIndex: 40,
+        zIndex: 42,
         background: 'linear-gradient(145deg, rgba(10, 30, 18, 0.95), rgba(15, 45, 25, 0.95))',
         backdropFilter: 'blur(12px)',
         borderRadius: '14px',

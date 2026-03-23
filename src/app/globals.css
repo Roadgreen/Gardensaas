@@ -452,3 +452,88 @@ button, [role="button"], a {
 .mobile-scroll-pad {
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 64px);
 }
+
+/* ============================================================
+   Garden 3D view — z-index hierarchy
+   40: spacing rings / 3D Html labels
+   42: spacing info overlay (top-center banner)
+   43: plant catalog sidebar
+   44: plant info panel backdrop (mobile)
+   45: plant info panel
+   60: bottom nav (fixed, always on top)
+   ============================================================ */
+
+/* Plant info panel — bottom sheet on mobile, floating panel on desktop */
+.plant-info-backdrop {
+  display: none;
+}
+
+@media (max-width: 639px) {
+  /* Show semi-transparent backdrop on mobile */
+  .plant-info-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 44;
+    background: rgba(0, 0, 0, 0.35);
+  }
+
+  /* Bottom sheet */
+  .plant-info-panel {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    width: 100% !important;
+    max-height: 60dvh !important;
+    overflow-y: auto !important;
+    z-index: 45 !important;
+    background: linear-gradient(145deg, rgba(10, 30, 18, 0.99), rgba(15, 45, 25, 0.99)) !important;
+    backdrop-filter: blur(16px) !important;
+    border-radius: 20px 20px 0 0 !important;
+    border-top: 2px solid rgba(74, 222, 128, 0.4) !important;
+    border-left: 2px solid rgba(74, 222, 128, 0.4) !important;
+    border-right: 2px solid rgba(74, 222, 128, 0.4) !important;
+    border-bottom: none !important;
+    padding: 16px 16px 80px 16px !important;
+    box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.5) !important;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(74, 222, 128, 0.3) transparent;
+  }
+
+  /* Hide the catalog sidebar when info panel is open */
+  .sidebar-hidden-mobile {
+    display: none !important;
+  }
+
+  /* Hide spacing labels when info panel is open on mobile */
+  .spacing-labels-hidden {
+    display: none !important;
+  }
+}
+
+/* Desktop: floating panel top-right */
+@media (min-width: 640px) {
+  .plant-info-panel {
+    position: absolute !important;
+    top: 12px !important;
+    right: 12px !important;
+    bottom: auto !important;
+    left: auto !important;
+    width: 340px !important;
+    max-height: calc(100vh - 120px) !important;
+    overflow-y: auto !important;
+    z-index: 45 !important;
+    background: linear-gradient(145deg, rgba(10, 30, 18, 0.97), rgba(15, 45, 25, 0.97)) !important;
+    backdrop-filter: blur(16px) !important;
+    border-radius: 16px !important;
+    border: 2px solid rgba(74, 222, 128, 0.4) !important;
+    padding: 20px !important;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5) !important;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(74, 222, 128, 0.3) transparent;
+  }
+}
+
+/* Bottom nav z-index is set to z-[60] directly in bottom-nav.tsx */

@@ -127,7 +127,7 @@ export function PlantSpacingRings({ config, plants, showSpacing, selectedPlantTy
           <ConflictLine ax={pair.ax} az={pair.az} bx={pair.bx} bz={pair.bz} />
           <Html
             position={[(pair.ax + pair.bx) / 2, 0.35, (pair.az + pair.bz) / 2]}
-            center distanceFactor={6} style={{ pointerEvents: 'none' }}
+            center distanceFactor={6} style={{ pointerEvents: 'none', zIndex: 10 }}
           >
             <div style={{
               background: 'rgba(239, 68, 68, 0.85)',
@@ -165,7 +165,7 @@ export function PlantSpacingRings({ config, plants, showSpacing, selectedPlantTy
             {/* Red warning line between conflicting plants */}
             <ConflictLine ax={ax} az={az} bx={bx} bz={bz} />
             {/* Warning icon at midpoint */}
-            <Html position={[midX, 0.3, midZ]} center distanceFactor={6} style={{ pointerEvents: 'none' }}>
+            <Html position={[midX, 0.3, midZ]} center distanceFactor={6} style={{ pointerEvents: 'none', zIndex: 10 }}>
               <div style={{
                 background: 'rgba(239, 68, 68, 0.9)',
                 borderRadius: '8px',
@@ -197,7 +197,7 @@ export function PlantSpacingRings({ config, plants, showSpacing, selectedPlantTy
 
       {/* Conflict count */}
       {conflicts.length > 0 && (
-        <Html position={[halfL + 0.3, 0.5, -halfW - 0.3]} center distanceFactor={5} style={{ pointerEvents: 'none' }}>
+        <Html position={[halfL + 0.3, 0.5, -halfW - 0.3]} center distanceFactor={5} style={{ pointerEvents: 'none', zIndex: 10 }}>
           <div style={{
             background: 'rgba(239, 68, 68, 0.85)',
             borderRadius: '10px',
@@ -257,7 +257,7 @@ function SpacingRing({ x, z, radius, color, hasConflict, spacingCm }: {
         position={[x + radius * 0.7, 0.08, z - radius * 0.7]}
         center
         distanceFactor={8}
-        style={{ pointerEvents: 'none' }}
+        style={{ pointerEvents: 'none', zIndex: 10 }}
       >
         <div style={{
           background: hasConflict ? 'rgba(239, 68, 68, 0.7)' : 'rgba(0,0,0,0.5)',

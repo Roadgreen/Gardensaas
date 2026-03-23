@@ -253,24 +253,26 @@ export function Garden3DView() {
 
       {/* 3D Canvas + Sidebar */}
       <div className="flex-1 relative overflow-hidden">
-        {/* Plant catalog sidebar */}
-        <PlantCatalogSidebar
-          plants={plants}
-          isOpen={isSidebarOpen}
-          onToggle={() => setIsSidebarOpen((v) => !v)}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-          selectedPlantType={selectedPlantType}
-          onSelectPlant={setSelectedPlantType}
-        />
+        {/* Plant catalog sidebar — hidden on mobile when info panel is open */}
+        <div className={infoPanelPlant && infoPanelItem && !showSuggestions ? 'sidebar-hidden-mobile' : ''}>
+          <PlantCatalogSidebar
+            plants={plants}
+            isOpen={isSidebarOpen}
+            onToggle={() => setIsSidebarOpen((v) => !v)}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            selectedPlantType={selectedPlantType}
+            onSelectPlant={setSelectedPlantType}
+          />
+        </div>
 
         {/* Drag-and-drop overlay */}
         <DragDropOverlay isDragging={isDragging} onDrop={handleDrop} />
 
-        {/* Spacing info overlay when placing a plant */}
+        {/* Spacing info overlay when placing a plant — hide when info panel is open */}
         <SpacingInfoOverlay
           plant={selectedPlantData}
-          isVisible={!!selectedPlantType && !showSizeSelector}
+          isVisible={!!selectedPlantType && !showSizeSelector && !(infoPanelPlant && infoPanelItem && !showSuggestions)}
         />
 
         {/* Garden size selector */}

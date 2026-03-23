@@ -31,6 +31,62 @@ const SUN_ICONS: Record<string, string> = {
 
 const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
+// FR translations for common English growing tips
+const TIPS_EN_TO_FR: Record<string, string> = {
+  'Pinch off suckers for bigger fruits': 'Supprimez les gourmands pour de plus gros fruits',
+  'Water at the base, not the leaves': 'Arrosez à la base, pas sur les feuilles',
+  'Add calcium to prevent blossom end rot': 'Ajoutez du calcium pour éviter la pourriture apicale',
+  'Stake or cage plants early for support': 'Tuteurez ou installez des cages tôt pour soutenir les plants',
+  'Keep soil consistently moist for even growth': 'Maintenez le sol constamment humide pour une croissance régulière',
+  'Thin seedlings to proper spacing': 'Éclaircissez les semis au bon espacement',
+  'Harvest outer leaves for continuous production': 'Récoltez les feuilles extérieures pour une production continue',
+  'Provide afternoon shade in hot weather': 'Protégez du soleil de l\'après-midi par temps chaud',
+  'Pinch flower buds to promote leaf growth': 'Pincez les boutons floraux pour favoriser la croissance des feuilles',
+  'Harvest from the top down': 'Récoltez de haut en bas',
+  'Start seeds indoors 8 weeks before last frost': 'Semez en intérieur 8 semaines avant les dernières gelées',
+  'Use black plastic mulch to warm soil': 'Utilisez du paillage plastique noir pour réchauffer le sol',
+  'Harvest when 15-20cm long for best flavor': 'Récoltez à 15-20 cm de long pour le meilleur goût',
+  'Provide a trellis for vertical growing': 'Installez un treillis pour la culture verticale',
+  'Stop watering when tops begin to fall over': 'Arrêtez d\'arroser quand les fanes commencent à tomber',
+  'Plant individual cloves pointy side up': 'Plantez les gousses individuelles pointe vers le haut',
+  'Sow every 2 weeks for continuous harvest': 'Semez toutes les 2 semaines pour une récolte continue',
+  'Grows best in cool weather below 24C': 'Pousse mieux par temps frais, en dessous de 24°C',
+  'Provide support for climbing varieties': 'Installez un support pour les variétés grimpantes',
+  'Do not soak seeds before planting': 'Ne faites pas tremper les graines avant de planter',
+  'Hill soil around stems to increase yield': 'Buttez le sol autour des tiges pour augmenter le rendement',
+  'Harvest when skin is glossy and firm': 'Récoltez quand la peau est brillante et ferme',
+  'Use collars to protect from cabbage root fly': 'Utilisez des collerettes pour protéger de la mouche du chou',
+  'Harvest before flower buds open': 'Récoltez avant que les boutons floraux s\'ouvrent',
+  'Plant in blocks of at least 4x4 for pollination': 'Plantez en blocs d\'au moins 4x4 pour la pollinisation',
+  'Remove runners for larger berries': 'Supprimez les stolons pour de plus grosses baies',
+  'Prefers well-drained soil': 'Préfère un sol bien drainé',
+  'Cut back after flowering': 'Taillez après la floraison',
+  'Grow in a pot to control spreading': 'Cultivez en pot pour contrôler l\'envahissement',
+  'Soak seeds overnight for faster germination': 'Faites tremper les graines une nuit pour germer plus vite',
+  'Cut to 5cm above ground for regrowth': 'Coupez à 5 cm du sol pour la repousse',
+  'Replace plants every 4-5 years': 'Remplacez les plants tous les 4-5 ans',
+  'Flavor intensifies when dried': 'La saveur s\'intensifie à la dessiccation',
+  'Harvest lower leaves first': 'Récoltez les feuilles inférieures en premier',
+  'Each seed cluster produces multiple seedlings - thin early': 'Chaque grappe de graines produit plusieurs semis - éclaircissez tôt',
+  'Harvest small for sweetest flavor': 'Récoltez petit pour la saveur la plus douce',
+  'Plant deep or hill soil for longer white stems': 'Plantez profond ou buttez pour de plus longs tiges blanches',
+  'Needs rich, moisture-retentive soil': 'Nécessite un sol riche et retenteur d\'humidité',
+  'Sow directly - does not transplant well': 'Semez en place - ne se transplante pas bien',
+  'Sow every 3 weeks for continuous supply': 'Semez toutes les 3 semaines pour un approvisionnement continu',
+  'Stake tall varieties against wind': 'Tuteurez les variétés hautes contre le vent',
+  'Needs lots of space to sprawl': 'Nécessite beaucoup d\'espace pour s\'étaler',
+  'Thump test - ripe melons sound hollow': 'Test de percussion - les melons mûrs sonnent creux',
+  'Provide a trellis or support system': 'Installez un treillis ou un système de support',
+  'Needs excellent drainage': 'Nécessite un excellent drainage',
+  'Use fresh seed each year as viability drops quickly': 'Utilisez des graines fraîches chaque année car la viabilité baisse vite',
+  'Can become invasive - harvest all tubers or contain': 'Peut devenir envahissant - récoltez tous les tubercules ou contenerisez',
+};
+
+function getLocalizedTip(tip: string, locale: string): string {
+  if (locale !== 'fr') return tip;
+  return TIPS_EN_TO_FR[tip] || tip;
+}
+
 export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, gardenLength, gardenWidth, raisedBedId, raisedBeds, varietyId, zoneId, zones, onClose, onRemove }: PlantInfoPanelProps) {
   const locale = useLocale();
   const t = useTranslations('garden3d.infoPanel');
@@ -104,28 +160,8 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
     return nearby;
   }, [plantedItems, gardenLength, gardenWidth, plant, plantedDate, allPlants]);
 
-  return (
-    <div
-      style={{
-        position: 'absolute',
-        top: '12px',
-        right: '12px',
-        zIndex: 50,
-        width: '340px',
-        maxHeight: 'calc(100vh - 120px)',
-        overflowY: 'auto',
-        background: 'linear-gradient(145deg, rgba(10, 30, 18, 0.97), rgba(15, 45, 25, 0.97))',
-        backdropFilter: 'blur(16px)',
-        borderRadius: '16px',
-        border: '2px solid rgba(74, 222, 128, 0.4)',
-        padding: '20px',
-        fontFamily: '"Nunito", system-ui, sans-serif',
-        color: 'white',
-        boxShadow: '0 12px 40px rgba(0,0,0,0.5)',
-        scrollbarWidth: 'thin',
-        scrollbarColor: 'rgba(74, 222, 128, 0.3) transparent',
-      }}
-    >
+  const panelContent = (
+    <>
       {/* Close button */}
       <button
         onClick={onClose}
@@ -502,7 +538,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
           </div>
           <ul style={{ margin: 0, paddingLeft: '16px', fontSize: '11px', color: '#FBBF24', lineHeight: '1.6' }}>
             {plant.tips.map((tip, i) => (
-              <li key={i}>{tip}</li>
+              <li key={i}>{getLocalizedTip(tip, locale)}</li>
             ))}
           </ul>
         </div>
@@ -525,6 +561,21 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
           {'\uD83D\uDDD1\uFE0F'} {t('removePlant')}
         </button>
       )}
-    </div>
+    </>
+  );
+
+  return (
+    <>
+      {/* Mobile: semi-transparent backdrop */}
+      <div
+        className="plant-info-backdrop"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+      {/* Mobile: bottom sheet / Desktop: floating panel */}
+      <div className="plant-info-panel" style={{ fontFamily: '"Nunito", system-ui, sans-serif', color: 'white' }}>
+        {panelContent}
+      </div>
+    </>
   );
 }
