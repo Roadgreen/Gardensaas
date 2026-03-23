@@ -576,7 +576,7 @@ export function PlantInfoPanel({ plant, plantedDate, allPlants, plantedItems, ga
         aria-hidden="true"
       />
       {/* Mobile: bottom sheet / Desktop: floating panel */}
-      <div className="plant-info-panel" style={{ fontFamily: '"Nunito", system-ui, sans-serif', color: 'white' }}>
+      <div className="plant-info-panel max-h-[50dvh] overflow-y-auto sm:max-h-none" style={{ fontFamily: '"Nunito", system-ui, sans-serif', color: 'white' }}>
         {panelContent}
       </div>
     </>
