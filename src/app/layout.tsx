@@ -86,9 +86,12 @@ export default async function RootLayout({
               <div className="hidden md:block">
                 <Footer />
               </div>
-              <BottomNav />
               <ScrollToTop />
             </ThemeProvider>
+            {/* BottomNav is intentionally outside ThemeProvider to prevent the SSR
+                hydration wrapper <div> from creating a stacking context that breaks
+                position:fixed anchoring to the viewport */}
+            <BottomNav />
           </SessionProvider>
         </NextIntlClientProvider>
       </body>

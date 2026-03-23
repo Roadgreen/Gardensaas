@@ -22,6 +22,8 @@ export function BottomNav() {
         background: 'var(--nav-bg)',
         borderTop: '1px solid var(--outline-variant)',
         paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+        willChange: 'transform',
+        transform: 'translateZ(0)',
       }}
     >
       <div className="flex items-stretch justify-around">
