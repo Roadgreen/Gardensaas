@@ -112,23 +112,24 @@ export function SettingsPageClient() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0D1F17] py-8 px-6">
+    <div className="min-h-screen py-8 px-6" style={{ background: 'var(--surface)' }}>
       <div className="max-w-3xl mx-auto">
-        <Link href="/garden/dashboard" className="inline-flex items-center gap-2 text-green-400/60 hover:text-green-300 text-sm mb-8 transition-colors">
+        <Link href="/garden/dashboard" className="inline-flex items-center gap-2 text-sm mb-8 transition-colors" style={{ color: 'var(--on-surface-variant, #43483f)', opacity: 0.8 }}>
           <ArrowLeft className="w-4 h-4" />
           {t('backToDashboard')}
         </Link>
 
-        <h1 className="text-3xl font-bold text-green-50 mb-8">{t('title')}</h1>
+        <h1 className="text-3xl font-bold mb-8" style={{ color: 'var(--on-surface)' }}>{t('title')}</h1>
 
         {success && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-6 p-4 rounded-xl bg-green-900/30 border border-green-700/30 flex items-center gap-3"
+            className="mb-6 p-4 rounded-xl flex items-center gap-3 border"
+            style={{ background: 'var(--surface-container)', borderColor: 'var(--outline-variant)' }}
           >
-            <Check className="w-5 h-5 text-green-400" />
-            <p className="text-green-200">
+            <Check className="w-5 h-5" style={{ color: 'var(--primary)' }} />
+            <p style={{ color: 'var(--on-surface)' }}>
               {t('upgradeSuccess')}
             </p>
           </motion.div>
@@ -138,11 +139,11 @@ export function SettingsPageClient() {
           {/* Language Preference */}
           <Card>
             <CardTitle className="flex items-center gap-2 mb-6">
-              <Globe className="w-5 h-5 text-green-400" />
+              <Globe className="w-5 h-5" style={{ color: 'var(--primary)' }} />
               {tLocale('switchLanguage')}
             </CardTitle>
             <CardContent>
-              <p className="text-sm text-green-200/60 mb-4">
+              <p className="text-sm mb-4" style={{ color: 'var(--on-surface-variant, #43483f)' }}>
                 {t('languageDescription')}
               </p>
               <div className="grid grid-cols-2 gap-4">
@@ -151,16 +152,15 @@ export function SettingsPageClient() {
                     key={loc}
                     onClick={() => handleLocaleChange(loc)}
                     disabled={localeSaving}
-                    className={`p-4 rounded-xl border text-center transition-all cursor-pointer ${
-                      selectedLocale === loc
-                        ? 'border-green-500 bg-green-900/30 text-green-50 shadow-lg shadow-green-900/20'
-                        : 'border-green-900/40 bg-[#0D1F17] text-green-300/70 hover:border-green-700/50'
-                    }`}
+                    className="p-4 rounded-xl border text-center transition-all cursor-pointer"
+                    style={selectedLocale === loc
+                      ? { borderColor: 'var(--primary)', background: 'var(--primary)', color: '#ffffff', boxShadow: '0 4px 12px rgba(35,66,42,0.25)' }
+                      : { borderColor: 'var(--outline-variant)', background: 'var(--surface-container-lowest, #ffffff)', color: 'var(--on-surface)' }}
                   >
                     <span className="text-2xl block mb-1">{loc === 'en' ? '\uD83C\uDDEC\uD83C\uDDE7' : '\uD83C\uDDEB\uD83C\uDDF7'}</span>
                     <span className="font-medium block">{tLocale(loc)}</span>
                     {selectedLocale === loc && localeSaved && (
-                      <span className="text-xs text-green-400 flex items-center justify-center gap-1 mt-1">
+                      <span className="text-xs flex items-center justify-center gap-1 mt-1" style={{ color: '#a8d5b5' }}>
                         <Check className="w-3 h-3" /> {t('saved')}
                       </span>
                     )}
@@ -173,17 +173,17 @@ export function SettingsPageClient() {
           {/* Garden Dimensions */}
           <Card>
             <CardTitle className="flex items-center gap-2 mb-6">
-              <Ruler className="w-5 h-5 text-green-400" />
+              <Ruler className="w-5 h-5" style={{ color: 'var(--primary)' }} />
               {t('gardenDimensions')}
             </CardTitle>
             <CardContent>
-              <p className="text-sm text-green-200/60 mb-4">
+              <p className="text-sm mb-4" style={{ color: 'var(--on-surface-variant, #43483f)' }}>
                 {t('gardenDimensionsDescription')}
               </p>
 
               {/* Presets */}
               <div className="mb-4">
-                <p className="text-xs text-green-400/50 mb-2">{t('quickPresets')}:</p>
+                <p className="text-xs mb-2" style={{ color: 'var(--on-surface-variant, #43483f)' }}>{t('quickPresets')}:</p>
                 <div className="grid grid-cols-3 gap-2">
                   {GARDEN_SIZE_PRESETS.map((preset) => {
                     const isActive = gardenLength === preset.length.toString() && gardenWidth === preset.width.toString();
@@ -197,15 +197,14 @@ export function SettingsPageClient() {
                           setDimensionsSaved(true);
                           setTimeout(() => setDimensionsSaved(false), 2000);
                         }}
-                        className={`p-2 rounded-xl border text-center transition-all cursor-pointer ${
-                          isActive
-                            ? 'border-green-500 bg-green-900/30 text-green-50'
-                            : 'border-green-900/40 bg-[#0D1F17] text-green-300/70 hover:border-green-700/50'
-                        }`}
+                        className="p-2 rounded-xl border text-center transition-all cursor-pointer"
+                        style={isActive
+                          ? { borderColor: 'var(--primary)', background: 'var(--surface-container)', color: 'var(--on-surface)' }
+                          : { borderColor: 'var(--outline-variant)', background: 'var(--surface-container-lowest, #ffffff)', color: 'var(--on-surface)' }}
                       >
                         <span className="text-lg block">{preset.emoji}</span>
                         <span className="text-xs block">{preset.label}</span>
-                        <span className="text-[10px] text-green-500/50">{preset.length}m x {preset.width}m</span>
+                        <span className="text-[10px]" style={{ color: 'var(--on-surface-variant, #43483f)' }}>{preset.length}m x {preset.width}m</span>
                       </button>
                     );
                   })}
@@ -237,8 +236,8 @@ export function SettingsPageClient() {
               </div>
 
               {parseFloat(gardenLength) > 0 && parseFloat(gardenWidth) > 0 && (
-                <p className="text-xs text-green-300/60 mb-3">
-                  {t('totalArea')}: <span className="text-green-200 font-bold">{(parseFloat(gardenLength) * parseFloat(gardenWidth)).toFixed(1)} m&sup2;</span>
+                <p className="text-xs mb-3" style={{ color: 'var(--on-surface-variant, #43483f)' }}>
+                  {t('totalArea')}: <span className="font-bold" style={{ color: 'var(--on-surface)' }}>{(parseFloat(gardenLength) * parseFloat(gardenWidth)).toFixed(1)} m&sup2;</span>
                   {' '} - ~{Math.floor(parseFloat(gardenLength) * parseFloat(gardenWidth) * 4)} {t('plantsCapacity')}
                 </p>
               )}
@@ -274,37 +273,35 @@ export function SettingsPageClient() {
           {/* Current Plan */}
           <Card>
             <CardTitle className="flex items-center gap-2 mb-6">
-              <CreditCard className="w-5 h-5 text-green-400" />
+              <CreditCard className="w-5 h-5" style={{ color: 'var(--primary)' }} />
               {t('currentPlan')}
             </CardTitle>
             <CardContent>
-              <div className={`p-6 rounded-xl border ${
-                isPro
-                  ? 'border-amber-500/30 bg-gradient-to-br from-amber-900/20 to-amber-900/5'
-                  : 'border-green-800/30 bg-[#0D1F17]'
-              }`}>
+              <div className="p-6 rounded-xl border" style={isPro
+                ? { borderColor: 'rgba(180,130,40,0.4)', background: 'rgba(180,130,40,0.06)' }
+                : { borderColor: 'var(--outline-variant)', background: 'var(--surface-container-lowest, #ffffff)' }}>
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     {isPro ? (
-                      <div className="w-10 h-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
-                        <Crown className="w-5 h-5 text-amber-400" />
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(180,130,40,0.15)' }}>
+                        <Crown className="w-5 h-5" style={{ color: '#b4841f' }} />
                       </div>
                     ) : (
-                      <div className="w-10 h-10 rounded-xl bg-green-600/20 flex items-center justify-center">
-                        <Zap className="w-5 h-5 text-green-400" />
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'var(--surface-container)' }}>
+                        <Zap className="w-5 h-5" style={{ color: 'var(--primary)' }} />
                       </div>
                     )}
                     <div>
-                      <h3 className="text-lg font-bold text-green-50">
+                      <h3 className="text-lg font-bold" style={{ color: 'var(--on-surface)' }}>
                         {isPro ? t('proPlan') : t('freePlan')}
                       </h3>
-                      <p className="text-sm text-green-400/60">
+                      <p className="text-sm" style={{ color: 'var(--on-surface-variant, #43483f)' }}>
                         {isPro ? '9.99 EUR/' + t('month') : t('freeForever')}
                       </p>
                     </div>
                   </div>
                   {isPro && (
-                    <span className="px-3 py-1 bg-amber-500/20 text-amber-400 text-xs font-semibold rounded-full flex items-center gap-1">
+                    <span className="px-3 py-1 text-xs font-semibold rounded-full flex items-center gap-1" style={{ background: 'rgba(180,130,40,0.15)', color: '#8a6010' }}>
                       <Sparkles className="w-3 h-3" />
                       {t('active')}
                     </span>
@@ -328,36 +325,36 @@ export function SettingsPageClient() {
           {/* Account Info */}
           <Card>
             <CardTitle className="flex items-center gap-2 mb-6">
-              <User className="w-5 h-5 text-green-400" />
+              <User className="w-5 h-5" style={{ color: 'var(--primary)' }} />
               {t('account')}
             </CardTitle>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-[#0D1F17] border border-green-900/30">
-                  <User className="w-4 h-4 text-green-600" />
+                <div className="flex items-center gap-3 p-3 rounded-xl border" style={{ background: 'var(--surface-container-lowest, #ffffff)', borderColor: 'var(--outline-variant)' }}>
+                  <User className="w-4 h-4" style={{ color: 'var(--primary)' }} />
                   <div>
-                    <p className="text-xs text-green-500/50">{t('name')}</p>
-                    <p className="text-sm text-green-100">{session?.user?.name || t('notSignedIn')}</p>
+                    <p className="text-xs" style={{ color: 'var(--on-surface-variant, #43483f)' }}>{t('name')}</p>
+                    <p className="text-sm font-medium" style={{ color: 'var(--on-surface)' }}>{session?.user?.name || t('notSignedIn')}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-[#0D1F17] border border-green-900/30">
-                  <Mail className="w-4 h-4 text-green-600" />
+                <div className="flex items-center gap-3 p-3 rounded-xl border" style={{ background: 'var(--surface-container-lowest, #ffffff)', borderColor: 'var(--outline-variant)' }}>
+                  <Mail className="w-4 h-4" style={{ color: 'var(--primary)' }} />
                   <div>
-                    <p className="text-xs text-green-500/50">{t('email')}</p>
-                    <p className="text-sm text-green-100">{session?.user?.email || t('notSignedIn')}</p>
+                    <p className="text-xs" style={{ color: 'var(--on-surface-variant, #43483f)' }}>{t('email')}</p>
+                    <p className="text-sm font-medium" style={{ color: 'var(--on-surface)' }}>{session?.user?.email || t('notSignedIn')}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 p-3 rounded-xl bg-[#0D1F17] border border-green-900/30">
-                  <Shield className="w-4 h-4 text-green-600" />
+                <div className="flex items-center gap-3 p-3 rounded-xl border" style={{ background: 'var(--surface-container-lowest, #ffffff)', borderColor: 'var(--outline-variant)' }}>
+                  <Shield className="w-4 h-4" style={{ color: 'var(--primary)' }} />
                   <div>
-                    <p className="text-xs text-green-500/50">{t('plan')}</p>
-                    <p className="text-sm text-green-100 capitalize">{userPlan}</p>
+                    <p className="text-xs" style={{ color: 'var(--on-surface-variant, #43483f)' }}>{t('plan')}</p>
+                    <p className="text-sm font-medium capitalize" style={{ color: 'var(--on-surface)' }}>{userPlan}</p>
                   </div>
                 </div>
               </div>
 
               {session && (
-                <div className="mt-6 pt-6 border-t border-green-900/30">
+                <div className="mt-6 pt-6 border-t" style={{ borderColor: 'var(--outline-variant)' }}>
                   <Button
                     variant="ghost"
                     className="w-full gap-2 text-red-400 hover:text-red-300 hover:bg-red-900/20"
