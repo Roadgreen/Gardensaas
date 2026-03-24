@@ -105,6 +105,18 @@ export function PlantCatalogSidebar({
             padding: 8px 12px !important;
             font-size: 13px !important;
             min-height: 44px !important;
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
+          }
+          .catalog-category-filters {
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+            scrollbar-width: none !important;
+            padding-bottom: 4px !important;
+          }
+          .catalog-category-filters::-webkit-scrollbar {
+            display: none !important;
           }
         }
       `}</style>
@@ -215,6 +227,7 @@ export function PlantCatalogSidebar({
 
         {/* Category filter */}
         <div
+          className="catalog-category-filters"
           style={{
             padding: '8px 16px',
             display: 'flex',
