@@ -1077,6 +1077,12 @@
     "removePlant": "Remove",
     "noCompanions": "None listed",
     "plantedIn": "Planted in",
-    "ground": "Ground"
+    "ground": "Ground",
+    "choosePlant": "Choose a plant",
+    "catalog": "Plant Catalog",
+    "readyToPlace": "Tap a cell on the grid",
+    "plantsAvailable": "{count} plants",
+    "closeSheet": "Close",
+    "companionNearby": "Good companion nearby!"
   }
 }

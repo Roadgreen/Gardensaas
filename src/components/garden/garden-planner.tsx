@@ -23,6 +23,8 @@ import {
   Sun,
   Heart,
   ShieldAlert,
+  ChevronUp,
+  Leaf,
 } from 'lucide-react';
 import type { Plant } from '@/types';
 
@@ -50,6 +52,8 @@ export function GardenPlanner() {
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [hoveredCell, setHoveredCell] = useState<{ col: number; row: number } | null>(null);
   const [pulseCell, setPulseCell] = useState<{ col: number; row: number } | null>(null);
+  // Mobile bottom sheet state
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
   // Variety picker state
   const [varietyPickerState, setVarietyPickerState] = useState<{
     plantId: string; x: number; z: number;
@@ -63,6 +67,7 @@ export function GardenPlanner() {
   } | null>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
+  const sheetRef = useRef<HTMLDivElement>(null);
 
   // Close popover on click outside
   useEffect(() => {
@@ -75,6 +80,26 @@ export function GardenPlanner() {
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, [selectedCellInfo]);
+
+  // Close mobile sheet on click outside
+  useEffect(() => {
+    if (!mobileSheetOpen) return;
+    const handler = (e: MouseEvent) => {
+      if (sheetRef.current && !sheetRef.current.contains(e.target as Node)) {
+        setMobileSheetOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [mobileSheetOpen]);
+
+  // Prevent body scroll when sheet is open
+  useEffect(() => {
+    if (mobileSheetOpen) {
+      document.body.style.overflow = 'hidden';
+      return () => { document.body.style.overflow = ''; };
+    }
+  }, [mobileSheetOpen]);
 
   const gridCols = Math.floor(config.width * 10); // 10cm cells
   const gridRows = Math.floor(config.length * 10);
@@ -128,6 +153,24 @@ export function GardenPlanner() {
     return enemyCells;
   }, [plantedWithInfo, config.width, config.length, displayCols, displayRows, locale]);
 
+  // Build a set of cells that have companion neighbors (for green glow during placement)
+  const cellsWithCompanions = useMemo(() => {
+    if (!selectedPlant) return new Set<string>();
+    const companionCells = new Set<string>();
+    for (const p of plantedWithInfo) {
+      if (!p.plant) continue;
+      const isCompanion = selectedPlant.companionPlants.includes(p.plantId) ||
+        p.plant.companionPlants.includes(selectedPlant.id);
+      if (isCompanion) {
+        const pCol = Math.round((p.x / config.width) * displayCols);
+        const pRow = Math.round((p.z / config.length) * displayRows);
+        // Highlight the companion cell and adjacent cells
+        companionCells.add(`${pCol}-${pRow}`);
+      }
+    }
+    return companionCells;
+  }, [selectedPlant, plantedWithInfo, config.width, config.length, displayCols, displayRows]);
+
   // Check companion/enemy warnings for sidebar
   const warnings = useMemo(() => {
     const w: string[] = [];
@@ -162,12 +205,23 @@ export function GardenPlanner() {
     });
   }, [hoveredCell, selectedPlant, plantedWithInfo, config.width, config.length, displayCols, displayRows]);
 
+  // Determine if the hovered cell is near a companion
+  const hoverCompanionHint = useMemo(() => {
+    if (!hoveredCell || !selectedPlant) return false;
+    const cellX = (hoveredCell.col / displayCols) * config.width;
+    const cellZ = (hoveredCell.row / displayRows) * config.length;
+    return plantedWithInfo.some((p) => {
+      if (!p.plant) return false;
+      const dist = Math.sqrt(Math.pow(p.x - cellX, 2) + Math.pow(p.z - cellZ, 2));
+      if (dist >= 1) return false;
+      return selectedPlant.companionPlants.includes(p.plantId) || p.plant.companionPlants.includes(selectedPlant.id);
+    });
+  }, [hoveredCell, selectedPlant, plantedWithInfo, config.width, config.length, displayCols, displayRows]);
+
   // Find which raised bed / zone a cell belongs to
   const getCellOverlay = useCallback((col: number, row: number) => {
     const cellX = (col / displayCols) * config.width;
     const cellZ = (row / displayRows) * config.length;
-    const cellXPct = (col / displayCols) * 100;
-    const cellZPct = (row / displayRows) * 100;
 
     // Check raised beds
     for (const bed of config.raisedBeds || []) {
@@ -255,6 +309,76 @@ export function GardenPlanner() {
 
   const varietyPickerPlantData = varietyPickerState ? plants.find(p => p.id === varietyPickerState.plantId) : null;
 
+  const handleSelectPlantFromPicker = (plant: Plant) => {
+    setSelectedPlant(plant);
+    setShowPlantPicker(false);
+    setMobileSheetOpen(false);
+  };
+
+  // Shared plant list renderer (used by both desktop sidebar and mobile sheet)
+  const renderPlantList = (maxHeight: string) => (
+    <>
+      {/* Search */}
+      <div className="relative mb-3">
+        <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-green-500/50" />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder={t('searchPlants')}
+          className="w-full pl-8 pr-3 py-2 text-sm rounded-lg bg-[#0D1F17] border border-green-800/30 text-green-100 placeholder:text-green-600/40 focus:outline-none focus:border-green-600/50"
+        />
+      </div>
+
+      {/* Category filter */}
+      <div className="flex flex-wrap gap-1.5 mb-3">
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setCategoryFilter(cat)}
+            className={`px-2 py-1 rounded-md text-xs transition-colors cursor-pointer ${
+              categoryFilter === cat
+                ? 'bg-green-900/50 text-green-200 border border-green-700/50'
+                : 'text-green-400/60 hover:text-green-300 border border-transparent'
+            }`}
+          >
+            {cat === 'all' ? t('allCategories') : `${CATEGORY_EMOJI[cat] || ''} ${t(cat)}`}
+          </button>
+        ))}
+      </div>
+
+      <div className={`${maxHeight} overflow-y-auto space-y-1`}>
+        {filteredPlants.map((plant) => (
+          <button
+            key={plant.id}
+            onClick={() => handleSelectPlantFromPicker(plant)}
+            className={`w-full flex items-center gap-3 p-2 rounded-lg text-left transition-colors cursor-pointer ${
+              selectedPlant?.id === plant.id
+                ? 'bg-green-900/40 border border-green-700/50'
+                : 'hover:bg-[#0D1F17]'
+            }`}
+          >
+            <span className="text-base shrink-0">{CATEGORY_EMOJI[plant.category] || '\uD83C\uDF31'}</span>
+            <div className="flex-1 min-w-0">
+              <span className="text-sm text-green-100 truncate block">
+                {locale === 'fr' ? plant.name.fr : plant.name.en}
+              </span>
+              {plant.varieties && plant.varieties.length > 0 && (
+                <span className="text-[10px] text-green-400/50">
+                  {plant.varieties.length} {locale === 'fr' ? 'variétés' : 'varieties'}
+                </span>
+              )}
+            </div>
+            <div
+              className="w-3 h-3 rounded-full shrink-0"
+              style={{ backgroundColor: plant.color }}
+            />
+          </button>
+        ))}
+      </div>
+    </>
+  );
+
   if (!isLoaded) {
     return (
       <div className="min-h-screen bg-[#0D1F17] flex items-center justify-center">
@@ -264,7 +388,7 @@ export function GardenPlanner() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0D1F17] py-8 px-4 sm:px-6 relative">
+    <div className="min-h-screen bg-[#0D1F17] py-8 px-4 sm:px-6 pb-24 lg:pb-8 relative">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
@@ -300,9 +424,15 @@ export function GardenPlanner() {
             <span className="text-green-200 text-sm font-medium">
               {t('placementMode', { name: locale === 'fr' ? selectedPlant.name.fr : selectedPlant.name.en })}
             </span>
-            <span className="text-green-400/60 text-xs ml-auto">
+            <span className="text-green-400/60 text-xs ml-auto hidden sm:inline">
               {t('spacing', { cm: selectedPlant.spacingCm })}
             </span>
+            <button
+              onClick={() => setSelectedPlant(null)}
+              className="text-green-600 hover:text-red-400 transition-colors cursor-pointer lg:hidden"
+            >
+              <X className="w-4 h-4" />
+            </button>
           </div>
         )}
 
@@ -329,9 +459,29 @@ export function GardenPlanner() {
                     const planted = cellPlantMap.get(cellKey);
                     const overlay = getCellOverlay(col, row);
                     const enemyNames = cellsWithEnemies.get(cellKey);
+                    const isCompanionCell = cellsWithCompanions.has(cellKey);
                     const isHovered = hoveredCell?.col === col && hoveredCell?.row === row;
                     const isPulsing = pulseCell?.col === col && pulseCell?.row === row;
                     const isSelected = selectedCellInfo?.col === col && selectedCellInfo?.row === row;
+
+                    // Determine cell background
+                    let bgColor = '#0D1F17';
+                    if (planted?.plant) {
+                      bgColor = planted.plant.color + '30';
+                    } else if (isHovered && selectedPlant) {
+                      if (hoverEnemyWarning) {
+                        bgColor = 'rgba(239, 68, 68, 0.15)';
+                      } else if (hoverCompanionHint) {
+                        bgColor = 'rgba(74, 222, 128, 0.25)';
+                      } else {
+                        bgColor = 'rgba(74, 222, 128, 0.15)';
+                      }
+                    } else if (overlay) {
+                      bgColor = overlay.color;
+                    }
+
+                    // Companion glow when in placement mode
+                    const companionGlow = selectedPlant && isCompanionCell && planted?.plant;
 
                     return (
                       <div
@@ -343,25 +493,21 @@ export function GardenPlanner() {
                           selectedPlant ? 'cursor-crosshair' : planted ? 'cursor-pointer' : 'cursor-default'
                         } ${planted ? 'border-green-800/30' : 'border-green-900/20 border-dashed'} ${
                           isSelected ? 'ring-2 ring-green-400 z-10' : ''
-                        }`}
+                        } ${companionGlow ? 'ring-1 ring-green-400/50' : ''}`}
                         style={{
-                          backgroundColor: planted?.plant
-                            ? planted.plant.color + '30'
-                            : overlay
-                              ? overlay.color
-                              : isHovered && selectedPlant
-                                ? hoverEnemyWarning
-                                  ? 'rgba(239, 68, 68, 0.15)'
-                                  : 'rgba(74, 222, 128, 0.15)'
-                                : '#0D1F17',
+                          backgroundColor: bgColor,
                           ...(isPulsing ? {
                             animation: 'plantPulse 0.6s ease-out',
+                          } : {}),
+                          ...(companionGlow ? {
+                            boxShadow: 'inset 0 0 6px rgba(74, 222, 128, 0.3)',
                           } : {}),
                         }}
                         title={
                           planted?.plant
                             ? (locale === 'fr' ? planted.plant.name.fr : planted.plant.name.en) +
-                              (enemyNames?.length ? ` \u26A0 ${enemyNames.join(', ')}` : '')
+                              (enemyNames?.length ? ` \u26A0 ${enemyNames.join(', ')}` : '') +
+                              (companionGlow ? ` \u2764 ${t('companionNearby')}` : '')
                             : overlay
                               ? `${overlay.type === 'bed' ? t('bed') : t('zone')}: ${overlay.name}`
                               : t('coordinates', {
@@ -390,6 +536,15 @@ export function GardenPlanner() {
                                 })()}
                               </span>
                             )}
+                          </div>
+                        )}
+                        {/* Companion indicator on cell */}
+                        {companionGlow && (
+                          <div
+                            className="absolute -top-0.5 -left-0.5 w-3.5 h-3.5 rounded-full bg-green-500/80 flex items-center justify-center text-white z-10"
+                            style={{ fontSize: 8, lineHeight: 1 }}
+                          >
+                            ♥
                           </div>
                         )}
                         {/* Enemy warning icon on cell */}
@@ -423,8 +578,8 @@ export function GardenPlanner() {
             </CardContent>
           </Card>
 
-          {/* Sidebar */}
-          <div className="space-y-4">
+          {/* Desktop Sidebar (hidden on mobile) */}
+          <div className="hidden lg:block space-y-4">
             {/* Plant picker */}
             <Card>
               <CardTitle className="flex items-center justify-between mb-3">
@@ -461,67 +616,7 @@ export function GardenPlanner() {
               )}
               {showPlantPicker && (
                 <CardContent>
-                  {/* Search */}
-                  <div className="relative mb-3">
-                    <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-green-500/50" />
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder={t('searchPlants')}
-                      className="w-full pl-8 pr-3 py-2 text-sm rounded-lg bg-[#0D1F17] border border-green-800/30 text-green-100 placeholder:text-green-600/40 focus:outline-none focus:border-green-600/50"
-                    />
-                  </div>
-
-                  {/* Category filter */}
-                  <div className="flex flex-wrap gap-1.5 mb-3">
-                    {CATEGORIES.map((cat) => (
-                      <button
-                        key={cat}
-                        onClick={() => setCategoryFilter(cat)}
-                        className={`px-2 py-1 rounded-md text-xs transition-colors cursor-pointer ${
-                          categoryFilter === cat
-                            ? 'bg-green-900/50 text-green-200 border border-green-700/50'
-                            : 'text-green-400/60 hover:text-green-300 border border-transparent'
-                        }`}
-                      >
-                        {cat === 'all' ? t('allCategories') : `${CATEGORY_EMOJI[cat] || ''} ${t(cat)}`}
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="max-h-64 overflow-y-auto space-y-1">
-                    {filteredPlants.map((plant) => (
-                      <button
-                        key={plant.id}
-                        onClick={() => {
-                          setSelectedPlant(plant);
-                          setShowPlantPicker(false);
-                        }}
-                        className={`w-full flex items-center gap-3 p-2 rounded-lg text-left transition-colors cursor-pointer ${
-                          selectedPlant?.id === plant.id
-                            ? 'bg-green-900/40 border border-green-700/50'
-                            : 'hover:bg-[#0D1F17]'
-                        }`}
-                      >
-                        <span className="text-base shrink-0">{CATEGORY_EMOJI[plant.category] || '\uD83C\uDF31'}</span>
-                        <div className="flex-1 min-w-0">
-                          <span className="text-sm text-green-100 truncate block">
-                            {locale === 'fr' ? plant.name.fr : plant.name.en}
-                          </span>
-                          {plant.varieties && plant.varieties.length > 0 && (
-                            <span className="text-[10px] text-green-400/50">
-                              {plant.varieties.length} {locale === 'fr' ? 'variétés' : 'varieties'}
-                            </span>
-                          )}
-                        </div>
-                        <div
-                          className="w-3 h-3 rounded-full shrink-0"
-                          style={{ backgroundColor: plant.color }}
-                        />
-                      </button>
-                    ))}
-                  </div>
+                  {renderPlantList('max-h-64')}
                 </CardContent>
               )}
             </Card>
@@ -613,8 +708,113 @@ export function GardenPlanner() {
               </div>
             )}
           </div>
+
+          {/* Mobile summary below grid (visible on mobile only, no plant picker here) */}
+          <div className="lg:hidden space-y-4">
+            {/* Compact summary */}
+            <div className="flex gap-3 text-xs text-green-300/70">
+              <span>{t('totalPlants')}: <strong className="text-green-100">{config.plantedItems.length}</strong></span>
+              <span>{t('gardenArea')}: <strong className="text-green-100">{(config.length * config.width).toFixed(1)} m²</strong></span>
+              <span>{t('usedArea')}: <strong className="text-green-100">{usedArea.toFixed(1)} m²</strong></span>
+            </div>
+
+            {/* Warnings on mobile */}
+            {warnings.length > 0 && (
+              <div className="flex items-start gap-2 px-3 py-2 rounded-lg bg-yellow-900/20 border border-yellow-800/30">
+                <AlertTriangle className="w-4 h-4 text-yellow-400 shrink-0 mt-0.5" />
+                <div className="space-y-1">
+                  {warnings.map((w, i) => (
+                    <p key={i} className="text-xs text-yellow-300/80">{w}</p>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {warnings.length === 0 && plantedWithInfo.length > 0 && (
+              <div className="flex items-center gap-2 text-xs text-green-400/60">
+                <Check className="w-3.5 h-3.5" />
+                {t('noWarnings')}
+              </div>
+            )}
+          </div>
         </div>
       </div>
+
+      {/* ===== MOBILE FIXED BOTTOM BAR ===== */}
+      <div className="fixed bottom-0 left-0 right-0 z-40 lg:hidden">
+        <div className="bg-[#0f2819]/95 backdrop-blur-md border-t border-green-800/40 px-4 py-3 safe-area-pb">
+          {selectedPlant ? (
+            <div className="flex items-center gap-3">
+              <span className="text-xl">{CATEGORY_EMOJI[selectedPlant.category] || '\uD83C\uDF31'}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-green-50 font-medium text-sm truncate">
+                  {locale === 'fr' ? selectedPlant.name.fr : selectedPlant.name.en}
+                </p>
+                <p className="text-green-400/60 text-[11px]">{t('readyToPlace')}</p>
+              </div>
+              <button
+                onClick={() => setSelectedPlant(null)}
+                className="px-3 py-1.5 text-xs text-red-400 border border-red-800/30 rounded-lg hover:bg-red-900/20 transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => setMobileSheetOpen(true)}
+                className="px-3 py-1.5 text-xs text-green-200 border border-green-700/40 rounded-lg hover:bg-green-900/30 transition-colors cursor-pointer"
+              >
+                {t('selectPlant')}
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setMobileSheetOpen(true)}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-green-700/30 border border-green-600/40 text-green-100 font-medium text-sm active:bg-green-700/50 transition-colors cursor-pointer"
+            >
+              <Leaf className="w-4 h-4" />
+              {t('choosePlant')}
+              <ChevronUp className="w-4 h-4 ml-1 text-green-400/60" />
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* ===== MOBILE BOTTOM SHEET ===== */}
+      {mobileSheetOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/60 transition-opacity"
+            onClick={() => setMobileSheetOpen(false)}
+          />
+          {/* Sheet */}
+          <div
+            ref={sheetRef}
+            className="absolute bottom-0 left-0 right-0 bg-[#0f2819] border-t border-green-700/50 rounded-t-2xl shadow-2xl shadow-black/50 animate-slideUp safe-area-pb"
+            style={{ maxHeight: '75vh' }}
+          >
+            {/* Handle */}
+            <div className="flex justify-center pt-3 pb-1">
+              <div className="w-10 h-1 rounded-full bg-green-700/50" />
+            </div>
+
+            {/* Sheet header */}
+            <div className="flex items-center justify-between px-4 pb-3 border-b border-green-800/30">
+              <h3 className="text-green-50 font-semibold text-base flex items-center gap-2">
+                <Leaf className="w-4 h-4 text-green-400" />
+                {t('catalog')}
+              </h3>
+              <span className="text-green-400/50 text-xs">
+                {t('plantsAvailable', { count: filteredPlants.length })}
+              </span>
+            </div>
+
+            {/* Sheet content */}
+            <div className="px-4 py-3 overflow-y-auto" style={{ maxHeight: 'calc(75vh - 80px)' }}>
+              {renderPlantList('max-h-[50vh]')}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Plant info popover */}
       {selectedCellInfo && (() => {
@@ -660,7 +860,7 @@ export function GardenPlanner() {
           >
             {/* Header */}
             <div className="flex items-center gap-3 px-4 py-3 bg-green-900/30 border-b border-green-800/30">
-              <span className="text-2xl">{CATEGORY_EMOJI[plant.category] || '🌱'}</span>
+              <span className="text-2xl">{CATEGORY_EMOJI[plant.category] || '\uD83C\uDF31'}</span>
               <div className="flex-1 min-w-0">
                 <p className="text-green-50 font-semibold text-sm truncate">{plantName}</p>
                 {varietyName && (
@@ -774,12 +974,22 @@ export function GardenPlanner() {
         </div>
       )}
 
-      {/* Pulse animation keyframes */}
+      {/* Animations */}
       <style jsx global>{`
         @keyframes plantPulse {
           0% { box-shadow: inset 0 0 0 0 rgba(74, 222, 128, 0.6); }
           50% { box-shadow: inset 0 0 8px 2px rgba(74, 222, 128, 0.4); }
           100% { box-shadow: inset 0 0 0 0 rgba(74, 222, 128, 0); }
+        }
+        @keyframes slideUp {
+          from { transform: translateY(100%); }
+          to { transform: translateY(0); }
+        }
+        .animate-slideUp {
+          animation: slideUp 0.3s ease-out;
+        }
+        .safe-area-pb {
+          padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
         }
       `}</style>
     </div>

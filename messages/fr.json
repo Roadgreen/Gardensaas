@@ -1077,6 +1077,12 @@
     "removePlant": "Retirer",
     "noCompanions": "Aucun listé",
     "plantedIn": "Planté dans",
-    "ground": "Pleine terre"
+    "ground": "Pleine terre",
+    "choosePlant": "Choisir une plante",
+    "catalog": "Catalogue de plantes",
+    "readyToPlace": "Touchez une cellule de la grille",
+    "plantsAvailable": "{count} plantes",
+    "closeSheet": "Fermer",
+    "companionNearby": "Bon compagnon à proximité !"
   }
 }
