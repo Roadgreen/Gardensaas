@@ -575,13 +575,10 @@ function GroundClickHandler({
       onClick={(e) => {
         e.stopPropagation();
         const point = e.point;
-        // Convert to percentage coords and snap to 30cm grid
-        const cellPctX = (0.3 / config.length) * 100;
-        const cellPctZ = (0.3 / config.width) * 100;
-        const rawPctX = ((point.x + halfL) / config.length) * 100;
-        const rawPctZ = ((point.z + halfW) / config.width) * 100;
-        const pctX = (Math.floor(rawPctX / cellPctX) + 0.5) * cellPctX;
-        const pctZ = (Math.floor(rawPctZ / cellPctZ) + 0.5) * cellPctZ;
+        // Convert to raw percentage coords — snapping is handled by handleGroundClick
+        // using the selected plant's spacing, so we must not pre-snap here
+        const pctX = ((point.x + halfL) / config.length) * 100;
+        const pctZ = ((point.z + halfW) / config.width) * 100;
         onGroundClick(pctX, pctZ);
       }}
       onPointerOver={() => {
