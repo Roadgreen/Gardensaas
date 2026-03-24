@@ -304,8 +304,9 @@ export default function PlantsPage() {
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.2 }}
-              className="mb-6 sm:mb-8 space-y-3 sm:space-y-4 overflow-hidden"
+              className="mb-6 sm:mb-8 overflow-hidden"
             >
+              <div className="space-y-3 sm:space-y-4 max-h-[45vh] sm:max-h-none overflow-y-auto sm:overflow-y-visible overscroll-contain">
               {/* Category filter */}
               <div>
                 <label className="text-xs text-gray-400 dark:text-green-400/60 mb-2 block uppercase tracking-wider font-semibold">{t('category')}</label>
@@ -378,6 +379,7 @@ export default function PlantsPage() {
                   {t('clearFilters')} ({activeFilters})
                 </button>
               )}
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
