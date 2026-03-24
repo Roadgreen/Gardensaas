@@ -376,7 +376,13 @@
     "plan": "Plan",
     "notSignedIn": "Non connecté",
     "signOut": "Se déconnecter",
-    "saved": "Enregistré !"
+    "saved": "Enregistré !",
+    "presetWindowBox": "Jardinière",
+    "presetBalcony": "Balcon",
+    "presetSmallPlot": "Petit potager",
+    "presetMediumGarden": "Jardin moyen",
+    "presetLargeGarden": "Grand jardin",
+    "presetFarmPlot": "Parcelle agricole"
   },
   "setup": {
     "welcome": {

@@ -26,12 +26,12 @@ import {
 import { useGarden } from '@/lib/hooks';
 
 const GARDEN_SIZE_PRESETS = [
-  { label: 'Window Box', length: 1, width: 0.5, emoji: '\uD83E\uDE9F' },
-  { label: 'Balcony', length: 2, width: 1, emoji: '\uD83C\uDFE0' },
-  { label: 'Small Plot', length: 3, width: 2, emoji: '\uD83C\uDF31' },
-  { label: 'Medium Garden', length: 5, width: 3, emoji: '\uD83C\uDF33' },
-  { label: 'Large Garden', length: 8, width: 5, emoji: '\uD83C\uDFE1' },
-  { label: 'Farm Plot', length: 12, width: 8, emoji: '\uD83C\uDF3E' },
+  { labelKey: 'presetWindowBox' as const, length: 1, width: 0.5, emoji: '\uD83E\uDE9F' },
+  { labelKey: 'presetBalcony' as const, length: 2, width: 1, emoji: '\uD83C\uDFE0' },
+  { labelKey: 'presetSmallPlot' as const, length: 3, width: 2, emoji: '\uD83C\uDF31' },
+  { labelKey: 'presetMediumGarden' as const, length: 5, width: 3, emoji: '\uD83C\uDF33' },
+  { labelKey: 'presetLargeGarden' as const, length: 8, width: 5, emoji: '\uD83C\uDFE1' },
+  { labelKey: 'presetFarmPlot' as const, length: 12, width: 8, emoji: '\uD83C\uDF3E' },
 ];
 
 export function SettingsPageClient() {
@@ -189,7 +189,7 @@ export function SettingsPageClient() {
                     const isActive = gardenLength === preset.length.toString() && gardenWidth === preset.width.toString();
                     return (
                       <button
-                        key={preset.label}
+                        key={preset.labelKey}
                         onClick={() => {
                           setGardenLength(preset.length.toString());
                           setGardenWidth(preset.width.toString());
@@ -203,7 +203,7 @@ export function SettingsPageClient() {
                           : { borderColor: 'var(--outline-variant)', background: 'var(--surface-container-lowest, #ffffff)', color: 'var(--on-surface)' }}
                       >
                         <span className="text-lg block">{preset.emoji}</span>
-                        <span className="text-xs block">{preset.label}</span>
+                        <span className="text-xs block">{t(preset.labelKey)}</span>
                         <span className="text-[10px]" style={{ color: 'var(--on-surface-variant, var(--body-text, #43483f))' }}>{preset.length}m x {preset.width}m</span>
                       </button>
                     );

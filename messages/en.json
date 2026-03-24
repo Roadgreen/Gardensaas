@@ -376,7 +376,13 @@
     "plan": "Plan",
     "notSignedIn": "Not signed in",
     "signOut": "Sign Out",
-    "saved": "Saved!"
+    "saved": "Saved!",
+    "presetWindowBox": "Window Box",
+    "presetBalcony": "Balcony",
+    "presetSmallPlot": "Small Plot",
+    "presetMediumGarden": "Medium Garden",
+    "presetLargeGarden": "Large Garden",
+    "presetFarmPlot": "Farm Plot"
   },
   "setup": {
     "welcome": {
