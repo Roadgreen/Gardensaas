@@ -79,8 +79,8 @@ export function HeroSection() {
       {/* Central glow - dark mode */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] rounded-full bg-gradient-to-br from-green-900/20 via-emerald-900/15 to-yellow-900/10 blur-3xl pointer-events-none hidden dark:block" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-12 md:py-16">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-6 md:py-16">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* Left column - Text */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -90,7 +90,7 @@ export function HeroSection() {
           >
             {/* Badge */}
             <motion.div
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-green-700/30 mb-8"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-green-700/30 mb-4 md:mb-8"
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.3, type: 'spring' }}
@@ -108,11 +108,11 @@ export function HeroSection() {
               </span>
             </h1>
 
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-green-200/60 mb-10 sm:mb-12 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-green-200/60 mb-6 sm:mb-12 max-w-xl mx-auto lg:mx-0 leading-relaxed">
               {t('description')}
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center lg:justify-start mb-10 sm:mb-12">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center lg:justify-start mb-6 sm:mb-12">
               <Link href="/garden/setup" className="w-full sm:w-auto">
                 <motion.div
                   whileHover={{ scale: 1.04, y: -2 }}
