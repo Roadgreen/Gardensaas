@@ -437,7 +437,7 @@ function SpinningScene() {
 
 export function MiniGardenPreview() {
   return (
-    <div className="w-full h-[300px] md:h-[350px] rounded-2xl overflow-hidden border-2 border-green-800/40 bg-gradient-to-b from-sky-400/20 to-green-900/20 shadow-lg shadow-green-900/20">
+    <div className="w-full h-[220px] sm:h-[300px] md:h-[350px] rounded-2xl overflow-hidden border-2 border-green-800/40 bg-gradient-to-b from-sky-400/20 to-green-900/20 shadow-lg shadow-green-900/20">
       <Canvas
         shadows
         camera={{ position: [3.5, 3, 3.5], fov: 40, near: 0.1, far: 50 }}

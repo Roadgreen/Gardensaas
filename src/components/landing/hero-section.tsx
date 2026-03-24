@@ -14,7 +14,7 @@ const MiniGardenPreview = dynamic(
   {
     ssr: false,
     loading: () => (
-      <div className="w-full h-[300px] md:h-[400px] rounded-3xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/30 flex items-center justify-center">
+      <div className="w-full h-[220px] sm:h-[300px] md:h-[400px] rounded-3xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/30 flex items-center justify-center">
         <div className="animate-pulse text-green-500 dark:text-green-400 text-sm">Loading...</div>
       </div>
     ),
@@ -35,7 +35,7 @@ const floatingElements = [
 export function HeroSection() {
   const t = useTranslations('hero');
   return (
-    <section className="relative min-h-[calc(100svh-72px)] flex items-center justify-center overflow-hidden bg-gradient-to-br from-green-50 via-emerald-50/50 to-lime-50/30 dark:from-[#071510] dark:via-[#0D1F17] dark:to-[#0D1F17]">
+    <section className="relative min-h-[calc(100svh-72px)] flex items-start md:items-center justify-center overflow-x-hidden overflow-y-visible bg-gradient-to-br from-green-50 via-emerald-50/50 to-lime-50/30 dark:from-[#071510] dark:via-[#0D1F17] dark:to-[#0D1F17]">
       {/* Subtle background pattern - light mode */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none dark:hidden">
         <div className="absolute top-0 left-1/4 w-[900px] h-[500px] rounded-full bg-gradient-to-br from-green-200/50 via-emerald-100/40 to-transparent blur-3xl" />
@@ -79,8 +79,8 @@ export function HeroSection() {
       {/* Central glow - dark mode */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] rounded-full bg-gradient-to-br from-green-900/20 via-emerald-900/15 to-yellow-900/10 blur-3xl pointer-events-none hidden dark:block" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-6 pb-20 md:pt-16 md:pb-28">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-16 md:pt-16 md:pb-28">
+        <div className="grid lg:grid-cols-2 gap-5 sm:gap-8 lg:gap-16 items-center">
           {/* Left column - Text */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -101,18 +101,18 @@ export function HeroSection() {
               </span>
             </motion.div>
 
-            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-bold mb-5 sm:mb-7 leading-[1.18] sm:leading-[1.08] tracking-tight">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] font-bold mb-3 sm:mb-7 leading-[1.18] sm:leading-[1.08] tracking-tight">
               <span className="text-gray-900 dark:text-green-50">{t('title1')}</span>
               <span className="block text-gradient animate-gradient-flow mt-1" style={{ backgroundSize: '200% 200%' }}>
                 {t('title2')}
               </span>
             </h1>
 
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-green-200/60 mb-6 sm:mb-12 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-green-200/60 mb-4 sm:mb-12 max-w-xl mx-auto lg:mx-0 leading-relaxed">
               {t('description')}
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center lg:justify-start mb-6 sm:mb-12">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-5 justify-center lg:justify-start mb-4 sm:mb-12">
               <Link href="/garden/setup" className="w-full sm:w-auto">
                 <motion.div
                   whileHover={{ scale: 1.04, y: -2 }}
@@ -169,7 +169,7 @@ export function HeroSection() {
             <div className="relative w-full">
               <div className="absolute -inset-4 bg-gradient-to-r from-green-200/30 via-emerald-200/20 to-lime-200/30 dark:from-green-600/10 dark:via-emerald-600/5 dark:to-lime-600/10 rounded-[2rem] blur-xl pointer-events-none" />
               <Suspense fallback={
-                <div className="w-full h-[300px] md:h-[400px] rounded-3xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/30 flex items-center justify-center">
+                <div className="w-full h-[220px] sm:h-[300px] md:h-[400px] rounded-3xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800/30 flex items-center justify-center">
                   <div className="animate-pulse text-green-500 dark:text-green-400 text-sm">Loading...</div>
                 </div>
               }>
