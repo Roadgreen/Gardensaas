@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
-import { useGarden } from '@/lib/hooks';
+import { useGarden, usePlants } from '@/lib/hooks';
 import {
   Send,
   Sparkles,
@@ -20,30 +20,13 @@ import {
   Lightbulb,
 } from 'lucide-react';
 import { MarkdownMessage } from './markdown-message';
+import { getContextAwareSuggestions, getGardenSummaryText } from '@/lib/advisor-questions';
 
 interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
 }
-
-const SUGGESTED_QUESTIONS_EN = [
-  { text: 'When should I plant tomatoes?', icon: Calendar },
-  { text: 'My lettuce is yellowing, what should I do?', icon: Leaf },
-  { text: 'Best companion plants for carrots?', icon: Sparkles },
-  { text: 'How to deal with aphids organically?', icon: Bug },
-  { text: 'How to improve my clay soil?', icon: FlaskConical },
-  { text: 'What can I plant this month?', icon: Calendar },
-];
-
-const SUGGESTED_QUESTIONS_FR = [
-  { text: 'Quand planter des tomates ?', icon: Calendar },
-  { text: 'Ma laitue jaunit, que faire ?', icon: Leaf },
-  { text: 'Meilleures associations pour les carottes ?', icon: Sparkles },
-  { text: 'Comment lutter contre les pucerons bio ?', icon: Bug },
-  { text: 'Comment améliorer mon sol argileux ?', icon: FlaskConical },
-  { text: 'Que planter ce mois-ci ?', icon: Calendar },
-];
 
 const FOLLOW_UP_QUESTIONS_EN: Record<string, { text: string; icon: typeof Leaf }[]> = {
   planting: [
@@ -110,10 +93,6 @@ const FOLLOW_UP_QUESTIONS_FR: Record<string, { text: string; icon: typeof Leaf }
     { text: 'Astuces petit jardin ?', icon: Lightbulb },
   ],
 };
-
-function getSuggestedQuestions(locale: string) {
-  return locale === 'fr' ? SUGGESTED_QUESTIONS_FR : SUGGESTED_QUESTIONS_EN;
-}
 
 function detectTopic(text: string): string {
   const lower = text.toLowerCase();
@@ -305,8 +284,19 @@ export function AdvisorPageClient() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const { config } = useGarden();
+  const { plants } = usePlants();
 
-  const suggestedQuestions = getSuggestedQuestions(locale);
+  const suggestedQuestions = useMemo(
+    () => getContextAwareSuggestions({ plantedItems: config.plantedItems, plants, locale }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [config.plantedItems.length, plants.length, locale]
+  );
+
+  const gardenSummary = useMemo(
+    () => getGardenSummaryText({ plantedItems: config.plantedItems, plants, locale }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [config.plantedItems.length, plants.length, locale]
+  );
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -499,19 +489,25 @@ export function AdvisorPageClient() {
               <h2 className="text-xl font-semibold text-green-100 mb-2">
                 {t('welcomeTitle')}
               </h2>
-              <p className="text-green-400/50 text-sm mb-8 max-w-md">
+              <p className="text-green-400/50 text-sm mb-4 max-w-md">
                 {t('welcomeSubtext', { soilType: config.soilType, climateZone: config.climateZone })}
               </p>
+
+              {/* Garden context chip */}
+              {gardenSummary && (
+                <div className="mb-6 px-4 py-2 rounded-full bg-green-900/40 border border-green-800/30 text-green-300/70 text-xs">
+                  {gardenSummary}
+                </div>
+              )}
 
               <div className="grid sm:grid-cols-2 gap-3 w-full max-w-lg">
                 {suggestedQuestions.map((q) => (
                   <button
-                    key={q.text}
-                    onClick={() => sendMessage(q.text)}
+                    key={q}
+                    onClick={() => sendMessage(q)}
                     className="flex items-center gap-3 text-left px-4 py-3 rounded-xl bg-[#1A2F23] border border-green-800/30 text-green-200 text-sm hover:bg-[#243D2E] hover:border-green-700/50 transition-all cursor-pointer"
                   >
-                    <q.icon className="w-4 h-4 text-green-500/60 shrink-0" />
-                    <span>{q.text}</span>
+                    <span>{q}</span>
                   </button>
                 ))}
               </div>

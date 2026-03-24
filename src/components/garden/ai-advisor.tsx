@@ -1,40 +1,19 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Send, X, ChevronDown } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
-import { useGarden } from '@/lib/hooks';
+import { useGarden, usePlants } from '@/lib/hooks';
 import { AiAdvisorLocked } from './ai-advisor-locked';
 import { MarkdownMessage } from './markdown-message';
+import { getContextAwareSuggestions, getGardenSummaryText } from '@/lib/advisor-questions';
 
 interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
 }
-
-const SUGGESTED_QUESTIONS_EN = [
-  'When should I plant tomatoes? 🍅',
-  'My basil leaves are turning yellow 🌿',
-  'Best companion plants for carrots? 🥕',
-  'How do I make compost at home? ♻️',
-  'How often should I water my garden? 💧',
-  'Which plants grow well in the shade? 🌑',
-  'How do I deal with aphids naturally? 🐛',
-  'What are the best plants for spring? 🌸',
-];
-
-const SUGGESTED_QUESTIONS_FR = [
-  'Quand planter des tomates ? 🍅',
-  'Mes feuilles de basilic jaunissent 🌿',
-  'Meilleures associations pour les carottes ? 🥕',
-  'Comment faire du compost maison ? ♻️',
-  'À quelle fréquence arroser mon potager ? 💧',
-  'Quelles plantes poussent bien à l\'ombre ? 🌑',
-  'Comment lutter contre les pucerons naturellement ? 🐛',
-  'Quelles plantes pour le printemps ? 🌸',
-];
 
 const FOLLOW_UP_QUESTIONS_EN: Record<string, string[]> = {
   planting: ['When to start seeds indoors? 🌱', 'Best soil mix for seedlings? 🪴', 'How deep should I plant? 📏'],
@@ -53,12 +32,6 @@ const FOLLOW_UP_QUESTIONS_FR: Record<string, string[]> = {
   companion: ['Quoi ne jamais planter ensemble ? ⚠️', 'Méthode des trois sœurs ? 🌽', 'Herbes anti-ravageurs ? 🌿'],
   general: ['Quoi planter ce mois-ci ? 📅', 'Comment améliorer mon sol ? 🪱', 'Astuces petit jardin ? 🏡'],
 };
-
-function getSuggestedQuestions(locale: string): string[] {
-  const pool = locale === 'fr' ? SUGGESTED_QUESTIONS_FR : SUGGESTED_QUESTIONS_EN;
-  const shuffled = [...pool].sort(() => Math.random() - 0.5);
-  return shuffled.slice(0, 4);
-}
 
 function detectTopic(text: string): string {
   const lower = text.toLowerCase();
@@ -149,11 +122,23 @@ export function AiAdvisor({ userPlan = 'free' }: { userPlan?: 'free' | 'pro' }) 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const { config } = useGarden();
+  const { plants } = usePlants();
   const locale = useLocale();
   const t = useTranslations('advisor');
 
   const isPro = userPlan === 'pro';
-  const suggestedQuestions = getSuggestedQuestions(locale);
+
+  const suggestedQuestions = useMemo(
+    () => getContextAwareSuggestions({ plantedItems: config.plantedItems, plants, locale }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [config.plantedItems.length, plants.length, locale]
+  );
+
+  const gardenSummary = useMemo(
+    () => getGardenSummaryText({ plantedItems: config.plantedItems, plants, locale }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [config.plantedItems.length, plants.length, locale]
+  );
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -379,9 +364,16 @@ export function AiAdvisor({ userPlan = 'free' }: { userPlan?: 'free' | 'pro' }) 
                   <p className="text-green-100 font-medium text-sm mb-1">
                     {t('welcomeTitle')}
                   </p>
-                  <p className="text-green-400/50 text-xs mb-5 max-w-[260px]">
+                  <p className="text-green-400/50 text-xs mb-3 max-w-[260px]">
                     {t('welcomeDescription')}
                   </p>
+
+                  {/* Garden context chip */}
+                  {gardenSummary && (
+                    <div className="mb-4 px-3 py-1.5 rounded-full bg-green-900/40 border border-green-800/30 text-green-300/70 text-[11px]">
+                      {gardenSummary}
+                    </div>
+                  )}
 
                   {/* Suggested questions */}
                   <div className="space-y-2 w-full max-w-[300px]">
