@@ -474,7 +474,7 @@ button, [role="button"], a {
    --plant-panel-height is shared with the clipPath inset in garden-3d-view.tsx
    so 3D Html labels are clipped exactly behind the panel. */
 :root {
-  --plant-panel-height: 50dvh;
+  --plant-panel-height: 55dvh;
 }
 
 .plant-info-backdrop {
