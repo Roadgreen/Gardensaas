@@ -1015,6 +1015,25 @@
     "lockedFeature4Desc": "Améliorez votre sol pour des plantes en meilleure santé",
     "lockedUpgrade": "Passer au PRO",
     "lockedIncluded": "10 questions IA par jour incluses avec PRO",
-    "followUpLabel": "Questions de suivi"
+    "followUpLabel": "Questions de suivi",
+    "backToDashboard": "Retour au tableau de bord",
+    "proFeature": "Fonctionnalité PRO",
+    "pageTitle": "Conseiller IA Jardin",
+    "pageDescription": "Votre expert jardinage personnel qui connaît votre jardin sur le bout des doigts.",
+    "pageAvailability": "Disponible 24h/24, 10 questions par jour.",
+    "previewQuestion": "Mes feuilles de basilic jaunissent. Au secours !",
+    "previewAnswer": "Le jaunissement des feuilles de basilic indique généralement un excès d'arrosage ou une carence nutritive. Étant donné votre sol limoneux...",
+    "upgradePro": "Passer au PRO — 9,99€/mois",
+    "you": "Vous",
+    "questionsLeftToday": "{remaining} questions restantes aujourd'hui",
+    "welcomeSubtext": "Posez-moi vos questions jardinage ! Je connais votre type de sol ({soilType}), votre climat ({climateZone}) et ce que vous avez planté.",
+    "feature1Title": "Conseils personnalisés",
+    "feature1Desc": "Astuces adaptées à votre sol, climat et plantes",
+    "feature2Title": "Diagnostic ravageurs & maladies",
+    "feature2Desc": "Décrivez les symptômes, obtenez des solutions bio",
+    "feature3Title": "Guide saisonnier",
+    "feature3Desc": "Sachez exactement quand planter, tailler et récolter",
+    "feature4Title": "Conseils sol & compostage",
+    "feature4Desc": "Améliorez votre sol pour des plantes en meilleure santé"
   }
 }

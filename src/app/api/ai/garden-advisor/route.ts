@@ -88,6 +88,54 @@ function getCropRotationContext(locale: string): string {
     .join('\n');
 }
 
+// Compact vegetable quick-reference for the system prompt
+// Provides specific variety recommendations, spacing, and timing data
+function getVegetableReference(locale: string): string {
+  const isFr = locale === 'fr';
+  const header = isFr
+    ? 'RÉFÉRENCE RAPIDE LÉGUMES (variétés, espacement, calendrier)'
+    : 'VEGETABLE QUICK REFERENCE (varieties, spacing, calendar)';
+
+  // Format: Name | Top Varieties | Spacing | Sow Indoors | Transplant/Direct Sow | Days to Harvest | Key Tips
+  const vegetables = isFr
+    ? [
+        'Tomate | Roma, Coeur de Boeuf, San Marzano, Cerise Sweet 100, Brandywine | 60cm | Fév-Mars intérieur | Mi-Mai après gelées | 60-85j | Tuteur obligatoire, supprimer gourmands, arrosage au pied',
+        'Courgette | Black Beauty, Ronde de Nice, Gold Rush | 90cm | Avril intérieur | Mai-Juin | 45-55j | 2-3 plants suffisent par famille, récolter jeunes',
+        'Laitue | Batavia, Feuille de Chêne, Romaine, Mesclun | 25cm | Mars-Août | Mars-Sept direct | 30-60j | Semer toutes les 2-3 semaines, ombre partielle en été',
+        'Carotte | Nantaise, Touchon, Chantenay, Marché de Paris (ronde) | 5cm | — | Mars-Juillet direct | 70-80j | Sol meuble sans cailloux, ne pas repiquer, éclaircir à 5cm',
+        'Haricot | Contender (nain), Blue Lake (grimpant), Coco de Paimpol | 15-20cm | — | Mai-Juillet direct (sol>12°C) | 55-65j | Ne pas tremper les graines, inoculant rhizobium bénéfique',
+        'Poivron/Piment | Corno di Toro, Lamuyo, Padron, Espelette | 45cm | Fév-Mars intérieur | Mi-Mai | 70-90j | Chaleur indispensable, pailler abondamment',
+        'Concombre | Marketmore, Long anglais, Lemon, Cornichon vert petit de Paris | 60cm | Avril intérieur | Mai-Juin | 50-65j | Treillis recommandé, récolter souvent',
+        'Radis | Cherry Belle, Rond écarlate, Flamboyant, Noir d\'hiver | 3cm | — | Mars-Sept direct | 20-30j | Le plus rapide du potager, intercaler entre cultures lentes',
+        'Basilic | Grand Vert, Genovese, Pourpre, Citron, Thaï | 25cm | Mars-Avril intérieur | Mai-Juin | 30-45j | Pincer les fleurs, associer aux tomates',
+        'Épinard | Géant d\'hiver, Bloomsdale, Matador | 15cm | — | Mars-Mai, Août-Oct direct | 35-45j | Préfère le frais, bolte vite en chaleur, culture d\'automne idéale',
+        'Oignon | Stuttgarter, Jaune Paille des Vertus, Rouge de Florence | 10cm | Fév intérieur ou bulbilles | Mars-Avril | 90-120j | Arrêter arrosage quand feuilles jaunissent',
+        'Pois | Petit Provençal, Kelvedon Wonder, Mangetout Oregon | 5cm | — | Fév-Avril direct (sol>5°C) | 60-70j | Grillage/tuteur nécessaire, fixe l\'azote',
+        'Chou | Cabus, Milan de Pontoise, Brocoli Calabrese, Kale Nero di Toscana | 50cm | Fév-Juil intérieur | Mars-Août | 60-120j selon type | Filet anti-piéride, riche en calcium',
+        'Ail | Messidrome (blanc), Germidour (violet), Rose de Lautrec | 15cm | — | Oct-Nov ou Fév-Mars direct | 150-240j | Planter pointe en haut à 3cm, ne pas arroser fin de culture',
+        'Fraise | Gariguette, Mara des Bois, Charlotte (remontante) | 30cm | — | Mars-Avril plants | 60j + remontant | Pailler, renouveler tous les 3 ans, stolons = nouveaux plants',
+      ]
+    : [
+        'Tomato | Roma, Beefsteak, San Marzano, Cherry Sweet 100, Brandywine | 24in | Feb-Mar indoors | Mid-May after frost | 60-85d | Stake/cage required, prune suckers, water at base',
+        'Zucchini | Black Beauty, Costata Romanesco, Gold Rush | 36in | April indoors | May-June | 45-55d | 2-3 plants feed a family, harvest young at 6-8in',
+        'Lettuce | Butterhead, Red Oak Leaf, Romaine, Mesclun mix | 10in | Mar-Aug | Mar-Sept direct | 30-60d | Succession sow every 2-3 weeks, partial shade in summer',
+        'Carrot | Nantes, Danvers, Chantenay, Paris Market (round) | 2in | — | Mar-Jul direct | 70-80d | Loose stone-free soil, don\'t transplant, thin to 2in',
+        'Bean | Contender (bush), Blue Lake (pole), Scarlet Runner | 6-8in | — | May-Jul direct (soil>55°F) | 55-65d | Don\'t soak seeds, rhizobium inoculant beneficial',
+        'Pepper | Corno di Toro, California Wonder, Padron, Jalapeño | 18in | Feb-Mar indoors | Mid-May | 70-90d | Needs warmth, mulch heavily, stake when fruiting',
+        'Cucumber | Marketmore, English Long, Lemon, Boston Pickling | 24in | April indoors | May-June | 50-65d | Trellis recommended, harvest often to keep producing',
+        'Radish | Cherry Belle, French Breakfast, Watermelon, Black Spanish | 1in | — | Mar-Sept direct | 20-30d | Fastest garden crop, interplant between slow growers',
+        'Basil | Genovese, Sweet, Purple, Lemon, Thai | 10in | Mar-Apr indoors | May-June | 30-45d | Pinch flowers, companion to tomatoes',
+        'Spinach | Bloomsdale, Giant Winter, Space | 6in | — | Mar-May, Aug-Oct direct | 35-45d | Prefers cool weather, bolts in heat, ideal fall crop',
+        'Onion | Stuttgarter, Yellow Sweet Spanish, Red Burgundy | 4in | Feb indoors or sets | Mar-Apr | 90-120d | Stop watering when tops yellow, cure 2 weeks before storage',
+        'Pea | Little Marvel, Kelvedon Wonder, Oregon Sugar Pod | 2in | — | Feb-Apr direct (soil>40°F) | 60-70d | Needs trellis/netting, fixes nitrogen in soil',
+        'Cabbage family | Early Jersey Wakefield, Broccoli Calabrese, Kale Nero di Toscana | 20in | Feb-Jul indoors | Mar-Aug | 60-120d by type | Row cover for cabbage moth, calcium-rich feeder',
+        'Garlic | Softneck California Early, Hardneck Music, Purple Stripe | 6in | — | Oct-Nov or Feb-Mar direct | 150-240d | Plant cloves point-up 2in deep, stop water before harvest',
+        'Strawberry | Earliglow, Seascape (everbearing), Mara des Bois | 12in | — | Mar-Apr plants | 60d + everbearing | Mulch with straw, renew beds every 3 years, runners = new plants',
+      ];
+
+  return `${header}:\n${vegetables.join('\n')}`;
+}
+
 function buildSystemPrompt(gardenContext: {
   soilType?: string;
   climateZone?: string;
@@ -116,6 +164,7 @@ function buildSystemPrompt(gardenContext: {
   const companionInfo = getCompanionPlantingContext(locale);
   const pestInfo = getPestControlContext(locale);
   const rotationInfo = getCropRotationContext(locale);
+  const vegetableRef = getVegetableReference(locale);
 
   return `${isFr
     ? `Tu es Sprout, un expert passionné en jardinage bio-intensif et permaculture. Tu ne réponds QU'AUX questions liées au jardinage, aux plantes, au sol, à la permaculture, à l'agriculture biologique, au compostage, aux semences, à l'irrigation et à la lutte biologique contre les ravageurs.
@@ -177,6 +226,15 @@ ${pestInfo}
 
 ${isFr ? 'ROTATION DES CULTURES (plan sur 4 ans)' : 'CROP ROTATION (4-year plan)'}:
 ${rotationInfo}
+
+${vegetableRef}
+
+${isFr ? 'CONSEILS DE RÉPONSE' : 'RESPONSE GUIDELINES'}:
+- ${isFr ? 'Quand on te demande un légume spécifique, donne : variétés recommandées, espacement, calendrier de semis, et astuces de culture' : 'When asked about a specific vegetable, provide: recommended varieties, spacing, sowing calendar, and growing tips'}
+- ${isFr ? 'Adapte les dates de semis à la zone climatique de l\'utilisateur si connue' : 'Adjust sowing dates to the user\'s climate zone when known'}
+- ${isFr ? 'Mentionne les associations bénéfiques et les plantes à éviter à proximité' : 'Mention beneficial companions and plants to avoid nearby'}
+- ${isFr ? 'Inclus des techniques bio-intensives pertinentes (paillage, compost, engrais verts)' : 'Include relevant bio-intensive techniques (mulching, compost, cover crops)'}
+- ${isFr ? 'Pour les problèmes de ravageurs, propose toujours des solutions naturelles d\'abord' : 'For pest problems, always suggest natural solutions first'}
 
 ${isFr
   ? 'Réponds en français. Sois concis mais complet (2-4 paragraphes max sauf si plus de détail est nécessaire). Adapte tes conseils à la saison actuelle et au jardin de l\'utilisateur.'
