@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useCallback, useMemo, useRef } from 'react';
+import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
+import { ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
 import type { GardenConfig, Plant } from '@/types';
 
 interface Garden2DMobileProps {
@@ -36,61 +37,273 @@ function getGrowthStage(plantedDate: string, harvestDays: number): { stage: stri
   return { stage: 'seed', progress };
 }
 
+// Distance between two touch points
+function touchDistance(t1: { clientX: number; clientY: number }, t2: { clientX: number; clientY: number }): number {
+  const dx = t1.clientX - t2.clientX;
+  const dy = t1.clientY - t2.clientY;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+// Midpoint of two touch points
+function touchMidpoint(t1: { clientX: number; clientY: number }, t2: { clientX: number; clientY: number }): { x: number; y: number } {
+  return { x: (t1.clientX + t2.clientX) / 2, y: (t1.clientY + t2.clientY) / 2 };
+}
+
+const MIN_ZOOM = 1;
+const MAX_ZOOM = 5;
+
 export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing, onPlantSelect }: Garden2DMobileProps) {
   const t = useTranslations('garden3d');
   const locale = useLocale();
   const containerRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   // Garden dimensions for the SVG viewBox
   const gardenL = config.length;
   const gardenW = config.width;
-  // Add padding around the garden (in meters)
   const pad = 0.3;
-  const viewW = gardenL + pad * 2;
-  const viewH = gardenW + pad * 2;
+  const fullW = gardenL + pad * 2;
+  const fullH = gardenW + pad * 2;
 
-  const handlePlantTap = useCallback((index: number) => {
+  // --- Zoom & pan state ---
+  const [zoom, setZoom] = useState(1);
+  const [panX, setPanX] = useState(0); // in SVG units
+  const [panY, setPanY] = useState(0);
+
+  // Derived viewBox
+  const vbW = fullW / zoom;
+  const vbH = fullH / zoom;
+  // Clamp pan so garden stays in view
+  const maxPanX = Math.max(0, (fullW - vbW) / 2);
+  const maxPanY = Math.max(0, (fullH - vbH) / 2);
+  const clampedPanX = Math.max(-maxPanX, Math.min(maxPanX, panX));
+  const clampedPanY = Math.max(-maxPanY, Math.min(maxPanY, panY));
+  const vbX = (fullW - vbW) / 2 + clampedPanX;
+  const vbY = (fullH - vbH) / 2 + clampedPanY;
+
+  // --- Touch gesture tracking refs ---
+  const gestureRef = useRef<{
+    type: 'none' | 'pan' | 'pinch' | 'tap';
+    startX: number;
+    startY: number;
+    startPanX: number;
+    startPanY: number;
+    startZoom: number;
+    startDist: number;
+    startMidX: number;
+    startMidY: number;
+    moved: boolean;
+    lastTapTime: number;
+  }>({
+    type: 'none',
+    startX: 0, startY: 0,
+    startPanX: 0, startPanY: 0,
+    startZoom: 1,
+    startDist: 0,
+    startMidX: 0, startMidY: 0,
+    moved: false,
+    lastTapTime: 0,
+  });
+
+  // Convert screen coordinates to SVG coordinates accounting for zoom/pan
+  const screenToSvg = useCallback((clientX: number, clientY: number) => {
+    const svg = svgRef.current;
+    if (!svg) return { x: 0, y: 0 };
+    const rect = svg.getBoundingClientRect();
+    const relX = (clientX - rect.left) / rect.width;
+    const relY = (clientY - rect.top) / rect.height;
+    return {
+      x: vbX + relX * vbW,
+      y: vbY + relY * vbH,
+    };
+  }, [vbX, vbY, vbW, vbH]);
+
+  // Reset view
+  const resetView = useCallback(() => {
+    setZoom(1);
+    setPanX(0);
+    setPanY(0);
+  }, []);
+
+  // Zoom in/out with buttons
+  const zoomIn = useCallback(() => {
+    setZoom(z => Math.min(MAX_ZOOM, z * 1.4));
+  }, []);
+  const zoomOut = useCallback(() => {
+    setZoom(z => {
+      const newZ = Math.max(MIN_ZOOM, z / 1.4);
+      if (newZ <= 1.05) { setPanX(0); setPanY(0); return 1; }
+      return newZ;
+    });
+  }, []);
+
+  // --- Touch event handlers ---
+  const handleTouchStart = useCallback((e: React.TouchEvent<SVGSVGElement>) => {
+    const g = gestureRef.current;
+    const touches = e.touches;
+
+    if (touches.length === 2) {
+      // Pinch start
+      e.preventDefault();
+      const dist = touchDistance(touches[0], touches[1]);
+      const mid = touchMidpoint(touches[0], touches[1]);
+      g.type = 'pinch';
+      g.startDist = dist;
+      g.startZoom = zoom;
+      g.startPanX = panX;
+      g.startPanY = panY;
+      g.startMidX = mid.x;
+      g.startMidY = mid.y;
+      g.moved = true;
+    } else if (touches.length === 1) {
+      // Could be tap or pan
+      g.type = 'tap';
+      g.startX = touches[0].clientX;
+      g.startY = touches[0].clientY;
+      g.startPanX = panX;
+      g.startPanY = panY;
+      g.startZoom = zoom;
+      g.moved = false;
+    }
+  }, [zoom, panX, panY]);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent<SVGSVGElement>) => {
+    const g = gestureRef.current;
+    const touches = e.touches;
+
+    if (touches.length === 2 && g.type === 'pinch') {
+      e.preventDefault();
+      const dist = touchDistance(touches[0], touches[1]);
+      const scale = dist / g.startDist;
+      const newZoom = Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, g.startZoom * scale));
+
+      // Pan to keep the pinch midpoint stable
+      const mid = touchMidpoint(touches[0], touches[1]);
+      const svg = svgRef.current;
+      if (svg) {
+        const rect = svg.getBoundingClientRect();
+        // How much the midpoint moved in screen pixels
+        const dScreenX = mid.x - g.startMidX;
+        const dScreenY = mid.y - g.startMidY;
+        // Convert screen pixel delta to SVG unit delta at the NEW zoom level
+        const svgPerPixelX = fullW / (newZoom * rect.width);
+        const svgPerPixelY = fullH / (newZoom * rect.height);
+        setZoom(newZoom);
+        setPanX(g.startPanX - dScreenX * svgPerPixelX);
+        setPanY(g.startPanY - dScreenY * svgPerPixelY);
+      } else {
+        setZoom(newZoom);
+      }
+      return;
+    }
+
+    if (touches.length === 1 && (g.type === 'tap' || g.type === 'pan')) {
+      const dx = touches[0].clientX - g.startX;
+      const dy = touches[0].clientY - g.startY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+
+      // Once moved past threshold, switch to pan mode
+      if (dist > 8) {
+        g.moved = true;
+        g.type = 'pan';
+
+        // Only allow pan when zoomed in
+        if (zoom > 1.05) {
+          e.preventDefault();
+          const svg = svgRef.current;
+          if (svg) {
+            const rect = svg.getBoundingClientRect();
+            const svgPerPixelX = fullW / (zoom * rect.width);
+            const svgPerPixelY = fullH / (zoom * rect.height);
+            setPanX(g.startPanX - dx * svgPerPixelX);
+            setPanY(g.startPanY - dy * svgPerPixelY);
+          }
+        }
+      }
+    }
+  }, [zoom, fullW, fullH]);
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent<SVGSVGElement>) => {
+    const g = gestureRef.current;
+
+    // If it was a tap (no significant movement), check for double-tap or pass through
+    if (g.type === 'tap' && !g.moved) {
+      const now = Date.now();
+      if (now - g.lastTapTime < 300) {
+        // Double-tap: toggle zoom
+        if (zoom > 1.2) {
+          resetView();
+        } else {
+          // Zoom into the tap point
+          const touch = e.changedTouches[0];
+          const svgPt = screenToSvg(touch.clientX, touch.clientY);
+          const targetZoom = 2.5;
+          setZoom(targetZoom);
+          // Center the view on the tapped point
+          const newVbW = fullW / targetZoom;
+          const newVbH = fullH / targetZoom;
+          setPanX(svgPt.x - fullW / 2);
+          setPanY(svgPt.y - fullH / 2);
+        }
+        g.lastTapTime = 0; // Reset to avoid triple-tap
+      } else {
+        g.lastTapTime = now;
+      }
+    }
+
+    // If we go from 2 touches to 1, don't start a new pan
+    if (e.touches.length === 0) {
+      g.type = 'none';
+    }
+  }, [zoom, screenToSvg, resetView, fullW, fullH]);
+
+  const handlePlantTap = useCallback((e: React.MouseEvent | React.TouchEvent, index: number) => {
+    // Only handle if it was a real tap (not a pan gesture)
+    const g = gestureRef.current;
+    if (g.moved) return;
+    e.stopPropagation();
     setSelectedIndex(prev => prev === index ? null : index);
     onPlantSelect(index);
   }, [onPlantSelect]);
 
   // Handle tap on empty ground to place a plant
   const handleGroundTap = useCallback((e: React.MouseEvent<SVGRectElement> | React.TouchEvent<SVGRectElement>) => {
+    // Don't plant if we were panning/pinching
+    const g = gestureRef.current;
+    if (g.moved) return;
+
     if (!selectedPlantType) return;
-    const svg = (e.target as SVGElement).closest('svg');
-    if (!svg) return;
 
-    const rect = svg.getBoundingClientRect();
     let clientX: number, clientY: number;
-
-    if ('touches' in e) {
+    if ('touches' in e && e.touches.length > 0) {
       clientX = e.touches[0].clientX;
       clientY = e.touches[0].clientY;
-    } else {
+    } else if ('clientX' in e) {
       clientX = e.clientX;
       clientY = e.clientY;
+    } else {
+      return;
     }
 
-    // Convert screen coords to SVG coords
-    const svgX = ((clientX - rect.left) / rect.width) * viewW - pad;
-    const svgY = ((clientY - rect.top) / rect.height) * viewH - pad;
+    const svgPt = screenToSvg(clientX, clientY);
 
-    // Convert to percentage coordinates
-    const pctX = (svgX / gardenL) * 100;
-    const pctZ = (svgY / gardenW) * 100;
+    // Convert SVG coords to garden percentage
+    const gardenX = svgPt.x - pad;
+    const gardenY = svgPt.y - pad;
+    const pctX = (gardenX / gardenL) * 100;
+    const pctZ = (gardenY / gardenW) * 100;
 
     if (pctX < 0 || pctX > 100 || pctZ < 0 || pctZ > 100) return;
 
     const clampedX = Math.max(2, Math.min(98, pctX));
     const clampedZ = Math.max(2, Math.min(98, pctZ));
 
-    // Dispatch the same event the 3D scene uses
     const event = new CustomEvent('garden:plant', {
       detail: { plantId: selectedPlantType, x: clampedX, z: clampedZ },
     });
     window.dispatchEvent(event);
-  }, [selectedPlantType, gardenL, gardenW, viewW, viewH, pad]);
+  }, [selectedPlantType, gardenL, gardenW, pad, screenToSvg]);
 
   // Grid lines for spacing visualization
   const gridLines = useMemo(() => {
@@ -99,7 +312,6 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
     if (!plant) return null;
     const spacingM = plant.spacingCm / 100;
     const lines: React.ReactNode[] = [];
-    // Vertical lines
     for (let x = 0; x <= gardenL; x += spacingM) {
       lines.push(
         <line
@@ -114,7 +326,6 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
         />
       );
     }
-    // Horizontal lines
     for (let y = 0; y <= gardenW; y += spacingM) {
       lines.push(
         <line
@@ -132,11 +343,14 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
     return lines;
   }, [showSpacing, selectedPlantType, plants, gardenL, gardenW, pad]);
 
+  const isZoomed = zoom > 1.05;
+
   return (
     <div ref={containerRef} className="w-full h-full relative bg-[#0D1F17] overflow-hidden">
       {/* Mobile 2D label */}
       <div className="absolute top-2 left-2 z-10 px-2 py-1 rounded-md bg-green-900/50 text-green-300/80 text-[10px] font-medium backdrop-blur-sm">
         2D {locale === 'fr' ? 'Vue du dessus' : 'Top View'}
+        {isZoomed && <span className="ml-1 text-green-400/60">{zoom.toFixed(1)}x</span>}
       </div>
 
       {/* Placement mode indicator */}
@@ -150,14 +364,48 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
         ) : null;
       })()}
 
+      {/* Zoom controls */}
+      <div className="absolute bottom-3 right-3 z-10 flex flex-col gap-1.5">
+        <button
+          onClick={zoomIn}
+          className="w-9 h-9 flex items-center justify-center rounded-lg bg-green-900/60 text-green-300/90 backdrop-blur-sm border border-green-700/30 active:bg-green-800/60 transition-colors"
+          aria-label={locale === 'fr' ? 'Zoom avant' : 'Zoom in'}
+        >
+          <ZoomIn className="w-4 h-4" />
+        </button>
+        <button
+          onClick={zoomOut}
+          className="w-9 h-9 flex items-center justify-center rounded-lg bg-green-900/60 text-green-300/90 backdrop-blur-sm border border-green-700/30 active:bg-green-800/60 transition-colors"
+          aria-label={locale === 'fr' ? 'Zoom arrière' : 'Zoom out'}
+        >
+          <ZoomOut className="w-4 h-4" />
+        </button>
+        {isZoomed && (
+          <button
+            onClick={resetView}
+            className="w-9 h-9 flex items-center justify-center rounded-lg bg-green-900/60 text-green-300/90 backdrop-blur-sm border border-green-700/30 active:bg-green-800/60 transition-colors"
+            aria-label={locale === 'fr' ? 'Réinitialiser la vue' : 'Reset view'}
+          >
+            <Maximize2 className="w-4 h-4" />
+          </button>
+        )}
+      </div>
+
+      {/* Gesture hint — shown briefly on first load */}
+      <GestureHint locale={locale} />
+
       <svg
-        viewBox={`0 0 ${viewW} ${viewH}`}
+        ref={svgRef}
+        viewBox={`${vbX} ${vbY} ${vbW} ${vbH}`}
         className="w-full h-full"
         preserveAspectRatio="xMidYMid meet"
-        style={{ touchAction: 'manipulation' }}
+        style={{ touchAction: 'none' }}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         {/* Background */}
-        <rect x={0} y={0} width={viewW} height={viewH} fill="#1a3a2a" />
+        <rect x={0} y={0} width={fullW} height={fullH} fill="#1a3a2a" />
 
         {/* Garden area — grass */}
         <rect
@@ -257,20 +505,16 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
           const isSelected = selectedIndex === index;
           const isHarvestReady = stage === 'harvest';
 
-          // Plant size scales with growth
           const baseR = Math.max(0.08, (plantData.spacingCm / 100) * 0.35);
           const r = baseR * (0.4 + progress * 0.6);
-
-          // Spacing ring
           const spacingR = plantData.spacingCm / 100 / 2;
 
           return (
             <g
               key={`plant-${index}`}
-              onClick={() => handlePlantTap(index)}
+              onClick={(e) => handlePlantTap(e, index)}
               style={{ cursor: 'pointer' }}
             >
-              {/* Spacing ring when showSpacing is on */}
               {showSpacing && (
                 <circle
                   cx={cx}
@@ -283,7 +527,6 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
                 />
               )}
 
-              {/* Selection ring */}
               {isSelected && (
                 <circle
                   cx={cx}
@@ -297,7 +540,6 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
                 </circle>
               )}
 
-              {/* Harvest glow */}
               {isHarvestReady && (
                 <circle
                   cx={cx}
@@ -311,7 +553,6 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
                 </circle>
               )}
 
-              {/* Plant circle */}
               <circle
                 cx={cx}
                 cy={cy}
@@ -322,7 +563,6 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
                 opacity={stage === 'seed' ? 0.5 : 0.85}
               />
 
-              {/* Plant emoji/label */}
               <text
                 x={cx}
                 y={cy + 0.055}
@@ -333,7 +573,6 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
                 {CATEGORY_EMOJI[plantData.category] || '\uD83C\uDF31'}
               </text>
 
-              {/* Plant name label (only when selected) */}
               {isSelected && (
                 <text
                   x={cx}
@@ -374,6 +613,24 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
           {'\u2195'} {gardenW}m
         </text>
       </svg>
+    </div>
+  );
+}
+
+// Ephemeral hint that fades out after 3s — teaches pinch/pan gestures
+function GestureHint({ locale }: { locale: string }) {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(false), 3000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!visible) return null;
+
+  return (
+    <div className="absolute bottom-14 left-1/2 -translate-x-1/2 z-10 px-3 py-1.5 rounded-full bg-black/60 text-white/80 text-[11px] backdrop-blur-sm pointer-events-none animate-pulse whitespace-nowrap">
+      {locale === 'fr' ? 'Pincez pour zoomer \u2022 Glissez pour naviguer' : 'Pinch to zoom \u2022 Drag to pan'}
     </div>
   );
 }
