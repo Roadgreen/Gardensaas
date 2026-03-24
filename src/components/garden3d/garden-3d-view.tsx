@@ -166,8 +166,8 @@ export function Garden3DView() {
   return (
     <div className="h-[calc(100dvh-64px-68px)] md:h-[calc(100dvh-64px)] bg-[#0D1F17] flex flex-col">
       {/* Top bar */}
-      <div className="flex items-center justify-between px-2 sm:px-4 py-2 sm:py-3 border-b border-green-900/30 bg-[#0D1F17]/80 backdrop-blur-sm z-10">
-        <div className="flex items-center gap-2 sm:gap-3">
+      <div className="flex items-center gap-2 px-2 sm:px-4 py-2 sm:py-3 border-b border-green-900/30 bg-[#0D1F17]/80 backdrop-blur-sm z-10">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <Link href="/garden/dashboard">
             <Button variant="ghost" size="sm" className="gap-1 sm:gap-2 px-2 sm:px-3">
               <ArrowLeft className="w-4 h-4" />
@@ -183,11 +183,11 @@ export function Garden3DView() {
             {config.plantedItems.length} {t('plants')}
           </span>
         </div>
-        <div className="flex items-center gap-1.5 sm:gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide ml-auto">
           {/* Garden size */}
           <button
             onClick={() => setShowSizeSelector(v => !v)}
-            className="px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
+            className="shrink-0 px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
             style={{
               background: showSizeSelector ? 'rgba(74, 222, 128, 0.15)' : 'transparent',
               borderColor: showSizeSelector ? 'rgba(74, 222, 128, 0.5)' : 'rgba(74, 222, 128, 0.2)',
@@ -199,7 +199,7 @@ export function Garden3DView() {
           {/* Spacing toggle */}
           <button
             onClick={() => setShowSpacing(v => !v)}
-            className="px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
+            className="shrink-0 px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
             style={{
               background: showSpacing ? 'rgba(168, 85, 247, 0.15)' : 'transparent',
               borderColor: showSpacing ? 'rgba(168, 85, 247, 0.5)' : 'rgba(74, 222, 128, 0.2)',
@@ -214,7 +214,7 @@ export function Garden3DView() {
               if (!v) { setShowRaisedBedPanel(false); setShowSuggestions(false); setInfoPanelPlantIndex(null); }
               return !v;
             })}
-            className="px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
+            className="shrink-0 px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
             style={{
               background: showZonePanel ? 'rgba(74, 222, 128, 0.15)' : 'transparent',
               borderColor: showZonePanel ? 'rgba(74, 222, 128, 0.5)' : 'rgba(74, 222, 128, 0.2)',
@@ -229,7 +229,7 @@ export function Garden3DView() {
               if (!v) { setShowZonePanel(false); setShowSuggestions(false); setInfoPanelPlantIndex(null); }
               return !v;
             })}
-            className="px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
+            className="shrink-0 px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
             style={{
               background: showRaisedBedPanel ? 'rgba(210, 160, 108, 0.15)' : 'transparent',
               borderColor: showRaisedBedPanel ? 'rgba(210, 160, 108, 0.5)' : 'rgba(74, 222, 128, 0.2)',
@@ -244,7 +244,7 @@ export function Garden3DView() {
               if (!v) { setShowRaisedBedPanel(false); setShowZonePanel(false); }
               return !v;
             })}
-            className="px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
+            className="shrink-0 px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
             style={{
               background: showSuggestions ? 'rgba(251, 191, 36, 0.15)' : 'transparent',
               borderColor: showSuggestions ? 'rgba(251, 191, 36, 0.5)' : 'rgba(74, 222, 128, 0.2)',
@@ -256,7 +256,7 @@ export function Garden3DView() {
           {/* Catalog */}
           <button
             onClick={() => setIsSidebarOpen((v) => !v)}
-            className="px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
+            className="shrink-0 px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
             style={{
               background: isSidebarOpen ? 'rgba(74, 222, 128, 0.15)' : 'transparent',
               borderColor: isSidebarOpen ? 'rgba(74, 222, 128, 0.5)' : 'rgba(74, 222, 128, 0.2)',
@@ -265,7 +265,7 @@ export function Garden3DView() {
           >
             {'\uD83C\uDF3B'} <span className="hidden sm:inline">{t('catalog')}</span>
           </button>
-          <Link href="/garden/planner">
+          <Link href="/garden/planner" className="shrink-0">
             <Button variant="secondary" size="sm" className="gap-1 sm:gap-2 px-2 sm:px-3">
               <Grid3x3 className="w-4 h-4" />
               <span className="hidden sm:inline">{t('planner2d')}</span>

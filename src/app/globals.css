@@ -496,6 +496,15 @@ button, [role="button"], a {
   --plant-panel-height: 55dvh;
 }
 
+/* Hide scrollbar while keeping scroll functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 .plant-info-backdrop {
   display: none;
 }
