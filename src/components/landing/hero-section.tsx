@@ -108,7 +108,7 @@ export function HeroSection() {
               </span>
             </h1>
 
-            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-green-200/60 mb-4 sm:mb-12 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-green-200/60 mb-4 sm:mb-12 max-w-[calc(100vw-2rem)] sm:max-w-xl mx-auto lg:mx-0 leading-relaxed">
               {t('description')}
             </p>
 
@@ -139,7 +139,7 @@ export function HeroSection() {
 
             {/* Trust signals */}
             <motion.div
-              className="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-3"
+              className="flex flex-wrap items-center justify-center lg:justify-start gap-x-3 sm:gap-x-6 gap-y-3"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.8 }}

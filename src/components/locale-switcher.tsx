@@ -70,7 +70,7 @@ export function LocaleSwitcher() {
       <button
         onClick={handleQuickSwitch}
         onContextMenu={(e) => { e.preventDefault(); setIsOpen(!isOpen); }}
-        className={`flex items-center gap-1.5 px-3 py-2 rounded-xl border-2 border-green-400/60 dark:border-green-500/40 bg-white/90 dark:bg-green-900/50 text-gray-800 dark:text-green-100 hover:bg-green-50 dark:hover:bg-green-800/60 hover:border-green-500 dark:hover:border-green-400/60 transition-all duration-200 cursor-pointer text-sm shadow-md hover:shadow-lg hover:scale-105 active:scale-95 ${switching ? 'opacity-70 pointer-events-none' : ''}`}
+        className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-2 rounded-xl border-2 border-green-400/60 dark:border-green-500/40 bg-white/90 dark:bg-green-900/50 text-gray-800 dark:text-green-100 hover:bg-green-50 dark:hover:bg-green-800/60 hover:border-green-500 dark:hover:border-green-400/60 transition-all duration-200 cursor-pointer text-sm shadow-md hover:shadow-lg sm:hover:scale-105 active:scale-95 shrink-0 ${switching ? 'opacity-70 pointer-events-none' : ''}`}
         aria-label={t('switchLanguage')}
         title={`${t('switchLanguage')} - ${t(otherLocale)}`}
       >
@@ -87,7 +87,7 @@ export function LocaleSwitcher() {
 
       {/* Optional dropdown (accessible via right-click) */}
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-44 rounded-xl border border-gray-200 dark:border-green-800/60 bg-white dark:bg-[#142A1E] shadow-xl overflow-hidden z-50 ring-1 ring-black/5 dark:ring-green-500/10 animate-bounce-in">
+        <div className="absolute right-0 mt-2 w-40 sm:w-44 rounded-xl border border-gray-200 dark:border-green-800/60 bg-white dark:bg-[#142A1E] shadow-xl overflow-hidden z-50 ring-1 ring-black/5 dark:ring-green-500/10 animate-bounce-in">
           {['en', 'fr'].map((loc) => (
             <button
               key={loc}
