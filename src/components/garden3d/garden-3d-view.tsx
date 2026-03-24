@@ -146,6 +146,19 @@ export function Garden3DView() {
     setDraggingPlantId(null);
   }, []);
 
+  // Helper: place a plant or open the variety picker if it has varieties/zones/beds
+  const placeOrPickVariety = useCallback(
+    (plantId: string, x: number, z: number) => {
+      const plantData = plants.find(p => p.id === plantId);
+      if (plantData && (plantData.varieties?.length || (config.zones || []).length > 0 || (config.raisedBeds || []).length > 0)) {
+        setVarietyPickerPlant({ plantId, x, z });
+      } else {
+        addPlant(plantId, x, z);
+      }
+    },
+    [plants, config.zones, config.raisedBeds, addPlant]
+  );
+
   const handleDrop = useCallback(
     (relX: number, relY: number) => {
       const plantId = draggingPlantId || selectedPlantType;
@@ -154,11 +167,11 @@ export function Garden3DView() {
       const pctZ = relY * 100;
       const clampedX = Math.max(5, Math.min(95, pctX));
       const clampedZ = Math.max(5, Math.min(95, pctZ));
-      addPlant(plantId, clampedX, clampedZ);
+      placeOrPickVariety(plantId, clampedX, clampedZ);
       setIsDragging(false);
       setDraggingPlantId(null);
     },
-    [draggingPlantId, selectedPlantType, addPlant]
+    [draggingPlantId, selectedPlantType, placeOrPickVariety]
   );
 
   // Touch drag handlers for mobile
@@ -192,7 +205,7 @@ export function Garden3DView() {
           const pctZ = relY * 100;
           const clampedX = Math.max(5, Math.min(95, pctX));
           const clampedZ = Math.max(5, Math.min(95, pctZ));
-          addPlant(touchDragPlantId, clampedX, clampedZ);
+          placeOrPickVariety(touchDragPlantId, clampedX, clampedZ);
         }
       }
       setTouchDragPlantId(null);
@@ -207,7 +220,7 @@ export function Garden3DView() {
       document.removeEventListener('touchmove', handleTouchMove);
       document.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [touchDragPlantId, addPlant]);
+  }, [touchDragPlantId, placeOrPickVariety]);
 
   // Determine info panel plant
   const infoPanelItem = infoPanelPlantIndex !== null ? config.plantedItems[infoPanelPlantIndex] : null;

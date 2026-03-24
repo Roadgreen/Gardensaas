@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import type { Plant, PlantVariety, GardenZone, RaisedBed } from '@/types';
+import { PlantImage } from '@/components/plants/plant-image';
 
 interface VarietyPickerProps {
   plant: Plant;
@@ -69,18 +70,16 @@ export function VarietyPicker({ plant, zones, raisedBeds, onConfirm, onCancel }:
       <div style={panelStyle}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-          <div style={{
-            width: '44px', height: '44px', borderRadius: '10px',
-            background: `linear-gradient(135deg, ${selectedVarietyData?.color || plant.color}, ${selectedVarietyData?.color || plant.color}88)`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            border: '2px solid rgba(255,255,255,0.2)',
-            fontSize: '20px',
-          }}>
-            {plant.category === 'vegetable' ? '\uD83E\uDD66' :
-             plant.category === 'herb' ? '\uD83C\uDF3F' :
-             plant.category === 'fruit' ? '\uD83C\uDF53' :
-             plant.category === 'root' ? '\uD83E\uDD55' : '\uD83C\uDF31'}
-          </div>
+          <PlantImage
+            plantId={plant.id}
+            plantName={plant.name.en}
+            emoji={plant.category === 'vegetable' ? '\uD83E\uDD66' :
+                   plant.category === 'herb' ? '\uD83C\uDF3F' :
+                   plant.category === 'fruit' ? '\uD83C\uDF53' :
+                   plant.category === 'root' ? '\uD83E\uDD55' : '\uD83C\uDF31'}
+            color={selectedVarietyData?.color || plant.color}
+            size="sm"
+          />
           <div style={{ flex: 1 }}>
             <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#86EFAC' }}>
               {t('plantingTitle', { name: locale === 'fr' ? plant.name.fr : plant.name.en })}
