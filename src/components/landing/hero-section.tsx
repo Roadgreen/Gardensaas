@@ -79,7 +79,7 @@ export function HeroSection() {
       {/* Central glow - dark mode */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] rounded-full bg-gradient-to-br from-green-900/20 via-emerald-900/15 to-yellow-900/10 blur-3xl pointer-events-none hidden dark:block" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 py-6 md:py-16">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 pt-6 pb-20 md:pt-16 md:pb-28">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* Left column - Text */}
           <motion.div
