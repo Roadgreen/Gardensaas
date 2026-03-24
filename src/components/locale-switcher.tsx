@@ -3,11 +3,35 @@
 import { useLocale, useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-import { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 
-const FLAG_EMOJI: Record<string, string> = {
-  en: '\uD83C\uDDEC\uD83C\uDDE7',
-  fr: '\uD83C\uDDEB\uD83C\uDDF7',
+function FlagGB({ size = 20 }: { size?: number }) {
+  const h = Math.round(size * 0.75);
+  return (
+    <svg width={size} height={h} viewBox="0 0 60 40" className="rounded-sm inline-block shrink-0" aria-hidden="true">
+      <rect width="60" height="40" fill="#012169"/>
+      <path d="M0,0 L60,40 M60,0 L0,40" stroke="white" strokeWidth="8"/>
+      <path d="M0,0 L60,40 M60,0 L0,40" stroke="#C8102E" strokeWidth="5"/>
+      <path d="M30,0 V40 M0,20 H60" stroke="white" strokeWidth="13"/>
+      <path d="M30,0 V40 M0,20 H60" stroke="#C8102E" strokeWidth="8"/>
+    </svg>
+  );
+}
+
+function FlagFR({ size = 20 }: { size?: number }) {
+  const h = Math.round(size * 0.75);
+  return (
+    <svg width={size} height={h} viewBox="0 0 60 40" className="rounded-sm inline-block shrink-0" aria-hidden="true">
+      <rect width="20" height="40" fill="#002395"/>
+      <rect x="20" width="20" height="40" fill="white"/>
+      <rect x="40" width="20" height="40" fill="#ED2939"/>
+    </svg>
+  );
+}
+
+const FLAG_COMPONENTS: Record<string, ({ size }: { size?: number }) => React.ReactElement> = {
+  en: FlagGB,
+  fr: FlagFR,
 };
 
 const localeLabels: Record<string, string> = {
@@ -64,6 +88,9 @@ export function LocaleSwitcher() {
     switchLocale(otherLocale);
   }, [otherLocale, switchLocale]);
 
+  const CurrentFlag = FLAG_COMPONENTS[locale];
+  const OtherFlag = FLAG_COMPONENTS[otherLocale];
+
   return (
     <div className="relative" ref={ref}>
       {/* Main toggle button - highly visible with flag */}
@@ -74,21 +101,19 @@ export function LocaleSwitcher() {
         aria-label={t('switchLanguage')}
         title={`${t('switchLanguage')} - ${t(otherLocale)}`}
       >
-        <span className="text-base leading-none" role="img" aria-label={locale === 'en' ? 'British flag' : 'French flag'}>
-          {FLAG_EMOJI[locale]}
-        </span>
+        {CurrentFlag && <CurrentFlag size={18} />}
         <span className="font-bold tracking-wide text-xs">{localeLabels[locale]}</span>
         <span className="text-green-400 dark:text-green-500/70 text-xs font-medium mx-0.5">{'\u2192'}</span>
-        <span className="text-base leading-none" role="img" aria-label={otherLocale === 'en' ? 'British flag' : 'French flag'}>
-          {FLAG_EMOJI[otherLocale]}
-        </span>
+        {OtherFlag && <OtherFlag size={18} />}
         <span className="font-medium tracking-wide text-xs text-gray-500 dark:text-green-400/60">{localeLabels[otherLocale]}</span>
       </button>
 
       {/* Optional dropdown (accessible via right-click) */}
       {isOpen && (
         <div className="absolute right-0 mt-2 w-40 sm:w-44 rounded-xl border border-gray-200 dark:border-green-800/60 bg-white dark:bg-[#142A1E] shadow-xl overflow-hidden z-50 ring-1 ring-black/5 dark:ring-green-500/10 animate-bounce-in">
-          {['en', 'fr'].map((loc) => (
+          {(['en', 'fr'] as const).map((loc) => {
+            const LocFlag = FLAG_COMPONENTS[loc];
+            return (
             <button
               key={loc}
               onClick={() => switchLocale(loc)}
@@ -98,13 +123,14 @@ export function LocaleSwitcher() {
                   : 'text-gray-600 dark:text-green-400/70 hover:bg-gray-50 dark:hover:bg-green-900/30 hover:text-gray-900 dark:hover:text-green-200'
               }`}
             >
-              <span className="text-lg leading-none">{FLAG_EMOJI[loc]}</span>
+              {LocFlag && <LocFlag size={20} />}
               <span className="flex-1">{t(loc)}</span>
               {locale === loc && (
                 <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse-glow" />
               )}
             </button>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
