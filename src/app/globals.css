@@ -171,7 +171,7 @@ body {
 /* Smooth scroll */
 html {
   scroll-behavior: smooth;
-  height: 100dvh;
+  min-height: 100dvh;
 }
 
 body {
@@ -436,11 +436,11 @@ body {
 /* Prevent horizontal overflow on all screens */
 /* NOTE: overflow-x: hidden on html/body can break position:fixed children in
    mobile WebKit.  Use clip instead so fixed elements (e.g. BottomNav) still
-   anchor to the viewport. */
-html {
-  max-width: 100vw;
-  overflow-x: clip;
-}
+   anchor to the viewport.
+   IMPORTANT: overflow-x: clip must NOT be set on html — per CSS spec, when one
+   axis is clip and the other is visible, both axes become clip.  Combined with
+   a fixed height this clips all content below the fold on mobile.  Keeping clip
+   on body only is sufficient to prevent horizontal overflow. */
 body {
   max-width: 100vw;
   overflow-x: clip;
