@@ -83,9 +83,7 @@ export default async function RootLayout({
               <main className="pt-16 pb-[calc(env(safe-area-inset-bottom,0px)+80px)] md:pb-0">
                 {children}
               </main>
-              <div className="hidden md:block">
-                <Footer />
-              </div>
+              <Footer />
               <ScrollToTop />
             </ThemeProvider>
             {/* BottomNav is intentionally outside ThemeProvider to prevent the SSR

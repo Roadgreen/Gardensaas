@@ -21,7 +21,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="py-16 px-6 transition-colors duration-200" style={{ background: 'var(--surface-container-low)' }}>
+    <footer className="pt-16 pb-28 md:pb-16 px-6 transition-colors duration-200" style={{ background: 'var(--surface-container-low)' }}>
       <div className="max-w-6xl mx-auto">
         <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
           {/* Brand + newsletter */}
