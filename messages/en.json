@@ -581,7 +581,32 @@
     "plants": "plants",
     "beds": "beds",
     "spacing": "Spacing",
-    "catalog": "Catalog",
+    "catalog": {
+      "title": "Plant Catalog",
+      "subtitle": "Drag plants onto your garden or click to select",
+      "searchPlaceholder": "Search plants...",
+      "plantsFound": "{count} plants found",
+      "harvestDays": "{days}d",
+      "spacing": "{cm}cm",
+      "clickToPlant": "Click on garden soil to plant!",
+      "sunNeeds": "Sun needs",
+      "watering": "Watering",
+      "daysToHarvest": "{days} days",
+      "heightLabel": "{cm}cm tall",
+      "betweenPlants": "between plants",
+      "betweenRows": "between rows",
+      "placingPlant": "Placing plant",
+      "depthLabel": "Depth",
+      "gridSnap": "Grid snap",
+      "dropToPlant": "Drop to plant here!",
+      "all": "All",
+      "vegetable": "Vegetables",
+      "herb": "Herbs",
+      "fruit": "Fruits",
+      "root": "Roots",
+      "ancient": "Heritage",
+      "exotic": "Exotic"
+    },
     "planner2d": "2D Planner",
     "loadingGarden": "Loading garden...",
     "loading3d": "Loading 3D scene...",
@@ -682,32 +707,6 @@
     },
     "zones_label": "Zones",
     "suggestions_label": "Suggestions",
-    "catalog": {
-      "title": "Plant Catalog",
-      "subtitle": "Drag plants onto your garden or click to select",
-      "searchPlaceholder": "Search plants...",
-      "plantsFound": "{count} plants found",
-      "harvestDays": "{days}d",
-      "spacing": "{cm}cm",
-      "clickToPlant": "Click on garden soil to plant!",
-      "sunNeeds": "Sun needs",
-      "watering": "Watering",
-      "daysToHarvest": "{days} days",
-      "heightLabel": "{cm}cm tall",
-      "betweenPlants": "between plants",
-      "betweenRows": "between rows",
-      "placingPlant": "Placing plant",
-      "depthLabel": "Depth",
-      "gridSnap": "Grid snap",
-      "dropToPlant": "Drop to plant here!",
-      "all": "All",
-      "vegetable": "Vegetables",
-      "herb": "Herbs",
-      "fruit": "Fruits",
-      "root": "Roots",
-      "ancient": "Heritage",
-      "exotic": "Exotic"
-    },
     "infoPanel": {
       "growthProgress": "Growth Progress",
       "day": "Day {current}/{total}",
@@ -797,9 +796,18 @@
       "gotIt": "Got it!"
     },
     "months": {
-      "jan": "Jan", "feb": "Feb", "mar": "Mar", "apr": "Apr",
-      "may": "May", "jun": "Jun", "jul": "Jul", "aug": "Aug",
-      "sep": "Sep", "oct": "Oct", "nov": "Nov", "dec": "Dec"
+      "jan": "Jan",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Apr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Aug",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Dec"
     },
     "categories": {
       "vegetable": "Vegetable",
@@ -819,22 +827,70 @@
     },
     "gardener": {
       "morning": {
-        "spring": ["Good morning! The spring air is perfect for planting!", "Early bird gets the worm! Let's check on our seedlings!", "What a beautiful spring morning! Time to tend the garden!"],
-        "summer": ["Rise and shine! Water the plants before it gets too hot!", "Good morning! The tomatoes are looking great today!", "Let's get an early start before the summer heat kicks in!"],
-        "autumn": ["Good morning! Time to harvest those pumpkins!", "The autumn leaves are so pretty! Let's gather the harvest!", "Morning! Don't forget to prepare beds for winter."],
-        "winter": ["Brr! Good morning! Let's plan for spring planting!", "A quiet winter morning. Perfect for garden planning!", "Morning! Time to check the compost and dream of spring."]
+        "spring": [
+          "Good morning! The spring air is perfect for planting!",
+          "Early bird gets the worm! Let's check on our seedlings!",
+          "What a beautiful spring morning! Time to tend the garden!"
+        ],
+        "summer": [
+          "Rise and shine! Water the plants before it gets too hot!",
+          "Good morning! The tomatoes are looking great today!",
+          "Let's get an early start before the summer heat kicks in!"
+        ],
+        "autumn": [
+          "Good morning! Time to harvest those pumpkins!",
+          "The autumn leaves are so pretty! Let's gather the harvest!",
+          "Morning! Don't forget to prepare beds for winter."
+        ],
+        "winter": [
+          "Brr! Good morning! Let's plan for spring planting!",
+          "A quiet winter morning. Perfect for garden planning!",
+          "Morning! Time to check the compost and dream of spring."
+        ]
       },
       "afternoon": {
-        "spring": ["The bees are busy! Great sign for pollination!", "Spring showers help everything grow! Keep planting!", "Lovely afternoon! The garden is coming alive!"],
-        "summer": ["Hot afternoon! Make sure everything is well-watered!", "The garden is thriving in this summer sun!", "Check for pests - they love warm afternoons!"],
-        "autumn": ["Beautiful autumn afternoon! The colors are amazing!", "Perfect weather for composting fallen leaves!", "Afternoon harvest time! Everything smells wonderful!"],
-        "winter": ["A crisp winter afternoon. Cozy up with seed catalogs!", "The garden is sleeping. Planning time!", "Winter mulch keeps the soil happy and warm!"]
+        "spring": [
+          "The bees are busy! Great sign for pollination!",
+          "Spring showers help everything grow! Keep planting!",
+          "Lovely afternoon! The garden is coming alive!"
+        ],
+        "summer": [
+          "Hot afternoon! Make sure everything is well-watered!",
+          "The garden is thriving in this summer sun!",
+          "Check for pests - they love warm afternoons!"
+        ],
+        "autumn": [
+          "Beautiful autumn afternoon! The colors are amazing!",
+          "Perfect weather for composting fallen leaves!",
+          "Afternoon harvest time! Everything smells wonderful!"
+        ],
+        "winter": [
+          "A crisp winter afternoon. Cozy up with seed catalogs!",
+          "The garden is sleeping. Planning time!",
+          "Winter mulch keeps the soil happy and warm!"
+        ]
       },
       "evening": {
-        "spring": ["What a productive day! The garden looks great!", "Evening watering is perfect on dry spring days!", "The sunset over the garden is so peaceful."],
-        "summer": ["The evening breeze feels so nice! Great gardening today!", "Summer evenings are the best in the garden!", "Time to relax and enjoy the garden view!"],
-        "autumn": ["Golden hour in the autumn garden. Simply magical!", "What a harvest day! Time to rest, gardener!", "The evening air smells like fallen leaves. So cozy!"],
-        "winter": ["Early sunset. Time to head inside and stay warm!", "A quiet winter evening. Spring will be here before we know it!", "Good night, garden! See you tomorrow!"]
+        "spring": [
+          "What a productive day! The garden looks great!",
+          "Evening watering is perfect on dry spring days!",
+          "The sunset over the garden is so peaceful."
+        ],
+        "summer": [
+          "The evening breeze feels so nice! Great gardening today!",
+          "Summer evenings are the best in the garden!",
+          "Time to relax and enjoy the garden view!"
+        ],
+        "autumn": [
+          "Golden hour in the autumn garden. Simply magical!",
+          "What a harvest day! Time to rest, gardener!",
+          "The evening air smells like fallen leaves. So cozy!"
+        ],
+        "winter": [
+          "Early sunset. Time to head inside and stay warm!",
+          "A quiet winter evening. Spring will be here before we know it!",
+          "Good night, garden! See you tomorrow!"
+        ]
       },
       "advice": [
         "Water early in the morning for best results!",
@@ -899,5 +955,32 @@
     "en": "English",
     "fr": "Français",
     "switchLanguage": "Language"
+  },
+  "plantDetail": {
+    "backToAll": "All plants",
+    "plantNow": "Plant now",
+    "watering": "Watering",
+    "sun": "Sun",
+    "harvest": "Harvest",
+    "spacing": "Spacing",
+    "days": "{count} days",
+    "fullSun": "Full sun",
+    "partialShade": "Partial shade",
+    "shade": "Shade",
+    "plantingDetails": "Planting details",
+    "sowingDepth": "Sowing depth",
+    "matureHeight": "Mature height",
+    "soilTypes": "Soil types",
+    "difficultyLabel": "Difficulty",
+    "visualCalendar": "Visual calendar",
+    "sowing": "Sowing",
+    "companions": "Good neighbors",
+    "noCompanions": "No companions listed.",
+    "enemies": "Keep apart",
+    "noEnemies": "Gets along with everyone!",
+    "growingTips": "Growing tips",
+    "easy": "Easy",
+    "medium": "Medium",
+    "hard": "Hard"
   }
 }

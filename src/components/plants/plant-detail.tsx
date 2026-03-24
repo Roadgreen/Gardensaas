@@ -26,7 +26,7 @@ import {
   getEnemyPlants,
 } from '@/lib/garden-utils';
 import { MONTH_NAMES } from '@/types';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 interface PlantDetailProps {
   plant: Plant;
@@ -52,19 +52,21 @@ function getPlantEmoji(id: string): string {
 
 const monthSeasonEmojis = ['\u2744\uFE0F', '\u2744\uFE0F', '\uD83C\uDF38', '\uD83C\uDF38', '\uD83C\uDF38', '\u2600\uFE0F', '\u2600\uFE0F', '\u2600\uFE0F', '\uD83C\uDF42', '\uD83C\uDF42', '\uD83C\uDF42', '\u2744\uFE0F'];
 
-const difficultyMeta: Record<string, { label: string; emoji: string }> = {
-  easy: { label: 'Facile', emoji: '\uD83D\uDE0A' },
-  medium: { label: 'Moyen', emoji: '\uD83D\uDCAA' },
-  hard: { label: 'Difficile', emoji: '\uD83D\uDD25' },
+const difficultyEmojis: Record<string, string> = {
+  easy: '\uD83D\uDE0A',
+  medium: '\uD83D\uDCAA',
+  hard: '\uD83D\uDD25',
 };
 
 export function PlantDetail({ plant }: PlantDetailProps) {
   const locale = useLocale();
+  const t = useTranslations('plantDetail');
   const plantable = isPlantableNow(plant);
   const companions = getCompanionPlants(plant.id);
   const enemies = getEnemyPlants(plant.id);
   const emoji = getPlantEmoji(plant.id);
-  const diff = difficultyMeta[plant.difficulty] || difficultyMeta.easy;
+  const diffEmoji = difficultyEmojis[plant.difficulty] || difficultyEmojis.easy;
+  const diffLabel = t(plant.difficulty as 'easy' | 'medium' | 'hard');
 
   return (
     <div className="min-h-screen bg-[#0D1F17] py-8 px-6">
@@ -72,7 +74,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
         <Link href="/plants">
           <Button variant="ghost" size="sm" className="mb-6 gap-2">
             <ArrowLeft className="w-4 h-4" />
-            Toutes les plantes
+            {t('backToAll')}
           </Button>
         </Link>
 
@@ -107,7 +109,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
                     backgroundColor: getDifficultyColor(plant.difficulty) + '20',
                   }}
                 >
-                  {diff.emoji} {diff.label}
+                  {diffEmoji} {diffLabel}
                 </span>
                 <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-900/50 text-green-300 capitalize">
                   {plant.category}
@@ -115,7 +117,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
                 {plantable && (
                   <span className="px-3 py-1 rounded-full text-sm font-medium bg-green-600/30 text-green-300 border border-green-600/40 flex items-center gap-1">
                     <Sprout className="w-3.5 h-3.5" />
-                    A planter maintenant
+                    {t('plantNow')}
                   </span>
                 )}
               </div>
@@ -132,10 +134,10 @@ export function PlantDetail({ plant }: PlantDetailProps) {
           {/* Quick stats grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             {[
-              { icon: Droplets, emoji: '\uD83D\uDCA7', label: 'Arrosage', value: getWateringLabel(plant.wateringFrequency), color: 'text-blue-400' },
-              { icon: Sun, emoji: '\u2600\uFE0F', label: 'Soleil', value: plant.sunExposure.map(s => s === 'full-sun' ? 'Plein soleil' : s === 'partial-shade' ? 'Mi-ombre' : 'Ombre').join(', '), color: 'text-yellow-400' },
-              { icon: Clock, emoji: '\u23F0', label: 'Recolte', value: `${plant.harvestDays} jours`, color: 'text-orange-400' },
-              { icon: Ruler, emoji: '\uD83D\uDCCF', label: 'Espacement', value: `${plant.spacingCm} cm`, color: 'text-green-400' },
+              { icon: Droplets, emoji: '\uD83D\uDCA7', label: t('watering'), value: getWateringLabel(plant.wateringFrequency), color: 'text-blue-400' },
+              { icon: Sun, emoji: '\u2600\uFE0F', label: t('sun'), value: plant.sunExposure.map(s => s === 'full-sun' ? t('fullSun') : s === 'partial-shade' ? t('partialShade') : t('shade')).join(', '), color: 'text-yellow-400' },
+              { icon: Clock, emoji: '\u23F0', label: t('harvest'), value: t('days', { count: plant.harvestDays }), color: 'text-orange-400' },
+              { icon: Ruler, emoji: '\uD83D\uDCCF', label: t('spacing'), value: `${plant.spacingCm} cm`, color: 'text-green-400' },
             ].map((stat) => (
               <Card key={stat.label}>
                 <div className="flex flex-col items-center text-center">
@@ -152,27 +154,27 @@ export function PlantDetail({ plant }: PlantDetailProps) {
             <Card>
               <CardTitle className="flex items-center gap-2 mb-3">
                 <span className="text-lg">{'\uD83C\uDF31'}</span>
-                Details de plantation
+                {t('plantingDetails')}
               </CardTitle>
               <CardContent>
                 <div className="space-y-3 text-sm">
                   <div className="flex justify-between items-center p-2 rounded-lg bg-[#0D1F17]/40">
-                    <span className="text-green-300/60">Profondeur de semis</span>
+                    <span className="text-green-300/60">{t('sowingDepth')}</span>
                     <span className="text-green-100 font-medium">{plant.depthCm} cm</span>
                   </div>
                   <div className="flex justify-between items-center p-2 rounded-lg bg-[#0D1F17]/40">
-                    <span className="text-green-300/60">Hauteur a maturite</span>
+                    <span className="text-green-300/60">{t('matureHeight')}</span>
                     <span className="text-green-100 font-medium">{plant.heightCm} cm</span>
                   </div>
                   <div className="flex justify-between items-center p-2 rounded-lg bg-[#0D1F17]/40">
-                    <span className="text-green-300/60">Types de sol</span>
+                    <span className="text-green-300/60">{t('soilTypes')}</span>
                     <span className="text-green-100 font-medium capitalize">
                       {plant.soilTypes.join(', ')}
                     </span>
                   </div>
                   <div className="flex justify-between items-center p-2 rounded-lg bg-[#0D1F17]/40">
-                    <span className="text-green-300/60">Difficulte</span>
-                    <span className="text-green-100 font-medium">{diff.emoji} {diff.label}</span>
+                    <span className="text-green-300/60">{t('difficultyLabel')}</span>
+                    <span className="text-green-100 font-medium">{diffEmoji} {diffLabel}</span>
                   </div>
                 </div>
               </CardContent>
@@ -181,7 +183,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
             <Card>
               <CardTitle className="flex items-center gap-2 mb-3">
                 <span className="text-lg">{'\uD83D\uDCC5'}</span>
-                Calendrier visuel
+                {t('visualCalendar')}
               </CardTitle>
               <CardContent>
                 <div className="grid grid-cols-4 gap-2">
@@ -205,7 +207,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
                           {MONTH_NAMES[month - 1].slice(0, 3)}
                         </span>
                         {active && (
-                          <span className="block text-[10px] mt-0.5 text-green-400">{'\u2713'} Semis</span>
+                          <span className="block text-[10px] mt-0.5 text-green-400">{'\u2713'} {t('sowing')}</span>
                         )}
                       </motion.div>
                     );
@@ -221,7 +223,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
               <CardTitle className="flex items-center gap-2 mb-3">
                 <Heart className="w-5 h-5 text-green-400" />
                 <span className="text-lg">{'\uD83E\uDD1D'}</span>
-                Bons voisins
+                {t('companions')}
               </CardTitle>
               <CardContent>
                 {companions.length > 0 ? (
@@ -239,7 +241,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-green-500/50">Pas de compagnons listes.</p>
+                  <p className="text-sm text-green-500/50">{t('noCompanions')}</p>
                 )}
                 {plant.companionPlants.filter(id => !companions.find(c => c.id === id)).length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-3">
@@ -257,7 +259,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
               <CardTitle className="flex items-center gap-2 mb-3">
                 <ShieldAlert className="w-5 h-5 text-red-400" />
                 <span className="text-lg">{'\u26A0\uFE0F'}</span>
-                A eloigner
+                {t('enemies')}
               </CardTitle>
               <CardContent>
                 {enemies.length > 0 ? (
@@ -275,7 +277,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-green-500/50">S'entend bien avec tout le monde !</p>
+                  <p className="text-sm text-green-500/50">{t('noEnemies')}</p>
                 )}
                 {plant.enemyPlants.filter(id => !enemies.find(e => e.id === id)).length > 0 && (
                   <div className="flex flex-wrap gap-2 mt-3">
@@ -294,7 +296,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
           <Card>
             <CardTitle className="mb-4 flex items-center gap-2">
               <span className="text-lg">{'\uD83D\uDCA1'}</span>
-              Conseils de culture
+              {t('growingTips')}
             </CardTitle>
             <CardContent>
               <ul className="space-y-3">

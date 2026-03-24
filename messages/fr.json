@@ -581,7 +581,32 @@
     "plants": "plantes",
     "beds": "bacs",
     "spacing": "Espacement",
-    "catalog": "Catalogue",
+    "catalog": {
+      "title": "Catalogue de plantes",
+      "subtitle": "Glissez les plantes sur votre jardin ou cliquez pour selectionner",
+      "searchPlaceholder": "Rechercher des plantes...",
+      "plantsFound": "{count} plantes trouvees",
+      "harvestDays": "{days}j",
+      "spacing": "{cm}cm",
+      "clickToPlant": "Cliquez sur le sol du jardin pour planter !",
+      "sunNeeds": "Besoin en soleil",
+      "watering": "Arrosage",
+      "daysToHarvest": "{days} jours",
+      "heightLabel": "{cm}cm de haut",
+      "betweenPlants": "entre plantes",
+      "betweenRows": "entre rangs",
+      "placingPlant": "Placement de la plante",
+      "depthLabel": "Profondeur",
+      "gridSnap": "Grille magnétique",
+      "dropToPlant": "Deposez pour planter ici !",
+      "all": "Tout",
+      "vegetable": "Legumes",
+      "herb": "Herbes",
+      "fruit": "Fruits",
+      "root": "Racines",
+      "ancient": "Patrimoine",
+      "exotic": "Exotique"
+    },
     "planner2d": "Planificateur 2D",
     "loadingGarden": "Chargement du jardin...",
     "loading3d": "Chargement de la scène 3D...",
@@ -682,32 +707,6 @@
     },
     "zones_label": "Zones",
     "suggestions_label": "Suggestions",
-    "catalog": {
-      "title": "Catalogue de plantes",
-      "subtitle": "Glissez les plantes sur votre jardin ou cliquez pour selectionner",
-      "searchPlaceholder": "Rechercher des plantes...",
-      "plantsFound": "{count} plantes trouvees",
-      "harvestDays": "{days}j",
-      "spacing": "{cm}cm",
-      "clickToPlant": "Cliquez sur le sol du jardin pour planter !",
-      "sunNeeds": "Besoin en soleil",
-      "watering": "Arrosage",
-      "daysToHarvest": "{days} jours",
-      "heightLabel": "{cm}cm de haut",
-      "betweenPlants": "entre plantes",
-      "betweenRows": "entre rangs",
-      "placingPlant": "Placement de la plante",
-      "depthLabel": "Profondeur",
-      "gridSnap": "Grille magnétique",
-      "dropToPlant": "Deposez pour planter ici !",
-      "all": "Tout",
-      "vegetable": "Legumes",
-      "herb": "Herbes",
-      "fruit": "Fruits",
-      "root": "Racines",
-      "ancient": "Patrimoine",
-      "exotic": "Exotique"
-    },
     "infoPanel": {
       "growthProgress": "Progression de croissance",
       "day": "Jour {current}/{total}",
@@ -797,9 +796,18 @@
       "gotIt": "Compris !"
     },
     "months": {
-      "jan": "Jan", "feb": "Fév", "mar": "Mar", "apr": "Avr",
-      "may": "Mai", "jun": "Juin", "jul": "Juil", "aug": "Août",
-      "sep": "Sep", "oct": "Oct", "nov": "Nov", "dec": "Déc"
+      "jan": "Jan",
+      "feb": "Fév",
+      "mar": "Mar",
+      "apr": "Avr",
+      "may": "Mai",
+      "jun": "Juin",
+      "jul": "Juil",
+      "aug": "Août",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Déc"
     },
     "categories": {
       "vegetable": "Légume",
@@ -814,22 +822,70 @@
     },
     "gardener": {
       "morning": {
-        "spring": ["Bonjour ! L'air printanier est parfait pour planter !", "Le monde appartient à ceux qui se lèvent tôt ! Vérifions nos semis !", "Quelle belle matinée de printemps ! Au jardin !"],
-        "summer": ["Debout ! Arrosons les plantes avant qu'il fasse trop chaud !", "Bonjour ! Les tomates ont fière allure aujourd'hui !", "Commençons tôt avant la chaleur estivale !"],
-        "autumn": ["Bonjour ! C'est l'heure de récolter les citrouilles !", "Les feuilles d'automne sont si jolies ! Récoltons !", "Matin ! N'oubliez pas de préparer les plates-bandes pour l'hiver."],
-        "winter": ["Brr ! Bonjour ! Planifions les plantations de printemps !", "Un matin d'hiver tranquille. Parfait pour planifier le jardin !", "Matin ! L'heure de vérifier le compost et rêver du printemps."]
+        "spring": [
+          "Bonjour ! L'air printanier est parfait pour planter !",
+          "Le monde appartient à ceux qui se lèvent tôt ! Vérifions nos semis !",
+          "Quelle belle matinée de printemps ! Au jardin !"
+        ],
+        "summer": [
+          "Debout ! Arrosons les plantes avant qu'il fasse trop chaud !",
+          "Bonjour ! Les tomates ont fière allure aujourd'hui !",
+          "Commençons tôt avant la chaleur estivale !"
+        ],
+        "autumn": [
+          "Bonjour ! C'est l'heure de récolter les citrouilles !",
+          "Les feuilles d'automne sont si jolies ! Récoltons !",
+          "Matin ! N'oubliez pas de préparer les plates-bandes pour l'hiver."
+        ],
+        "winter": [
+          "Brr ! Bonjour ! Planifions les plantations de printemps !",
+          "Un matin d'hiver tranquille. Parfait pour planifier le jardin !",
+          "Matin ! L'heure de vérifier le compost et rêver du printemps."
+        ]
       },
       "afternoon": {
-        "spring": ["Les abeilles sont occupées ! Bon signe pour la pollinisation !", "Les averses printanières font tout pousser ! Continuons à planter !", "Bel après-midi ! Le jardin prend vie !"],
-        "summer": ["Après-midi chaud ! Assurez-vous que tout est bien arrosé !", "Le jardin s'épanouit sous le soleil d'été !", "Surveillez les nuisibles - ils adorent les après-midi chauds !"],
-        "autumn": ["Magnifique après-midi d'automne ! Les couleurs sont incroyables !", "Temps idéal pour composter les feuilles mortes !", "L'heure de la récolte ! Tout sent bon !"],
-        "winter": ["Un après-midi d'hiver frais. Feuilletons les catalogues de graines !", "Le jardin dort. C'est l'heure de planifier !", "Le paillage d'hiver garde le sol heureux et chaud !"]
+        "spring": [
+          "Les abeilles sont occupées ! Bon signe pour la pollinisation !",
+          "Les averses printanières font tout pousser ! Continuons à planter !",
+          "Bel après-midi ! Le jardin prend vie !"
+        ],
+        "summer": [
+          "Après-midi chaud ! Assurez-vous que tout est bien arrosé !",
+          "Le jardin s'épanouit sous le soleil d'été !",
+          "Surveillez les nuisibles - ils adorent les après-midi chauds !"
+        ],
+        "autumn": [
+          "Magnifique après-midi d'automne ! Les couleurs sont incroyables !",
+          "Temps idéal pour composter les feuilles mortes !",
+          "L'heure de la récolte ! Tout sent bon !"
+        ],
+        "winter": [
+          "Un après-midi d'hiver frais. Feuilletons les catalogues de graines !",
+          "Le jardin dort. C'est l'heure de planifier !",
+          "Le paillage d'hiver garde le sol heureux et chaud !"
+        ]
       },
       "evening": {
-        "spring": ["Quelle journée productive ! Le jardin est superbe !", "L'arrosage du soir est parfait par temps sec au printemps !", "Le coucher de soleil sur le jardin est si paisible."],
-        "summer": ["La brise du soir est si agréable ! Belle journée de jardinage !", "Les soirées d'été au jardin sont les meilleures !", "L'heure de se détendre et profiter du jardin !"],
-        "autumn": ["L'heure dorée dans le jardin d'automne. Tout simplement magique !", "Quelle journée de récolte ! Reposez-vous, jardinier !", "L'air du soir sent les feuilles mortes. Si agréable !"],
-        "winter": ["Coucher de soleil précoce. Rentrons au chaud !", "Une soirée d'hiver tranquille. Le printemps sera vite là !", "Bonne nuit, jardin ! À demain !"]
+        "spring": [
+          "Quelle journée productive ! Le jardin est superbe !",
+          "L'arrosage du soir est parfait par temps sec au printemps !",
+          "Le coucher de soleil sur le jardin est si paisible."
+        ],
+        "summer": [
+          "La brise du soir est si agréable ! Belle journée de jardinage !",
+          "Les soirées d'été au jardin sont les meilleures !",
+          "L'heure de se détendre et profiter du jardin !"
+        ],
+        "autumn": [
+          "L'heure dorée dans le jardin d'automne. Tout simplement magique !",
+          "Quelle journée de récolte ! Reposez-vous, jardinier !",
+          "L'air du soir sent les feuilles mortes. Si agréable !"
+        ],
+        "winter": [
+          "Coucher de soleil précoce. Rentrons au chaud !",
+          "Une soirée d'hiver tranquille. Le printemps sera vite là !",
+          "Bonne nuit, jardin ! À demain !"
+        ]
       },
       "advice": [
         "Arrosez tôt le matin pour de meilleurs résultats !",
@@ -899,5 +955,32 @@
     "en": "English",
     "fr": "Français",
     "switchLanguage": "Langue"
+  },
+  "plantDetail": {
+    "backToAll": "Toutes les plantes",
+    "plantNow": "À planter maintenant",
+    "watering": "Arrosage",
+    "sun": "Soleil",
+    "harvest": "Récolte",
+    "spacing": "Espacement",
+    "days": "{count} jours",
+    "fullSun": "Plein soleil",
+    "partialShade": "Mi-ombre",
+    "shade": "Ombre",
+    "plantingDetails": "Détails de plantation",
+    "sowingDepth": "Profondeur de semis",
+    "matureHeight": "Hauteur à maturité",
+    "soilTypes": "Types de sol",
+    "difficultyLabel": "Difficulté",
+    "visualCalendar": "Calendrier visuel",
+    "sowing": "Semis",
+    "companions": "Bons voisins",
+    "noCompanions": "Pas de compagnons listés.",
+    "enemies": "À éloigner",
+    "noEnemies": "S'entend bien avec tout le monde !",
+    "growingTips": "Conseils de culture",
+    "easy": "Facile",
+    "medium": "Moyen",
+    "hard": "Difficile"
   }
 }
