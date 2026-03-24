@@ -1,9 +1,106 @@
 'use client';
 
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useState, useEffect, Component, type ReactNode } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
+
+// ── Error boundary so a WebGL crash doesn't leave a permanent "Loading…" ──
+class ThreeErrorBoundary extends Component<
+  { children: ReactNode; fallback: ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: ReactNode; fallback: ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  render() {
+    if (this.state.hasError) return this.props.fallback;
+    return this.props.children;
+  }
+}
+
+// ── Pure-CSS 2-D garden preview (no WebGL required) ──
+function Garden2DFallback() {
+  return (
+    <div className="w-full h-full relative flex items-end justify-center overflow-hidden select-none"
+      style={{ background: 'linear-gradient(to bottom, #87CEEB 0%, #B0E0E6 40%, #7EC850 40%, #5C8A2E 100%)' }}>
+      {/* Sun */}
+      <div className="absolute top-3 right-8 w-12 h-12 rounded-full bg-yellow-300 shadow-[0_0_20px_8px_rgba(253,224,71,0.45)]" />
+      {/* Clouds */}
+      <div className="absolute top-4 left-6 flex gap-1 opacity-80">
+        <div className="w-8 h-4 rounded-full bg-white" />
+        <div className="w-10 h-5 rounded-full bg-white -ml-3 -mt-1" />
+        <div className="w-6 h-3 rounded-full bg-white -ml-2" />
+      </div>
+      {/* Raised bed */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-[70%] h-10 rounded bg-[#5C3D1E] border-2 border-[#7B5130]" />
+      {/* Plants row */}
+      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-4 items-end">
+        {[
+          { h: 44, color: '#FF6347', leaf: '#4CAF50' },
+          { h: 36, color: '#90EE90', leaf: '#388E3C' },
+          { h: 52, color: '#9370DB', leaf: '#4CAF50' },
+          { h: 40, color: '#FFD700', leaf: '#388E3C' },
+          { h: 32, color: '#FF69B4', leaf: '#4CAF50' },
+        ].map((p, i) => (
+          <div key={i} className="flex flex-col items-center">
+            <div className="rounded-full shadow-sm" style={{ width: 18, height: 18, background: p.color }} />
+            <div style={{ width: 3, height: p.h * 0.6, background: p.leaf, borderRadius: 2 }} />
+          </div>
+        ))}
+      </div>
+      {/* Trees */}
+      <div className="absolute bottom-12 left-4 flex flex-col items-center">
+        <div className="w-0 h-0" style={{ borderLeft: '14px solid transparent', borderRight: '14px solid transparent', borderBottom: '26px solid #66BB6A' }} />
+        <div className="w-2 h-5 bg-[#795548]" />
+      </div>
+      <div className="absolute bottom-12 right-4 flex flex-col items-center">
+        <div className="w-0 h-0" style={{ borderLeft: '14px solid transparent', borderRight: '14px solid transparent', borderBottom: '26px solid #66BB6A' }} />
+        <div className="w-2 h-5 bg-[#795548]" />
+      </div>
+      {/* Fence */}
+      <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2">
+        {Array.from({ length: 9 }).map((_, i) => (
+          <div key={i} className="w-2 h-6 bg-[#D4A870] rounded-t" />
+        ))}
+      </div>
+      {/* Little gardener */}
+      <div className="absolute bottom-14 right-[22%] flex flex-col items-center">
+        <div className="w-4 h-4 rounded-full bg-[#FFD5B8] border border-[#e0b89a]" />
+        <div className="w-5 h-6 rounded bg-[#4ADE80]" />
+        <div className="flex gap-1">
+          <div className="w-2 h-4 bg-[#5B8C5A] rounded-b" />
+          <div className="w-2 h-4 bg-[#5B8C5A] rounded-b" />
+        </div>
+      </div>
+      {/* Animated butterflies */}
+      <div className="absolute top-[30%] left-[20%] animate-bounce text-pink-400 text-xs">🦋</div>
+      <div className="absolute top-[25%] right-[30%] animate-bounce text-yellow-400 text-xs" style={{ animationDelay: '0.5s' }}>🦋</div>
+      {/* Label */}
+      <div className="absolute top-2 left-2 text-[10px] font-medium text-white/80 bg-black/20 rounded px-1.5 py-0.5">
+        Preview
+      </div>
+    </div>
+  );
+}
+
+// Helper: detect WebGL support
+function isWebGLAvailable(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    const canvas = document.createElement('canvas');
+    return !!(
+      window.WebGLRenderingContext &&
+      (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
+    );
+  } catch {
+    return false;
+  }
+}
 
 function MiniTerrain() {
   return (
@@ -436,34 +533,67 @@ function SpinningScene() {
 }
 
 export function MiniGardenPreview() {
+  const [webGLSupported, setWebGLSupported] = useState<boolean | null>(null);
+  // isMobile: screens narrower than 768px get the lightweight 2-D version
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setWebGLSupported(isWebGLAvailable());
+    setIsMobile(window.innerWidth < 768);
+  }, []);
+
+  const containerClass =
+    'w-full h-[220px] sm:h-[300px] md:h-[350px] rounded-2xl overflow-hidden border-2 border-green-800/40 bg-gradient-to-b from-sky-400/20 to-green-900/20 shadow-lg shadow-green-900/20';
+
+  // Still detecting — show a garden-themed skeleton, not "Loading..."
+  if (webGLSupported === null) {
+    return (
+      <div className={containerClass}>
+        <Garden2DFallback />
+      </div>
+    );
+  }
+
+  // Mobile or no WebGL → 2-D CSS garden
+  if (isMobile || !webGLSupported) {
+    return (
+      <div className={containerClass}>
+        <Garden2DFallback />
+      </div>
+    );
+  }
+
+  // Desktop + WebGL → full Three.js scene wrapped in error boundary
   return (
-    <div className="w-full h-[220px] sm:h-[300px] md:h-[350px] rounded-2xl overflow-hidden border-2 border-green-800/40 bg-gradient-to-b from-sky-400/20 to-green-900/20 shadow-lg shadow-green-900/20">
-      <Canvas
-        shadows
-        camera={{ position: [3.5, 3, 3.5], fov: 40, near: 0.1, far: 50 }}
-        gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.3 }}
-        style={{ background: 'transparent' }}
-      >
-        <ambientLight intensity={0.6} color="#FFE4B5" />
-        <directionalLight
-          position={[4, 6, 3]}
-          intensity={1}
-          color="#FFF8E1"
-          castShadow
-          shadow-mapSize={[512, 512]}
-        />
-        <hemisphereLight args={['#87CEEB', '#4CAF50', 0.3]} />
-        <fog attach="fog" args={['#C8E6C9', 10, 30]} />
+    <div className={containerClass}>
+      <ThreeErrorBoundary fallback={<Garden2DFallback />}>
+        <Canvas
+          shadows
+          camera={{ position: [3.5, 3, 3.5], fov: 40, near: 0.1, far: 50 }}
+          gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.3 }}
+          style={{ background: 'transparent' }}
+        >
+          <ambientLight intensity={0.6} color="#FFE4B5" />
+          <directionalLight
+            position={[4, 6, 3]}
+            intensity={1}
+            color="#FFF8E1"
+            castShadow
+            shadow-mapSize={[512, 512]}
+          />
+          <hemisphereLight args={['#87CEEB', '#4CAF50', 0.3]} />
+          <fog attach="fog" args={['#C8E6C9', 10, 30]} />
 
-        <SpinningScene />
+          <SpinningScene />
 
-        <OrbitControls
-          enablePan={false}
-          enableZoom={false}
-          enableRotate={false}
-          autoRotate={false}
-        />
-      </Canvas>
+          <OrbitControls
+            enablePan={false}
+            enableZoom={false}
+            enableRotate={false}
+            autoRotate={false}
+          />
+        </Canvas>
+      </ThreeErrorBoundary>
     </div>
   );
 }
