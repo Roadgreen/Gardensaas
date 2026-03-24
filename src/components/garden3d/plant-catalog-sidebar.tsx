@@ -84,6 +84,26 @@ export function PlantCatalogSidebar({
 
   return (
     <>
+      {/* Mobile backdrop overlay - dismiss sidebar by tapping outside */}
+      {isOpen && (
+        <div
+          onClick={onToggle}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 25,
+            background: 'rgba(0, 0, 0, 0.5)',
+            display: 'none',
+          }}
+          className="catalog-sidebar-backdrop"
+        />
+      )}
+      <style>{`
+        @media (max-width: 768px) {
+          .catalog-sidebar-backdrop { display: block !important; }
+        }
+      `}</style>
+
       {/* Toggle button */}
       <button
         onClick={onToggle}
