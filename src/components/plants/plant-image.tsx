@@ -8,7 +8,7 @@ interface PlantImageProps {
   plantName: string; // English name for Wikipedia lookup
   emoji: string;
   color: string;
-  size?: 'sm' | 'md';
+  size?: 'sm' | 'md' | 'lg';
 }
 
 // Wikipedia article title overrides for better image results
@@ -87,8 +87,8 @@ export function PlantImage({ plantId, plantName, emoji, color, size = 'md' }: Pl
   const [errored, setErrored] = useState(false);
 
   const wikiTitle = getWikiTitle(plantId, plantName);
-  const sizeClass = size === 'sm' ? 'w-10 h-10' : 'w-12 h-12 sm:w-14 sm:h-14';
-  const roundClass = size === 'sm' ? 'rounded-xl' : 'rounded-xl sm:rounded-2xl';
+  const sizeClass = size === 'lg' ? 'w-24 h-24' : size === 'sm' ? 'w-10 h-10' : 'w-12 h-12 sm:w-14 sm:h-14';
+  const roundClass = size === 'lg' ? 'rounded-3xl' : size === 'sm' ? 'rounded-xl' : 'rounded-xl sm:rounded-2xl';
 
   useEffect(() => {
     let cancelled = false;
@@ -110,19 +110,19 @@ export function PlantImage({ plantId, plantName, emoji, color, size = 'md' }: Pl
         <Image
           src={imgUrl}
           alt={`Photo of ${plantName} plant`}
-          width={size === 'sm' ? 40 : 56}
-          height={size === 'sm' ? 40 : 56}
+          width={size === 'lg' ? 96 : size === 'sm' ? 40 : 56}
+          height={size === 'lg' ? 96 : size === 'sm' ? 40 : 56}
           className={`w-full h-full object-cover transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
           onLoad={() => setLoaded(true)}
           onError={() => setErrored(true)}
           loading="lazy"
-          sizes={size === 'sm' ? '40px' : '56px'}
+          sizes={size === 'lg' ? '96px' : size === 'sm' ? '40px' : '56px'}
         />
       ) : null}
       {/* Emoji shown while loading or on error */}
       {!showImage || !loaded ? (
         <span
-          className={`${size === 'sm' ? 'text-lg' : 'text-xl sm:text-2xl'} absolute`}
+          className={`${size === 'lg' ? 'text-5xl' : size === 'sm' ? 'text-lg' : 'text-xl sm:text-2xl'} absolute`}
           style={showImage ? { opacity: loaded ? 0 : 1 } : undefined}
           role="img"
           aria-label={plantName}

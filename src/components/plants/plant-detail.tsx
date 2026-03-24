@@ -27,6 +27,7 @@ import {
 } from '@/lib/garden-utils';
 import { MONTH_NAMES } from '@/types';
 import { useLocale, useTranslations } from 'next-intl';
+import { PlantImage } from './plant-image';
 
 interface PlantDetailProps {
   plant: Plant;
@@ -86,15 +87,17 @@ export function PlantDetail({ plant }: PlantDetailProps) {
           {/* Header */}
           <div className="flex items-start gap-6 mb-8">
             <motion.div
-              className="w-24 h-24 rounded-3xl flex-shrink-0 flex items-center justify-center shadow-lg"
-              style={{
-                backgroundColor: plant.color + '25',
-                border: `3px solid ${plant.color}60`,
-              }}
+              className="flex-shrink-0 shadow-lg"
               whileHover={{ scale: 1.1, rotate: 5 }}
               transition={{ type: 'spring' }}
             >
-              <span className="text-5xl" role="img" aria-label={locale === 'fr' ? plant.name.fr : plant.name.en}>{emoji}</span>
+              <PlantImage
+                plantId={plant.id}
+                plantName={plant.name.en}
+                emoji={emoji}
+                color={plant.color}
+                size="lg"
+              />
             </motion.div>
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-green-50 mb-1">
@@ -231,10 +234,16 @@ export function PlantDetail({ plant }: PlantDetailProps) {
                     {companions.map((c) => (
                       <Link key={c.id} href={`/plants/${c.id}`}>
                         <motion.div
-                          className="p-3 rounded-xl bg-green-900/30 border border-green-800/30 hover:border-green-600/50 transition-all cursor-pointer flex items-center gap-2"
+                          className="p-3 rounded-xl bg-green-900/30 border border-green-800/30 hover:border-green-600/50 transition-all cursor-pointer flex items-center gap-2 group"
                           whileHover={{ scale: 1.03 }}
                         >
-                          <span className="text-lg" aria-hidden="true">{getPlantEmoji(c.id)}</span>
+                          <PlantImage
+                            plantId={c.id}
+                            plantName={c.name.en}
+                            emoji={getPlantEmoji(c.id)}
+                            color={plant.color}
+                            size="sm"
+                          />
                           <span className="text-sm text-green-200 truncate">{locale === 'fr' ? c.name.fr : c.name.en}</span>
                         </motion.div>
                       </Link>
@@ -267,10 +276,16 @@ export function PlantDetail({ plant }: PlantDetailProps) {
                     {enemies.map((e) => (
                       <Link key={e.id} href={`/plants/${e.id}`}>
                         <motion.div
-                          className="p-3 rounded-xl bg-red-900/20 border border-red-800/20 hover:border-red-600/40 transition-all cursor-pointer flex items-center gap-2"
+                          className="p-3 rounded-xl bg-red-900/20 border border-red-800/20 hover:border-red-600/40 transition-all cursor-pointer flex items-center gap-2 group"
                           whileHover={{ scale: 1.03 }}
                         >
-                          <span className="text-lg" aria-hidden="true">{getPlantEmoji(e.id)}</span>
+                          <PlantImage
+                            plantId={e.id}
+                            plantName={e.name.en}
+                            emoji={getPlantEmoji(e.id)}
+                            color="#ef4444"
+                            size="sm"
+                          />
                           <span className="text-sm text-red-200 truncate">{locale === 'fr' ? e.name.fr : e.name.en}</span>
                         </motion.div>
                       </Link>
