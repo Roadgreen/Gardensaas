@@ -16,6 +16,7 @@ import { VarietyPicker } from './variety-picker';
 import { PlantingSuggestions } from './planting-suggestions';
 import { GardenSizeSelector } from './garden-size-selector';
 import { SpacingInfoOverlay } from './spacing-info-overlay';
+import { Garden2DMobile } from './garden-2d-mobile';
 import type { RaisedBed } from '@/types';
 
 const GardenScene = dynamic(() => import('./garden-scene').then(m => ({ default: m.GardenScene })), {
@@ -66,9 +67,9 @@ export function Garden3DView() {
     return plants.find(p => p.id === selectedPlantType) || null;
   }, [selectedPlantType, plants]);
 
-  // Detect mobile for label clip logic
+  // Detect mobile — used for 2D fallback (<768px) and label clip logic
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 640);
+    const check = () => setIsMobile(window.innerWidth < 768);
     check();
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
@@ -475,28 +476,44 @@ export function Garden3DView() {
           />
         )}
 
-        <Suspense fallback={
-          <div className="w-full h-full flex items-center justify-center bg-[#0D1F17]">
-            <div className="flex flex-col items-center gap-3">
-              <div className="w-10 h-10 rounded-full border-2 border-green-700/40 border-t-green-400 animate-spin" />
-              <span className="text-sm text-green-400/60">{t('loading3d')}</span>
-            </div>
-          </div>
-        }>
-          <GardenScene
+        {/* Mobile: lightweight 2D top-down view — no Three.js overhead */}
+        {isMobile ? (
+          <Garden2DMobile
             config={config}
+            plants={plants}
             selectedPlantType={selectedPlantType}
             showSpacing={showSpacing}
-            selectedBedId={selectedBedId}
-            onSelectBed={setSelectedBedId}
-            selectedZoneId={selectedZoneId}
-            onSelectZone={setSelectedZoneId}
-            locale={locale}
-            onPlantAdded={() => {
-              // Plant was placed via click, handled through events
+            onPlantSelect={(index) => {
+              setInfoPanelPlantIndex(index);
+              setShowRaisedBedPanel(false);
+              setShowZonePanel(false);
+              setShowSizeSelector(false);
             }}
           />
-        </Suspense>
+        ) : (
+          <Suspense fallback={
+            <div className="w-full h-full flex items-center justify-center bg-[#0D1F17]">
+              <div className="flex flex-col items-center gap-3">
+                <div className="w-10 h-10 rounded-full border-2 border-green-700/40 border-t-green-400 animate-spin" />
+                <span className="text-sm text-green-400/60">{t('loading3d')}</span>
+              </div>
+            </div>
+          }>
+            <GardenScene
+              config={config}
+              selectedPlantType={selectedPlantType}
+              showSpacing={showSpacing}
+              selectedBedId={selectedBedId}
+              onSelectBed={setSelectedBedId}
+              selectedZoneId={selectedZoneId}
+              onSelectZone={setSelectedZoneId}
+              locale={locale}
+              onPlantAdded={() => {
+                // Plant was placed via click, handled through events
+              }}
+            />
+          </Suspense>
+        )}
       </div>
 
       {/* Plant info panel — outside the clipped canvas container so the clipPath
