@@ -16,7 +16,7 @@ const panelStyle: React.CSSProperties = {
   top: '12px',
   right: '12px',
   zIndex: 50,
-  width: '360px',
+  width: 'min(calc(100vw - 24px), 360px)',
   maxHeight: 'calc(100vh - 120px)',
   overflowY: 'auto',
   background: 'linear-gradient(145deg, rgba(10, 30, 18, 0.97), rgba(15, 45, 25, 0.97))',
@@ -194,7 +194,7 @@ export function PlantingSuggestions({ config, plants, onClose, onSelectPlant }: 
   };
 
   return (
-    <div style={panelStyle}>
+    <div className="planting-suggestions-panel" style={panelStyle}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
