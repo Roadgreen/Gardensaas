@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
+import { useLocale, useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { useGarden } from '@/lib/hooks';
 import {
@@ -25,7 +26,7 @@ interface Message {
   content: string;
 }
 
-const SUGGESTED_QUESTIONS = [
+const SUGGESTED_QUESTIONS_EN = [
   { text: 'When should I plant tomatoes?', icon: Calendar },
   { text: 'My lettuce is yellowing, what should I do?', icon: Leaf },
   { text: 'Best companion plants for carrots?', icon: Sparkles },
@@ -34,7 +35,16 @@ const SUGGESTED_QUESTIONS = [
   { text: 'What can I plant this month?', icon: Calendar },
 ];
 
-const FOLLOW_UP_QUESTIONS: Record<string, { text: string; icon: typeof Leaf }[]> = {
+const SUGGESTED_QUESTIONS_FR = [
+  { text: 'Quand planter des tomates ?', icon: Calendar },
+  { text: 'Ma laitue jaunit, que faire ?', icon: Leaf },
+  { text: 'Meilleures associations pour les carottes ?', icon: Sparkles },
+  { text: 'Comment lutter contre les pucerons bio ?', icon: Bug },
+  { text: 'Comment améliorer mon sol argileux ?', icon: FlaskConical },
+  { text: 'Que planter ce mois-ci ?', icon: Calendar },
+];
+
+const FOLLOW_UP_QUESTIONS_EN: Record<string, { text: string; icon: typeof Leaf }[]> = {
   planting: [
     { text: 'When to start seeds indoors?', icon: Calendar },
     { text: 'Best soil mix for seedlings?', icon: FlaskConical },
@@ -67,21 +77,59 @@ const FOLLOW_UP_QUESTIONS: Record<string, { text: string; icon: typeof Leaf }[]>
   ],
 };
 
+const FOLLOW_UP_QUESTIONS_FR: Record<string, { text: string; icon: typeof Leaf }[]> = {
+  planting: [
+    { text: 'Quand semer en intérieur ?', icon: Calendar },
+    { text: 'Meilleur terreau pour semis ?', icon: FlaskConical },
+    { text: 'Profondeur de plantation ?', icon: Leaf },
+  ],
+  pests: [
+    { text: 'Et les limaces ?', icon: Bug },
+    { text: 'Recettes de pesticides naturels ?', icon: FlaskConical },
+    { text: 'Comment attirer les insectes utiles ?', icon: Sparkles },
+  ],
+  soil: [
+    { text: 'Comment tester le pH du sol ?', icon: FlaskConical },
+    { text: 'Bon ratio de compost ?', icon: Leaf },
+    { text: 'Quand pailler ?', icon: Calendar },
+  ],
+  watering: [
+    { text: 'Conseils goutte-à-goutte ?', icon: Lightbulb },
+    { text: 'Signes de sur-arrosage ?', icon: Leaf },
+    { text: 'Meilleur moment pour arroser ?', icon: Calendar },
+  ],
+  companion: [
+    { text: 'Quoi ne jamais planter ensemble ?', icon: Bug },
+    { text: 'Méthode des trois sœurs ?', icon: Sparkles },
+    { text: 'Herbes anti-ravageurs ?', icon: Leaf },
+  ],
+  general: [
+    { text: 'Quoi planter ce mois-ci ?', icon: Calendar },
+    { text: 'Comment améliorer mon sol ?', icon: FlaskConical },
+    { text: 'Astuces petit jardin ?', icon: Lightbulb },
+  ],
+};
+
+function getSuggestedQuestions(locale: string) {
+  return locale === 'fr' ? SUGGESTED_QUESTIONS_FR : SUGGESTED_QUESTIONS_EN;
+}
+
 function detectTopic(text: string): string {
   const lower = text.toLowerCase();
-  if (/plant|sow|seed|germin|transplant/.test(lower)) return 'planting';
-  if (/pest|aphid|bug|slug|insect|disease/.test(lower)) return 'pests';
-  if (/soil|compost|mulch|fertil/.test(lower)) return 'soil';
-  if (/water|irrigat|drought/.test(lower)) return 'watering';
-  if (/companion|associat|together|guild/.test(lower)) return 'companion';
+  if (/plant|sow|seed|sem|germin|transplant/.test(lower)) return 'planting';
+  if (/pest|aphid|bug|slug|insect|pucer|limace|ravageur|maladie|disease/.test(lower)) return 'pests';
+  if (/soil|compost|mulch|fertil|sol|terre|paill|engrais/.test(lower)) return 'soil';
+  if (/water|irrigat|arros|drought|sécheresse|goutte/.test(lower)) return 'watering';
+  if (/companion|associat|together|guild|ensemble|voisin/.test(lower)) return 'companion';
   return 'general';
 }
 
-function getFollowUpQuestions(lastMessage: string): { text: string; icon: typeof Leaf }[] {
+function getFollowUpQuestions(lastMessage: string, locale: string): { text: string; icon: typeof Leaf }[] {
   const topic = detectTopic(lastMessage);
-  const topicQuestions = FOLLOW_UP_QUESTIONS[topic] || FOLLOW_UP_QUESTIONS.general;
+  const pool = locale === 'fr' ? FOLLOW_UP_QUESTIONS_FR : FOLLOW_UP_QUESTIONS_EN;
+  const topicQuestions = pool[topic] || pool.general;
   if (topic !== 'general') {
-    const general = FOLLOW_UP_QUESTIONS.general;
+    const general = pool.general;
     return [...topicQuestions.slice(0, 2), general[Math.floor(Math.random() * general.length)]];
   }
   return topicQuestions;
@@ -91,7 +139,7 @@ function TypingIndicator() {
   return (
     <div className="flex items-start gap-3">
       <div className="w-9 h-9 rounded-full bg-gradient-to-br from-green-700 to-emerald-800 flex items-center justify-center shrink-0 text-base shadow-lg shadow-green-900/30">
-        <span>&#x1F9D1;&#x200D;&#x1F33E;</span>
+        <span aria-hidden="true">&#x1F9D1;&#x200D;&#x1F33E;</span>
       </div>
       <div className="bg-[#1A2F23] border border-green-800/30 rounded-2xl rounded-bl-md px-4 py-3">
         <div className="flex items-center gap-1.5">
@@ -109,7 +157,7 @@ function TypingIndicator() {
   );
 }
 
-function MessageBubble({ message }: { message: Message }) {
+function MessageBubble({ message, youLabel }: { message: Message; youLabel: string }) {
   const isUser = message.role === 'user';
 
   return (
@@ -121,12 +169,12 @@ function MessageBubble({ message }: { message: Message }) {
     >
       {!isUser && (
         <div className="w-9 h-9 rounded-full bg-gradient-to-br from-green-700 to-emerald-800 flex items-center justify-center shrink-0 text-base shadow-lg shadow-green-900/30 mt-0.5">
-          <span>&#x1F9D1;&#x200D;&#x1F33E;</span>
+          <span aria-hidden="true">&#x1F9D1;&#x200D;&#x1F33E;</span>
         </div>
       )}
       {isUser && (
         <div className="w-9 h-9 rounded-full bg-green-600 flex items-center justify-center shrink-0 text-sm font-bold text-white mt-0.5">
-          You
+          {youLabel}
         </div>
       )}
       <div
@@ -143,11 +191,13 @@ function MessageBubble({ message }: { message: Message }) {
 }
 
 function PaywallView() {
+  const t = useTranslations('advisor');
+
   const features = [
-    { icon: Leaf, title: 'Personalized advice', description: 'Tips tailored to your soil, climate, and plants' },
-    { icon: Bug, title: 'Pest & disease diagnosis', description: 'Describe symptoms, get organic solutions' },
-    { icon: Calendar, title: 'Seasonal guidance', description: 'Know exactly when to plant, prune, and harvest' },
-    { icon: FlaskConical, title: 'Soil & composting tips', description: 'Improve your soil for healthier plants' },
+    { icon: Leaf, titleKey: 'feature1Title' as const, descKey: 'feature1Desc' as const },
+    { icon: Bug, titleKey: 'feature2Title' as const, descKey: 'feature2Desc' as const },
+    { icon: Calendar, titleKey: 'feature3Title' as const, descKey: 'feature3Desc' as const },
+    { icon: FlaskConical, titleKey: 'feature4Title' as const, descKey: 'feature4Desc' as const },
   ];
 
   return (
@@ -155,7 +205,7 @@ function PaywallView() {
       <div className="max-w-2xl mx-auto">
         <Link href="/garden/dashboard" className="inline-flex items-center gap-2 text-green-400/60 hover:text-green-300 text-sm mb-8 transition-colors">
           <ArrowLeft className="w-4 h-4" />
-          Back to Dashboard
+          {t('backToDashboard')}
         </Link>
 
         <motion.div
@@ -173,33 +223,33 @@ function PaywallView() {
 
               <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/20 text-amber-400 text-xs font-semibold rounded-full mb-4">
                 <Sparkles className="w-3.5 h-3.5" />
-                PRO Feature
+                {t('proFeature')}
               </span>
 
               <h1 className="text-3xl font-bold text-green-50 mb-3">
-                AI Garden Advisor
+                {t('pageTitle')}
               </h1>
               <p className="text-green-200/60 text-lg max-w-md mx-auto mb-6">
-                Your personal gardening expert who knows your garden inside and out.
-                Available 24/7, 10 questions per day.
+                {t('pageDescription')}
+                {' '}{t('pageAvailability')}
               </p>
 
               {/* Preview chat bubbles */}
               <div className="max-w-sm mx-auto space-y-3 mb-8 text-left">
                 <div className="flex items-start gap-2">
                   <div className="w-7 h-7 rounded-full bg-green-600 flex items-center justify-center shrink-0 text-xs font-bold text-white">
-                    You
+                    {t('you')}
                   </div>
                   <div className="bg-green-600/20 border border-green-600/30 rounded-2xl rounded-bl-md px-3 py-2 text-sm text-green-200">
-                    My basil leaves are turning yellow. Help!
+                    {t('previewQuestion')}
                   </div>
                 </div>
                 <div className="flex items-start gap-2">
                   <div className="w-7 h-7 rounded-full bg-gradient-to-br from-green-700 to-emerald-800 flex items-center justify-center shrink-0 text-xs">
-                    <span>&#x1F9D1;&#x200D;&#x1F33E;</span>
+                    <span aria-hidden="true">&#x1F9D1;&#x200D;&#x1F33E;</span>
                   </div>
                   <div className="bg-[#1A2F23]/50 border border-green-800/20 rounded-2xl rounded-bl-md px-3 py-2 text-sm text-green-300/70 blur-[2px]">
-                    Yellowing basil leaves usually indicate overwatering or nutrient deficiency. Given your loamy soil...
+                    {t('previewAnswer')}
                   </div>
                 </div>
               </div>
@@ -207,7 +257,7 @@ function PaywallView() {
               <Link href="/pricing">
                 <Button size="lg" className="gap-2">
                   <Sparkles className="w-4 h-4" />
-                  Upgrade to PRO - 9.99&euro;/month
+                  {t('upgradePro')}
                 </Button>
               </Link>
             </div>
@@ -217,7 +267,7 @@ function PaywallView() {
           <div className="grid sm:grid-cols-2 gap-4">
             {features.map((feature, i) => (
               <motion.div
-                key={feature.title}
+                key={feature.titleKey}
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 + i * 0.1 }}
@@ -227,8 +277,8 @@ function PaywallView() {
                   <feature.icon className="w-5 h-5 text-green-400" />
                 </div>
                 <div>
-                  <p className="text-green-100 text-sm font-medium">{feature.title}</p>
-                  <p className="text-green-400/50 text-xs">{feature.description}</p>
+                  <p className="text-green-100 text-sm font-medium">{t(feature.titleKey)}</p>
+                  <p className="text-green-400/50 text-xs">{t(feature.descKey)}</p>
                 </div>
               </motion.div>
             ))}
@@ -243,6 +293,8 @@ export function AdvisorPageClient() {
   const { data: session } = useSession();
   const userPlan = (session?.user as Record<string, unknown>)?.plan as string | undefined;
   const isPro = userPlan === 'pro';
+  const locale = useLocale();
+  const t = useTranslations('advisor');
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -252,6 +304,8 @@ export function AdvisorPageClient() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const { config } = useGarden();
+
+  const suggestedQuestions = getSuggestedQuestions(locale);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -300,6 +354,7 @@ export function AdvisorPageClient() {
             climateZone: config.climateZone,
             sunExposure: config.sunExposure,
             plantedItems: config.plantedItems,
+            locale,
           },
           userPlan: 'pro',
           userId: session?.user?.id || 'local-user',
@@ -315,7 +370,7 @@ export function AdvisorPageClient() {
           {
             id: assistantId,
             role: 'assistant',
-            content: errorData.message || 'Sorry, something went wrong. Please try again.',
+            content: errorData.message || t('errorGeneric'),
           },
         ]);
         setIsLoading(false);
@@ -379,7 +434,7 @@ export function AdvisorPageClient() {
           {
             id: assistantId,
             role: 'assistant',
-            content: 'Connection error. Please try again.',
+            content: t('errorConnection'),
           },
         ]);
       }
@@ -411,22 +466,22 @@ export function AdvisorPageClient() {
               <ArrowLeft className="w-5 h-5" />
             </Link>
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-700 to-emerald-800 flex items-center justify-center text-lg shadow-lg shadow-green-900/30">
-              <span>&#x1F9D1;&#x200D;&#x1F33E;</span>
+              <span aria-hidden="true">&#x1F9D1;&#x200D;&#x1F33E;</span>
             </div>
             <div>
               <h1 className="text-green-50 font-semibold flex items-center gap-2">
-                Garden Advisor
+                {t('title')}
                 <Bot className="w-4 h-4 text-green-500/60" />
               </h1>
               <div className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                <span className="text-green-400/70 text-xs">Online</span>
+                <span className="text-green-400/70 text-xs">{t('online')}</span>
               </div>
             </div>
           </div>
           {remaining !== null && (
             <span className="text-green-500/50 text-sm">
-              {remaining} questions left today
+              {t('questionsLeftToday', { remaining })}
             </span>
           )}
         </div>
@@ -438,18 +493,17 @@ export function AdvisorPageClient() {
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center py-16 text-center">
               <div className="w-16 h-16 rounded-full bg-green-900/50 flex items-center justify-center text-3xl mb-4">
-                <span>&#x1F331;</span>
+                <span aria-hidden="true">&#x1F331;</span>
               </div>
               <h2 className="text-xl font-semibold text-green-100 mb-2">
-                Your personal garden advisor
+                {t('welcomeTitle')}
               </h2>
               <p className="text-green-400/50 text-sm mb-8 max-w-md">
-                Ask me anything about gardening! I know your soil type ({config.soilType}),
-                climate ({config.climateZone}), and what you have planted.
+                {t('welcomeSubtext', { soilType: config.soilType, climateZone: config.climateZone })}
               </p>
 
               <div className="grid sm:grid-cols-2 gap-3 w-full max-w-lg">
-                {SUGGESTED_QUESTIONS.map((q) => (
+                {suggestedQuestions.map((q) => (
                   <button
                     key={q.text}
                     onClick={() => sendMessage(q.text)}
@@ -465,7 +519,7 @@ export function AdvisorPageClient() {
 
           {messages.map((msg, idx) => (
             <div key={msg.id}>
-              <MessageBubble message={msg} />
+              <MessageBubble message={msg} youLabel={t('you')} />
               {/* Quick-reply follow-up buttons after the last assistant message */}
               {msg.role === 'assistant' &&
                 idx === messages.length - 1 &&
@@ -477,7 +531,7 @@ export function AdvisorPageClient() {
                     transition={{ delay: 0.3 }}
                     className="flex flex-wrap gap-2 mt-3 ml-12"
                   >
-                    {getFollowUpQuestions(msg.content).map((q) => (
+                    {getFollowUpQuestions(msg.content, locale).map((q) => (
                       <button
                         key={q.text}
                         onClick={() => sendMessage(q.text)}
@@ -509,7 +563,7 @@ export function AdvisorPageClient() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Ask a gardening question..."
+              placeholder={t('placeholder')}
               rows={1}
               className="flex-1 resize-none bg-[#1A2F23] border border-green-800/40 rounded-xl px-4 py-3 text-sm text-green-100 placeholder-green-500/40 focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600/30 transition-colors max-h-32"
               style={{ height: 'auto', minHeight: '48px' }}
@@ -523,7 +577,7 @@ export function AdvisorPageClient() {
               onClick={() => sendMessage(input)}
               disabled={!input.trim() || isLoading}
               className="w-12 h-12 rounded-xl bg-green-600 hover:bg-green-500 disabled:opacity-40 disabled:hover:bg-green-600 flex items-center justify-center text-white transition-colors shrink-0 cursor-pointer disabled:cursor-not-allowed"
-              aria-label="Send message"
+              aria-label={t('sendMessage')}
             >
               <Send className="w-5 h-5" />
             </button>
