@@ -305,6 +305,85 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
     window.dispatchEvent(event);
   }, [selectedPlantType, gardenL, gardenW, pad, screenToSvg]);
 
+  // Companion / enemy plant relationship lines + spacing conflicts
+  const { companionLines, enemyLines, conflictLines } = useMemo(() => {
+    if (!showSpacing) return { companionLines: [] as React.ReactNode[], enemyLines: [] as React.ReactNode[], conflictLines: [] as React.ReactNode[] };
+    const companions: React.ReactNode[] = [];
+    const enemies: React.ReactNode[] = [];
+    const conflicts: React.ReactNode[] = [];
+
+    config.plantedItems.forEach((item, i) => {
+      const plantA = plants.find(p => p.id === item.plantId);
+      if (!plantA) return;
+      const ax = (item.x / 100) * gardenL + pad;
+      const ay = (item.z / 100) * gardenW + pad;
+      const spacingA = plantA.spacingCm / 100 / 2;
+
+      config.plantedItems.forEach((other, j) => {
+        if (i >= j) return;
+        const plantB = plants.find(p => p.id === other.plantId);
+        if (!plantB) return;
+        const bx = (other.x / 100) * gardenL + pad;
+        const by = (other.z / 100) * gardenW + pad;
+        const dist = Math.sqrt((ax - bx) ** 2 + (ay - by) ** 2);
+
+        // Only show relationships for nearby plants (within 2m equivalent)
+        if (dist > 2) return;
+
+        // Spacing conflict
+        const requiredDist = (plantA.spacingCm + plantB.spacingCm) / 100 / 2;
+        if (dist < requiredDist) {
+          conflicts.push(
+            <line
+              key={`conflict-${i}-${j}`}
+              x1={ax} y1={ay} x2={bx} y2={by}
+              stroke="rgba(239, 68, 68, 0.6)"
+              strokeWidth={0.025}
+              strokeDasharray="0.04 0.03"
+            />
+          );
+        }
+
+        // Companion plants — green line
+        if (plantA.companionPlants.includes(plantB.id) || plantB.companionPlants.includes(plantA.id)) {
+          companions.push(
+            <line
+              key={`companion-${i}-${j}`}
+              x1={ax} y1={ay} x2={bx} y2={by}
+              stroke="rgba(74, 222, 128, 0.4)"
+              strokeWidth={0.02}
+            />
+          );
+        }
+
+        // Enemy plants — red dashed line
+        if (plantA.enemyPlants.includes(plantB.id) || plantB.enemyPlants.includes(plantA.id)) {
+          enemies.push(
+            <g key={`enemy-${i}-${j}`}>
+              <line
+                x1={ax} y1={ay} x2={bx} y2={by}
+                stroke="rgba(239, 68, 68, 0.5)"
+                strokeWidth={0.025}
+                strokeDasharray="0.06 0.03"
+              />
+              <text
+                x={(ax + bx) / 2}
+                y={(ay + by) / 2 - 0.06}
+                textAnchor="middle"
+                fill="rgba(239, 68, 68, 0.9)"
+                fontSize={0.12}
+                fontFamily="system-ui, sans-serif"
+              >
+                {'\u26A0'}
+              </text>
+            </g>
+          );
+        }
+      });
+    });
+    return { companionLines: companions, enemyLines: enemies, conflictLines: conflicts };
+  }, [showSpacing, config.plantedItems, plants, gardenL, gardenW, pad]);
+
   // Grid lines for spacing visualization
   const gridLines = useMemo(() => {
     if (!showSpacing || !selectedPlantType) return null;
@@ -363,6 +442,30 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
           </div>
         ) : null;
       })()}
+
+      {/* Companion/enemy legend */}
+      {showSpacing && (companionLines.length > 0 || enemyLines.length > 0 || conflictLines.length > 0) && (
+        <div className="absolute bottom-3 left-3 z-10 px-2 py-1.5 rounded-md bg-black/50 backdrop-blur-sm text-[9px] flex flex-col gap-0.5">
+          {companionLines.length > 0 && (
+            <div className="flex items-center gap-1.5">
+              <span className="w-3 h-[2px] bg-green-400 rounded-full inline-block" />
+              <span className="text-green-300/80">{locale === 'fr' ? 'Compagnons' : 'Companions'}</span>
+            </div>
+          )}
+          {enemyLines.length > 0 && (
+            <div className="flex items-center gap-1.5">
+              <span className="w-3 h-[2px] bg-red-400 rounded-full inline-block" style={{ borderTop: '1px dashed rgba(239,68,68,0.8)' }} />
+              <span className="text-red-300/80">{locale === 'fr' ? 'Ennemis' : 'Enemies'}</span>
+            </div>
+          )}
+          {conflictLines.length > 0 && (
+            <div className="flex items-center gap-1.5">
+              <span className="w-3 h-[2px] rounded-full inline-block" style={{ borderTop: '2px dashed rgba(239,68,68,0.6)' }} />
+              <span className="text-orange-300/80">{locale === 'fr' ? 'Trop proches' : 'Too close'}</span>
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Zoom controls */}
       <div className="absolute bottom-3 right-3 z-10 flex flex-col gap-1.5">
@@ -432,6 +535,11 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
 
         {/* Spacing grid lines */}
         {gridLines}
+
+        {/* Companion / enemy / conflict relationship lines */}
+        {companionLines}
+        {enemyLines}
+        {conflictLines}
 
         {/* Raised beds */}
         {(config.raisedBeds || []).map((bed) => {
@@ -563,6 +671,11 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
                 opacity={stage === 'seed' ? 0.5 : 0.85}
               />
 
+              {/* Growth progress arc — shows % to harvest */}
+              {progress > 0 && progress < 1 && (
+                <GrowthArc cx={cx} cy={cy} r={r + 0.035} progress={progress} />
+              )}
+
               <text
                 x={cx}
                 y={cy + 0.055}
@@ -614,6 +727,36 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
         </text>
       </svg>
     </div>
+  );
+}
+
+// SVG arc for growth progress around a plant
+function GrowthArc({ cx, cy, r, progress }: { cx: number; cy: number; r: number; progress: number }) {
+  // Draw arc from 12 o'clock position clockwise
+  const startAngle = -Math.PI / 2;
+  const endAngle = startAngle + progress * 2 * Math.PI;
+  const x1 = cx + r * Math.cos(startAngle);
+  const y1 = cy + r * Math.sin(startAngle);
+  const x2 = cx + r * Math.cos(endAngle);
+  const y2 = cy + r * Math.sin(endAngle);
+  const largeArc = progress > 0.5 ? 1 : 0;
+
+  // Color transitions: green early, yellow mid, bright green near harvest
+  const color = progress < 0.3
+    ? 'rgba(74, 222, 128, 0.5)'
+    : progress < 0.7
+      ? 'rgba(250, 204, 21, 0.6)'
+      : 'rgba(34, 197, 94, 0.8)';
+
+  return (
+    <path
+      d={`M ${x1} ${y1} A ${r} ${r} 0 ${largeArc} 1 ${x2} ${y2}`}
+      fill="none"
+      stroke={color}
+      strokeWidth={0.02}
+      strokeLinecap="round"
+      pointerEvents="none"
+    />
   );
 }
 
