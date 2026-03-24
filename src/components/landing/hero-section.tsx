@@ -113,7 +113,7 @@ export function HeroSection() {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 justify-center lg:justify-start mb-10 sm:mb-12">
-              <Link href="/garden/setup">
+              <Link href="/garden/setup" className="w-full sm:w-auto">
                 <motion.div
                   whileHover={{ scale: 1.04, y: -2 }}
                   whileTap={{ scale: 0.97 }}
@@ -125,7 +125,7 @@ export function HeroSection() {
                   </Button>
                 </motion.div>
               </Link>
-              <Link href="#features">
+              <Link href="#features" className="w-full sm:w-auto">
                 <motion.div
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.97 }}
