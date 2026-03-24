@@ -988,5 +988,32 @@
     "easy": "Easy",
     "medium": "Medium",
     "hard": "Hard"
+  },
+  "advisor": {
+    "openChat": "Open AI Garden Advisor",
+    "title": "Garden Advisor",
+    "online": "Online",
+    "remainingToday": "{remaining} left today",
+    "closeChat": "Close chat",
+    "welcomeTitle": "Your personal garden advisor",
+    "welcomeDescription": "Ask me anything about gardening! I know your soil, climate, and what you have planted.",
+    "placeholder": "Ask a gardening question...",
+    "sendMessage": "Send message",
+    "errorGeneric": "Sorry, something went wrong. Please try again.",
+    "errorConnection": "Connection error. Please try again.",
+    "lockedTitle": "Garden AI Advisor",
+    "lockedClose": "Close",
+    "lockedHeading": "Unlock your personal garden advisor",
+    "lockedDescription": "Get expert gardening advice tailored to your garden, available 24/7.",
+    "lockedFeature1Title": "Personalized advice",
+    "lockedFeature1Desc": "Get tips tailored to your soil, climate, and plants",
+    "lockedFeature2Title": "Pest & disease diagnosis",
+    "lockedFeature2Desc": "Describe symptoms, get organic solutions",
+    "lockedFeature3Title": "Seasonal guidance",
+    "lockedFeature3Desc": "Know exactly when to plant, prune, and harvest",
+    "lockedFeature4Title": "Soil & composting tips",
+    "lockedFeature4Desc": "Improve your soil for healthier plants",
+    "lockedUpgrade": "Upgrade to PRO",
+    "lockedIncluded": "10 AI questions per day included with PRO"
   }
 }

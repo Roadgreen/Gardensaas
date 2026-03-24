@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Send, X, ChevronDown } from 'lucide-react';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useGarden } from '@/lib/hooks';
 import { AiAdvisorLocked } from './ai-advisor-locked';
 
@@ -104,7 +104,7 @@ export function AiAdvisor({ userPlan = 'free' }: { userPlan?: 'free' | 'pro' }) 
   const abortControllerRef = useRef<AbortController | null>(null);
   const { config } = useGarden();
   const locale = useLocale();
-  const isFr = locale === 'fr';
+  const t = useTranslations('advisor');
 
   const isPro = userPlan === 'pro';
   const suggestedQuestions = getSuggestedQuestions(locale);
@@ -174,7 +174,7 @@ export function AiAdvisor({ userPlan = 'free' }: { userPlan?: 'free' | 'pro' }) 
             role: 'assistant',
             content:
               errorData.message ||
-              'Sorry, something went wrong. Please try again.',
+              t('errorGeneric'),
           },
         ]);
         setIsLoading(false);
@@ -240,7 +240,7 @@ export function AiAdvisor({ userPlan = 'free' }: { userPlan?: 'free' | 'pro' }) 
           {
             id: assistantId,
             role: 'assistant',
-            content: 'Connection error. Please try again.',
+            content: t('errorConnection'),
           },
         ]);
       }
@@ -265,7 +265,7 @@ export function AiAdvisor({ userPlan = 'free' }: { userPlan?: 'free' | 'pro' }) 
         className="fixed bottom-24 right-4 sm:bottom-6 sm:right-6 z-50 w-14 h-14 rounded-full bg-green-600 hover:bg-green-500 text-white shadow-lg shadow-green-900/40 flex items-center justify-center transition-colors cursor-pointer"
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
-        aria-label="Open AI Garden Advisor"
+        aria-label={t('openChat')}
       >
         {isOpen ? (
           <ChevronDown className="w-6 h-6" />
@@ -301,24 +301,24 @@ export function AiAdvisor({ userPlan = 'free' }: { userPlan?: 'free' | 'pro' }) 
                 </div>
                 <div>
                   <h3 className="text-green-50 font-semibold text-sm">
-                    Garden Advisor
+                    {t('title')}
                   </h3>
                   <div className="flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-                    <span className="text-green-400/70 text-xs">Online</span>
+                    <span className="text-green-400/70 text-xs">{t('online')}</span>
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 {remaining !== null && (
                   <span className="text-green-500/50 text-xs">
-                    {remaining} left today
+                    {t('remainingToday', { remaining })}
                   </span>
                 )}
                 <button
                   onClick={() => setIsOpen(false)}
                   className="w-8 h-8 rounded-lg hover:bg-green-800/40 flex items-center justify-center text-green-400/60 hover:text-green-300 transition-colors cursor-pointer"
-                  aria-label="Close chat"
+                  aria-label={t('closeChat')}
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -331,12 +331,10 @@ export function AiAdvisor({ userPlan = 'free' }: { userPlan?: 'free' | 'pro' }) 
                 <div className="flex flex-col items-center justify-center h-full text-center">
                   <div className="text-4xl mb-3">🌱</div>
                   <p className="text-green-100 font-medium text-sm mb-1">
-                    {isFr ? 'Votre conseiller jardin personnel' : 'Your personal garden advisor'}
+                    {t('welcomeTitle')}
                   </p>
                   <p className="text-green-400/50 text-xs mb-5 max-w-[260px]">
-                    {isFr
-                      ? 'Posez-moi vos questions jardinage ! Je connais votre sol, votre climat et vos plantes.'
-                      : 'Ask me anything about gardening! I know your soil, climate, and what you have planted.'}
+                    {t('welcomeDescription')}
                   </p>
 
                   {/* Suggested questions */}
@@ -374,7 +372,7 @@ export function AiAdvisor({ userPlan = 'free' }: { userPlan?: 'free' | 'pro' }) 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder={isFr ? 'Posez une question jardinage...' : 'Ask a gardening question...'}
+                  placeholder={t('placeholder')}
                   rows={1}
                   className="flex-1 resize-none bg-[#1A2F23] border border-green-800/40 rounded-xl px-3.5 py-2.5 text-sm text-green-100 placeholder-green-500/40 focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600/30 transition-colors max-h-24"
                   style={{
@@ -391,7 +389,7 @@ export function AiAdvisor({ userPlan = 'free' }: { userPlan?: 'free' | 'pro' }) 
                   onClick={() => sendMessage(input)}
                   disabled={!input.trim() || isLoading}
                   className="w-10 h-10 rounded-xl bg-green-600 hover:bg-green-500 disabled:opacity-40 disabled:hover:bg-green-600 flex items-center justify-center text-white transition-colors shrink-0 cursor-pointer disabled:cursor-not-allowed"
-                  aria-label="Send message"
+                  aria-label={t('sendMessage')}
                 >
                   <Send className="w-4 h-4" />
                 </button>

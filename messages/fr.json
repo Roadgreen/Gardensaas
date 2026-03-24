@@ -988,5 +988,32 @@
     "easy": "Facile",
     "medium": "Moyen",
     "hard": "Difficile"
+  },
+  "advisor": {
+    "openChat": "Ouvrir le conseiller IA jardin",
+    "title": "Conseiller Jardin",
+    "online": "En ligne",
+    "remainingToday": "{remaining} restantes aujourd'hui",
+    "closeChat": "Fermer le chat",
+    "welcomeTitle": "Votre conseiller jardin personnel",
+    "welcomeDescription": "Posez-moi vos questions jardinage ! Je connais votre sol, votre climat et vos plantes.",
+    "placeholder": "Posez une question jardinage...",
+    "sendMessage": "Envoyer le message",
+    "errorGeneric": "Désolé, une erreur s'est produite. Veuillez réessayer.",
+    "errorConnection": "Erreur de connexion. Veuillez réessayer.",
+    "lockedTitle": "Conseiller IA Jardin",
+    "lockedClose": "Fermer",
+    "lockedHeading": "Débloquez votre conseiller jardin personnel",
+    "lockedDescription": "Obtenez des conseils jardinage experts adaptés à votre jardin, disponibles 24h/24.",
+    "lockedFeature1Title": "Conseils personnalisés",
+    "lockedFeature1Desc": "Des astuces adaptées à votre sol, climat et plantes",
+    "lockedFeature2Title": "Diagnostic ravageurs & maladies",
+    "lockedFeature2Desc": "Décrivez les symptômes, obtenez des solutions bio",
+    "lockedFeature3Title": "Guide saisonnier",
+    "lockedFeature3Desc": "Sachez exactement quand planter, tailler et récolter",
+    "lockedFeature4Title": "Conseils sol & compostage",
+    "lockedFeature4Desc": "Améliorez votre sol pour des plantes en meilleure santé",
+    "lockedUpgrade": "Passer au PRO",
+    "lockedIncluded": "10 questions IA par jour incluses avec PRO"
   }
 }
