@@ -19,6 +19,7 @@ import {
   Bot,
   Lightbulb,
 } from 'lucide-react';
+import { MarkdownMessage } from './markdown-message';
 
 interface Message {
   id: string;
@@ -178,13 +179,13 @@ function MessageBubble({ message, youLabel }: { message: Message; youLabel: stri
         </div>
       )}
       <div
-        className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed whitespace-pre-wrap ${
+        className={`max-w-[75%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
           isUser
             ? 'bg-green-600 text-white rounded-br-md'
             : 'bg-[#1A2F23] text-green-100 border border-green-800/30 rounded-bl-md'
         }`}
       >
-        {message.content}
+        <MarkdownMessage content={message.content} isUser={isUser} />
       </div>
     </motion.div>
   );

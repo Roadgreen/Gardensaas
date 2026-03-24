@@ -6,6 +6,7 @@ import { Sparkles, Send, X, ChevronDown } from 'lucide-react';
 import { useLocale, useTranslations } from 'next-intl';
 import { useGarden } from '@/lib/hooks';
 import { AiAdvisorLocked } from './ai-advisor-locked';
+import { MarkdownMessage } from './markdown-message';
 
 interface Message {
   id: string;
@@ -126,13 +127,13 @@ function MessageBubble({ message }: { message: Message }) {
         </div>
       )}
       <div
-        className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${
+        className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
           isUser
             ? 'bg-green-600 text-white rounded-br-md'
             : 'bg-[#1A2F23] text-green-100 border border-green-800/30 rounded-bl-md'
         }`}
       >
-        {message.content}
+        <MarkdownMessage content={message.content} isUser={isUser} />
       </div>
     </motion.div>
   );
