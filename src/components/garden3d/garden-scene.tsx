@@ -1199,9 +1199,11 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
       const halfL = config.length / 2;
       const halfW = config.width / 2;
 
-      // Snap to 30cm grid cell centers
-      const cellPctX = (0.3 / config.length) * 100;
-      const cellPctZ = (0.3 / config.width) * 100;
+      // Snap to grid cell centers using selected plant spacing (fallback 30cm)
+      const newPlant = plants.find((p) => p.id === selectedPlantType);
+      const snapM = newPlant ? newPlant.spacingCm / 100 : 0.3;
+      const cellPctX = (snapM / config.length) * 100;
+      const cellPctZ = (snapM / config.width) * 100;
       const snappedPctX = (Math.floor(pctX / cellPctX) + 0.5) * cellPctX;
       const snappedPctZ = (Math.floor(pctZ / cellPctZ) + 0.5) * cellPctZ;
 
