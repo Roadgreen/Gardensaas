@@ -101,6 +101,11 @@ export function PlantCatalogSidebar({
       <style>{`
         @media (max-width: 768px) {
           .catalog-sidebar-backdrop { display: block !important; }
+          .catalog-category-btn {
+            padding: 8px 12px !important;
+            font-size: 13px !important;
+            min-height: 44px !important;
+          }
         }
       `}</style>
 
@@ -221,6 +226,7 @@ export function PlantCatalogSidebar({
           {categories.map((cat) => (
             <button
               key={cat}
+              className="catalog-category-btn"
               onClick={() => setCategoryFilter(cat)}
               style={{
                 background:
