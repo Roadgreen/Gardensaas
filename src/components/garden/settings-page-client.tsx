@@ -157,7 +157,7 @@ export function SettingsPageClient() {
                       ? { borderColor: 'var(--primary)', background: 'var(--primary)', color: 'var(--on-primary, #ffffff)', boxShadow: '0 4px 12px rgba(35,66,42,0.25)' }
                       : { borderColor: 'var(--outline-variant)', background: 'var(--surface-container-lowest, #ffffff)', color: 'var(--on-surface)' }}
                   >
-                    <span className="text-2xl block mb-1">{loc === 'en' ? '\uD83C\uDDEC\uD83C\uDDE7' : '\uD83C\uDDEB\uD83C\uDDF7'}</span>
+                    <span className="text-2xl block mb-1" aria-hidden="true">{loc === 'en' ? '\uD83C\uDDEC\uD83C\uDDE7' : '\uD83C\uDDEB\uD83C\uDDF7'}</span>
                     <span className="font-medium block">{tLocale(loc)}</span>
                     {selectedLocale === loc && localeSaved && (
                       <span className="text-xs flex items-center justify-center gap-1 mt-1" style={{ color: 'var(--on-primary, #ffffff)', opacity: 0.85 }}>

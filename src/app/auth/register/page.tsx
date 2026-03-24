@@ -173,7 +173,7 @@ export default function RegisterPage() {
                         : 'border-green-900/40 bg-[#0D1F17] text-green-300/70 hover:border-green-700/50'
                     }`}
                   >
-                    <span className="text-lg block mb-0.5">{loc === 'en' ? '\uD83C\uDDEC\uD83C\uDDE7' : '\uD83C\uDDEB\uD83C\uDDF7'}</span>
+                    <span className="text-lg block mb-0.5" aria-hidden="true">{loc === 'en' ? '\uD83C\uDDEC\uD83C\uDDE7' : '\uD83C\uDDEB\uD83C\uDDF7'}</span>
                     <span className="text-sm font-medium">{tLocale(loc)}</span>
                   </button>
                 ))}

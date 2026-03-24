@@ -150,7 +150,7 @@ export function PlantCard({ plant, index = 0 }: PlantCardProps) {
             </span>
             <span className="flex items-center gap-1.5">
               <Sun className="w-3.5 h-3.5" />
-              {plant.sunExposure[0] === 'full-sun' ? '\u2600\uFE0F\u2600\uFE0F' : plant.sunExposure[0] === 'partial-shade' ? '\u26C5' : '\uD83C\uDF27\uFE0F'}
+              <span aria-hidden="true">{plant.sunExposure[0] === 'full-sun' ? '\u2600\uFE0F\u2600\uFE0F' : plant.sunExposure[0] === 'partial-shade' ? '\u26C5' : '\uD83C\uDF27\uFE0F'}</span>
             </span>
             <span className="flex items-center gap-1.5">
               <Clock className="w-3.5 h-3.5" />

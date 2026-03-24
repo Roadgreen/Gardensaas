@@ -270,7 +270,7 @@ export function AiAdvisor({ userPlan = 'free' }: { userPlan?: 'free' | 'pro' }) 
         {isOpen ? (
           <ChevronDown className="w-6 h-6" />
         ) : (
-          <span className="text-2xl">🌿</span>
+          <span className="text-2xl" aria-hidden="true">🌿</span>
         )}
         {/* PRO badge */}
         <span className="absolute -top-1 -right-1 flex items-center gap-0.5 px-1.5 py-0.5 bg-amber-500 text-[10px] font-bold text-white rounded-full shadow">

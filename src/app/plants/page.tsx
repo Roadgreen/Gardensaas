@@ -321,7 +321,7 @@ export default function PlantsPage() {
                           : 'bg-gray-100 dark:bg-[#142A1E] text-gray-600 dark:text-green-400/60 hover:text-gray-800 dark:hover:text-green-300 border border-gray-200 dark:border-green-900/40 hover:border-green-300 dark:hover:border-green-700/50'
                       }`}
                     >
-                      <span>{c.emoji}</span>
+                      <span aria-hidden="true">{c.emoji}</span>
                       {t(c.labelKey)}
                     </button>
                   ))}
@@ -342,7 +342,7 @@ export default function PlantsPage() {
                           : 'bg-gray-100 dark:bg-[#142A1E] text-gray-600 dark:text-green-400/60 hover:text-gray-800 dark:hover:text-green-300 border border-gray-200 dark:border-green-900/40 hover:border-green-300 dark:hover:border-green-700/50'
                       }`}
                     >
-                      <span>{s.emoji}</span>
+                      <span aria-hidden="true">{s.emoji}</span>
                       {t(s.labelKey)}
                     </button>
                   ))}
@@ -363,7 +363,7 @@ export default function PlantsPage() {
                           : 'bg-gray-100 dark:bg-[#142A1E] text-gray-600 dark:text-green-400/60 hover:text-gray-800 dark:hover:text-green-300 border border-gray-200 dark:border-green-900/40 hover:border-green-300 dark:hover:border-green-700/50'
                       }`}
                     >
-                      <span>{d.emoji}</span>
+                      <span aria-hidden="true">{d.emoji}</span>
                       {t(d.labelKey)}
                     </button>
                   ))}
@@ -432,7 +432,7 @@ export default function PlantsPage() {
 
         {filtered.length === 0 && (
           <div className="text-center py-16">
-            <span className="text-4xl block mb-4">{'\uD83D\uDE14'}</span>
+            <span className="text-4xl block mb-4" role="img" aria-label="No results found">{'\uD83D\uDE14'}</span>
             <p className="text-gray-400 dark:text-green-500/50 text-lg mb-2">{t('noMatch')}</p>
             <button
               onClick={() => { setCategory('all'); setSeason('all'); setDifficulty('all'); setSearch(''); }}

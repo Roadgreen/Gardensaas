@@ -41,7 +41,7 @@ export function AiAdvisorLocked({ onClose }: { onClose: () => void }) {
       <div className="bg-gradient-to-r from-green-900/80 to-emerald-900/80 px-5 py-4 border-b border-green-800/50">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-2xl">🌱</span>
+            <span className="text-2xl" aria-hidden="true">🌱</span>
             <div>
               <h3 className="text-green-50 font-semibold text-base">
                 Garden AI Advisor
