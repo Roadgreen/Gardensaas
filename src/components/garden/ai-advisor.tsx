@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sparkles, Send, X, ChevronDown } from 'lucide-react';
+import { useLocale } from 'next-intl';
 import { useGarden } from '@/lib/hooks';
 import { AiAdvisorLocked } from './ai-advisor-locked';
 
@@ -12,11 +13,33 @@ interface Message {
   content: string;
 }
 
-const SUGGESTED_QUESTIONS = [
-  'When should I plant tomatoes?',
-  'My basil leaves are turning yellow',
-  'Best companion plants for carrots?',
+const SUGGESTED_QUESTIONS_EN = [
+  'When should I plant tomatoes? 🍅',
+  'My basil leaves are turning yellow 🌿',
+  'Best companion plants for carrots? 🥕',
+  'How do I make compost at home? ♻️',
+  'How often should I water my garden? 💧',
+  'Which plants grow well in the shade? 🌑',
+  'How do I deal with aphids naturally? 🐛',
+  'What are the best plants for spring? 🌸',
 ];
+
+const SUGGESTED_QUESTIONS_FR = [
+  'Quand planter des tomates ? 🍅',
+  'Mes feuilles de basilic jaunissent 🌿',
+  'Meilleures associations pour les carottes ? 🥕',
+  'Comment faire du compost maison ? ♻️',
+  'À quelle fréquence arroser mon potager ? 💧',
+  'Quelles plantes poussent bien à l\'ombre ? 🌑',
+  'Comment lutter contre les pucerons naturellement ? 🐛',
+  'Quelles plantes pour le printemps ? 🌸',
+];
+
+function getSuggestedQuestions(locale: string): string[] {
+  const pool = locale === 'fr' ? SUGGESTED_QUESTIONS_FR : SUGGESTED_QUESTIONS_EN;
+  const shuffled = [...pool].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, 4);
+}
 
 function TypingIndicator() {
   return (
@@ -80,8 +103,11 @@ export function AiAdvisor({ userPlan = 'free' }: { userPlan?: 'free' | 'pro' }) 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const { config } = useGarden();
+  const locale = useLocale();
+  const isFr = locale === 'fr';
 
   const isPro = userPlan === 'pro';
+  const suggestedQuestions = getSuggestedQuestions(locale);
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -130,6 +156,7 @@ export function AiAdvisor({ userPlan = 'free' }: { userPlan?: 'free' | 'pro' }) 
             climateZone: config.climateZone,
             sunExposure: config.sunExposure,
             plantedItems: config.plantedItems,
+            locale,
           },
           userPlan,
           userId: 'local-user',
@@ -304,16 +331,17 @@ export function AiAdvisor({ userPlan = 'free' }: { userPlan?: 'free' | 'pro' }) 
                 <div className="flex flex-col items-center justify-center h-full text-center">
                   <div className="text-4xl mb-3">🌱</div>
                   <p className="text-green-100 font-medium text-sm mb-1">
-                    Your personal garden advisor
+                    {isFr ? 'Votre conseiller jardin personnel' : 'Your personal garden advisor'}
                   </p>
                   <p className="text-green-400/50 text-xs mb-5 max-w-[260px]">
-                    Ask me anything about gardening! I know your soil, climate,
-                    and what you have planted.
+                    {isFr
+                      ? 'Posez-moi vos questions jardinage ! Je connais votre sol, votre climat et vos plantes.'
+                      : 'Ask me anything about gardening! I know your soil, climate, and what you have planted.'}
                   </p>
 
                   {/* Suggested questions */}
                   <div className="space-y-2 w-full max-w-[300px]">
-                    {SUGGESTED_QUESTIONS.map((q) => (
+                    {suggestedQuestions.map((q) => (
                       <button
                         key={q}
                         onClick={() => sendMessage(q)}
@@ -346,7 +374,7 @@ export function AiAdvisor({ userPlan = 'free' }: { userPlan?: 'free' | 'pro' }) 
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={handleKeyDown}
-                  placeholder="Ask a gardening question..."
+                  placeholder={isFr ? 'Posez une question jardinage...' : 'Ask a gardening question...'}
                   rows={1}
                   className="flex-1 resize-none bg-[#1A2F23] border border-green-800/40 rounded-xl px-3.5 py-2.5 text-sm text-green-100 placeholder-green-500/40 focus:outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600/30 transition-colors max-h-24"
                   style={{
