@@ -5,6 +5,7 @@ import { SettingsPageClient } from '@/components/garden/settings-page-client';
 export const metadata: Metadata = {
   title: 'Billing & Settings',
   description: 'Manage your subscription and account settings.',
+  robots: { index: false, follow: false },
 };
 
 export default function SettingsPage() {

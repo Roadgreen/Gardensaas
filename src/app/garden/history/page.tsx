@@ -3,7 +3,9 @@ import { HistoryPageClient } from '@/components/garden/history-page-client';
 
 export const metadata: Metadata = {
   title: 'Garden History - Year Over Year',
-  description: 'View your garden history season by season. Track what you planted where for better crop rotation and planning.',
+  description:
+    'View your garden history season by season. Track what you planted where for better crop rotation and planning.',
+  robots: { index: false, follow: false },
 };
 
 export default function HistoryPage() {

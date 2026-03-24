@@ -15,6 +15,9 @@ export const metadata: Metadata = {
     title: 'Create Account | GardenSaas',
     description: 'Create your free GardenSaas account. Plan your garden and get AI-powered planting advice.',
   },
+  alternates: {
+    canonical: 'https://gardensaas.vercel.app/auth/register',
+  },
 };
 
 export default function RegisterLayout({

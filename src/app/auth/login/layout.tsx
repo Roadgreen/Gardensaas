@@ -15,6 +15,9 @@ export const metadata: Metadata = {
     title: 'Sign In | GardenSaas',
     description: 'Sign in to your GardenSaas account to manage your garden and get personalized planting tips.',
   },
+  alternates: {
+    canonical: 'https://gardensaas.vercel.app/auth/login',
+  },
 };
 
 export default function LoginLayout({

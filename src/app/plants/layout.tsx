@@ -14,17 +14,46 @@ export const metadata: Metadata = {
     'harvest time calculator',
   ],
   openGraph: {
-    title: 'Plant Encyclopedia - Vegetable & Herb Growing Guides',
+    title: 'Plant Encyclopedia - Vegetable & Herb Growing Guides | GardenSaas',
     description:
       'Browse 100+ vegetables, herbs, and fruits with detailed growing guides and planting calendars.',
     url: 'https://gardensaas.vercel.app/plants',
     type: 'website',
+    siteName: 'GardenSaas',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Plant Encyclopedia | GardenSaas',
+    description:
+      'Browse 100+ vegetables, herbs, and fruits with detailed growing guides and planting calendars.',
   },
   alternates: {
     canonical: 'https://gardensaas.vercel.app/plants',
   },
 };
 
+const plantsJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': 'https://gardensaas.vercel.app/plants#collection',
+  name: 'Plant Encyclopedia - Vegetable & Herb Growing Guides',
+  description:
+    'Browse 100+ vegetables, herbs, and fruits with detailed growing guides, planting dates, and companion planting information.',
+  url: 'https://gardensaas.vercel.app/plants',
+  isPartOf: {
+    '@type': 'WebSite',
+    '@id': 'https://gardensaas.vercel.app/#website',
+  },
+};
+
 export default function PlantsLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(plantsJsonLd) }}
+      />
+      {children}
+    </>
+  );
 }
