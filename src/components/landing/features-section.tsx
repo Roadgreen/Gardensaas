@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import {
   Sprout,
@@ -13,15 +12,6 @@ import {
   Crown,
 } from 'lucide-react';
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.08 } },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 24 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' as const } },
-};
 
 export function FeaturesSection() {
   const t = useTranslations('features');
@@ -81,38 +71,22 @@ export function FeaturesSection() {
   return (
     <section className="py-24 md:py-32 px-6 bg-white dark:bg-[#0D1F17]" id="features">
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <motion.span
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-green-800/30 text-green-700 dark:text-green-400 text-sm font-medium mb-6"
-            whileInView={{ scale: [0.9, 1] }}
-            viewport={{ once: true }}
-          >
+        <div className="text-center mb-16">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-green-800/30 text-green-700 dark:text-green-400 text-sm font-medium mb-6">
             <Sparkles className="w-4 h-4" />
             {t('badge')}
-          </motion.span>
+          </span>
           <h2 className="text-3xl md:text-5xl font-bold text-gray-900 dark:text-green-50 mb-5 tracking-tight">
             {t('title')}
           </h2>
           <p className="text-gray-500 dark:text-green-200/60 text-lg max-w-2xl mx-auto">
             {t('subtitle')}
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
-        >
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {features.map((feature) => (
-            <motion.div key={feature.titleKey} variants={itemVariants}>
+            <div key={feature.titleKey}>
               <div className="relative h-full p-7 rounded-2xl border border-gray-100 dark:border-green-900/40 bg-white dark:bg-[#142A1E] transition-all duration-300 hover:border-green-300 dark:hover:border-green-700/60 hover:shadow-xl hover:shadow-green-100/60 dark:hover:shadow-green-900/30 hover:-translate-y-1.5 group">
                 {feature.pro && (
                   <span className="absolute top-5 right-5 px-3 py-1.5 bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-500/20 dark:to-yellow-500/15 text-amber-600 dark:text-amber-400 text-xs font-bold rounded-full flex items-center gap-1.5 border border-amber-200/50 dark:border-amber-500/30">
@@ -126,9 +100,9 @@ export function FeaturesSection() {
                 <h3 className="text-lg font-bold text-gray-900 dark:text-green-50 mb-3">{t(feature.titleKey)}</h3>
                 <p className="text-gray-500 dark:text-green-200/60 text-sm leading-relaxed">{t(feature.descKey)}</p>
               </div>
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );

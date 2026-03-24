@@ -33,13 +33,7 @@ export function PricingSection() {
   return (
     <section className="py-24 md:py-32 px-6 bg-gray-50 dark:bg-[#0a1a10]" id="pricing">
       <div className="max-w-5xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
+        <div className="text-center mb-12">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-green-800/30 text-green-700 dark:text-green-400 text-sm font-medium mb-6">
             {t('badge')}
           </span>
@@ -76,18 +70,14 @@ export function PricingSection() {
               </span>
             </button>
           </div>
-        </motion.div>
+        </div>
 
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {plans.map((plan, i) => {
             const price = isYearly ? plan.yearlyPrice : plan.monthlyPrice;
             return (
-              <motion.div
+              <div
                 key={plan.key}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
                 className={`relative rounded-2xl border p-8 transition-all duration-300 ${
                   plan.popular
                     ? 'border-green-400 dark:border-green-500/50 bg-gradient-to-br from-white to-green-50/50 dark:from-green-900/40 dark:to-emerald-900/20 shadow-2xl shadow-green-200/40 dark:shadow-green-900/30 scale-[1.03] ring-1 ring-green-200/50 dark:ring-green-600/20'
@@ -144,7 +134,7 @@ export function PricingSection() {
                     </Button>
                   </motion.div>
                 </Link>
-              </motion.div>
+              </div>
             );
           })}
         </div>

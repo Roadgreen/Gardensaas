@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useMotionValue, useTransform, animate } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState, useEffect, useRef, useCallback } from 'react';
@@ -80,15 +80,6 @@ const testimonials = [
   },
 ];
 
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
 
 function TestimonialCard({ t }: { t: typeof testimonials[0] }) {
   return (
@@ -150,13 +141,7 @@ export function TestimonialsSection() {
   return (
     <section className="py-24 md:py-32 px-6 bg-white dark:bg-gradient-to-b dark:from-[#0D1F17] dark:to-[#0a1a10] overflow-hidden">
       <div className="max-w-6xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-green-800/30 text-green-700 dark:text-green-400 text-sm font-medium mb-6">
             {t('badge')}
           </span>
@@ -166,7 +151,7 @@ export function TestimonialsSection() {
           <p className="text-gray-500 dark:text-green-200/60 text-lg max-w-2xl mx-auto">
             {t('subtitle')}
           </p>
-        </motion.div>
+        </div>
 
         {/* Desktop: carousel with 3 cards per page */}
         <div className="relative">
@@ -200,9 +185,9 @@ export function TestimonialsSection() {
                   style={{ minWidth: '100%' }}
                 >
                   {testimonials.slice(pageIdx * 3, pageIdx * 3 + 3).map((t) => (
-                    <motion.div key={t.name} variants={itemVariants}>
+                    <div key={t.name}>
                       <TestimonialCard t={t} />
-                    </motion.div>
+                    </div>
                   ))}
                 </div>
               ))}
@@ -227,13 +212,7 @@ export function TestimonialsSection() {
         </div>
 
         {/* Trust bar */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-          className="mt-12 flex flex-wrap items-center justify-center gap-6 md:gap-10 text-sm text-gray-400 dark:text-green-400/50"
-        >
+        <div className="mt-12 flex flex-wrap items-center justify-center gap-6 md:gap-10 text-sm text-gray-400 dark:text-green-400/50">
           <span className="flex items-center gap-2">
             <span className="flex -space-x-2">
               {['bg-pink-500', 'bg-blue-500', 'bg-amber-500', 'bg-emerald-500'].map((color, i) => (
@@ -249,7 +228,7 @@ export function TestimonialsSection() {
             {t('trustRating')}
           </span>
           <span>{t('trustFeatured')}</span>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

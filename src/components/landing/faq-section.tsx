@@ -9,12 +9,7 @@ function FAQItem({ question, answer, index }: { question: string; answer: string
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4, delay: index * 0.05 }}
-    >
+    <div>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="w-full text-left p-5 rounded-2xl border border-gray-100 dark:border-green-900/40 bg-white dark:bg-[#142A1E] hover:border-green-200 dark:hover:border-green-700/60 transition-all duration-300 cursor-pointer group"
@@ -47,7 +42,7 @@ function FAQItem({ question, answer, index }: { question: string; answer: string
           )}
         </AnimatePresence>
       </button>
-    </motion.div>
+    </div>
   );
 }
 
@@ -68,13 +63,7 @@ export function FAQSection() {
   return (
     <section className="py-24 md:py-32 px-6 bg-gray-50 dark:bg-gradient-to-b dark:from-[#0a1a10] dark:to-[#0D1F17]">
       <div className="max-w-3xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
+        <div className="text-center mb-12">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-green-800/30 text-green-700 dark:text-green-400 text-sm font-medium mb-6">
             <HelpCircle className="w-4 h-4" />
             {t('badge')}
@@ -85,7 +74,7 @@ export function FAQSection() {
           <p className="text-gray-500 dark:text-green-200/60 text-lg max-w-2xl mx-auto">
             {t('subtitle')}
           </p>
-        </motion.div>
+        </div>
 
         <div className="space-y-3">
           {faqs.map((faq, i) => (

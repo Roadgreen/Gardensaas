@@ -86,9 +86,6 @@ export default async function RootLayout({
               <Footer />
               <ScrollToTop />
             </ThemeProvider>
-            {/* BottomNav is intentionally outside ThemeProvider to prevent the SSR
-                hydration wrapper <div> from creating a stacking context that breaks
-                position:fixed anchoring to the viewport */}
             <BottomNav />
           </SessionProvider>
         </NextIntlClientProvider>

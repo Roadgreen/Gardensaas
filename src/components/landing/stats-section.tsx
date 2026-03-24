@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { useEffect, useRef, useState } from 'react';
 import { Sprout, Users, Leaf, Star } from 'lucide-react';
@@ -90,12 +89,8 @@ export function StatsSection() {
       <div className="max-w-6xl mx-auto relative">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           {stats.map((stat, i) => (
-            <motion.div
+            <div
               key={stat.labelKey}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.1 }}
               className="text-center group"
             >
               <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl ${stat.bg} mb-4 transition-transform duration-300 group-hover:scale-110`}>
@@ -114,7 +109,7 @@ export function StatsSection() {
               <div className="text-xs text-gray-400 dark:text-green-400/50">
                 {t(stat.descKey)}
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

@@ -43,17 +43,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     });
   }, []);
 
-  // Prevent flash of wrong theme
-  if (!mounted) {
-    return (
-      <ThemeContext.Provider value={{ theme: 'dark', toggleTheme }}>
-        <div className="dark">{children}</div>
-      </ThemeContext.Provider>
-    );
-  }
-
+  // Always render the same tree structure to avoid unmounting/remounting
+  // children on hydration. The <html> element already carries className="dark"
+  // from the server, so a wrapper <div className="dark"> is unnecessary and
+  // was causing a full tree remount that broke framer-motion animations.
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme: mounted ? theme : 'dark', toggleTheme }}>
       {children}
     </ThemeContext.Provider>
   );

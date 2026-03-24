@@ -11,13 +11,7 @@ export function CTASection() {
 
   return (
     <section className="py-24 md:py-32 px-6 bg-white dark:bg-[#0D1F17]">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="max-w-4xl mx-auto text-center relative rounded-3xl overflow-hidden"
-      >
+      <div className="max-w-4xl mx-auto text-center relative rounded-3xl overflow-hidden">
         {/* Background */}
         <div className="absolute inset-0 bg-gradient-to-br from-green-600 via-emerald-600 to-green-700 rounded-3xl" />
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(255,255,255,0.1)_0%,_transparent_60%)]" />
@@ -52,7 +46,7 @@ export function CTASection() {
             {t('note')}
           </p>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 }

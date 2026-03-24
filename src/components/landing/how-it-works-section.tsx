@@ -1,6 +1,5 @@
 'use client';
 
-import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { Ruler, Sprout, Eye } from 'lucide-react';
 
@@ -63,13 +62,7 @@ export function HowItWorksSection() {
   return (
     <section className="py-24 md:py-32 px-6 bg-gray-50 dark:bg-gradient-to-b dark:from-[#0D1F17] dark:to-[#0a1a10]">
       <div className="max-w-5xl mx-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
+        <div className="text-center mb-16">
           <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-green-100 dark:bg-green-900/40 border border-green-200 dark:border-green-800/30 text-green-700 dark:text-green-400 text-sm font-medium mb-6">
             {t('badge')}
           </span>
@@ -79,26 +72,19 @@ export function HowItWorksSection() {
           <p className="text-gray-500 dark:text-green-200/60 text-lg max-w-2xl mx-auto">
             {t('subtitle')}
           </p>
-        </motion.div>
+        </div>
 
         <div className="grid md:grid-cols-3 gap-8 md:gap-12 relative">
           {/* Connection line */}
           <div className="hidden md:block absolute top-16 left-[20%] right-[20%] h-px bg-gradient-to-r from-green-300/30 dark:from-green-800/50 via-green-400/40 dark:via-green-600/30 to-green-300/30 dark:to-green-800/50" />
 
           {steps.map((step, i) => (
-            <motion.div
+            <div
               key={step.step}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: i * 0.15 }}
               className="relative text-center"
             >
               {/* Illustration */}
-              <motion.div
-                className="mx-auto mb-4 w-32 h-24 relative"
-                whileHover={{ scale: 1.05 }}
-              >
+              <div className="mx-auto mb-4 w-32 h-24 relative">
                 <svg viewBox="0 0 100 70" className="w-full h-full">
                   {(step.illustration as Array<Record<string, unknown>>).map((el: Record<string, unknown>, j: number) => {
                     if (el.type === 'rect') return <rect key={j} x={el.x as number} y={el.y as number} width={el.w as number} height={el.h as number} fill={el.fill as string} rx={el.rx as number} />;
@@ -107,23 +93,21 @@ export function HowItWorksSection() {
                     return null;
                   })}
                 </svg>
-              </motion.div>
+              </div>
 
               <div className="relative inline-flex mb-6">
-                <motion.div
-                  className={`w-24 h-24 rounded-3xl bg-gradient-to-br ${step.color} flex items-center justify-center shadow-lg shadow-green-500/10`}
-                  whileHover={{ scale: 1.08, rotate: 3 }}
-                  transition={{ type: 'spring', stiffness: 300 }}
+                <div
+                  className={`w-24 h-24 rounded-3xl bg-gradient-to-br ${step.color} flex items-center justify-center shadow-lg shadow-green-500/10 transition-transform duration-300 hover:scale-[1.08] hover:rotate-[3deg]`}
                 >
                   <span className="text-4xl" role="img">{step.emoji}</span>
-                </motion.div>
+                </div>
                 <span className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-white dark:bg-[#0D1F17] border-2 border-green-500 flex items-center justify-center text-sm font-bold text-green-600 dark:text-green-400 shadow-sm">
                   {step.step}
                 </span>
               </div>
               <h3 className="text-xl font-bold text-gray-900 dark:text-green-50 mb-3">{t(step.titleKey)}</h3>
               <p className="text-gray-500 dark:text-green-200/60 leading-relaxed">{t(step.descKey)}</p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
