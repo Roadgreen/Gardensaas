@@ -6,9 +6,11 @@ import { useTranslations } from 'next-intl';
 interface DragDropOverlayProps {
   isDragging: boolean;
   onDrop: (x: number, y: number) => void;
+  /** For touch drag: current finger position (clientX/Y) */
+  touchPosition?: { clientX: number; clientY: number } | null;
 }
 
-export function DragDropOverlay({ isDragging, onDrop }: DragDropOverlayProps) {
+export function DragDropOverlay({ isDragging, onDrop, touchPosition }: DragDropOverlayProps) {
   const t = useTranslations('garden3d.catalog');
   const overlayRef = useRef<HTMLDivElement>(null);
   const [isOver, setIsOver] = useState(false);
@@ -36,6 +38,19 @@ export function DragDropOverlay({ isDragging, onDrop }: DragDropOverlayProps) {
     [onDrop]
   );
 
+  // Check if touch position is over this overlay
+  const isTouchOver = !!(touchPosition && overlayRef.current && (() => {
+    const rect = overlayRef.current!.getBoundingClientRect();
+    return (
+      touchPosition.clientX >= rect.left &&
+      touchPosition.clientX <= rect.right &&
+      touchPosition.clientY >= rect.top &&
+      touchPosition.clientY <= rect.bottom
+    );
+  })());
+
+  const showOverState = isOver || isTouchOver;
+
   if (!isDragging) return null;
 
   return (
@@ -52,13 +67,13 @@ export function DragDropOverlay({ isDragging, onDrop }: DragDropOverlayProps) {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: isOver ? 'rgba(74, 222, 128, 0.08)' : 'transparent',
-        border: isOver ? '3px dashed rgba(74, 222, 128, 0.5)' : '3px dashed rgba(74, 222, 128, 0.15)',
+        background: showOverState ? 'rgba(74, 222, 128, 0.08)' : 'transparent',
+        border: showOverState ? '3px dashed rgba(74, 222, 128, 0.5)' : '3px dashed rgba(74, 222, 128, 0.15)',
         borderRadius: '8px',
         transition: 'all 0.2s ease',
       }}
     >
-      {isOver && (
+      {showOverState && (
         <div
           style={{
             background: 'rgba(15, 40, 24, 0.85)',

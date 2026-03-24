@@ -10,6 +10,7 @@ interface PlantCatalogSidebarProps {
   onToggle: () => void;
   onDragStart: (plantId: string) => void;
   onDragEnd: () => void;
+  onTouchDragStart?: (plantId: string, touch: { clientX: number; clientY: number }) => void;
   selectedPlantType: string | null;
   onSelectPlant: (plantId: string | null) => void;
 }
@@ -36,6 +37,7 @@ export function PlantCatalogSidebar({
   onToggle,
   onDragStart,
   onDragEnd,
+  onTouchDragStart,
   selectedPlantType,
   onSelectPlant,
 }: PlantCatalogSidebarProps) {
@@ -45,6 +47,8 @@ export function PlantCatalogSidebar({
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [hoveredPlant, setHoveredPlant] = useState<string | null>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const touchHoldTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const touchStartPosRef = useRef<{ x: number; y: number } | null>(null);
 
   const categories = useMemo(() => {
     const cats = new Set(plants.map((p) => p.category));
@@ -81,6 +85,51 @@ export function PlantCatalogSidebar({
   const handleDragEnd = useCallback(() => {
     onDragEnd();
   }, [onDragEnd]);
+
+  // Touch drag: long-press (300ms) to start dragging a plant on mobile
+  const handleTouchStart = useCallback(
+    (plantId: string, e: React.TouchEvent) => {
+      const touch = e.touches[0];
+      touchStartPosRef.current = { x: touch.clientX, y: touch.clientY };
+      touchHoldTimerRef.current = setTimeout(() => {
+        if (onTouchDragStart) {
+          onTouchDragStart(plantId, { clientX: touch.clientX, clientY: touch.clientY });
+          onSelectPlant(plantId);
+        }
+      }, 300);
+    },
+    [onTouchDragStart, onSelectPlant]
+  );
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent) => {
+      // If finger moves more than 10px before hold timer fires, cancel (user is scrolling)
+      if (touchHoldTimerRef.current && touchStartPosRef.current) {
+        const touch = e.touches[0];
+        const dx = touch.clientX - touchStartPosRef.current.x;
+        const dy = touch.clientY - touchStartPosRef.current.y;
+        if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+          clearTimeout(touchHoldTimerRef.current);
+          touchHoldTimerRef.current = null;
+        }
+      }
+    },
+    []
+  );
+
+  const handleTouchEnd = useCallback(() => {
+    if (touchHoldTimerRef.current) {
+      clearTimeout(touchHoldTimerRef.current);
+      touchHoldTimerRef.current = null;
+    }
+  }, []);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (touchHoldTimerRef.current) clearTimeout(touchHoldTimerRef.current);
+    };
+  }, []);
 
   return (
     <>
@@ -284,6 +333,9 @@ export function PlantCatalogSidebar({
               draggable
               onDragStart={(e) => handleDragStart(e, plant.id)}
               onDragEnd={handleDragEnd}
+              onTouchStart={(e) => handleTouchStart(plant.id, e)}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
               onClick={() =>
                 onSelectPlant(selectedPlantType === plant.id ? null : plant.id)
               }

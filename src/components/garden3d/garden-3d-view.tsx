@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState, useCallback, useEffect, useMemo } from 'react';
+import { Suspense, useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -45,6 +45,10 @@ export function Garden3DView() {
   const [infoPanelPlantIndex, setInfoPanelPlantIndex] = useState<number | null>(null);
   const [showSizeSelector, setShowSizeSelector] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  // Touch drag state
+  const [touchDragPlantId, setTouchDragPlantId] = useState<string | null>(null);
+  const [touchPos, setTouchPos] = useState<{ clientX: number; clientY: number } | null>(null);
+  const canvasContainerRef = useRef<HTMLDivElement>(null);
   // Variety picker state
   const [varietyPickerPlant, setVarietyPickerPlant] = useState<{ plantId: string; x: number; z: number; raisedBedId?: string; zoneId?: string } | null>(null);
 
@@ -147,6 +151,54 @@ export function Garden3DView() {
     },
     [draggingPlantId, selectedPlantType, addPlant]
   );
+
+  // Touch drag handlers for mobile
+  const handleTouchDragStart = useCallback((plantId: string, touch: { clientX: number; clientY: number }) => {
+    setTouchDragPlantId(plantId);
+    setTouchPos(touch);
+    setIsDragging(true);
+    setDraggingPlantId(plantId);
+  }, []);
+
+  // Global touchmove/touchend for touch drag
+  useEffect(() => {
+    if (!touchDragPlantId) return;
+
+    const handleTouchMove = (e: TouchEvent) => {
+      e.preventDefault(); // Prevent scrolling while dragging
+      const touch = e.touches[0];
+      setTouchPos({ clientX: touch.clientX, clientY: touch.clientY });
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      const touch = e.changedTouches[0];
+      // Calculate drop position relative to the canvas container
+      if (canvasContainerRef.current) {
+        const rect = canvasContainerRef.current.getBoundingClientRect();
+        const relX = (touch.clientX - rect.left) / rect.width;
+        const relY = (touch.clientY - rect.top) / rect.height;
+        // Only drop if within bounds
+        if (relX >= 0 && relX <= 1 && relY >= 0 && relY <= 1) {
+          const pctX = relX * 100;
+          const pctZ = relY * 100;
+          const clampedX = Math.max(5, Math.min(95, pctX));
+          const clampedZ = Math.max(5, Math.min(95, pctZ));
+          addPlant(touchDragPlantId, clampedX, clampedZ);
+        }
+      }
+      setTouchDragPlantId(null);
+      setTouchPos(null);
+      setIsDragging(false);
+      setDraggingPlantId(null);
+    };
+
+    document.addEventListener('touchmove', handleTouchMove, { passive: false });
+    document.addEventListener('touchend', handleTouchEnd);
+    return () => {
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [touchDragPlantId, addPlant]);
 
   // Determine info panel plant
   const infoPanelItem = infoPanelPlantIndex !== null ? config.plantedItems[infoPanelPlantIndex] : null;
@@ -274,9 +326,39 @@ export function Garden3DView() {
         </div>
       </div>
 
+      {/* Touch drag ghost — floating element that follows the finger */}
+      {touchDragPlantId && touchPos && (() => {
+        const dragPlant = plants.find(p => p.id === touchDragPlantId);
+        return (
+          <div
+            style={{
+              position: 'fixed',
+              left: touchPos.clientX - 24,
+              top: touchPos.clientY - 24,
+              width: 48,
+              height: 48,
+              borderRadius: '50%',
+              background: dragPlant ? `radial-gradient(circle, ${dragPlant.color}CC, ${dragPlant.color})` : 'rgba(74, 222, 128, 0.8)',
+              border: '3px solid rgba(255,255,255,0.4)',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.5)',
+              zIndex: 9999,
+              pointerEvents: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '20px',
+              transition: 'none',
+            }}
+          >
+            {'\uD83C\uDF31'}
+          </div>
+        );
+      })()}
+
       {/* 3D Canvas + Sidebar */}
       {/* On mobile with info panel open, clip the Three.js Html labels so they don't bleed over the bottom sheet */}
       <div
+        ref={canvasContainerRef}
         className="flex-1 relative overflow-hidden"
         style={
           isMobile && infoPanelPlant && infoPanelItem && !showSuggestions
@@ -292,13 +374,14 @@ export function Garden3DView() {
             onToggle={() => setIsSidebarOpen((v) => !v)}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
+            onTouchDragStart={handleTouchDragStart}
             selectedPlantType={selectedPlantType}
             onSelectPlant={setSelectedPlantType}
           />
         </div>
 
         {/* Drag-and-drop overlay */}
-        <DragDropOverlay isDragging={isDragging} onDrop={handleDrop} />
+        <DragDropOverlay isDragging={isDragging} onDrop={handleDrop} touchPosition={touchPos} />
 
         {/* Spacing info overlay when placing a plant — hide when info panel is open */}
         <SpacingInfoOverlay
