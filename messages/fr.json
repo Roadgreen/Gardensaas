@@ -1066,6 +1066,17 @@
     "fruit": "Fruits",
     "root": "Racines",
     "ancient": "Anciennes",
-    "exotic": "Exotiques"
+    "exotic": "Exotiques",
+    "plantInfo": "Info plante",
+    "variety": "Variété",
+    "standard": "Standard",
+    "harvestDays": "Récolte",
+    "daysUnit": "{days} jours",
+    "companions": "Bons compagnons",
+    "enemies": "Mauvais voisins",
+    "removePlant": "Retirer",
+    "noCompanions": "Aucun listé",
+    "plantedIn": "Planté dans",
+    "ground": "Pleine terre"
   }
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import Link from 'next/link';
 import { useTranslations, useLocale } from 'next-intl';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,11 @@ import {
   ArrowLeft,
   Info,
   Search,
+  X,
+  Droplets,
+  Sun,
+  Heart,
+  ShieldAlert,
 } from 'lucide-react';
 import type { Plant } from '@/types';
 
@@ -49,6 +54,27 @@ export function GardenPlanner() {
   const [varietyPickerState, setVarietyPickerState] = useState<{
     plantId: string; x: number; z: number;
   } | null>(null);
+  // Plant info popover state
+  const [selectedCellInfo, setSelectedCellInfo] = useState<{
+    idx: number;
+    col: number;
+    row: number;
+    rect: { top: number; left: number; width: number; height: number };
+  } | null>(null);
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  // Close popover on click outside
+  useEffect(() => {
+    if (!selectedCellInfo) return;
+    const handler = (e: MouseEvent) => {
+      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) {
+        setSelectedCellInfo(null);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [selectedCellInfo]);
 
   const gridCols = Math.floor(config.width * 10); // 10cm cells
   const gridRows = Math.floor(config.length * 10);
@@ -167,10 +193,27 @@ export function GardenPlanner() {
     return null;
   }, [config.width, config.length, config.raisedBeds, config.zones, displayCols, displayRows]);
 
-  const handleCellClick = (col: number, row: number) => {
+  const handleCellClick = (col: number, row: number, e: React.MouseEvent<HTMLDivElement>) => {
+    const cellKey = `${col}-${row}`;
+    const planted = cellPlantMap.get(cellKey);
+
+    // If no plant selected and cell is occupied, show plant info popover
+    if (!selectedPlant && planted?.plant) {
+      const cellEl = e.currentTarget;
+      const rect = cellEl.getBoundingClientRect();
+      setSelectedCellInfo({
+        idx: planted.idx,
+        col,
+        row,
+        rect: { top: rect.top, left: rect.left, width: rect.width, height: rect.height },
+      });
+      return;
+    }
+
+    // Close popover if open
+    setSelectedCellInfo(null);
+
     if (!selectedPlant) return;
-    const x = (col / displayCols) * config.width;
-    const z = (row / displayRows) * config.length;
     const pctX = (col / displayCols) * 100;
     const pctZ = (row / displayRows) * 100;
 
@@ -271,7 +314,7 @@ export function GardenPlanner() {
               {t('title')}
             </CardTitle>
             <CardContent>
-              <div className="overflow-auto pb-4">
+              <div className="overflow-auto pb-4" ref={gridRef}>
                 <div
                   className="inline-grid border border-green-800/30 rounded-lg overflow-hidden"
                   style={{
@@ -288,16 +331,19 @@ export function GardenPlanner() {
                     const enemyNames = cellsWithEnemies.get(cellKey);
                     const isHovered = hoveredCell?.col === col && hoveredCell?.row === row;
                     const isPulsing = pulseCell?.col === col && pulseCell?.row === row;
+                    const isSelected = selectedCellInfo?.col === col && selectedCellInfo?.row === row;
 
                     return (
                       <div
                         key={idx}
-                        onClick={() => handleCellClick(col, row)}
+                        onClick={(e) => handleCellClick(col, row, e)}
                         onMouseEnter={() => setHoveredCell({ col, row })}
                         onMouseLeave={() => setHoveredCell(null)}
                         className={`relative border transition-all duration-150 ${
-                          selectedPlant ? 'cursor-crosshair' : 'cursor-default'
-                        } ${planted ? 'border-green-800/30' : 'border-green-900/20 border-dashed'}`}
+                          selectedPlant ? 'cursor-crosshair' : planted ? 'cursor-pointer' : 'cursor-default'
+                        } ${planted ? 'border-green-800/30' : 'border-green-900/20 border-dashed'} ${
+                          isSelected ? 'ring-2 ring-green-400 z-10' : ''
+                        }`}
                         style={{
                           backgroundColor: planted?.plant
                             ? planted.plant.color + '30'
@@ -569,6 +615,148 @@ export function GardenPlanner() {
           </div>
         </div>
       </div>
+
+      {/* Plant info popover */}
+      {selectedCellInfo && (() => {
+        const item = config.plantedItems[selectedCellInfo.idx];
+        if (!item) return null;
+        const plant = getPlantById(item.plantId);
+        if (!plant) return null;
+        const plantName = locale === 'fr' ? plant.name.fr : plant.name.en;
+        const variety = item.varietyId ? plant.varieties?.find(v => v.id === item.varietyId) : null;
+        const varietyName = variety ? (locale === 'fr' ? variety.name.fr : variety.name.en) : null;
+        const enemyNames = cellsWithEnemies.get(`${selectedCellInfo.col}-${selectedCellInfo.row}`);
+        const companionNames = plant.companionPlants
+          .slice(0, 5)
+          .map(id => {
+            const cp = getPlantById(id);
+            return cp ? (locale === 'fr' ? cp.name.fr : cp.name.en) : null;
+          })
+          .filter(Boolean);
+        const enemyPlantNames = plant.enemyPlants
+          .slice(0, 5)
+          .map(id => {
+            const ep = getPlantById(id);
+            return ep ? (locale === 'fr' ? ep.name.fr : ep.name.en) : null;
+          })
+          .filter(Boolean);
+
+        // Position popover near the cell
+        const popTop = selectedCellInfo.rect.top + selectedCellInfo.rect.height + 8;
+        const popLeft = selectedCellInfo.rect.left + selectedCellInfo.rect.width / 2;
+
+        // Determine target location
+        const bed = item.raisedBedId ? (config.raisedBeds || []).find(b => b.id === item.raisedBedId) : null;
+        const zone = item.zoneId ? (config.zones || []).find(z => z.id === item.zoneId) : null;
+
+        return (
+          <div
+            ref={popoverRef}
+            className="fixed z-50 w-72 bg-[#0f2819] border border-green-700/50 rounded-xl shadow-2xl shadow-black/50 overflow-hidden"
+            style={{
+              top: Math.min(popTop, window.innerHeight - 380),
+              left: Math.min(Math.max(popLeft - 144, 8), window.innerWidth - 296),
+            }}
+          >
+            {/* Header */}
+            <div className="flex items-center gap-3 px-4 py-3 bg-green-900/30 border-b border-green-800/30">
+              <span className="text-2xl">{CATEGORY_EMOJI[plant.category] || '🌱'}</span>
+              <div className="flex-1 min-w-0">
+                <p className="text-green-50 font-semibold text-sm truncate">{plantName}</p>
+                {varietyName && (
+                  <p className="text-green-400/70 text-xs">{t('variety')}: {varietyName}</p>
+                )}
+              </div>
+              <button
+                onClick={() => setSelectedCellInfo(null)}
+                className="text-green-600 hover:text-green-300 transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Details */}
+            <div className="px-4 py-3 space-y-2.5">
+              {/* Quick stats row */}
+              <div className="flex items-center gap-4 text-xs">
+                <span className="flex items-center gap-1 text-green-300/70">
+                  <Sun className="w-3 h-3" />
+                  {t('spacing', { cm: plant.spacingCm })}
+                </span>
+                <span className="flex items-center gap-1 text-green-300/70">
+                  <Droplets className="w-3 h-3" />
+                  {t('harvestDays')}: {t('daysUnit', { days: variety?.harvestDays || plant.harvestDays })}
+                </span>
+              </div>
+
+              {/* Planted in */}
+              {(bed || zone) && (
+                <div className="text-xs text-green-400/60">
+                  {t('plantedIn')}: {bed ? `${t('bed')} — ${bed.name}` : zone ? `${t('zone')} — ${zone.name}` : t('ground')}
+                </div>
+              )}
+
+              {/* Companions */}
+              {companionNames.length > 0 && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-green-500/50 mb-1 flex items-center gap-1">
+                    <Heart className="w-2.5 h-2.5" />
+                    {t('companions')}
+                  </p>
+                  <div className="flex flex-wrap gap-1">
+                    {companionNames.map((name, i) => (
+                      <span key={i} className="px-1.5 py-0.5 text-[10px] rounded bg-green-900/40 text-green-300/80 border border-green-800/30">
+                        {name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Enemies */}
+              {enemyPlantNames.length > 0 && (
+                <div>
+                  <p className="text-[10px] uppercase tracking-wider text-red-500/50 mb-1 flex items-center gap-1">
+                    <ShieldAlert className="w-2.5 h-2.5" />
+                    {t('enemies')}
+                  </p>
+                  <div className="flex flex-wrap gap-1">
+                    {enemyPlantNames.map((name, i) => (
+                      <span key={i} className="px-1.5 py-0.5 text-[10px] rounded bg-red-900/20 text-red-300/80 border border-red-800/30">
+                        {name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Active enemy warning */}
+              {enemyNames && enemyNames.length > 0 && (
+                <div className="flex items-start gap-2 px-2.5 py-2 rounded-lg bg-red-900/20 border border-red-800/30">
+                  <AlertTriangle className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
+                  <p className="text-[11px] text-red-300/80">
+                    {enemyNames.map(n => t('enemyWarning', { a: plantName, b: n })).join('. ')}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            {/* Remove button */}
+            <div className="px-4 py-3 border-t border-green-800/30">
+              <button
+                onClick={() => {
+                  removePlant(selectedCellInfo.idx);
+                  setSelectedCellInfo(null);
+                }}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-red-400 hover:text-red-300 bg-red-900/15 hover:bg-red-900/30 border border-red-800/30 transition-colors cursor-pointer"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                {t('removePlant')}
+              </button>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Variety picker modal */}
       {varietyPickerPlantData && varietyPickerState && (
