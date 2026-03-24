@@ -117,7 +117,7 @@ export function SproutMascot({ page = 'default', className = '' }: SproutMascotP
 
   return (
     <motion.div
-      className={`fixed bottom-6 right-6 z-40 ${className}`}
+      className={`fixed bottom-24 md:bottom-6 right-6 z-[65] md:z-40 ${className}`}
       initial={{ y: 100, opacity: 0, scale: 0.5 }}
       animate={isDismissed ? { scale: 0.6, opacity: 0.5 } : { y: 0, opacity: 1, scale: 1 }}
       transition={{ type: 'spring', stiffness: 200, damping: 15 }}
