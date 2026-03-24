@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { getAllPlants } from '@/lib/garden-utils';
 
 const BASE_URL = 'https://gardensaas.vercel.app';
 
@@ -74,5 +75,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  return staticRoutes;
+  // Add all individual plant pages (300+ unique growing guides)
+  const plants = getAllPlants();
+  const plantRoutes: MetadataRoute.Sitemap = plants.map((plant) => ({
+    url: `${BASE_URL}/plants/${plant.id}`,
+    lastModified: now,
+    changeFrequency: 'monthly',
+    priority: 0.8,
+  }));
+
+  return [...staticRoutes, ...plantRoutes];
 }
