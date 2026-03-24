@@ -3,6 +3,7 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import type { Plant } from '@/types';
+import { PlantImage } from '@/components/plants/plant-image';
 
 interface PlantCatalogSidebarProps {
   plants: Plant[];
@@ -363,27 +364,26 @@ export function PlantCatalogSidebar({
                 userSelect: 'none',
               }}
             >
-              {/* Plant color circle */}
+              {/* Plant image */}
               <div
                 style={{
-                  width: '32px',
-                  height: '32px',
-                  borderRadius: '8px',
-                  background: `radial-gradient(circle at 35% 35%, ${plant.color}CC, ${plant.color})`,
-                  border: '2px solid rgba(255,255,255,0.15)',
                   flexShrink: 0,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
                   boxShadow:
                     selectedPlantType === plant.id
                       ? `0 0 10px ${plant.color}66`
                       : 'none',
+                  borderRadius: '8px',
+                  overflow: 'hidden',
+                  position: 'relative',
                 }}
               >
-                <span style={{ fontSize: '14px' }}>
-                  {CATEGORY_ICONS[plant.category] || '\uD83C\uDF3F'}
-                </span>
+                <PlantImage
+                  plantId={plant.id}
+                  plantName={plant.name.en}
+                  emoji={CATEGORY_ICONS[plant.category] || '\uD83C\uDF3F'}
+                  color={plant.color}
+                  size="sm"
+                />
               </div>
 
               {/* Plant info */}
