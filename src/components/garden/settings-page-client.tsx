@@ -278,13 +278,13 @@ export function SettingsPageClient() {
             </CardTitle>
             <CardContent>
               <div className="p-6 rounded-xl border" style={isPro
-                ? { borderColor: 'rgba(180,130,40,0.4)', background: 'rgba(180,130,40,0.06)' }
+                ? { borderColor: 'var(--secondary-fixed-dim, #c9a97a)', background: 'var(--surface-container-low)' }
                 : { borderColor: 'var(--outline-variant)', background: 'var(--surface-container-lowest, #ffffff)' }}>
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center gap-3">
                     {isPro ? (
-                      <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(180,130,40,0.15)' }}>
-                        <Crown className="w-5 h-5" style={{ color: '#b4841f' }} />
+                      <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'var(--accent-muted)' }}>
+                        <Crown className="w-5 h-5" style={{ color: 'var(--secondary-fixed-dim, #c9a97a)' }} />
                       </div>
                     ) : (
                       <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'var(--surface-container)' }}>
@@ -301,7 +301,7 @@ export function SettingsPageClient() {
                     </div>
                   </div>
                   {isPro && (
-                    <span className="px-3 py-1 text-xs font-semibold rounded-full flex items-center gap-1" style={{ background: 'rgba(180,130,40,0.15)', color: 'var(--on-surface)' }}>
+                    <span className="px-3 py-1 text-xs font-semibold rounded-full flex items-center gap-1" style={{ background: 'var(--accent-muted)', color: 'var(--secondary-fixed-dim, #c9a97a)' }}>
                       <Sparkles className="w-3 h-3" />
                       {t('active')}
                     </span>
