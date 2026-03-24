@@ -206,7 +206,10 @@ export function Garden3DView() {
           </button>
           {/* Zones */}
           <button
-            onClick={() => setShowZonePanel(v => !v)}
+            onClick={() => setShowZonePanel(v => {
+              if (!v) { setShowRaisedBedPanel(false); setShowSuggestions(false); }
+              return !v;
+            })}
             className="px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
             style={{
               background: showZonePanel ? 'rgba(74, 222, 128, 0.15)' : 'transparent',
@@ -218,7 +221,10 @@ export function Garden3DView() {
           </button>
           {/* Raised beds */}
           <button
-            onClick={() => setShowRaisedBedPanel(v => !v)}
+            onClick={() => setShowRaisedBedPanel(v => {
+              if (!v) { setShowZonePanel(false); setShowSuggestions(false); }
+              return !v;
+            })}
             className="px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
             style={{
               background: showRaisedBedPanel ? 'rgba(210, 160, 108, 0.15)' : 'transparent',
@@ -230,7 +236,10 @@ export function Garden3DView() {
           </button>
           {/* Suggestions */}
           <button
-            onClick={() => setShowSuggestions(v => !v)}
+            onClick={() => setShowSuggestions(v => {
+              if (!v) { setShowRaisedBedPanel(false); setShowZonePanel(false); }
+              return !v;
+            })}
             className="px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
             style={{
               background: showSuggestions ? 'rgba(251, 191, 36, 0.15)' : 'transparent',
