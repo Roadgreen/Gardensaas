@@ -7,6 +7,7 @@ import { Droplets, Sun, Clock, Leaf } from 'lucide-react';
 import type { Plant } from '@/types';
 import { isPlantableNow } from '@/lib/garden-utils';
 import { useLocale, useTranslations } from 'next-intl';
+import { PlantImage } from './plant-image';
 
 interface PlantCardProps {
   plant: Plant;
@@ -97,15 +98,19 @@ export function PlantCard({ plant, index = 0 }: PlantCardProps) {
             </div>
           )}
 
-          {/* Plant emoji + name */}
+          {/* Plant image + name */}
           <div className="flex items-start gap-3 sm:gap-4 mb-3 sm:mb-4 mt-1 pr-16 sm:pr-0">
             <motion.div
-              className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
-              style={{ backgroundColor: plant.color + '20', border: `2px solid ${plant.color}30` }}
               whileHover={{ rotate: [0, -5, 5, 0] }}
               transition={{ duration: 0.4 }}
+              className="relative"
             >
-              <span className="text-xl sm:text-2xl">{emoji}</span>
+              <PlantImage
+                plantId={plant.id}
+                plantName={plant.name.en}
+                emoji={emoji}
+                color={plant.color}
+              />
             </motion.div>
             <div className="min-w-0 pt-0.5 sm:pt-1">
               <h3 className="text-base sm:text-lg font-semibold group-hover:text-green-600 dark:group-hover:text-green-300 transition-colors line-clamp-2 sm:truncate" style={{ color: 'var(--on-surface)' }}>
