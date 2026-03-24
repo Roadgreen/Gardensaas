@@ -47,7 +47,6 @@ export function BottomNav() {
     >
       <div
         className="flex items-stretch justify-around"
-        style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       >
         {navRoutes.map(({ href, labelKey, icon: Icon }) => {
           const isActive =
