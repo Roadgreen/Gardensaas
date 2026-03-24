@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations, useLocale } from 'next-intl';
 import { PlantCard } from '@/components/plants/plant-card';
 import { usePlants } from '@/lib/hooks';
-import { Search, Sprout, X, Grid3x3, List, Droplets, Sun, Clock, Leaf, ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { Search, X, Grid3x3, List, Droplets, Clock, Leaf, ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { PlantCardSkeleton, PlantListSkeleton } from '@/components/ui/skeleton';
 import type { Difficulty, Plant } from '@/types';
 import { SproutMascot } from '@/components/sprout-mascot';
 import Link from 'next/link';
@@ -178,13 +179,22 @@ export default function PlantsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-[#0D1F17] flex items-center justify-center">
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-        >
-          <Sprout className="w-8 h-8 text-green-600 dark:text-green-400" />
-        </motion.div>
+      <div className="min-h-screen bg-white dark:bg-[#0D1F17] py-6 sm:py-8 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto">
+          {/* Header skeleton */}
+          <div className="mb-6 sm:mb-8">
+            <div className="h-8 sm:h-10 w-48 sm:w-64 rounded-lg bg-gray-200 dark:bg-green-900/30 animate-pulse mb-2" />
+            <div className="h-4 w-36 sm:w-48 rounded-md bg-gray-200 dark:bg-green-900/30 animate-pulse" />
+          </div>
+          {/* Search bar skeleton */}
+          <div className="h-12 rounded-xl bg-gray-200 dark:bg-green-900/30 animate-pulse mb-6" />
+          {/* Grid skeletons */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <PlantCardSkeleton key={i} />
+            ))}
+          </div>
+        </div>
       </div>
     );
   }

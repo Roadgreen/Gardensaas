@@ -42,6 +42,7 @@ import type { WateringTask } from '@/types';
 import { SproutMascot } from '@/components/sprout-mascot';
 import { calculateWateringTasks, getWateringSummary } from '@/lib/watering-service';
 import type { WeatherContext } from '@/lib/watering-service';
+import { Skeleton, WeatherCardSkeleton } from '@/components/ui/skeleton';
 import { getSeasonalQuickPicks } from '@/lib/smart-planting';
 import type { PlantingSuggestionResult } from '@/lib/smart-planting';
 
@@ -212,14 +213,7 @@ function WeatherWidget({ gardenLat, gardenLng }: { gardenLat?: number; gardenLng
   }, [gardenLat, gardenLng]);
 
   if (loading) {
-    return (
-      <Card className="bg-gradient-to-br from-[#142A1E] to-[#1A3528]">
-        <div className="flex items-center justify-center py-8">
-          <Sprout className="w-5 h-5 text-green-400 animate-spin" />
-          <span className="ml-2 text-green-300/60 text-sm">{tW('loading')}</span>
-        </div>
-      </Card>
-    );
+    return <WeatherCardSkeleton />;
   }
 
   return (
@@ -573,9 +567,14 @@ function WateringTasksWidget({ plants, latitude, longitude }: {
   if (loading) {
     return (
       <Card className="bg-gradient-to-br from-blue-900/20 to-cyan-900/10 border-blue-800/20">
-        <div className="flex items-center justify-center py-6">
-          <Droplets className="w-5 h-5 text-blue-400 animate-pulse" />
-          <span className="ml-2 text-green-300/60 text-sm">{tW('loading')}</span>
+        <div className="flex items-center gap-2 mb-4">
+          <Skeleton className="w-5 h-5 rounded-full" />
+          <Skeleton className="h-5 w-32 rounded-md" />
+        </div>
+        <div className="space-y-3">
+          <Skeleton className="h-12 rounded-lg" />
+          <Skeleton className="h-12 rounded-lg" />
+          <Skeleton className="h-12 rounded-lg" />
         </div>
       </Card>
     );
