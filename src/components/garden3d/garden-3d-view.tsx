@@ -98,6 +98,10 @@ export function Garden3DView() {
       const detail = (e as CustomEvent).detail;
       if (detail?.index !== undefined) {
         setInfoPanelPlantIndex(detail.index);
+        // Close bottom-positioned panels to prevent overlap on mobile
+        setShowRaisedBedPanel(false);
+        setShowZonePanel(false);
+        setShowSizeSelector(false);
       }
     };
     window.addEventListener('garden:plant', handlePlant);
@@ -207,7 +211,7 @@ export function Garden3DView() {
           {/* Zones */}
           <button
             onClick={() => setShowZonePanel(v => {
-              if (!v) { setShowRaisedBedPanel(false); setShowSuggestions(false); }
+              if (!v) { setShowRaisedBedPanel(false); setShowSuggestions(false); setInfoPanelPlantIndex(null); }
               return !v;
             })}
             className="px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
@@ -222,7 +226,7 @@ export function Garden3DView() {
           {/* Raised beds */}
           <button
             onClick={() => setShowRaisedBedPanel(v => {
-              if (!v) { setShowZonePanel(false); setShowSuggestions(false); }
+              if (!v) { setShowZonePanel(false); setShowSuggestions(false); setInfoPanelPlantIndex(null); }
               return !v;
             })}
             className="px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
