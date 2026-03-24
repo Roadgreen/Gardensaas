@@ -13,6 +13,14 @@ interface Garden2DMobileProps {
   onPlantSelect: (index: number) => void;
 }
 
+// Placement pulse: tracks recently-placed plants for animation
+interface PlacementPulse {
+  x: number; // SVG coords
+  y: number;
+  color: string;
+  id: number;
+}
+
 // Map plant categories to emoji icons for the 2D view
 const CATEGORY_EMOJI: Record<string, string> = {
   vegetable: '\uD83E\uDD66',
@@ -58,6 +66,11 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  // Cursor preview position (SVG coords) when a plant is selected for placement
+  const [cursorPos, setCursorPos] = useState<{ x: number; y: number } | null>(null);
+  // Placement pulse animations
+  const [pulses, setPulses] = useState<PlacementPulse[]>([]);
+  const pulseIdRef = useRef(0);
 
   // Garden dimensions for the SVG viewBox
   const gardenL = config.length;
@@ -267,6 +280,32 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
     onPlantSelect(index);
   }, [onPlantSelect]);
 
+  // Track cursor/touch position over garden for placement preview
+  const handlePointerMove = useCallback((e: React.MouseEvent<SVGRectElement>) => {
+    if (!selectedPlantType) { setCursorPos(null); return; }
+    const svgPt = screenToSvg(e.clientX, e.clientY);
+    const gx = svgPt.x - pad;
+    const gy = svgPt.y - pad;
+    if (gx >= 0 && gx <= gardenL && gy >= 0 && gy <= gardenW) {
+      setCursorPos({ x: svgPt.x, y: svgPt.y });
+    } else {
+      setCursorPos(null);
+    }
+  }, [selectedPlantType, gardenL, gardenW, pad, screenToSvg]);
+
+  const handlePointerLeave = useCallback(() => {
+    setCursorPos(null);
+  }, []);
+
+  // Trigger a placement pulse animation at (svgX, svgY)
+  const triggerPulse = useCallback((svgX: number, svgY: number, color: string) => {
+    const id = ++pulseIdRef.current;
+    setPulses(prev => [...prev, { x: svgX, y: svgY, color, id }]);
+    setTimeout(() => {
+      setPulses(prev => prev.filter(p => p.id !== id));
+    }, 700);
+  }, []);
+
   // Handle tap on empty ground to place a plant
   const handleGroundTap = useCallback((e: React.MouseEvent<SVGRectElement> | React.TouchEvent<SVGRectElement>) => {
     // Don't plant if we were panning/pinching
@@ -299,11 +338,17 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
     const clampedX = Math.max(2, Math.min(98, pctX));
     const clampedZ = Math.max(2, Math.min(98, pctZ));
 
+    // Get plant color for pulse
+    const plantData = plants.find(p => p.id === selectedPlantType);
+    if (plantData) {
+      triggerPulse(svgPt.x, svgPt.y, plantData.color);
+    }
+
     const event = new CustomEvent('garden:plant', {
       detail: { plantId: selectedPlantType, x: clampedX, z: clampedZ },
     });
     window.dispatchEvent(event);
-  }, [selectedPlantType, gardenL, gardenW, pad, screenToSvg]);
+  }, [selectedPlantType, gardenL, gardenW, pad, screenToSvg, plants, triggerPulse]);
 
   // Companion / enemy plant relationship lines + spacing conflicts
   const { companionLines, enemyLines, conflictLines } = useMemo(() => {
@@ -422,6 +467,30 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
     return lines;
   }, [showSpacing, selectedPlantType, plants, gardenL, gardenW, pad]);
 
+  // Compute enemy warnings for placement preview cursor
+  const cursorEnemyWarnings = useMemo(() => {
+    if (!cursorPos || !selectedPlantType) return [];
+    const placingPlant = plants.find(p => p.id === selectedPlantType);
+    if (!placingPlant) return [];
+
+    const warnings: { name: string }[] = [];
+    const curGardenX = cursorPos.x - pad;
+    const curGardenY = cursorPos.y - pad;
+
+    config.plantedItems.forEach((item) => {
+      const existingPlant = plants.find(p => p.id === item.plantId);
+      if (!existingPlant) return;
+      const ex = (item.x / 100) * gardenL;
+      const ey = (item.z / 100) * gardenW;
+      const dist = Math.sqrt((curGardenX - ex) ** 2 + (curGardenY - ey) ** 2);
+      if (dist > 1.5) return; // Only warn for nearby plants
+      if (placingPlant.enemyPlants.includes(existingPlant.id) || existingPlant.enemyPlants.includes(placingPlant.id)) {
+        warnings.push({ name: locale === 'fr' ? existingPlant.name.fr : existingPlant.name.en });
+      }
+    });
+    return warnings;
+  }, [cursorPos, selectedPlantType, plants, config.plantedItems, gardenL, gardenW, pad, locale]);
+
   const isZoomed = zoom > 1.05;
 
   return (
@@ -521,6 +590,8 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
           strokeWidth={0.03}
           rx={0.05}
           onClick={handleGroundTap}
+          onMouseMove={handlePointerMove}
+          onMouseLeave={handlePointerLeave}
           style={{ cursor: selectedPlantType ? 'crosshair' : 'default' }}
         />
 
@@ -686,6 +757,28 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
                 {CATEGORY_EMOJI[plantData.category] || '\uD83C\uDF31'}
               </text>
 
+              {/* Always-visible compact plant label */}
+              <text
+                x={cx}
+                y={cy + r + 0.14}
+                textAnchor="middle"
+                fill={isSelected ? 'rgba(255,255,255,0.95)' : 'rgba(255,255,255,0.7)'}
+                fontSize={isSelected ? 0.13 : 0.1}
+                fontFamily="system-ui, sans-serif"
+                fontWeight={isSelected ? 'bold' : 'normal'}
+                pointerEvents="none"
+              >
+                {(() => {
+                  const name = locale === 'fr' ? plantData.name.fr : plantData.name.en;
+                  // Show variety name if available
+                  if (item.varietyId) {
+                    const variety = plantData.varieties?.find(v => v.id === item.varietyId);
+                    if (variety) return locale === 'fr' ? variety.name.fr : variety.name.en;
+                  }
+                  return name.length > 10 ? name.slice(0, 9) + '…' : name;
+                })()}
+              </text>
+
               {isSelected && (
                 <text
                   x={cx}
@@ -702,6 +795,112 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
             </g>
           );
         })}
+
+        {/* Placement cursor preview — ghost plant following mouse/touch */}
+        {cursorPos && selectedPlantType && (() => {
+          const previewPlant = plants.find(p => p.id === selectedPlantType);
+          if (!previewPlant) return null;
+          const previewR = Math.max(0.08, (previewPlant.spacingCm / 100) * 0.35) * 0.6;
+          const hasEnemyWarning = cursorEnemyWarnings.length > 0;
+          return (
+            <g pointerEvents="none">
+              {/* Highlight circle — light green tint for valid, red for enemy */}
+              <circle
+                cx={cursorPos.x}
+                cy={cursorPos.y}
+                r={previewR + 0.08}
+                fill={hasEnemyWarning ? 'rgba(239, 68, 68, 0.08)' : 'rgba(74, 222, 128, 0.08)'}
+                stroke={hasEnemyWarning ? 'rgba(239, 68, 68, 0.4)' : 'rgba(74, 222, 128, 0.4)'}
+                strokeWidth={0.015}
+                strokeDasharray="0.04 0.03"
+              />
+              {/* Ghost plant circle */}
+              <circle
+                cx={cursorPos.x}
+                cy={cursorPos.y}
+                r={previewR}
+                fill={previewPlant.color}
+                opacity={0.5}
+                stroke="rgba(255,255,255,0.3)"
+                strokeWidth={0.015}
+              />
+              {/* Plant emoji */}
+              <text
+                x={cursorPos.x}
+                y={cursorPos.y + 0.045}
+                textAnchor="middle"
+                fontSize={previewR * 1.4}
+                opacity={0.6}
+              >
+                {CATEGORY_EMOJI[previewPlant.category] || '\uD83C\uDF31'}
+              </text>
+              {/* Plant name label */}
+              <text
+                x={cursorPos.x}
+                y={cursorPos.y - previewR - 0.06}
+                textAnchor="middle"
+                fill="rgba(134, 239, 172, 0.8)"
+                fontSize={0.11}
+                fontFamily="system-ui, sans-serif"
+              >
+                {locale === 'fr' ? previewPlant.name.fr : previewPlant.name.en}
+              </text>
+              {/* Enemy warning icon */}
+              {hasEnemyWarning && (
+                <g>
+                  <text
+                    x={cursorPos.x + previewR + 0.06}
+                    y={cursorPos.y + 0.04}
+                    textAnchor="start"
+                    fill="rgba(239, 68, 68, 0.9)"
+                    fontSize={0.16}
+                    fontFamily="system-ui, sans-serif"
+                  >
+                    {'\u26A0'}
+                  </text>
+                  <text
+                    x={cursorPos.x}
+                    y={cursorPos.y + previewR + 0.18}
+                    textAnchor="middle"
+                    fill="rgba(239, 68, 68, 0.8)"
+                    fontSize={0.08}
+                    fontFamily="system-ui, sans-serif"
+                  >
+                    {cursorEnemyWarnings.map(w => w.name).join(', ')}
+                  </text>
+                </g>
+              )}
+            </g>
+          );
+        })()}
+
+        {/* Placement pulse animations */}
+        {pulses.map((pulse) => (
+          <g key={`pulse-${pulse.id}`} pointerEvents="none">
+            <circle
+              cx={pulse.x}
+              cy={pulse.y}
+              r={0.05}
+              fill={pulse.color}
+              opacity={0}
+            >
+              <animate attributeName="r" from="0.05" to="0.35" dur="0.6s" fill="freeze" />
+              <animate attributeName="opacity" values="0.6;0.3;0" dur="0.6s" fill="freeze" />
+            </circle>
+            <circle
+              cx={pulse.x}
+              cy={pulse.y}
+              r={0.05}
+              fill="none"
+              stroke={pulse.color}
+              strokeWidth={0.02}
+              opacity={0}
+            >
+              <animate attributeName="r" from="0.08" to="0.5" dur="0.7s" fill="freeze" />
+              <animate attributeName="opacity" values="0.8;0.2;0" dur="0.7s" fill="freeze" />
+            </circle>
+          </g>
+        ))}
 
         {/* Dimension labels */}
         <text
