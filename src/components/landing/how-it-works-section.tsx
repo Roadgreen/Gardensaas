@@ -85,7 +85,7 @@ export function HowItWorksSection() {
             >
               {/* Illustration */}
               <div className="mx-auto mb-4 w-32 h-24 relative">
-                <svg viewBox="0 0 100 70" className="w-full h-full">
+                <svg viewBox="0 0 100 70" className="w-full h-full" aria-hidden="true">
                   {(step.illustration as Array<Record<string, unknown>>).map((el: Record<string, unknown>, j: number) => {
                     if (el.type === 'rect') return <rect key={j} x={el.x as number} y={el.y as number} width={el.w as number} height={el.h as number} fill={el.fill as string} rx={el.rx as number} />;
                     if (el.type === 'circle') return <circle key={j} cx={el.cx as number} cy={el.cy as number} r={el.r as number} fill={el.fill as string} />;
@@ -99,7 +99,7 @@ export function HowItWorksSection() {
                 <div
                   className={`w-24 h-24 rounded-3xl bg-gradient-to-br ${step.color} flex items-center justify-center shadow-lg shadow-green-500/10 transition-transform duration-300 hover:scale-[1.08] hover:rotate-[3deg]`}
                 >
-                  <span className="text-4xl" role="img">{step.emoji}</span>
+                  <span className="text-4xl" role="img" aria-label={t(step.titleKey)}>{step.emoji}</span>
                 </div>
                 <span className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-white dark:bg-[#0D1F17] border-2 border-green-500 flex items-center justify-center text-sm font-bold text-green-600 dark:text-green-400 shadow-sm">
                   {step.step}

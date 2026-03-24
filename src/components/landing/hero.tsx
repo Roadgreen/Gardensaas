@@ -45,7 +45,7 @@ export function Hero() {
           }}
           transition={{ duration: el.duration, repeat: Infinity, delay: i * 0.3 }}
         >
-          <el.icon className={el.size} />
+          <el.icon className={el.size} aria-hidden="true" />
         </motion.div>
       ))}
 
@@ -125,7 +125,7 @@ export function Hero() {
 
       {/* Bottom terrain silhouette */}
       <div className="absolute bottom-0 left-0 right-0 pointer-events-none">
-        <svg viewBox="0 0 1440 120" className="w-full h-16 md:h-24" preserveAspectRatio="none">
+        <svg viewBox="0 0 1440 120" className="w-full h-16 md:h-24" preserveAspectRatio="none" aria-hidden="true">
           <path
             d="M0,60 C240,20 480,100 720,50 C960,0 1200,80 1440,40 L1440,120 L0,120 Z"
             fill="#0a1a0f"

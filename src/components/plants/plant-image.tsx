@@ -109,7 +109,7 @@ export function PlantImage({ plantId, plantName, emoji, color, size = 'md' }: Pl
       {showImage ? (
         <Image
           src={imgUrl}
-          alt={plantName}
+          alt={`Photo of ${plantName} plant`}
           width={size === 'sm' ? 40 : 56}
           height={size === 'sm' ? 40 : 56}
           className={`w-full h-full object-cover transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
@@ -124,6 +124,8 @@ export function PlantImage({ plantId, plantName, emoji, color, size = 'md' }: Pl
         <span
           className={`${size === 'sm' ? 'text-lg' : 'text-xl sm:text-2xl'} absolute`}
           style={showImage ? { opacity: loaded ? 0 : 1 } : undefined}
+          role="img"
+          aria-label={plantName}
         >
           {emoji}
         </span>

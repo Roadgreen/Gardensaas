@@ -94,7 +94,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
               whileHover={{ scale: 1.1, rotate: 5 }}
               transition={{ type: 'spring' }}
             >
-              <span className="text-5xl">{emoji}</span>
+              <span className="text-5xl" role="img" aria-label={locale === 'fr' ? plant.name.fr : plant.name.en}>{emoji}</span>
             </motion.div>
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-green-50 mb-1">
@@ -141,7 +141,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
             ].map((stat) => (
               <Card key={stat.label}>
                 <div className="flex flex-col items-center text-center">
-                  <span className="text-2xl mb-2">{stat.emoji}</span>
+                  <span className="text-2xl mb-2" aria-hidden="true">{stat.emoji}</span>
                   <span className="text-xs text-green-400/60 mb-1">{stat.label}</span>
                   <span className="text-sm font-medium text-green-100">{stat.value}</span>
                 </div>
@@ -153,7 +153,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
           <div className="grid md:grid-cols-2 gap-6 mb-6">
             <Card>
               <CardTitle className="flex items-center gap-2 mb-3">
-                <span className="text-lg">{'\uD83C\uDF31'}</span>
+                <span className="text-lg" aria-hidden="true">{'\uD83C\uDF31'}</span>
                 {t('plantingDetails')}
               </CardTitle>
               <CardContent>
@@ -182,7 +182,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
 
             <Card>
               <CardTitle className="flex items-center gap-2 mb-3">
-                <span className="text-lg">{'\uD83D\uDCC5'}</span>
+                <span className="text-lg" aria-hidden="true">{'\uD83D\uDCC5'}</span>
                 {t('visualCalendar')}
               </CardTitle>
               <CardContent>
@@ -202,7 +202,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
                         }`}
                         whileHover={active ? { scale: 1.05 } : {}}
                       >
-                        <span className="text-sm">{monthSeasonEmojis[month - 1]}</span>
+                        <span className="text-sm" aria-hidden="true">{monthSeasonEmojis[month - 1]}</span>
                         <span className={`block text-xs font-medium mt-0.5 ${active ? '' : 'opacity-50'}`}>
                           {MONTH_NAMES[month - 1].slice(0, 3)}
                         </span>
@@ -222,7 +222,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
             <Card>
               <CardTitle className="flex items-center gap-2 mb-3">
                 <Heart className="w-5 h-5 text-green-400" />
-                <span className="text-lg">{'\uD83E\uDD1D'}</span>
+                <span className="text-lg" aria-hidden="true">{'\uD83E\uDD1D'}</span>
                 {t('companions')}
               </CardTitle>
               <CardContent>
@@ -234,7 +234,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
                           className="p-3 rounded-xl bg-green-900/30 border border-green-800/30 hover:border-green-600/50 transition-all cursor-pointer flex items-center gap-2"
                           whileHover={{ scale: 1.03 }}
                         >
-                          <span className="text-lg">{getPlantEmoji(c.id)}</span>
+                          <span className="text-lg" aria-hidden="true">{getPlantEmoji(c.id)}</span>
                           <span className="text-sm text-green-200 truncate">{locale === 'fr' ? c.name.fr : c.name.en}</span>
                         </motion.div>
                       </Link>
@@ -258,7 +258,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
             <Card>
               <CardTitle className="flex items-center gap-2 mb-3">
                 <ShieldAlert className="w-5 h-5 text-red-400" />
-                <span className="text-lg">{'\u26A0\uFE0F'}</span>
+                <span className="text-lg" aria-hidden="true">{'\u26A0\uFE0F'}</span>
                 {t('enemies')}
               </CardTitle>
               <CardContent>
@@ -270,7 +270,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
                           className="p-3 rounded-xl bg-red-900/20 border border-red-800/20 hover:border-red-600/40 transition-all cursor-pointer flex items-center gap-2"
                           whileHover={{ scale: 1.03 }}
                         >
-                          <span className="text-lg">{getPlantEmoji(e.id)}</span>
+                          <span className="text-lg" aria-hidden="true">{getPlantEmoji(e.id)}</span>
                           <span className="text-sm text-red-200 truncate">{locale === 'fr' ? e.name.fr : e.name.en}</span>
                         </motion.div>
                       </Link>
@@ -295,7 +295,7 @@ export function PlantDetail({ plant }: PlantDetailProps) {
           {/* Tips */}
           <Card>
             <CardTitle className="mb-4 flex items-center gap-2">
-              <span className="text-lg">{'\uD83D\uDCA1'}</span>
+              <span className="text-lg" aria-hidden="true">{'\uD83D\uDCA1'}</span>
               {t('growingTips')}
             </CardTitle>
             <CardContent>

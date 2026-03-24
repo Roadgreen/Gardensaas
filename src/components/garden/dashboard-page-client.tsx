@@ -387,7 +387,7 @@ function DailyTasksCalendar() {
               ) : (
                 <Circle className="w-5 h-5 text-green-700 shrink-0" />
               )}
-              <span className="text-lg shrink-0">{task.emoji}</span>
+              <span className="text-lg shrink-0" aria-hidden="true">{task.emoji}</span>
               <span className={`text-sm flex-1 ${task.done ? 'text-green-500/50 line-through' : 'text-green-100'}`}>
                 {task.text}
               </span>
@@ -434,7 +434,7 @@ function QuickActions() {
             whileTap={{ scale: 0.97 }}
             className="p-4 rounded-xl bg-[#142A1E] border border-green-900/40 hover:border-green-700/50 transition-all cursor-pointer text-center"
           >
-            <span className="text-2xl block mb-2">{action.emoji}</span>
+            <span className="text-2xl block mb-2" aria-hidden="true">{action.emoji}</span>
             <span className="text-sm text-green-200 font-medium">{t(action.labelKey)}</span>
           </motion.div>
         </Link>
@@ -470,7 +470,7 @@ function RecentActivity() {
               transition={{ delay: i * 0.1 }}
               className="flex items-center gap-3 py-2"
             >
-              <span className="text-base">{activity.emoji}</span>
+              <span className="text-base" aria-hidden="true">{activity.emoji}</span>
               <span className="text-sm text-green-200 flex-1">{t(activity.textKey)}</span>
               <span className="text-xs text-green-500/40">{t(activity.timeKey)}</span>
             </motion.div>
@@ -958,7 +958,7 @@ export function DashboardPageClient() {
             <div>
               <h1 className="text-3xl font-bold text-green-50 mb-1 flex items-center gap-3">
                 {session?.user?.name ? t('greeting', { name: session.user.name }) : t('myGarden')}
-                <span className="text-2xl">{season.emoji}</span>
+                <span className="text-2xl" aria-hidden="true">{season.emoji}</span>
               </h1>
               <p className="text-green-300/60">
                 {config.length}m x {config.width}m |{' '}

@@ -128,12 +128,12 @@ export function PlantCard({ plant, index = 0 }: PlantCardProps) {
           <div className="flex flex-wrap gap-1.5 mb-4">
             {seasons.map(s => (
               <span key={s.key} className={`px-2 py-0.5 rounded-md text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider flex items-center gap-1 ${seasonColors[s.key]}`}>
-                <span className="text-xs">{s.emoji}</span>
+                <span className="text-xs" aria-hidden="true">{s.emoji}</span>
                 {t(s.key)}
               </span>
             ))}
             <span className={`px-2 py-0.5 rounded-md text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider flex items-center gap-1 ${diffCls}`}>
-              <span className="text-xs">{diffEmoji}</span>
+              <span className="text-xs" aria-hidden="true">{diffEmoji}</span>
               {t(plant.difficulty as 'easy' | 'medium' | 'hard')}
             </span>
           </div>
