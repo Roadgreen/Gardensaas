@@ -115,7 +115,7 @@ export function PlantCard({ plant, index = 0 }: PlantCardProps) {
             </div>
           </div>
 
-          <p className="text-sm mb-4 line-clamp-2 leading-relaxed" style={{ color: 'var(--on-surface)', opacity: 0.85 }}>
+          <p className="text-sm mb-4 line-clamp-2 leading-relaxed" style={{ color: 'var(--on-surface)' }}>
             {locale === 'fr' ? plant.description.fr : plant.description.en}
           </p>
 
