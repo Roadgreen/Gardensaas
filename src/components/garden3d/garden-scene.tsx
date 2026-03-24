@@ -43,6 +43,48 @@ const SoundEffects = {
   },
 };
 
+// ===== Mobile Detection Hook =====
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768 || 'ontouchstart' in window);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+  return isMobile;
+}
+
+// ===== Canvas Resizer — handles orientation changes inside R3F context =====
+function CanvasResizer() {
+  const { gl, camera } = useThree();
+  useEffect(() => {
+    const handleResize = () => {
+      const canvas = gl.domElement;
+      const parent = canvas.parentElement;
+      if (!parent) return;
+      const w = parent.clientWidth;
+      const h = parent.clientHeight;
+      gl.setSize(w, h);
+      if ('aspect' in camera) {
+        (camera as THREE.PerspectiveCamera).aspect = w / h;
+        (camera as THREE.PerspectiveCamera).updateProjectionMatrix();
+      }
+    };
+    // orientationchange fires on mobile rotation
+    window.addEventListener('orientationchange', () => {
+      // Delay to let the browser settle the new viewport dimensions
+      setTimeout(handleResize, 150);
+    });
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
+    };
+  }, [gl, camera]);
+  return null;
+}
+
 // Sky dome with day/night cycle - smooth color transitions
 function SkyDome({ season, timeOfDay }: { season: string; timeOfDay: string }) {
   const meshRef = useRef<THREE.Mesh>(null);
@@ -793,6 +835,7 @@ function SceneContent({
   selectedZoneId,
   onSelectZone,
   selectedPlantType,
+  isMobile = false,
 }: {
   config: GardenConfig;
   selectedPlantIndex: number | null;
@@ -819,6 +862,7 @@ function SceneContent({
   selectedZoneId: string | null;
   onSelectZone: (zoneId: string | null) => void;
   selectedPlantType: string | null;
+  isMobile?: boolean;
 }) {
   const locale = useLocale();
   const halfL = config.length / 2;
@@ -862,13 +906,13 @@ function SceneContent({
           }
         }}
         enableDamping
-        dampingFactor={0.08}
-        // Touch controls for mobile
+        dampingFactor={isMobile ? 0.12 : 0.08}
+        // Touch controls for mobile — one finger rotates, two fingers pinch-zoom + pan
         touches={{ ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN }}
         // Smooth zoom
-        zoomSpeed={0.8}
-        rotateSpeed={0.6}
-        panSpeed={0.8}
+        zoomSpeed={isMobile ? 1.2 : 0.8}
+        rotateSpeed={isMobile ? 0.8 : 0.6}
+        panSpeed={isMobile ? 1.0 : 0.8}
       />
 
       {/* Soft fog for depth -- warm tones */}
@@ -989,32 +1033,40 @@ function SceneContent({
         locale={locale}
       />
 
-      {/* Weather effects (rain, snow, sun rays, wind) */}
-      <WeatherSystem
-        season={season}
-        timeOfDay={timeOfDay}
-        gardenLength={config.length}
-        gardenWidth={config.width}
-        weather={weather}
-      />
+      {/* Weather effects (rain, snow, sun rays, wind) — skip on mobile for perf */}
+      {!isMobile && (
+        <WeatherSystem
+          season={season}
+          timeOfDay={timeOfDay}
+          gardenLength={config.length}
+          gardenWidth={config.width}
+          weather={weather}
+        />
+      )}
 
-      {/* Seasonal particle effects (fireflies, falling leaves) */}
-      <SeasonalParticles
-        season={season}
-        timeOfDay={timeOfDay}
-        gardenLength={config.length}
-        gardenWidth={config.width}
-      />
+      {/* Seasonal particle effects (fireflies, falling leaves) — skip on mobile for perf */}
+      {!isMobile && (
+        <SeasonalParticles
+          season={season}
+          timeOfDay={timeOfDay}
+          gardenLength={config.length}
+          gardenWidth={config.width}
+        />
+      )}
 
-      {/* Flying birds in the sky */}
-      <FlyingBirds gardenLength={config.length} gardenWidth={config.width} />
+      {/* Flying birds in the sky — skip on mobile for perf */}
+      {!isMobile && (
+        <FlyingBirds gardenLength={config.length} gardenWidth={config.width} />
+      )}
 
-      {/* Decorations */}
-      <GardenDecorations
-        gardenLength={config.length}
-        gardenWidth={config.width}
-        season={season}
-      />
+      {/* Decorations — skip on mobile for perf */}
+      {!isMobile && (
+        <GardenDecorations
+          gardenLength={config.length}
+          gardenWidth={config.width}
+          season={season}
+        />
+      )}
 
       {/* Click-away deselect */}
       <mesh
@@ -1365,6 +1417,7 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
 
   // Prevent browser context menu on the canvas
   const canvasRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
   useEffect(() => {
     const el = canvasRef.current;
     if (!el) return;
@@ -1374,7 +1427,7 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
   }, []);
 
   return (
-    <div ref={canvasRef} style={{ width: '100%', height: '100%', position: 'relative' }}>
+    <div ref={canvasRef} style={{ width: '100%', height: '100%', position: 'relative', touchAction: 'none' }}>
       <Canvas
         shadows="soft"
         camera={{
@@ -1383,17 +1436,20 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
             Math.max(4, Math.max(config.length, config.width) * 0.9),
             Math.max(4, config.width * 0.9),
           ],
-          fov: 38,
+          fov: isMobile ? 45 : 38,
           near: 0.1,
           far: 100,
         }}
+        dpr={isMobile ? [1, 1.5] : [1, 2]}
         gl={{
-          antialias: true,
+          antialias: !isMobile,
           toneMapping: THREE.ACESFilmicToneMapping,
           toneMappingExposure: 1.35,
+          powerPreference: isMobile ? 'low-power' : 'high-performance',
         }}
-        style={{ background: 'transparent' }}
+        style={{ background: 'transparent', touchAction: 'none' }}
       >
+        <CanvasResizer />
         <SceneContent
           config={config}
           selectedPlantIndex={selectedPlantIndex}
@@ -1420,6 +1476,7 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
           selectedZoneId={externalSelectedZoneId}
           onSelectZone={externalOnSelectZone || (() => {})}
           selectedPlantType={selectedPlantType}
+          isMobile={isMobile}
         />
       </Canvas>
 

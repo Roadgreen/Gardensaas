@@ -360,11 +360,12 @@ export function Garden3DView() {
       <div
         ref={canvasContainerRef}
         className="flex-1 relative overflow-hidden"
-        style={
-          isMobile && infoPanelPlant && infoPanelItem && !showSuggestions
+        style={{
+          touchAction: 'none',
+          ...(isMobile && infoPanelPlant && infoPanelItem && !showSuggestions
             ? { clipPath: 'inset(0 0 var(--plant-panel-height) 0)' }
-            : undefined
-        }
+            : {}),
+        }}
       >
         {/* Plant catalog sidebar — hidden on mobile when info panel is open */}
         <div className={infoPanelPlant && infoPanelItem && !showSuggestions ? 'sidebar-hidden-mobile' : ''}>
