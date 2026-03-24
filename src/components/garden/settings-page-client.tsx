@@ -114,7 +114,7 @@ export function SettingsPageClient() {
   return (
     <div className="min-h-screen py-8 px-6" style={{ background: 'var(--surface)' }}>
       <div className="max-w-3xl mx-auto">
-        <Link href="/garden/dashboard" className="inline-flex items-center gap-2 text-sm mb-8 transition-colors" style={{ color: 'var(--on-surface-variant, #43483f)', opacity: 0.8 }}>
+        <Link href="/garden/dashboard" className="inline-flex items-center gap-2 text-sm mb-8 transition-colors" style={{ color: 'var(--on-surface-variant, var(--body-text, #43483f))', opacity: 0.8 }}>
           <ArrowLeft className="w-4 h-4" />
           {t('backToDashboard')}
         </Link>
@@ -143,7 +143,7 @@ export function SettingsPageClient() {
               {tLocale('switchLanguage')}
             </CardTitle>
             <CardContent>
-              <p className="text-sm mb-4" style={{ color: 'var(--on-surface-variant, #43483f)' }}>
+              <p className="text-sm mb-4" style={{ color: 'var(--on-surface-variant, var(--body-text, #43483f))' }}>
                 {t('languageDescription')}
               </p>
               <div className="grid grid-cols-2 gap-4">
@@ -177,13 +177,13 @@ export function SettingsPageClient() {
               {t('gardenDimensions')}
             </CardTitle>
             <CardContent>
-              <p className="text-sm mb-4" style={{ color: 'var(--on-surface-variant, #43483f)' }}>
+              <p className="text-sm mb-4" style={{ color: 'var(--on-surface-variant, var(--body-text, #43483f))' }}>
                 {t('gardenDimensionsDescription')}
               </p>
 
               {/* Presets */}
               <div className="mb-4">
-                <p className="text-xs mb-2" style={{ color: 'var(--on-surface-variant, #43483f)' }}>{t('quickPresets')}:</p>
+                <p className="text-xs mb-2" style={{ color: 'var(--on-surface-variant, var(--body-text, #43483f))' }}>{t('quickPresets')}:</p>
                 <div className="grid grid-cols-3 gap-2">
                   {GARDEN_SIZE_PRESETS.map((preset) => {
                     const isActive = gardenLength === preset.length.toString() && gardenWidth === preset.width.toString();
@@ -204,7 +204,7 @@ export function SettingsPageClient() {
                       >
                         <span className="text-lg block">{preset.emoji}</span>
                         <span className="text-xs block">{preset.label}</span>
-                        <span className="text-[10px]" style={{ color: 'var(--on-surface-variant, #43483f)' }}>{preset.length}m x {preset.width}m</span>
+                        <span className="text-[10px]" style={{ color: 'var(--on-surface-variant, var(--body-text, #43483f))' }}>{preset.length}m x {preset.width}m</span>
                       </button>
                     );
                   })}
@@ -236,7 +236,7 @@ export function SettingsPageClient() {
               </div>
 
               {parseFloat(gardenLength) > 0 && parseFloat(gardenWidth) > 0 && (
-                <p className="text-xs mb-3" style={{ color: 'var(--on-surface-variant, #43483f)' }}>
+                <p className="text-xs mb-3" style={{ color: 'var(--on-surface-variant, var(--body-text, #43483f))' }}>
                   {t('totalArea')}: <span className="font-bold" style={{ color: 'var(--on-surface)' }}>{(parseFloat(gardenLength) * parseFloat(gardenWidth)).toFixed(1)} m&sup2;</span>
                   {' '} - ~{Math.floor(parseFloat(gardenLength) * parseFloat(gardenWidth) * 4)} {t('plantsCapacity')}
                 </p>
@@ -295,7 +295,7 @@ export function SettingsPageClient() {
                       <h3 className="text-lg font-bold" style={{ color: 'var(--on-surface)' }}>
                         {isPro ? t('proPlan') : t('freePlan')}
                       </h3>
-                      <p className="text-sm" style={{ color: 'var(--on-surface-variant, #43483f)' }}>
+                      <p className="text-sm" style={{ color: 'var(--on-surface-variant, var(--body-text, #43483f))' }}>
                         {isPro ? '9.99 EUR/' + t('month') : t('freeForever')}
                       </p>
                     </div>
@@ -333,21 +333,21 @@ export function SettingsPageClient() {
                 <div className="flex items-center gap-3 p-3 rounded-xl border" style={{ background: 'var(--surface-container-lowest, #ffffff)', borderColor: 'var(--outline-variant)' }}>
                   <User className="w-4 h-4" style={{ color: 'var(--primary)' }} />
                   <div>
-                    <p className="text-xs" style={{ color: 'var(--on-surface-variant, #43483f)' }}>{t('name')}</p>
+                    <p className="text-xs" style={{ color: 'var(--on-surface-variant, var(--body-text, #43483f))' }}>{t('name')}</p>
                     <p className="text-sm font-medium" style={{ color: 'var(--on-surface)' }}>{session?.user?.name || t('notSignedIn')}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 rounded-xl border" style={{ background: 'var(--surface-container-lowest, #ffffff)', borderColor: 'var(--outline-variant)' }}>
                   <Mail className="w-4 h-4" style={{ color: 'var(--primary)' }} />
                   <div>
-                    <p className="text-xs" style={{ color: 'var(--on-surface-variant, #43483f)' }}>{t('email')}</p>
+                    <p className="text-xs" style={{ color: 'var(--on-surface-variant, var(--body-text, #43483f))' }}>{t('email')}</p>
                     <p className="text-sm font-medium" style={{ color: 'var(--on-surface)' }}>{session?.user?.email || t('notSignedIn')}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 p-3 rounded-xl border" style={{ background: 'var(--surface-container-lowest, #ffffff)', borderColor: 'var(--outline-variant)' }}>
                   <Shield className="w-4 h-4" style={{ color: 'var(--primary)' }} />
                   <div>
-                    <p className="text-xs" style={{ color: 'var(--on-surface-variant, #43483f)' }}>{t('plan')}</p>
+                    <p className="text-xs" style={{ color: 'var(--on-surface-variant, var(--body-text, #43483f))' }}>{t('plan')}</p>
                     <p className="text-sm font-medium capitalize" style={{ color: 'var(--on-surface)' }}>{userPlan}</p>
                   </div>
                 </div>
