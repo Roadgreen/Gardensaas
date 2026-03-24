@@ -811,9 +811,9 @@ export function Plant3D({ plant, position, plantedDate, onSelect, onContextMenu,
           <Html
             position={[0, stage === 'sprout' ? 0.18 : 0.35, 0]}
             center
-            distanceFactor={6}
+            distanceFactor={4}
+            occlude
             style={{ pointerEvents: 'none' }}
-            zIndexRange={[0, 0]}
           >
             <div style={{
               background: 'rgba(0,0,0,0.55)',
