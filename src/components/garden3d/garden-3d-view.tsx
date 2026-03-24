@@ -21,8 +21,16 @@ import type { RaisedBed } from '@/types';
 const GardenScene = dynamic(() => import('./garden-scene').then(m => ({ default: m.GardenScene })), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full flex items-center justify-center bg-[#0D1F17]">
-      <div className="animate-pulse text-green-400" suppressHydrationWarning>...</div>
+    <div className="w-full h-full bg-[#0D1F17] animate-pulse flex items-center justify-center relative">
+      {/* Fake grid for spatial context while loading */}
+      <div className="absolute inset-x-0 bottom-0 h-1/2 opacity-10" style={{
+        backgroundImage: 'linear-gradient(rgba(74,222,128,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(74,222,128,0.3) 1px, transparent 1px)',
+        backgroundSize: '40px 40px',
+      }} />
+      <div className="flex flex-col items-center gap-3 z-10">
+        <div className="w-10 h-10 rounded-full border-2 border-green-700/40 border-t-green-400 animate-spin" />
+        <div className="h-3 w-28 bg-green-900/30 rounded-md" />
+      </div>
     </div>
   ),
 });
@@ -209,8 +217,20 @@ export function Garden3DView() {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-[#0D1F17] flex items-center justify-center">
-        <div className="animate-pulse text-green-400">{t('loadingGarden')}</div>
+      <div className="h-[calc(100dvh-64px-68px)] md:h-[calc(100dvh-64px)] bg-[#0D1F17] flex flex-col animate-pulse">
+        <div className="flex items-center gap-2 px-4 py-3 border-b border-green-900/30">
+          <div className="h-8 w-20 bg-green-900/30 rounded-lg" />
+          <div className="h-4 w-32 bg-green-900/20 rounded-md hidden sm:block" />
+          <div className="ml-auto flex gap-2">
+            {[1, 2, 3].map(i => <div key={i} className="h-8 w-16 bg-green-900/30 rounded-lg" />)}
+          </div>
+        </div>
+        <div className="flex-1 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-10 h-10 rounded-full border-2 border-green-700/40 border-t-green-400 animate-spin" />
+            <span className="text-sm text-green-400/60">{t('loadingGarden')}</span>
+          </div>
+        </div>
       </div>
     );
   }
@@ -456,8 +476,11 @@ export function Garden3DView() {
         )}
 
         <Suspense fallback={
-          <div className="w-full h-full flex items-center justify-center">
-            <div className="animate-pulse text-green-400">{t('loading3d')}</div>
+          <div className="w-full h-full flex items-center justify-center bg-[#0D1F17]">
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-10 h-10 rounded-full border-2 border-green-700/40 border-t-green-400 animate-spin" />
+              <span className="text-sm text-green-400/60">{t('loading3d')}</span>
+            </div>
           </div>
         }>
           <GardenScene

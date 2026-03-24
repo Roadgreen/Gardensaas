@@ -71,15 +71,17 @@ function CanvasResizer() {
         (camera as THREE.PerspectiveCamera).updateProjectionMatrix();
       }
     };
-    // orientationchange fires on mobile rotation
-    window.addEventListener('orientationchange', () => {
-      // Delay to let the browser settle the new viewport dimensions
-      setTimeout(handleResize, 150);
-    });
+    // orientationchange: stagger resize calls so the browser settles
+    const handleOrientationChange = () => {
+      setTimeout(handleResize, 100);
+      setTimeout(handleResize, 300);
+      setTimeout(handleResize, 600);
+    };
     window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleOrientationChange);
     return () => {
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('orientationchange', handleResize);
+      window.removeEventListener('orientationchange', handleOrientationChange);
     };
   }, [gl, camera]);
   return null;
