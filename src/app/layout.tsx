@@ -70,6 +70,9 @@ export default async function RootLayout({
     <html lang={locale} className="dark" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+        {/* Preconnect to image CDN for faster LCP on plant pages */}
+        <link rel="preconnect" href="https://upload.wikimedia.org" />
+        <link rel="dns-prefetch" href="https://upload.wikimedia.org" />
       </head>
       <body
         className={`${plusJakarta.variable} ${geistMono.variable} antialiased`}

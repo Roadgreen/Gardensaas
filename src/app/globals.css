@@ -120,7 +120,6 @@ body {
   font-family: var(--font-sans), 'Plus Jakarta Sans', Arial, Helvetica, sans-serif;
   font-size: 1rem;
   line-height: 1.6;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Typography scale */
@@ -362,6 +361,32 @@ body {
 .animate-shimmer {
   background-size: 200% 100%;
   animation: shimmer 3s ease infinite;
+}
+
+/* CSS-only starfield — replaces 40 framer-motion divs for better CWV */
+.hero-starfield {
+  background-image:
+    radial-gradient(1px 1px at 10% 15%, rgba(134,239,172,0.25) 50%, transparent 50%),
+    radial-gradient(1px 1px at 25% 40%, rgba(134,239,172,0.18) 50%, transparent 50%),
+    radial-gradient(1px 1px at 42% 8%, rgba(134,239,172,0.22) 50%, transparent 50%),
+    radial-gradient(1px 1px at 55% 65%, rgba(134,239,172,0.15) 50%, transparent 50%),
+    radial-gradient(1px 1px at 70% 25%, rgba(134,239,172,0.20) 50%, transparent 50%),
+    radial-gradient(1px 1px at 85% 50%, rgba(134,239,172,0.18) 50%, transparent 50%),
+    radial-gradient(1px 1px at 15% 70%, rgba(134,239,172,0.22) 50%, transparent 50%),
+    radial-gradient(1px 1px at 35% 85%, rgba(134,239,172,0.16) 50%, transparent 50%),
+    radial-gradient(1px 1px at 60% 35%, rgba(134,239,172,0.20) 50%, transparent 50%),
+    radial-gradient(1px 1px at 78% 75%, rgba(134,239,172,0.18) 50%, transparent 50%),
+    radial-gradient(1px 1px at 5% 45%, rgba(134,239,172,0.15) 50%, transparent 50%),
+    radial-gradient(1px 1px at 92% 10%, rgba(134,239,172,0.22) 50%, transparent 50%),
+    radial-gradient(1px 1px at 48% 55%, rgba(134,239,172,0.17) 50%, transparent 50%),
+    radial-gradient(1px 1px at 30% 20%, rgba(134,239,172,0.20) 50%, transparent 50%),
+    radial-gradient(1px 1px at 65% 90%, rgba(134,239,172,0.15) 50%, transparent 50%);
+  animation: starfield-twinkle 4s ease-in-out infinite alternate;
+}
+
+@keyframes starfield-twinkle {
+  0% { opacity: 0.4; }
+  100% { opacity: 0.8; }
 }
 
 /* Focus visible for accessibility */

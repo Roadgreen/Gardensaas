@@ -43,21 +43,8 @@ export function HeroSection() {
         <div className="absolute bottom-0 left-0 w-[500px] h-[300px] rounded-full bg-gradient-to-tr from-emerald-100/40 to-transparent blur-3xl" />
       </div>
 
-      {/* Starfield dots - dark mode */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none hidden dark:block">
-        {[...Array(40)].map((_, i) => (
-          <motion.div
-            key={`star-${i}`}
-            className="absolute w-1 h-1 rounded-full bg-green-300/15"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{ opacity: [0.05, 0.4, 0.05], scale: [0.8, 1.2, 0.8] }}
-            transition={{ duration: 2 + Math.random() * 4, repeat: Infinity, delay: Math.random() * 3 }}
-          />
-        ))}
-      </div>
+      {/* Starfield dots - dark mode (CSS-only for better CWV) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none hidden dark:block hero-starfield" />
 
       {/* Floating nature elements */}
       {floatingElements.map((el, i) => (

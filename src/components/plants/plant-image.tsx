@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 interface PlantImageProps {
   plantId: string;
@@ -106,12 +107,16 @@ export function PlantImage({ plantId, plantName, emoji, color, size = 'md' }: Pl
       style={!showImage ? { backgroundColor: color + '20', border: `2px solid ${color}30` } : undefined}
     >
       {showImage ? (
-        <img
+        <Image
           src={imgUrl}
           alt={plantName}
+          width={size === 'sm' ? 40 : 56}
+          height={size === 'sm' ? 40 : 56}
           className={`w-full h-full object-cover transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'}`}
           onLoad={() => setLoaded(true)}
           onError={() => setErrored(true)}
+          loading="lazy"
+          sizes={size === 'sm' ? '40px' : '56px'}
         />
       ) : null}
       {/* Emoji shown while loading or on error */}
