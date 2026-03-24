@@ -1014,6 +1014,7 @@
     "lockedFeature4Title": "Conseils sol & compostage",
     "lockedFeature4Desc": "Améliorez votre sol pour des plantes en meilleure santé",
     "lockedUpgrade": "Passer au PRO",
-    "lockedIncluded": "10 questions IA par jour incluses avec PRO"
+    "lockedIncluded": "10 questions IA par jour incluses avec PRO",
+    "followUpLabel": "Questions de suivi"
   }
 }

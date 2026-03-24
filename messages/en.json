@@ -1014,6 +1014,26 @@
     "lockedFeature4Title": "Soil & composting tips",
     "lockedFeature4Desc": "Improve your soil for healthier plants",
     "lockedUpgrade": "Upgrade to PRO",
-    "lockedIncluded": "10 AI questions per day included with PRO"
+    "lockedIncluded": "10 AI questions per day included with PRO",
+    "followUpLabel": "Follow-up questions",
+    "backToDashboard": "Back to Dashboard",
+    "proFeature": "PRO Feature",
+    "pageTitle": "AI Garden Advisor",
+    "pageDescription": "Your personal gardening expert who knows your garden inside and out.",
+    "pageAvailability": "Available 24/7, 10 questions per day.",
+    "previewQuestion": "My basil leaves are turning yellow. Help!",
+    "previewAnswer": "Yellowing basil leaves usually indicate overwatering or nutrient deficiency. Given your loamy soil...",
+    "upgradePro": "Upgrade to PRO — 9.99€/month",
+    "you": "You",
+    "questionsLeftToday": "{remaining} questions left today",
+    "welcomeSubtext": "Ask me anything about gardening! I know your soil type ({soilType}), climate ({climateZone}), and what you have planted.",
+    "feature1Title": "Personalized advice",
+    "feature1Desc": "Tips tailored to your soil, climate, and plants",
+    "feature2Title": "Pest & disease diagnosis",
+    "feature2Desc": "Describe symptoms, get organic solutions",
+    "feature3Title": "Seasonal guidance",
+    "feature3Desc": "Know exactly when to plant, prune, and harvest",
+    "feature4Title": "Soil & composting tips",
+    "feature4Desc": "Improve your soil for healthier plants"
   }
 }

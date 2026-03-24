@@ -35,10 +35,55 @@ const SUGGESTED_QUESTIONS_FR = [
   'Quelles plantes pour le printemps ? 🌸',
 ];
 
+const FOLLOW_UP_QUESTIONS_EN: Record<string, string[]> = {
+  planting: ['When to start seeds indoors? 🌱', 'Best soil mix for seedlings? 🪴', 'How deep should I plant? 📏'],
+  pests: ['What about slugs? 🐌', 'Natural pesticide recipes? 🧪', 'How to attract beneficial insects? 🐝'],
+  soil: ['How to test my soil pH? 🧪', 'Best compost ratio? ♻️', 'When to add mulch? 🍂'],
+  watering: ['Drip irrigation tips? 💧', 'Signs of overwatering? 🚿', 'Best time of day to water? ☀️'],
+  companion: ['What should I never plant together? ⚠️', 'Three sisters planting method? 🌽', 'Herbs that repel pests? 🌿'],
+  general: ['What to plant this month? 📅', 'How to improve my soil? 🪱', 'Tips for small space gardening? 🏡'],
+};
+
+const FOLLOW_UP_QUESTIONS_FR: Record<string, string[]> = {
+  planting: ['Quand semer en intérieur ? 🌱', 'Meilleur terreau pour semis ? 🪴', 'Profondeur de plantation ? 📏'],
+  pests: ['Et les limaces ? 🐌', 'Recettes de pesticides naturels ? 🧪', 'Attirer les insectes utiles ? 🐝'],
+  soil: ['Comment tester le pH du sol ? 🧪', 'Bon ratio de compost ? ♻️', 'Quand pailler ? 🍂'],
+  watering: ['Conseils goutte-à-goutte ? 💧', 'Signes de sur-arrosage ? 🚿', 'Meilleur moment pour arroser ? ☀️'],
+  companion: ['Quoi ne jamais planter ensemble ? ⚠️', 'Méthode des trois sœurs ? 🌽', 'Herbes anti-ravageurs ? 🌿'],
+  general: ['Quoi planter ce mois-ci ? 📅', 'Comment améliorer mon sol ? 🪱', 'Astuces petit jardin ? 🏡'],
+};
+
 function getSuggestedQuestions(locale: string): string[] {
   const pool = locale === 'fr' ? SUGGESTED_QUESTIONS_FR : SUGGESTED_QUESTIONS_EN;
   const shuffled = [...pool].sort(() => Math.random() - 0.5);
   return shuffled.slice(0, 4);
+}
+
+function detectTopic(text: string): string {
+  const lower = text.toLowerCase();
+  if (/plant|sow|seed|sem|germin|transplant/.test(lower)) return 'planting';
+  if (/pest|aphid|bug|slug|insect|pucer|limace|ravageur|maladie|disease/.test(lower)) return 'pests';
+  if (/soil|compost|mulch|fertil|sol|terre|paill|engrais/.test(lower)) return 'soil';
+  if (/water|irrigat|arros|drought|sécheresse|goutte/.test(lower)) return 'watering';
+  if (/companion|associat|together|guild|ensemble|voisin/.test(lower)) return 'companion';
+  return 'general';
+}
+
+function getFollowUpQuestions(lastAssistantMessage: string, locale: string): string[] {
+  const topic = detectTopic(lastAssistantMessage);
+  const pool = locale === 'fr' ? FOLLOW_UP_QUESTIONS_FR : FOLLOW_UP_QUESTIONS_EN;
+  const topicQuestions = pool[topic] || pool.general;
+  const generalQuestions = pool.general;
+  // Pick 2 from topic + 1 from general (if different)
+  const shuffledTopic = [...topicQuestions].sort(() => Math.random() - 0.5);
+  const result = shuffledTopic.slice(0, 2);
+  if (topic !== 'general') {
+    const shuffledGeneral = [...generalQuestions].sort(() => Math.random() - 0.5);
+    result.push(shuffledGeneral[0]);
+  } else {
+    result.push(shuffledTopic[2] || shuffledTopic[0]);
+  }
+  return result;
 }
 
 function TypingIndicator() {
@@ -352,8 +397,32 @@ export function AiAdvisor({ userPlan = 'free' }: { userPlan?: 'free' | 'pro' }) 
                 </div>
               )}
 
-              {messages.map((msg) => (
-                <MessageBubble key={msg.id} message={msg} />
+              {messages.map((msg, idx) => (
+                <div key={msg.id}>
+                  <MessageBubble message={msg} />
+                  {/* Quick-reply follow-up buttons after the last assistant message */}
+                  {msg.role === 'assistant' &&
+                    idx === messages.length - 1 &&
+                    !isLoading &&
+                    msg.content.length > 0 && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="flex flex-wrap gap-1.5 mt-2 ml-9"
+                      >
+                        {getFollowUpQuestions(msg.content, locale).map((q) => (
+                          <button
+                            key={q}
+                            onClick={() => sendMessage(q)}
+                            className="px-3 py-1.5 rounded-full bg-[#1A2F23] border border-green-800/30 text-green-300 text-xs hover:bg-[#243D2E] hover:border-green-700/50 transition-all cursor-pointer"
+                          >
+                            {q}
+                          </button>
+                        ))}
+                      </motion.div>
+                    )}
+                </div>
               ))}
 
               {isLoading &&

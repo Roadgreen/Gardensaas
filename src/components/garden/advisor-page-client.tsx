@@ -16,6 +16,7 @@ import {
   FlaskConical,
   ArrowLeft,
   Bot,
+  Lightbulb,
 } from 'lucide-react';
 
 interface Message {
@@ -32,6 +33,59 @@ const SUGGESTED_QUESTIONS = [
   { text: 'How to improve my clay soil?', icon: FlaskConical },
   { text: 'What can I plant this month?', icon: Calendar },
 ];
+
+const FOLLOW_UP_QUESTIONS: Record<string, { text: string; icon: typeof Leaf }[]> = {
+  planting: [
+    { text: 'When to start seeds indoors?', icon: Calendar },
+    { text: 'Best soil mix for seedlings?', icon: FlaskConical },
+    { text: 'How deep should I plant?', icon: Leaf },
+  ],
+  pests: [
+    { text: 'What about slugs and snails?', icon: Bug },
+    { text: 'Natural pesticide recipes?', icon: FlaskConical },
+    { text: 'How to attract beneficial insects?', icon: Sparkles },
+  ],
+  soil: [
+    { text: 'How to test my soil pH?', icon: FlaskConical },
+    { text: 'Best compost ratio?', icon: Leaf },
+    { text: 'When should I add mulch?', icon: Calendar },
+  ],
+  watering: [
+    { text: 'Drip irrigation setup tips?', icon: Lightbulb },
+    { text: 'Signs of overwatering?', icon: Leaf },
+    { text: 'Best time of day to water?', icon: Calendar },
+  ],
+  companion: [
+    { text: 'What should I never plant together?', icon: Bug },
+    { text: 'Three sisters planting method?', icon: Sparkles },
+    { text: 'Herbs that repel pests?', icon: Leaf },
+  ],
+  general: [
+    { text: 'What to plant this month?', icon: Calendar },
+    { text: 'How to improve my soil?', icon: FlaskConical },
+    { text: 'Tips for small space gardening?', icon: Lightbulb },
+  ],
+};
+
+function detectTopic(text: string): string {
+  const lower = text.toLowerCase();
+  if (/plant|sow|seed|germin|transplant/.test(lower)) return 'planting';
+  if (/pest|aphid|bug|slug|insect|disease/.test(lower)) return 'pests';
+  if (/soil|compost|mulch|fertil/.test(lower)) return 'soil';
+  if (/water|irrigat|drought/.test(lower)) return 'watering';
+  if (/companion|associat|together|guild/.test(lower)) return 'companion';
+  return 'general';
+}
+
+function getFollowUpQuestions(lastMessage: string): { text: string; icon: typeof Leaf }[] {
+  const topic = detectTopic(lastMessage);
+  const topicQuestions = FOLLOW_UP_QUESTIONS[topic] || FOLLOW_UP_QUESTIONS.general;
+  if (topic !== 'general') {
+    const general = FOLLOW_UP_QUESTIONS.general;
+    return [...topicQuestions.slice(0, 2), general[Math.floor(Math.random() * general.length)]];
+  }
+  return topicQuestions;
+}
 
 function TypingIndicator() {
   return (
@@ -409,8 +463,33 @@ export function AdvisorPageClient() {
             </div>
           )}
 
-          {messages.map((msg) => (
-            <MessageBubble key={msg.id} message={msg} />
+          {messages.map((msg, idx) => (
+            <div key={msg.id}>
+              <MessageBubble message={msg} />
+              {/* Quick-reply follow-up buttons after the last assistant message */}
+              {msg.role === 'assistant' &&
+                idx === messages.length - 1 &&
+                !isLoading &&
+                msg.content.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="flex flex-wrap gap-2 mt-3 ml-12"
+                  >
+                    {getFollowUpQuestions(msg.content).map((q) => (
+                      <button
+                        key={q.text}
+                        onClick={() => sendMessage(q.text)}
+                        className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#1A2F23] border border-green-800/30 text-green-200 text-sm hover:bg-[#243D2E] hover:border-green-700/50 transition-all cursor-pointer"
+                      >
+                        <q.icon className="w-3.5 h-3.5 text-green-500/60 shrink-0" />
+                        <span>{q.text}</span>
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+            </div>
           ))}
 
           {isLoading && messages[messages.length - 1]?.role === 'user' && (
