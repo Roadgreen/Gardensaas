@@ -80,7 +80,7 @@ export default async function RootLayout({
             <ThemeProvider>
               <Navbar />
               {/* pt-safe-top accounts for status bar on native; pb-safe-bottom leaves room for bottom nav + home indicator */}
-              <main className="pt-16 pb-[calc(env(safe-area-inset-bottom,0px)+80px)] md:pb-0">
+              <main className="pt-12 md:pt-16 pb-[calc(env(safe-area-inset-bottom,0px)+72px)] md:pb-0">
                 {children}
               </main>
               <Footer />
