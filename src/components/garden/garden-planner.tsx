@@ -54,6 +54,12 @@ export function GardenPlanner() {
   const [pulseCell, setPulseCell] = useState<{ col: number; row: number } | null>(null);
   // Mobile bottom sheet state
   const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
+  // Add plant modal state
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addModalPlant, setAddModalPlant] = useState<Plant | null>(null);
+  const [addModalQuantity, setAddModalQuantity] = useState(1);
+  const [addModalSearch, setAddModalSearch] = useState('');
+  const addModalRef = useRef<HTMLDivElement>(null);
   // Variety picker state
   const [varietyPickerState, setVarietyPickerState] = useState<{
     plantId: string; x: number; z: number;
@@ -92,6 +98,18 @@ export function GardenPlanner() {
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, [mobileSheetOpen]);
+
+  // Close add modal on click outside
+  useEffect(() => {
+    if (!showAddModal) return;
+    const handler = (e: MouseEvent) => {
+      if (addModalRef.current && !addModalRef.current.contains(e.target as Node)) {
+        setShowAddModal(false);
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showAddModal]);
 
   // Prevent body scroll when sheet is open
   useEffect(() => {
@@ -287,6 +305,72 @@ export function GardenPlanner() {
     addPlant(varietyPickerState.plantId, varietyPickerState.x, varietyPickerState.z, targetBedId, varietyId, targetZoneId);
     setVarietyPickerState(null);
   }, [varietyPickerState, addPlant]);
+
+  // Auto-place N plants with proper spacing across the grid
+  const autoPlacePlants = useCallback((plant: Plant, quantity: number) => {
+    const spacingCells = Math.max(1, Math.ceil(plant.spacingCm / 10));
+    // Build set of occupied cells
+    const occupied = new Set<string>();
+    config.plantedItems.forEach((item) => {
+      const col = Math.round((item.x / 100) * displayCols);
+      const row = Math.round((item.z / 100) * displayRows);
+      // Mark spacing radius as occupied
+      for (let dc = -spacingCells; dc <= spacingCells; dc++) {
+        for (let dr = -spacingCells; dr <= spacingCells; dr++) {
+          occupied.add(`${col + dc}-${row + dr}`);
+        }
+      }
+    });
+    // Collect candidate cells in row-major order
+    const candidates: { col: number; row: number }[] = [];
+    for (let row = 0; row < displayRows; row += spacingCells) {
+      for (let col = 0; col < displayCols; col += spacingCells) {
+        const key = `${col}-${row}`;
+        if (!occupied.has(key)) {
+          candidates.push({ col, row });
+        }
+      }
+    }
+    const toPlace = candidates.slice(0, quantity);
+    toPlace.forEach(({ col, row }) => {
+      const pctX = (col / displayCols) * 100;
+      const pctZ = (row / displayRows) * 100;
+      addPlant(plant.id, pctX, pctZ);
+      // Mark as occupied for subsequent placements
+      for (let dc = -spacingCells; dc <= spacingCells; dc++) {
+        for (let dr = -spacingCells; dr <= spacingCells; dr++) {
+          occupied.add(`${col + dc}-${row + dr}`);
+        }
+      }
+    });
+    // Pulse first placed cell
+    if (toPlace.length > 0) {
+      setPulseCell(toPlace[0]);
+      setTimeout(() => setPulseCell(null), 600);
+    }
+    return toPlace.length;
+  }, [config.plantedItems, displayCols, displayRows, addPlant]);
+
+  const openAddModal = () => {
+    setAddModalPlant(null);
+    setAddModalQuantity(1);
+    setAddModalSearch('');
+    setShowAddModal(true);
+  };
+
+  const handleAddModalConfirm = () => {
+    if (!addModalPlant) return;
+    autoPlacePlants(addModalPlant, addModalQuantity);
+    setShowAddModal(false);
+    // Also set selectedPlant so user can manually add more by clicking
+    setSelectedPlant(addModalPlant);
+  };
+
+  const addModalFilteredPlants = useMemo(() => {
+    if (!addModalSearch) return plants;
+    const q = addModalSearch.toLowerCase();
+    return plants.filter(p => p.name.fr.toLowerCase().includes(q) || p.name.en.toLowerCase().includes(q));
+  }, [plants, addModalSearch]);
 
   const usedArea = plantedWithInfo.reduce((acc, p) => {
     if (!p.plant) return acc;
@@ -571,9 +655,24 @@ export function GardenPlanner() {
                 </div>
               </div>
 
-              {/* Tip text */}
-              {!selectedPlant && config.plantedItems.length === 0 && (
-                <p className="text-green-400/40 text-xs mt-3 text-center">{t('tapToPlace')}</p>
+              {/* Empty state CTA overlay */}
+              {config.plantedItems.length === 0 && !selectedPlant && (
+                <div className="flex flex-col items-center justify-center py-10 gap-4">
+                  <div className="w-16 h-16 rounded-full bg-green-900/40 border-2 border-dashed border-green-700/50 flex items-center justify-center">
+                    <span className="text-3xl">🌱</span>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-green-100 font-semibold text-base mb-1">Votre jardin est vide</p>
+                    <p className="text-green-400/60 text-sm">Ajoutez vos premiers légumes pour commencer</p>
+                  </div>
+                  <button
+                    onClick={openAddModal}
+                    className="flex items-center gap-2 px-6 py-3 rounded-xl bg-green-700/40 hover:bg-green-700/60 border border-green-600/50 text-green-100 font-medium text-sm transition-colors cursor-pointer"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Ajouter un légume
+                  </button>
+                </div>
               )}
             </CardContent>
           </Card>
@@ -587,13 +686,24 @@ export function GardenPlanner() {
                   <Plus className="w-5 h-5 text-green-400" />
                   {t('selectPlant')}
                 </span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowPlantPicker(!showPlantPicker)}
-                >
-                  {showPlantPicker ? t('hide') : t('show')}
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={openAddModal}
+                    className="gap-1 text-green-400 border border-green-700/40 hover:bg-green-900/30"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    Ajouter
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowPlantPicker(!showPlantPicker)}
+                  >
+                    {showPlantPicker ? t('hide') : t('show')}
+                  </Button>
+                </div>
               </CardTitle>
               {selectedPlant && (
                 <div className="flex items-center gap-3 p-3 rounded-xl bg-green-900/30 border border-green-700/40 mb-3">
@@ -767,12 +877,11 @@ export function GardenPlanner() {
             </div>
           ) : (
             <button
-              onClick={() => setMobileSheetOpen(true)}
-              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-green-700/30 border border-green-600/40 text-green-100 font-medium text-sm active:bg-green-700/50 transition-colors cursor-pointer"
+              onClick={openAddModal}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-green-700/40 border border-green-600/50 text-green-100 font-semibold text-sm active:bg-green-700/60 transition-colors cursor-pointer"
             >
-              <Leaf className="w-4 h-4" />
-              {t('choosePlant')}
-              <ChevronUp className="w-4 h-4 ml-1 text-green-400/60" />
+              <Plus className="w-5 h-5" />
+              Ajouter un légume
             </button>
           )}
         </div>
@@ -957,6 +1066,141 @@ export function GardenPlanner() {
           </div>
         );
       })()}
+
+      {/* ===== ADD PLANT MODAL ===== */}
+      {showAddModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+          <div className="absolute inset-0 bg-black/70" onClick={() => setShowAddModal(false)} />
+          <div
+            ref={addModalRef}
+            className="relative w-full sm:max-w-md bg-[#0f2819] border border-green-700/50 rounded-t-2xl sm:rounded-2xl shadow-2xl shadow-black/60 overflow-hidden animate-slideUp"
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-green-800/30">
+              <div>
+                <h2 className="text-green-50 font-bold text-lg">Ajouter un légume</h2>
+                <p className="text-green-400/60 text-xs mt-0.5">Choisissez et plantez en quelques taps</p>
+              </div>
+              <button onClick={() => setShowAddModal(false)} className="text-green-600 hover:text-green-300 cursor-pointer">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="px-5 py-4 space-y-5 overflow-y-auto" style={{ maxHeight: 'calc(85vh - 80px)' }}>
+              {/* Step 1: Which vegetable */}
+              <div>
+                <p className="text-green-300/80 text-xs font-semibold uppercase tracking-wider mb-3">
+                  1. Quel légume ?
+                </p>
+                {/* Search */}
+                <div className="relative mb-3">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-green-500/50" />
+                  <input
+                    type="text"
+                    value={addModalSearch}
+                    onChange={(e) => setAddModalSearch(e.target.value)}
+                    placeholder="Rechercher un légume..."
+                    className="w-full pl-9 pr-3 py-2.5 text-sm rounded-xl bg-[#0D1F17] border border-green-800/30 text-green-100 placeholder:text-green-600/40 focus:outline-none focus:border-green-600/50"
+                    autoFocus
+                  />
+                </div>
+                {/* Plant grid */}
+                <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-1">
+                  {addModalFilteredPlants.map((plant) => (
+                    <button
+                      key={plant.id}
+                      onClick={() => setAddModalPlant(plant)}
+                      className={`flex items-center gap-2.5 p-3 rounded-xl text-left transition-all cursor-pointer border ${
+                        addModalPlant?.id === plant.id
+                          ? 'bg-green-900/50 border-green-600/60 ring-1 ring-green-500/40'
+                          : 'bg-[#0D1F17] border-green-900/20 hover:border-green-700/40 hover:bg-green-900/20'
+                      }`}
+                    >
+                      <div
+                        className="w-8 h-8 rounded-lg flex items-center justify-center text-lg shrink-0"
+                        style={{ backgroundColor: plant.color + '20' }}
+                      >
+                        {CATEGORY_EMOJI[plant.category] || '🌱'}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <span className="text-sm text-green-100 font-medium block truncate leading-tight">
+                          {locale === 'fr' ? plant.name.fr : plant.name.en}
+                        </span>
+                        <span className="text-[10px] text-green-500/60 block">
+                          {plant.spacingCm}cm espacement
+                        </span>
+                      </div>
+                      {addModalPlant?.id === plant.id && (
+                        <Check className="w-4 h-4 text-green-400 shrink-0" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Step 2: Quantity — only show after plant is selected */}
+              {addModalPlant && (
+                <div>
+                  <p className="text-green-300/80 text-xs font-semibold uppercase tracking-wider mb-3">
+                    2. Combien de pieds ?
+                  </p>
+                  {/* Preset buttons */}
+                  <div className="flex gap-2 mb-3">
+                    {[1, 2, 3, 5, 10].map((n) => (
+                      <button
+                        key={n}
+                        onClick={() => setAddModalQuantity(n)}
+                        className={`flex-1 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer border ${
+                          addModalQuantity === n
+                            ? 'bg-green-700/50 border-green-600/60 text-green-100 ring-1 ring-green-500/40'
+                            : 'bg-[#0D1F17] border-green-900/20 text-green-400/70 hover:border-green-700/40 hover:text-green-200'
+                        }`}
+                      >
+                        {n}
+                      </button>
+                    ))}
+                  </div>
+                  {/* Custom input */}
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setAddModalQuantity(Math.max(1, addModalQuantity - 1))}
+                      className="w-10 h-10 rounded-xl bg-[#0D1F17] border border-green-800/30 text-green-300 hover:bg-green-900/30 transition-colors cursor-pointer flex items-center justify-center text-lg font-bold"
+                    >−</button>
+                    <div className="flex-1 text-center">
+                      <span className="text-3xl font-bold text-green-50">{addModalQuantity}</span>
+                      <span className="text-green-400/60 text-sm ml-2">pied{addModalQuantity > 1 ? 's' : ''}</span>
+                    </div>
+                    <button
+                      onClick={() => setAddModalQuantity(addModalQuantity + 1)}
+                      className="w-10 h-10 rounded-xl bg-[#0D1F17] border border-green-800/30 text-green-300 hover:bg-green-900/30 transition-colors cursor-pointer flex items-center justify-center text-lg font-bold"
+                    >+</button>
+                  </div>
+                  {/* Info hint */}
+                  <p className="text-green-500/50 text-xs text-center mt-2">
+                    Ils seront placés automatiquement avec le bon espacement
+                  </p>
+                </div>
+              )}
+
+              {/* CTA */}
+              <button
+                onClick={handleAddModalConfirm}
+                disabled={!addModalPlant}
+                className={`w-full flex items-center justify-center gap-2 py-4 rounded-xl font-bold text-base transition-all ${
+                  addModalPlant
+                    ? 'bg-green-600 hover:bg-green-500 text-white cursor-pointer shadow-lg shadow-green-900/40'
+                    : 'bg-green-900/20 text-green-700/50 cursor-not-allowed'
+                }`}
+              >
+                <Leaf className="w-5 h-5" />
+                {addModalPlant
+                  ? `Planter ${addModalQuantity} ${addModalQuantity > 1 ? (locale === 'fr' ? addModalPlant.name.fr : addModalPlant.name.en) + 's' : (locale === 'fr' ? addModalPlant.name.fr : addModalPlant.name.en)}`
+                  : 'Choisissez un légume'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Variety picker modal */}
       {varietyPickerPlantData && varietyPickerState && (
