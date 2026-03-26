@@ -232,33 +232,72 @@ export function DashboardView() {
     p.plantingMonths.includes(currentMonth)
   );
 
+  const nbZones = (config.zones || []).length;
+  const nbPlants = config.plantedItems.length;
+  const nbSeedlings = (config.seedlings || []).length;
+
   return (
-    <div className="min-h-screen bg-white dark:bg-[#0D1F17] py-6 sm:py-8 px-4 sm:px-6">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white dark:from-[#0D1F17] dark:to-[#0A1810] py-6 sm:py-8 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-green-50 mb-1">My Garden</h1>
-            <p className="text-sm sm:text-base text-gray-500 dark:text-green-300/60">
-              {config.length}m x {config.width}m |{' '}
-              {SOIL_LABELS[config.soilType]} soil |{' '}
-              {CLIMATE_LABELS[config.climateZone]} |{' '}
-              {SUN_LABELS[config.sunExposure]}
+            <h1 className="text-2xl sm:text-3xl font-bold text-green-900 dark:text-green-50 mb-1">
+              {'\uD83C\uDF31'} Mon Jardin
+            </h1>
+            <p className="text-sm text-green-600/70 dark:text-green-300/60">
+              {config.length}m x {config.width}m &middot; {SOIL_LABELS[config.soilType]}
             </p>
           </div>
-          <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
-            <Link href="/garden/3d" className="flex-1 sm:flex-none">
-              <Button variant="secondary" className="gap-2 w-full sm:w-auto">
-                <Eye className="w-4 h-4" />
-                <span className="sm:inline">3D View</span>
-              </Button>
-            </Link>
-            <Link href="/garden/setup">
-              <Button variant="ghost" size="sm" className="gap-2">
-                <Settings className="w-4 h-4" />
-              </Button>
-            </Link>
+          <Link href="/garden/setup">
+            <Button variant="ghost" size="sm" className="gap-2">
+              <Settings className="w-4 h-4" />
+            </Button>
+          </Link>
+        </div>
+
+        {/* Stats Cards (max 3 mobile, no scroll) */}
+        <div className="grid grid-cols-3 gap-3 mb-6">
+          <div className="rounded-2xl p-4 bg-green-500 text-white shadow-lg shadow-green-500/20">
+            <div className="text-2xl font-bold">{nbZones}</div>
+            <div className="text-xs font-medium opacity-90">Zones</div>
           </div>
+          <div className="rounded-2xl p-4 bg-green-600 text-white shadow-lg shadow-green-600/20">
+            <div className="text-2xl font-bold">{nbPlants}</div>
+            <div className="text-xs font-medium opacity-90">Plantes</div>
+          </div>
+          <div className="rounded-2xl p-4 bg-amber-500 text-white shadow-lg shadow-amber-500/20">
+            <div className="text-2xl font-bold">{nbSeedlings}</div>
+            <div className="text-xs font-medium opacity-90">Semis</div>
+          </div>
+        </div>
+
+        {/* Quick Action Buttons */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
+          <Link href="/garden/3d" className="w-full">
+            <button className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold bg-green-500 text-white hover:bg-green-600 transition-colors shadow-md min-h-[48px]">
+              <Eye className="w-4 h-4" />
+              Vue 3D
+            </button>
+          </Link>
+          <Link href="/garden/planner" className="w-full">
+            <button className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold bg-green-600 text-white hover:bg-green-700 transition-colors shadow-md min-h-[48px]">
+              <Sprout className="w-4 h-4" />
+              Plan 2D
+            </button>
+          </Link>
+          <Link href="/garden/semis" className="w-full">
+            <button className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold bg-amber-500 text-white hover:bg-amber-600 transition-colors shadow-md min-h-[48px]">
+              <Plus className="w-4 h-4" />
+              + Semis
+            </button>
+          </Link>
+          <Link href="/plants" className="w-full">
+            <button className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold bg-emerald-500 text-white hover:bg-emerald-600 transition-colors shadow-md min-h-[48px]">
+              <Leaf className="w-4 h-4" />
+              + Plante
+            </button>
+          </Link>
         </div>
 
         {/* Today's Tasks Widget */}
@@ -268,7 +307,7 @@ export function DashboardView() {
             animate={{ opacity: 1, y: 0 }}
             className="mb-6"
           >
-            <Card className="bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-900/20 dark:to-green-900/15 border-green-200 dark:border-green-800/30 overflow-hidden">
+            <Card className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/15 border-green-500/20 dark:border-green-800/30 overflow-hidden">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center flex-shrink-0">
@@ -386,7 +425,7 @@ export function DashboardView() {
           animate={{ opacity: 1, y: 0 }}
           className="mb-6 sm:mb-8"
         >
-          <Card className="bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-green-900/40 dark:to-emerald-900/20 border-yellow-200/50 dark:border-green-800/30">
+          <Card className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/10 border-amber-500/20 dark:border-amber-800/30">
             <div className="flex items-start gap-3 sm:gap-4">
               <div className="w-10 h-10 rounded-xl bg-yellow-500/20 flex items-center justify-center flex-shrink-0">
                 <Lightbulb className="w-5 h-5 text-yellow-500 dark:text-yellow-400" />
