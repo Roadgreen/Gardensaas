@@ -45,6 +45,7 @@ export function useGarden() {
     updateZone: store.updateZone,
     addSeedling: store.addSeedling,
     removeSeedling: store.removeSeedling,
+    updateSeedling: store.updateSeedling,
     transplantSeedling: store.transplantSeedling,
     isLoaded: store.isLoaded,
     isSetupComplete,

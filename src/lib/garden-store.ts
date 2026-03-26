@@ -71,6 +71,7 @@ interface GardenStore {
   updateZone: (zoneId: string, partial: Partial<GardenZone>) => void;
   addSeedling: (seedling: Seedling) => void;
   removeSeedling: (seedlingId: string) => void;
+  updateSeedling: (seedlingId: string, partial: Partial<Seedling>) => void;
   transplantSeedling: (seedlingId: string, x: number, z: number) => void;
   completeSetup: () => void;
   advanceOnboarding: (step: 'setup' | 'inspect' | 'plant' | 'done') => void;
@@ -273,6 +274,19 @@ export const useGardenStore = create<GardenStore>((set, get) => ({
   removeSeedling: (seedlingId: string) => {
     const prev = get().config;
     const updated = { ...prev, seedlings: (prev.seedlings || []).filter((s) => s.id !== seedlingId) };
+    saveToStorage(updated);
+    set({ config: updated });
+    get().syncToServer();
+  },
+
+  updateSeedling: (seedlingId: string, partial: Partial<Seedling>) => {
+    const prev = get().config;
+    const updated = {
+      ...prev,
+      seedlings: (prev.seedlings || []).map((s) =>
+        s.id === seedlingId ? { ...s, ...partial } : s
+      ),
+    };
     saveToStorage(updated);
     set({ config: updated });
     get().syncToServer();
