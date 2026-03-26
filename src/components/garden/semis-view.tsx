@@ -6,7 +6,7 @@ import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 import { useGarden, usePlants } from '@/lib/hooks';
 import type { Plant, Seedling } from '@/types';
-import { Plus, X, Search, Trash2, ArrowRightLeft, ChevronUp } from 'lucide-react';
+import { Plus, X, Search, Trash2, ArrowRightLeft, ChevronUp, CalendarDays } from 'lucide-react';
 
 /* ------------------------------------------------------------------ */
 /*  Color palette                                                      */
@@ -37,9 +37,9 @@ type SeedlingStage = 0 | 1 | 2 | 3;
 
 function getSeedlingStage(seededAt: string): SeedlingStage {
   const days = Math.floor((Date.now() - new Date(seededAt).getTime()) / (1000 * 60 * 60 * 24));
-  if (days < 3) return 0;
-  if (days < 7) return 1;
-  if (days < 14) return 2;
+  if (days < 7) return 0;
+  if (days < 14) return 1;
+  if (days < 21) return 2;
   return 3;
 }
 
@@ -51,115 +51,102 @@ const STAGE_INFO: Record<SeedlingStage, { label: string; emoji: string; color: s
   0: { label: 'Graine', emoji: '\uD83E\uDEB4', color: '#8B6914', tip: 'Gardez le sol humide, temperature ideale 20-25\u00B0C' },
   1: { label: 'Cotyledons', emoji: '\uD83C\uDF31', color: '#7BC67E', tip: 'Premiere lumiere ! Placez pres d\'une fenetre' },
   2: { label: 'Vraies feuilles', emoji: '\uD83C\uDF3F', color: '#22c55e', tip: 'Arrosez regulierement, ajoutez de l\'engrais' },
-  3: { label: 'Pret a transplanter', emoji: '\uD83C\uDF3B', color: '#16a34a', tip: 'Pret pour le repiquage en pleine terre !' },
+  3: { label: 'Pret a repiquer', emoji: '\uD83C\uDF3B', color: '#16a34a', tip: 'Pret pour le repiquage en pleine terre !' },
 };
 
 /* ------------------------------------------------------------------ */
-/*  3D: Seedling growth models                                          */
+/*  Tray layout: compute grid dimensions for seedling count             */
+/* ------------------------------------------------------------------ */
+function getTrayLayout(count: number): { cols: number; rows: number } {
+  if (count <= 2) return { cols: 2, rows: 1 };
+  if (count <= 4) return { cols: 2, rows: 2 };
+  if (count <= 6) return { cols: 3, rows: 2 };
+  if (count <= 8) return { cols: 4, rows: 2 };
+  if (count <= 12) return { cols: 4, rows: 3 };
+  if (count <= 16) return { cols: 4, rows: 4 };
+  if (count <= 24) return { cols: 6, rows: 4 };
+  if (count <= 36) return { cols: 6, rows: 6 };
+  return { cols: 8, rows: Math.ceil(count / 8) };
+}
+
+/* ------------------------------------------------------------------ */
+/*  3D: Seedling tray with individual pots                              */
 /* ------------------------------------------------------------------ */
 
-function TerracottaPot() {
+function TrayPot({ position }: { position: [number, number, number] }) {
   return (
-    <group position={[0, -0.3, 0]}>
+    <group position={position}>
       <mesh>
-        <latheGeometry args={[
-          [
-            new THREE.Vector2(0.2, 0),
-            new THREE.Vector2(0.22, 0),
-            new THREE.Vector2(0.35, 0.5),
-            new THREE.Vector2(0.4, 0.55),
-            new THREE.Vector2(0.42, 0.55),
-            new THREE.Vector2(0.42, 0.6),
-            new THREE.Vector2(0.38, 0.6),
-            new THREE.Vector2(0.36, 0.58),
-            new THREE.Vector2(0.33, 0.5),
-            new THREE.Vector2(0.19, 0.03),
-            new THREE.Vector2(0.19, 0),
-          ],
-          32,
-        ]} />
-        <meshStandardMaterial color={C.terra} roughness={0.8} />
+        <cylinderGeometry args={[0.12, 0.09, 0.15, 8]} />
+        <meshStandardMaterial color="#6D4C41" roughness={0.85} />
       </mesh>
-      <mesh position={[0, -0.02, 0]}>
-        <cylinderGeometry args={[0.44, 0.46, 0.04, 32]} />
-        <meshStandardMaterial color={C.terraLt} roughness={0.7} />
+      {/* Soil top */}
+      <mesh position={[0, 0.075, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[0.11, 16]} />
+        <meshStandardMaterial color="#3E2723" roughness={1} />
       </mesh>
     </group>
   );
 }
 
-function SoilDisc() {
+function TraySeed({ position }: { position: [number, number, number] }) {
+  const ref = useRef<THREE.Mesh>(null);
+  useFrame(() => {
+    if (!ref.current) return;
+    ref.current.position.y = position[1] + 0.09 + Math.sin(performance.now() * 0.002) * 0.003;
+  });
   return (
-    <mesh position={[0, 0.28, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-      <circleGeometry args={[0.38, 32]} />
-      <meshStandardMaterial color="#3E2723" roughness={1} />
+    <mesh ref={ref} position={[position[0], position[1] + 0.09, position[2]]}>
+      <sphereGeometry args={[0.025, 8, 6]} />
+      <meshStandardMaterial color="#6B4423" roughness={0.9} />
     </mesh>
   );
 }
 
-// Stage 0: seed in soil (small brown point)
-function SeedModel() {
+function TrayCotyledon({ position, color }: { position: [number, number, number]; color: string }) {
   const ref = useRef<THREE.Group>(null);
   useFrame(() => {
     if (!ref.current) return;
-    ref.current.position.y = 0.3 + Math.sin(performance.now() * 0.002) * 0.003;
+    ref.current.rotation.z = Math.sin(performance.now() * 0.002) * 0.05;
   });
   return (
-    <group ref={ref} position={[0, 0.3, 0]}>
-      <mesh>
-        <sphereGeometry args={[0.04, 8, 6]} />
-        <meshStandardMaterial color="#6B4423" roughness={0.9} />
-      </mesh>
-    </group>
-  );
-}
-
-// Stage 1: cotyledons (2 small green leaves)
-function CotyledonModel({ color }: { color: string }) {
-  const ref = useRef<THREE.Group>(null);
-  useFrame(() => {
-    if (!ref.current) return;
-    ref.current.rotation.z = Math.sin(performance.now() * 0.002) * 0.06;
-  });
-  return (
-    <group ref={ref} position={[0, 0.28, 0]}>
-      <mesh position={[0, 0.06, 0]}>
-        <cylinderGeometry args={[0.01, 0.015, 0.12, 6]} />
+    <group ref={ref} position={[position[0], position[1] + 0.08, position[2]]}>
+      <mesh position={[0, 0.03, 0]}>
+        <cylinderGeometry args={[0.008, 0.012, 0.06, 6]} />
         <meshStandardMaterial color="#4CAF50" />
       </mesh>
-      <mesh position={[-0.03, 0.13, 0]} rotation={[0.2, 0, -0.5]}>
-        <sphereGeometry args={[0.022, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2]} />
+      <mesh position={[-0.02, 0.065, 0]} rotation={[0.2, 0, -0.5]}>
+        <sphereGeometry args={[0.015, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2]} />
         <meshStandardMaterial color={color || '#66BB6A'} />
       </mesh>
-      <mesh position={[0.03, 0.13, 0]} rotation={[0.2, 0, 0.5]}>
-        <sphereGeometry args={[0.022, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2]} />
+      <mesh position={[0.02, 0.065, 0]} rotation={[0.2, 0, 0.5]}>
+        <sphereGeometry args={[0.015, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2]} />
         <meshStandardMaterial color={color || '#66BB6A'} />
       </mesh>
     </group>
   );
 }
 
-// Stage 2: true leaves (3-4 leaves, taller stem)
-function TrueLeavesModel({ color }: { color: string }) {
+function TrayTrueLeaves({ position, color }: { position: [number, number, number]; color: string }) {
   const ref = useRef<THREE.Group>(null);
   useFrame(() => {
     if (!ref.current) return;
     ref.current.rotation.z = Math.sin(performance.now() * 0.0015) * 0.03;
   });
   return (
-    <group ref={ref} position={[0, 0.28, 0]}>
-      <mesh position={[0, 0.1, 0]}>
-        <cylinderGeometry args={[0.013, 0.022, 0.2, 6]} />
+    <group ref={ref} position={[position[0], position[1] + 0.08, position[2]]}>
+      <mesh position={[0, 0.05, 0]}>
+        <cylinderGeometry args={[0.01, 0.015, 0.1, 6]} />
         <meshStandardMaterial color="#388E3C" />
       </mesh>
-      {[0.08, 0.14, 0.19].map((h, i) => (
+      {[0.04, 0.07, 0.1].map((h, i) => (
         <group key={i} position={[0, h, 0]} rotation={[0, i * 1.2, 0]}>
-          <mesh position={[-0.035, 0, 0]} rotation={[0.3, 0, -0.4 - i * 0.1]}>
-            <sphereGeometry args={[0.025 - i * 0.003, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          <mesh position={[-0.025, 0, 0]} rotation={[0.3, 0, -0.4]}>
+            <sphereGeometry args={[0.018, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2]} />
             <meshStandardMaterial color={color || C.leaf} />
           </mesh>
-          <mesh position={[0.035, 0, 0]} rotation={[0.3, 0, 0.4 + i * 0.1]}>
-            <sphereGeometry args={[0.025 - i * 0.003, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          <mesh position={[0.025, 0, 0]} rotation={[0.3, 0, 0.4]}>
+            <sphereGeometry args={[0.018, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2]} />
             <meshStandardMaterial color={color || C.leaf} />
           </mesh>
         </group>
@@ -168,75 +155,115 @@ function TrueLeavesModel({ color }: { color: string }) {
   );
 }
 
-// Stage 3: adult plant ready to transplant (larger model)
-function AdultModel({ color }: { color: string }) {
+function TrayAdult({ position, color }: { position: [number, number, number]; color: string }) {
   const ref = useRef<THREE.Group>(null);
   const glowRef = useRef<THREE.PointLight>(null);
   useFrame(() => {
     if (!ref.current) return;
-    ref.current.rotation.z = Math.sin(performance.now() * 0.001) * 0.015;
+    ref.current.rotation.z = Math.sin(performance.now() * 0.001) * 0.01;
     if (glowRef.current) {
-      glowRef.current.intensity = 0.4 + Math.sin(performance.now() * 0.003) * 0.15;
+      glowRef.current.intensity = 0.3 + Math.sin(performance.now() * 0.003) * 0.1;
     }
   });
   return (
-    <group ref={ref} position={[0, 0.28, 0]}>
-      <pointLight ref={glowRef} position={[0, 0.3, 0]} color={C.gold} intensity={0.4} distance={1.5} />
-      <mesh position={[0, 0.15, 0]}>
-        <cylinderGeometry args={[0.018, 0.03, 0.3, 8]} />
+    <group ref={ref} position={[position[0], position[1] + 0.08, position[2]]}>
+      <pointLight ref={glowRef} position={[0, 0.18, 0]} color={C.gold} intensity={0.3} distance={0.6} />
+      <mesh position={[0, 0.07, 0]}>
+        <cylinderGeometry args={[0.012, 0.02, 0.14, 8]} />
         <meshStandardMaterial color="#2E7D32" />
       </mesh>
-      {[0.12, 0.2, 0.27, 0.33].map((h, i) => (
+      {[0.06, 0.1, 0.14, 0.17].map((h, i) => (
         <group key={i} position={[0, h, 0]} rotation={[0, i * 0.9, 0]}>
-          <mesh position={[-0.045, 0, 0.01]} rotation={[0.2, 0, -0.5]}>
-            <sphereGeometry args={[0.032, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          <mesh position={[-0.03, 0, 0]} rotation={[0.2, 0, -0.5]}>
+            <sphereGeometry args={[0.02, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2]} />
             <meshStandardMaterial color={color || C.leafDeep} />
           </mesh>
-          <mesh position={[0.045, 0, -0.01]} rotation={[0.2, 0, 0.5]}>
-            <sphereGeometry args={[0.032, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2]} />
+          <mesh position={[0.03, 0, 0]} rotation={[0.2, 0, 0.5]}>
+            <sphereGeometry args={[0.02, 8, 6, 0, Math.PI * 2, 0, Math.PI / 2]} />
             <meshStandardMaterial color={color || C.leafDeep} />
           </mesh>
         </group>
       ))}
-      <mesh position={[0, 0.37, 0]}>
-        <sphereGeometry args={[0.022, 8, 6]} />
+      <mesh position={[0, 0.2, 0]}>
+        <sphereGeometry args={[0.014, 8, 6]} />
         <meshStandardMaterial color={color || '#E8F5E9'} emissive={C.gold} emissiveIntensity={0.2} />
       </mesh>
     </group>
   );
 }
 
-function SeedlingScene3D({ plant, seededAt }: { plant: Plant; seededAt: string }) {
-  const stage = getSeedlingStage(seededAt);
+function SeedlingTrayScene({ seedlings, plants }: { seedlings: Seedling[]; plants: Plant[] }) {
+  const totalPots = seedlings.reduce((sum, s) => sum + s.pots, 0);
+  const { cols, rows } = getTrayLayout(totalPots);
+  const spacing = 0.3;
+  const offsetX = ((cols - 1) * spacing) / 2;
+  const offsetZ = ((rows - 1) * spacing) / 2;
+
+  // Build pot array with seedling info
+  const pots: { x: number; z: number; seedling: Seedling; plant: Plant | undefined }[] = [];
+  seedlings.forEach((s) => {
+    const plant = plants.find((p) => p.id === s.plantId);
+    for (let i = 0; i < s.pots; i++) {
+      pots.push({ x: 0, z: 0, seedling: s, plant });
+    }
+  });
+
   return (
     <>
       <ambientLight intensity={0.7} />
       <directionalLight position={[3, 5, 2]} intensity={1.0} castShadow color="#FFF8E1" />
       <directionalLight position={[-2, 3, -1]} intensity={0.3} color="#E8F5E9" />
-      <mesh position={[0, -0.34, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
-        <planeGeometry args={[4, 4]} />
+
+      {/* Tray base */}
+      <mesh position={[0, -0.12, 0]} receiveShadow>
+        <boxGeometry args={[cols * spacing + 0.2, 0.04, rows * spacing + 0.2]} />
+        <meshStandardMaterial color="#5D4037" roughness={0.9} />
+      </mesh>
+
+      {/* Background plane */}
+      <mesh position={[0, -0.15, 0]} rotation={[-Math.PI / 2, 0, 0]} receiveShadow>
+        <planeGeometry args={[6, 6]} />
         <meshStandardMaterial color={C.paperMid} roughness={1} />
       </mesh>
-      <TerracottaPot />
-      <SoilDisc />
-      {stage === 0 && <SeedModel />}
-      {stage === 1 && <CotyledonModel color={plant.color} />}
-      {stage === 2 && <TrueLeavesModel color={plant.color} />}
-      {stage === 3 && <AdultModel color={plant.color} />}
+
+      {/* Pots */}
+      {pots.map((pot, idx) => {
+        const col = idx % cols;
+        const row = Math.floor(idx / cols);
+        if (row >= rows) return null;
+        const x = col * spacing - offsetX;
+        const z = row * spacing - offsetZ;
+        const pos: [number, number, number] = [x, -0.04, z];
+        const stage = getSeedlingStage(pot.seedling.seededAt);
+        const color = pot.plant?.color || C.leaf;
+
+        return (
+          <group key={idx}>
+            <TrayPot position={pos} />
+            {stage === 0 && <TraySeed position={pos} />}
+            {stage === 1 && <TrayCotyledon position={pos} color={color} />}
+            {stage === 2 && <TrayTrueLeaves position={pos} color={color} />}
+            {stage === 3 && <TrayAdult position={pos} color={color} />}
+          </group>
+        );
+      })}
+
       <OrbitControls
         autoRotate
-        autoRotateSpeed={1.2}
-        enableZoom={false}
+        autoRotateSpeed={0.8}
+        enableZoom={true}
         enablePan={false}
         minPolarAngle={Math.PI / 6}
-        maxPolarAngle={Math.PI / 2.2}
+        maxPolarAngle={Math.PI / 2.4}
+        minDistance={1}
+        maxDistance={4}
       />
     </>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/*  Sow modal (Nouveau semis)                                          */
+/*  Sow modal                                                          */
 /* ------------------------------------------------------------------ */
 function SowModal({
   plants,
@@ -282,7 +309,7 @@ function SowModal({
           <h3 className="text-lg font-semibold" style={{ color: C.ink }}>
             {'\uD83C\uDF31'} Nouveau semis
           </h3>
-          <button onClick={onClose} className="p-1 rounded-lg hover:bg-black/5 transition-colors">
+          <button onClick={onClose} className="p-2 rounded-lg hover:bg-black/5 transition-colors min-w-[48px] min-h-[48px] flex items-center justify-center">
             <X className="w-5 h-5" style={{ color: C.inkSoft }} />
           </button>
         </div>
@@ -297,7 +324,7 @@ function SowModal({
                   placeholder="Rechercher une plante..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl text-sm outline-none transition-colors"
+                  className="w-full pl-10 pr-4 py-3 rounded-xl text-sm outline-none transition-colors"
                   style={{ background: C.paper, border: `1px solid ${C.dew}`, color: C.ink }}
                   autoFocus
                 />
@@ -309,7 +336,7 @@ function SowModal({
                   <button
                     key={p.id}
                     onClick={() => setSelectedPlant(p)}
-                    className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-left transition-all hover:scale-[1.01]"
+                    className="w-full flex items-center gap-3 px-3 py-3 rounded-xl text-left transition-all hover:scale-[1.01] min-h-[48px]"
                     style={{ background: C.cream }}
                   >
                     <span
@@ -353,7 +380,7 @@ function SowModal({
                 type="date"
                 value={sowDate}
                 onChange={(e) => setSowDate(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl text-sm outline-none"
+                className="w-full px-4 py-3 rounded-xl text-sm outline-none min-h-[48px]"
                 style={{ background: C.paper, border: `1px solid ${C.dew}`, color: C.ink }}
               />
             </div>
@@ -363,13 +390,13 @@ function SowModal({
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setPots(Math.max(1, pots - 1))}
-                  className="w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold transition-colors"
+                  className="w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold transition-colors"
                   style={{ background: C.paper, border: `1px solid ${C.dew}`, color: C.ink }}
                 >-</button>
                 <span className="text-xl font-bold min-w-[40px] text-center" style={{ color: C.leaf }}>{pots}</span>
                 <button
                   onClick={() => setPots(pots + 1)}
-                  className="w-10 h-10 rounded-xl flex items-center justify-center text-lg font-bold transition-colors"
+                  className="w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold transition-colors"
                   style={{ background: C.paper, border: `1px solid ${C.dew}`, color: C.ink }}
                 >+</button>
               </div>
@@ -378,12 +405,12 @@ function SowModal({
             <div className="flex gap-3 pt-2">
               <button
                 onClick={() => setSelectedPlant(null)}
-                className="flex-1 py-2.5 rounded-xl text-sm font-medium transition-colors"
+                className="flex-1 py-3 rounded-xl text-sm font-medium transition-colors min-h-[48px]"
                 style={{ background: C.paper, color: C.inkMid }}
               >Retour</button>
               <button
                 onClick={handleConfirm}
-                className="flex-1 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:brightness-110"
+                className="flex-1 py-3 rounded-xl text-sm font-medium text-white transition-all hover:brightness-110 min-h-[48px]"
                 style={{ background: C.leaf }}
               >{'\uD83C\uDF31'} Semer</button>
             </div>
@@ -411,25 +438,36 @@ function SeedlingCard({
   const stage = getSeedlingStage(seedling.seededAt);
   const info = STAGE_INFO[stage];
   const days = getDaysSince(seedling.seededAt);
-  const progress = Math.min(1, days / 14);
+  const progress = Math.min(1, days / 21);
+  const daysBeforeTransplant = Math.max(0, 21 - days);
 
   return (
     <button
       onClick={onSelect}
-      className="w-full text-left rounded-xl p-3 transition-all duration-200 shrink-0"
+      className="w-full text-left rounded-xl p-3 transition-all duration-200 shrink-0 min-h-[48px]"
       style={{
         background: isSelected ? C.leafGlow + '25' : C.cream,
         border: `2px solid ${isSelected ? C.leaf : 'transparent'}`,
         minWidth: '160px',
       }}
+      title={`${plant.name.fr} - Jour ${days} - ${daysBeforeTransplant > 0 ? daysBeforeTransplant + 'j avant repiquage' : 'Pret !'}`}
     >
       <div className="flex items-start gap-2.5">
         <span className="text-lg">{info.emoji}</span>
         <div className="flex-1 min-w-0">
           <div className="text-sm font-semibold truncate" style={{ color: C.ink }}>{plant.name.fr}</div>
           <div className="text-xs mt-0.5" style={{ color: C.inkSoft }}>
-            Jour {days} &middot; {info.label} &middot; {seedling.pots} godet{seedling.pots > 1 ? 's' : ''}
+            J{days} &middot; {info.label} &middot; {seedling.pots} godet{seedling.pots > 1 ? 's' : ''}
           </div>
+          {daysBeforeTransplant > 0 ? (
+            <div className="text-[10px] mt-0.5" style={{ color: C.terra }}>
+              {daysBeforeTransplant}j avant repiquage
+            </div>
+          ) : (
+            <div className="text-[10px] mt-0.5 font-semibold" style={{ color: C.leafDeep }}>
+              {'\u2728'} Pret a repiquer !
+            </div>
+          )}
         </div>
       </div>
       <div className="mt-2.5 h-1.5 rounded-full overflow-hidden" style={{ background: C.paperMid }}>
@@ -443,26 +481,42 @@ function SeedlingCard({
 }
 
 /* ------------------------------------------------------------------ */
-/*  Info panel                                                          */
+/*  Info panel with date editing                                        */
 /* ------------------------------------------------------------------ */
 function InfoPanel({
   seedling,
   plant,
   onRemove,
   onTransplant,
+  onUpdateDate,
 }: {
   seedling: Seedling;
   plant: Plant;
   onRemove: () => void;
   onTransplant: () => void;
+  onUpdateDate: (newDate: string) => void;
 }) {
   const stage = getSeedlingStage(seedling.seededAt);
   const info = STAGE_INFO[stage];
   const days = getDaysSince(seedling.seededAt);
-  const progress = Math.min(1, days / 14);
+  const progress = Math.min(1, days / 21);
+  const daysBeforeTransplant = Math.max(0, 21 - days);
   const sowDate = new Date(seedling.seededAt).toLocaleDateString('fr-FR', {
     day: 'numeric', month: 'long', year: 'numeric',
   });
+  const [editingDate, setEditingDate] = useState(false);
+  const [newDate, setNewDate] = useState(new Date(seedling.seededAt).toISOString().slice(0, 10));
+
+  // Reset when seedling changes
+  useEffect(() => {
+    setEditingDate(false);
+    setNewDate(new Date(seedling.seededAt).toISOString().slice(0, 10));
+  }, [seedling.id, seedling.seededAt]);
+
+  const handleDateSave = () => {
+    onUpdateDate(new Date(newDate).toISOString());
+    setEditingDate(false);
+  };
 
   return (
     <div className="rounded-2xl p-4 md:p-5 space-y-4" style={{ background: C.cream, border: `1px solid ${C.dew}` }}>
@@ -493,11 +547,49 @@ function InfoPanel({
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-xl p-3" style={{ background: C.parchment }}>
           <div className="text-[10px] uppercase tracking-wider font-medium mb-1" style={{ color: C.inkSoft }}>Seme le</div>
-          <div className="text-sm font-semibold" style={{ color: C.ink }}>{sowDate}</div>
+          {editingDate ? (
+            <div className="space-y-2">
+              <input
+                type="date"
+                value={newDate}
+                onChange={(e) => setNewDate(e.target.value)}
+                className="w-full px-2 py-1.5 rounded-lg text-xs outline-none"
+                style={{ background: C.paper, border: `1px solid ${C.dew}`, color: C.ink }}
+              />
+              <div className="flex gap-1">
+                <button
+                  onClick={handleDateSave}
+                  className="flex-1 py-1.5 rounded-lg text-xs font-medium text-white min-h-[32px]"
+                  style={{ background: C.leaf }}
+                >OK</button>
+                <button
+                  onClick={() => setEditingDate(false)}
+                  className="flex-1 py-1.5 rounded-lg text-xs font-medium min-h-[32px]"
+                  style={{ background: C.paper, color: C.inkMid }}
+                >Annuler</button>
+              </div>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1.5">
+              <div className="text-sm font-semibold" style={{ color: C.ink }}>{sowDate}</div>
+              <button
+                onClick={() => setEditingDate(true)}
+                className="p-1 rounded-md hover:bg-black/5 transition-colors min-w-[32px] min-h-[32px] flex items-center justify-center"
+                title="Modifier la date"
+              >
+                <CalendarDays className="w-3.5 h-3.5" style={{ color: C.inkSoft }} />
+              </button>
+            </div>
+          )}
         </div>
         <div className="rounded-xl p-3" style={{ background: C.parchment }}>
           <div className="text-[10px] uppercase tracking-wider font-medium mb-1" style={{ color: C.inkSoft }}>Age</div>
           <div className="text-sm font-semibold" style={{ color: C.ink }}>{days} jours</div>
+          {daysBeforeTransplant > 0 && (
+            <div className="text-[10px] mt-0.5" style={{ color: C.terra }}>
+              {daysBeforeTransplant}j avant repiquage
+            </div>
+          )}
         </div>
       </div>
 
@@ -510,7 +602,7 @@ function InfoPanel({
         {stage >= 2 && (
           <button
             onClick={onTransplant}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:brightness-110 flex-1"
+            className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium text-white transition-all hover:brightness-110 flex-1 min-h-[48px]"
             style={{ background: C.leaf }}
           >
             <ArrowRightLeft className="w-4 h-4" />
@@ -519,7 +611,7 @@ function InfoPanel({
         )}
         <button
           onClick={onRemove}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-all hover:brightness-95"
+          className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium transition-all hover:brightness-95 min-h-[48px]"
           style={{ background: C.terraPal, color: C.terraDk }}
         >
           <Trash2 className="w-4 h-4" />
@@ -543,7 +635,7 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
       </p>
       <button
         onClick={onAdd}
-        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:brightness-110 shadow-md"
+        className="flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-medium text-white transition-all hover:brightness-110 shadow-md min-h-[48px]"
         style={{ background: C.leaf }}
       >
         <Plus className="w-4 h-4" />
@@ -557,7 +649,7 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
 /*  Main view                                                           */
 /* ------------------------------------------------------------------ */
 export function SemisView() {
-  const { config, addSeedling, removeSeedling, transplantSeedling, isLoaded } = useGarden();
+  const { config, addSeedling, removeSeedling, updateSeedling, transplantSeedling, isLoaded } = useGarden();
   const { plants, isLoading: plantsLoading } = usePlants();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showSowModal, setShowSowModal] = useState(false);
@@ -600,11 +692,18 @@ export function SemisView() {
   }, [removeSeedling]);
 
   const handleTransplant = useCallback((seedlingId: string) => {
-    // Place at center of garden
     const x = 50;
     const z = 50;
     transplantSeedling(seedlingId, x, z);
   }, [transplantSeedling]);
+
+  const handleUpdateDate = useCallback((seedlingId: string, newDate: string) => {
+    updateSeedling(seedlingId, { seededAt: newDate });
+  }, [updateSeedling]);
+
+  // Total pots for tray camera distance
+  const totalPots = seedlings.reduce((sum, s) => sum + s.pots, 0);
+  const cameraZ = Math.max(1.5, Math.min(3.5, totalPots * 0.12 + 0.8));
 
   if (!isLoaded || plantsLoading) {
     return (
@@ -642,11 +741,13 @@ export function SemisView() {
         <div className="flex items-center justify-between px-4 md:px-8 pt-6 pb-4">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold" style={{ color: C.ink }}>{'\uD83C\uDF31'} Mes Semis</h1>
-            <p className="text-sm mt-1" style={{ color: C.inkSoft }}>{seedlings.length} semis en cours</p>
+            <p className="text-sm mt-1" style={{ color: C.inkSoft }}>
+              {seedlings.length} semis &middot; {totalPots} godets
+            </p>
           </div>
           <button
             onClick={() => setShowSowModal(true)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-all hover:brightness-110 shadow-md"
+            className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium text-white transition-all hover:brightness-110 shadow-md min-h-[48px]"
             style={{ background: C.leaf }}
           >
             <Plus className="w-4 h-4" />
@@ -673,7 +774,7 @@ export function SemisView() {
             })}
           </div>
 
-          {/* Right: 3D viewer + info */}
+          {/* Right: 3D tray viewer + info */}
           <div className="space-y-5">
             <div
               className="rounded-2xl overflow-hidden shadow-lg"
@@ -683,19 +784,17 @@ export function SemisView() {
                 border: `1px solid ${C.dew}`,
               }}
             >
-              {selected && (
-                <Suspense
-                  fallback={
-                    <div className="w-full h-full flex items-center justify-center">
-                      <div className="animate-pulse text-2xl">{'\uD83C\uDF31'}</div>
-                    </div>
-                  }
-                >
-                  <Canvas camera={{ position: [0, 0.5, 1.3], fov: 40 }} shadows>
-                    <SeedlingScene3D plant={selected.plant} seededAt={selected.seedling.seededAt} />
-                  </Canvas>
-                </Suspense>
-              )}
+              <Suspense
+                fallback={
+                  <div className="w-full h-full flex items-center justify-center">
+                    <div className="animate-pulse text-2xl">{'\uD83C\uDF31'}</div>
+                  </div>
+                }
+              >
+                <Canvas camera={{ position: [0, 1.2, cameraZ], fov: 40 }} shadows>
+                  <SeedlingTrayScene seedlings={seedlings} plants={plants} />
+                </Canvas>
+              </Suspense>
             </div>
 
             {selected && (
@@ -704,6 +803,7 @@ export function SemisView() {
                 plant={selected.plant}
                 onRemove={() => handleRemove(selected.seedling.id)}
                 onTransplant={() => handleTransplant(selected.seedling.id)}
+                onUpdateDate={(d) => handleUpdateDate(selected.seedling.id, d)}
               />
             )}
           </div>
@@ -713,23 +813,21 @@ export function SemisView() {
         <div className="md:hidden">
           <div
             style={{
-              height: '50vh',
+              height: '45vh',
               background: `linear-gradient(180deg, ${C.paper} 0%, ${C.paperMid} 100%)`,
             }}
           >
-            {selected && (
-              <Suspense
-                fallback={
-                  <div className="w-full h-full flex items-center justify-center">
-                    <div className="animate-pulse text-2xl">{'\uD83C\uDF31'}</div>
-                  </div>
-                }
-              >
-                <Canvas camera={{ position: [0, 0.5, 1.3], fov: 40 }} shadows>
-                  <SeedlingScene3D plant={selected.plant} seededAt={selected.seedling.seededAt} />
-                </Canvas>
-              </Suspense>
-            )}
+            <Suspense
+              fallback={
+                <div className="w-full h-full flex items-center justify-center">
+                  <div className="animate-pulse text-2xl">{'\uD83C\uDF31'}</div>
+                </div>
+              }
+            >
+              <Canvas camera={{ position: [0, 1.2, cameraZ], fov: 40 }} shadows>
+                <SeedlingTrayScene seedlings={seedlings} plants={plants} />
+              </Canvas>
+            </Suspense>
           </div>
 
           <div className="px-4 py-3">
@@ -758,7 +856,7 @@ export function SemisView() {
             <div className="px-4">
               <button
                 onClick={() => setMobileDetailOpen(!mobileDetailOpen)}
-                className="w-full flex items-center justify-center gap-2 py-2 rounded-xl text-sm font-medium transition-colors mb-3"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium transition-colors mb-3 min-h-[48px]"
                 style={{ background: C.dew, color: C.inkMid }}
               >
                 <ChevronUp
@@ -775,6 +873,7 @@ export function SemisView() {
                     plant={selected.plant}
                     onRemove={() => handleRemove(selected.seedling.id)}
                     onTransplant={() => handleTransplant(selected.seedling.id)}
+                    onUpdateDate={(d) => handleUpdateDate(selected.seedling.id, d)}
                   />
                 </div>
               )}
