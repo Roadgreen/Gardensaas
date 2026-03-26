@@ -36,19 +36,19 @@ const GardenScene = dynamic(() => import('./garden-scene').then(m => ({ default:
   ),
 });
 
-// ===== Rotating Tips Bubble =====
+// ===== Rotating Tips Bubble (40px green circle, bottom-right) =====
 const ROTATING_TIPS = [
   { icon: '\uD83C\uDF31', text: 'Clique sur le catalogue pour ajouter des plantes a ton jardin' },
   { icon: '\uD83D\uDCA7', text: 'Pince pour zoomer, glisse pour tourner autour du jardin' },
   { icon: '\uD83E\uDD1D', text: 'Certaines plantes poussent mieux ensemble ! Verifie le compagnonnage' },
-  { icon: '\u2728', text: 'Bientot : un assistant jardin intelligent pour te guider !' },
+  { icon: '\u2728', text: 'Ajoute des zones (serre, exterieur) pour organiser ton jardin !' },
+  { icon: '\uD83C\uDF31', text: 'Semis : suis la croissance de tes graines en 3D' },
 ];
 
 function TipBubble() {
   const [isOpen, setIsOpen] = useState(false);
   const [tipIndex, setTipIndex] = useState(0);
 
-  // Rotate tips every 8 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setTipIndex(i => (i + 1) % ROTATING_TIPS.length);
@@ -111,9 +111,10 @@ function TipBubble() {
       )}
       <button
         onClick={() => setIsOpen(v => !v)}
+        aria-label="Conseil jardin"
         style={{
-          width: '52px',
-          height: '52px',
+          width: '48px',
+          height: '48px',
           borderRadius: '50%',
           border: 'none',
           background: 'linear-gradient(135deg, #22c55e, #16a34a)',
@@ -122,7 +123,7 @@ function TipBubble() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '24px',
+          fontSize: '22px',
           transition: 'transform 0.2s ease, box-shadow 0.2s ease',
           transform: isOpen ? 'scale(0.92)' : 'scale(1)',
         }}
