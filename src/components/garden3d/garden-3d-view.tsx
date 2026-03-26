@@ -22,19 +22,130 @@ import type { RaisedBed } from '@/types';
 const GardenScene = dynamic(() => import('./garden-scene').then(m => ({ default: m.GardenScene })), {
   ssr: false,
   loading: () => (
-    <div className="w-full h-full bg-[#0D1F17] animate-pulse flex items-center justify-center relative">
+    <div className="w-full h-full bg-[#F5F1E8] animate-pulse flex items-center justify-center relative">
       {/* Fake grid for spatial context while loading */}
       <div className="absolute inset-x-0 bottom-0 h-1/2 opacity-10" style={{
-        backgroundImage: 'linear-gradient(rgba(74,222,128,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(74,222,128,0.3) 1px, transparent 1px)',
+        backgroundImage: 'linear-gradient(rgba(74,124,89,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(74,124,89,0.2) 1px, transparent 1px)',
         backgroundSize: '40px 40px',
       }} />
       <div className="flex flex-col items-center gap-3 z-10">
-        <div className="w-10 h-10 rounded-full border-2 border-green-700/40 border-t-green-400 animate-spin" />
-        <div className="h-3 w-28 bg-green-900/30 rounded-md" />
+        <div className="w-10 h-10 rounded-full border-2 border-[#C8DFC1] border-t-[#4A7C59] animate-spin" />
+        <div className="h-3 w-28 bg-[#C8DFC1]/40 rounded-md" />
       </div>
     </div>
   ),
 });
+
+// ===== Rotating Tips Bubble =====
+const ROTATING_TIPS = [
+  { icon: '\uD83C\uDF31', text: 'Clique sur le catalogue pour ajouter des plantes a ton jardin' },
+  { icon: '\uD83D\uDCA7', text: 'Pince pour zoomer, glisse pour tourner autour du jardin' },
+  { icon: '\uD83E\uDD1D', text: 'Certaines plantes poussent mieux ensemble ! Verifie le compagnonnage' },
+  { icon: '\u2728', text: 'Bientot : un assistant jardin intelligent pour te guider !' },
+];
+
+function TipBubble() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [tipIndex, setTipIndex] = useState(0);
+
+  // Rotate tips every 8 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTipIndex(i => (i + 1) % ROTATING_TIPS.length);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const tip = ROTATING_TIPS[tipIndex];
+
+  return (
+    <div style={{
+      position: 'fixed',
+      bottom: '80px',
+      right: '16px',
+      zIndex: 50,
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'flex-end',
+      gap: '8px',
+    }}>
+      {isOpen && (
+        <div style={{
+          width: '260px',
+          maxWidth: '85vw',
+          background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+          borderRadius: '16px',
+          padding: '14px 16px',
+          boxShadow: '0 8px 30px rgba(22, 163, 74, 0.35)',
+          animation: 'tipBubbleIn 0.25s ease-out',
+        }}>
+          <div style={{
+            fontFamily: '"Nunito", system-ui, sans-serif',
+            fontSize: '13px',
+            color: '#fff',
+            lineHeight: '1.5',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: '8px',
+          }}>
+            <span style={{ fontSize: '18px', flexShrink: 0 }}>{tip.icon}</span>
+            <span>{tip.text}</span>
+          </div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '4px',
+            marginTop: '10px',
+          }}>
+            {ROTATING_TIPS.map((_, i) => (
+              <span key={i} style={{
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                background: i === tipIndex ? '#fff' : 'rgba(255,255,255,0.4)',
+                transition: 'background 0.3s',
+              }} />
+            ))}
+          </div>
+        </div>
+      )}
+      <button
+        onClick={() => setIsOpen(v => !v)}
+        style={{
+          width: '52px',
+          height: '52px',
+          borderRadius: '50%',
+          border: 'none',
+          background: 'linear-gradient(135deg, #22c55e, #16a34a)',
+          boxShadow: '0 4px 20px rgba(22, 163, 74, 0.4)',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '24px',
+          transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+          transform: isOpen ? 'scale(0.92)' : 'scale(1)',
+        }}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLElement).style.transform = 'scale(1.1)';
+          (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 24px rgba(22, 163, 74, 0.5)';
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLElement).style.transform = isOpen ? 'scale(0.92)' : 'scale(1)';
+          (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(22, 163, 74, 0.4)';
+        }}
+      >
+        {'\uD83C\uDF31'}
+      </button>
+      <style>{`
+        @keyframes tipBubbleIn {
+          0% { transform: scale(0.8); opacity: 0; }
+          100% { transform: scale(1); opacity: 1; }
+        }
+      `}</style>
+    </div>
+  );
+}
 
 export function Garden3DView() {
   const { config, isLoaded, addPlant, removePlant, addRaisedBed, removeRaisedBed, updateRaisedBed, addZone, removeZone, updateZone, updateConfig } = useGarden();
@@ -45,7 +156,7 @@ export function Garden3DView() {
   const [isDragging, setIsDragging] = useState(false);
   const [draggingPlantId, setDraggingPlantId] = useState<string | null>(null);
   const [selectedPlantType, setSelectedPlantType] = useState<string | null>(null);
-  const [showSpacing, setShowSpacing] = useState(true);
+  const showSpacing = true;
   const [showRaisedBedPanel, setShowRaisedBedPanel] = useState(false);
   const [showZonePanel, setShowZonePanel] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -231,18 +342,18 @@ export function Garden3DView() {
 
   if (!isLoaded) {
     return (
-      <div className="h-[calc(100dvh-64px-68px)] md:h-[calc(100dvh-64px)] bg-[#0D1F17] flex flex-col animate-pulse">
-        <div className="flex items-center gap-2 px-4 py-3 border-b border-green-900/30">
-          <div className="h-8 w-20 bg-green-900/30 rounded-lg" />
-          <div className="h-4 w-32 bg-green-900/20 rounded-md hidden sm:block" />
+      <div className="h-[calc(100dvh-64px-68px)] md:h-[calc(100dvh-64px)] bg-[#F5F1E8] flex flex-col animate-pulse">
+        <div className="flex items-center gap-2 px-4 py-3 border-b border-[#C8DFC1]">
+          <div className="h-8 w-20 bg-[#C8DFC1]/40 rounded-lg" />
+          <div className="h-4 w-32 bg-[#C8DFC1]/30 rounded-md hidden sm:block" />
           <div className="ml-auto flex gap-2">
-            {[1, 2, 3].map(i => <div key={i} className="h-8 w-16 bg-green-900/30 rounded-lg" />)}
+            {[1, 2, 3].map(i => <div key={i} className="h-8 w-16 bg-[#C8DFC1]/40 rounded-lg" />)}
           </div>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
-            <div className="w-10 h-10 rounded-full border-2 border-green-700/40 border-t-green-400 animate-spin" />
-            <span className="text-sm text-green-400/60">{t('loadingGarden')}</span>
+            <div className="w-10 h-10 rounded-full border-2 border-[#C8DFC1] border-t-[#4A7C59] animate-spin" />
+            <span className="text-sm text-[#4A7C59]/70">{t('loadingGarden')}</span>
           </div>
         </div>
       </div>
@@ -250,9 +361,9 @@ export function Garden3DView() {
   }
 
   return (
-    <div className="h-[calc(100dvh-64px-68px)] md:h-[calc(100dvh-64px)] bg-[#0D1F17] flex flex-col">
+    <div className="h-[calc(100dvh-64px-68px)] md:h-[calc(100dvh-64px)] bg-[#F5F1E8] flex flex-col">
       {/* Top bar */}
-      <div className="flex items-center gap-2 px-2 sm:px-4 py-2 sm:py-3 border-b border-green-900/30 bg-[#0D1F17]/80 backdrop-blur-sm z-10">
+      <div className="flex items-center gap-2 px-2 sm:px-4 py-2 sm:py-3 border-b border-[#C8DFC1] bg-[#FDFAF4]/90 backdrop-blur-sm z-10">
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <Link href="/garden/dashboard">
             <Button variant="ghost" size="sm" className="gap-1 sm:gap-2 px-2 sm:px-3">
@@ -260,97 +371,29 @@ export function Garden3DView() {
               <span className="hidden sm:inline">{t('dashboard')}</span>
             </Button>
           </Link>
-          <span className="text-xs sm:text-sm text-green-300/60 hidden sm:inline">
+          <span className="text-xs sm:text-sm text-[#1B2B1A]/60 hidden sm:inline">
             {config.length}m x {config.width}m | {config.plantedItems.length} {t('plants')}
             {(config.raisedBeds || []).length > 0 && ` | ${(config.raisedBeds || []).length} ${t('beds')}`}
             {(config.zones || []).length > 0 && ` | ${(config.zones || []).length} ${t('zones')}`}
           </span>
-          <span className="text-xs text-green-300/60 sm:hidden">
+          <span className="text-xs text-[#1B2B1A]/60 sm:hidden">
             {config.plantedItems.length} {t('plants')}
           </span>
         </div>
         <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-hide ml-auto">
-          {/* Garden size */}
-          <button
-            onClick={() => setShowSizeSelector(v => !v)}
-            className="shrink-0 px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
-            style={{
-              background: showSizeSelector ? 'rgba(74, 222, 128, 0.15)' : 'transparent',
-              borderColor: showSizeSelector ? 'rgba(74, 222, 128, 0.5)' : 'rgba(74, 222, 128, 0.2)',
-              color: showSizeSelector ? '#86EFAC' : '#9CA3AF',
-            }}
-          >
-            {'\uD83D\uDCCF'} <span className="hidden sm:inline">{config.length}x{config.width}m</span>
-          </button>
-          {/* Spacing toggle */}
-          <button
-            onClick={() => setShowSpacing(v => !v)}
-            className="shrink-0 px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
-            style={{
-              background: showSpacing ? 'rgba(168, 85, 247, 0.15)' : 'transparent',
-              borderColor: showSpacing ? 'rgba(168, 85, 247, 0.5)' : 'rgba(74, 222, 128, 0.2)',
-              color: showSpacing ? '#C084FC' : '#9CA3AF',
-            }}
-          >
-            {'\uD83E\uDDF2'} <span className="hidden sm:inline">{t('spacing')}</span>
-          </button>
-          {/* Zones */}
-          <button
-            onClick={() => setShowZonePanel(v => {
-              if (!v) { setShowRaisedBedPanel(false); setShowSuggestions(false); setInfoPanelPlantIndex(null); }
-              return !v;
-            })}
-            className="shrink-0 px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
-            style={{
-              background: showZonePanel ? 'rgba(74, 222, 128, 0.15)' : 'transparent',
-              borderColor: showZonePanel ? 'rgba(74, 222, 128, 0.5)' : 'rgba(74, 222, 128, 0.2)',
-              color: showZonePanel ? '#4ADE80' : '#9CA3AF',
-            }}
-          >
-            {'\uD83D\uDFE9'} <span className="hidden sm:inline">{t('zones_label')}</span>
-          </button>
-          {/* Raised beds */}
-          <button
-            onClick={() => setShowRaisedBedPanel(v => {
-              if (!v) { setShowZonePanel(false); setShowSuggestions(false); setInfoPanelPlantIndex(null); }
-              return !v;
-            })}
-            className="shrink-0 px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
-            style={{
-              background: showRaisedBedPanel ? 'rgba(210, 160, 108, 0.15)' : 'transparent',
-              borderColor: showRaisedBedPanel ? 'rgba(210, 160, 108, 0.5)' : 'rgba(74, 222, 128, 0.2)',
-              color: showRaisedBedPanel ? '#D4A06C' : '#9CA3AF',
-            }}
-          >
-            {'\uD83E\uDDF1'} <span className="hidden sm:inline">{t('beds')}</span>
-          </button>
-          {/* Suggestions */}
-          <button
-            onClick={() => setShowSuggestions(v => {
-              if (!v) { setShowRaisedBedPanel(false); setShowZonePanel(false); }
-              return !v;
-            })}
-            className="shrink-0 px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
-            style={{
-              background: showSuggestions ? 'rgba(251, 191, 36, 0.15)' : 'transparent',
-              borderColor: showSuggestions ? 'rgba(251, 191, 36, 0.5)' : 'rgba(74, 222, 128, 0.2)',
-              color: showSuggestions ? '#FBBF24' : '#9CA3AF',
-            }}
-          >
-            {'\uD83D\uDCA1'} <span className="hidden sm:inline">{t('suggestions_label')}</span>
-          </button>
-          {/* Catalog */}
+          {/* Add plant (Catalog) */}
           <button
             onClick={() => setIsSidebarOpen((v) => !v)}
-            className="shrink-0 px-2 sm:px-3 py-1.5 text-xs rounded-lg border transition-all"
+            className="shrink-0 px-3 sm:px-4 py-1.5 text-xs font-medium rounded-lg border transition-all"
             style={{
-              background: isSidebarOpen ? 'rgba(74, 222, 128, 0.15)' : 'transparent',
-              borderColor: isSidebarOpen ? 'rgba(74, 222, 128, 0.5)' : 'rgba(74, 222, 128, 0.2)',
-              color: isSidebarOpen ? '#86EFAC' : '#9CA3AF',
+              background: isSidebarOpen ? '#22c55e' : 'transparent',
+              borderColor: isSidebarOpen ? '#16a34a' : 'rgba(74, 124, 89, 0.3)',
+              color: isSidebarOpen ? '#fff' : '#4A7C59',
             }}
           >
             {'\uD83C\uDF3B'} <span className="hidden sm:inline">{t('catalog')}</span>
           </button>
+          {/* 2D planner link */}
           <Link href="/garden/planner" className="shrink-0">
             <Button variant="secondary" size="sm" className="gap-1 sm:gap-2 px-2 sm:px-3">
               <Grid3x3 className="w-4 h-4" />
@@ -505,10 +548,10 @@ export function Garden3DView() {
           />
         ) : (
           <Suspense fallback={
-            <div className="w-full h-full flex items-center justify-center bg-[#0D1F17]">
+            <div className="w-full h-full flex items-center justify-center bg-[#F5F1E8]">
               <div className="flex flex-col items-center gap-3">
-                <div className="w-10 h-10 rounded-full border-2 border-green-700/40 border-t-green-400 animate-spin" />
-                <span className="text-sm text-green-400/60">{t('loading3d')}</span>
+                <div className="w-10 h-10 rounded-full border-2 border-[#C8DFC1] border-t-[#4A7C59] animate-spin" />
+                <span className="text-sm text-[#4A7C59]/70">{t('loading3d')}</span>
               </div>
             </div>
           }>
@@ -553,6 +596,9 @@ export function Garden3DView() {
           }}
         />
       )}
+
+      {/* Rotating tips bubble */}
+      <TipBubble />
     </div>
   );
 }

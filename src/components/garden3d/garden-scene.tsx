@@ -1,16 +1,29 @@
 'use client';
 
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
-import { useTranslations, useLocale } from 'next-intl';
+import { useLocale } from 'next-intl';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
 import * as THREE from 'three';
 import type { GardenConfig, Plant } from '@/types';
-import { GardenerCharacter, getSeason, getTimeOfDay, getSeasonalDialogue, getRandomAdvice } from './gardener-character';
 import { GardenTerrain } from './garden-terrain';
+
+// Utility functions (moved from gardener-character.tsx which is now removed)
+function getSeason(): 'spring' | 'summer' | 'autumn' | 'winter' {
+  const month = new Date().getMonth();
+  if (month >= 2 && month <= 4) return 'spring';
+  if (month >= 5 && month <= 7) return 'summer';
+  if (month >= 8 && month <= 10) return 'autumn';
+  return 'winter';
+}
+
+function getTimeOfDay(): 'morning' | 'afternoon' | 'evening' {
+  const hour = new Date().getHours();
+  if (hour >= 5 && hour < 12) return 'morning';
+  if (hour >= 12 && hour < 18) return 'afternoon';
+  return 'evening';
+}
 import { Plant3D } from './plant-3d';
-import { GardenDecorations } from './garden-decorations';
-import { GardenUIOverlay } from './garden-ui-overlay';
 import { WeatherSystem } from './weather-effects';
 import { RaisedBed3D } from './raised-bed-3d';
 import { Zone3D } from './zone-3d';
@@ -95,25 +108,25 @@ function SkyDome({ season, timeOfDay }: { season: string; timeOfDay: string }) {
   const colors = useMemo(() => {
     const palettes: Record<string, Record<string, [string, string]>> = {
       morning: {
-        spring: ['#9DD6F5', '#FFECD2'],
-        summer: ['#7EC8F2', '#FFE0A0'],
-        autumn: ['#A8C8E8', '#FFD8A0'],
-        winter: ['#C0CCD8', '#E0E4E8'],
+        spring: ['#7EC8F0', '#FFF3D0'],
+        summer: ['#60B8E8', '#FFE0A0'],
+        autumn: ['#D0A878', '#FFE0C0'],
+        winter: ['#C0D0E0', '#F0ECE8'],
       },
       afternoon: {
-        spring: ['#6BB8E8', '#E8F4FC'],
-        summer: ['#5AACE0', '#D0EAFF'],
-        autumn: ['#8090C0', '#F0E8F0'],
-        winter: ['#90A0B0', '#F0F2F4'],
+        spring: ['#4AADE0', '#FFF8E0'],
+        summer: ['#38A0D8', '#FFF0D0'],
+        autumn: ['#C09060', '#FFF0D0'],
+        winter: ['#A0B8D0', '#F5F0EC'],
       },
       evening: {
-        spring: ['#7878C0', '#FF9878'],
-        summer: ['#5060B0', '#FF8860'],
-        autumn: ['#583CA0', '#FF7850'],
-        winter: ['#303848', '#607080'],
+        spring: ['#7050B0', '#FF9060'],
+        summer: ['#5048B0', '#FF8050'],
+        autumn: ['#604080', '#FF7848'],
+        winter: ['#303848', '#506070'],
       },
     };
-    return palettes[timeOfDay]?.[season] || ['#9DD6F5', '#FFECD2'];
+    return palettes[timeOfDay]?.[season] || ['#4AADE0', '#FFF3E0'];
   }, [season, timeOfDay]);
 
   const topColor = useMemo(() => new THREE.Color(colors[0]), [colors]);
@@ -140,108 +153,6 @@ function SkyDome({ season, timeOfDay }: { season: string; timeOfDay: string }) {
         side={THREE.BackSide}
       />
     </mesh>
-  );
-}
-
-// Firefly particles - glow at evening
-function Fireflies({ count, gardenLength, gardenWidth }: { count: number; gardenLength: number; gardenWidth: number }) {
-  const ref = useRef<THREE.Group>(null);
-  const particles = useMemo(() =>
-    Array.from({ length: count }, (_, i) => ({
-      x: (Math.random() - 0.5) * (gardenLength + 6),
-      z: (Math.random() - 0.5) * (gardenWidth + 6),
-      y: 0.2 + Math.random() * 1.5,
-      speed: 0.15 + Math.random() * 0.35,
-      offset: Math.random() * Math.PI * 2,
-      pulseSpeed: 1.5 + Math.random() * 2,
-    })),
-  [count, gardenLength, gardenWidth]);
-
-  useFrame(() => {
-    if (!ref.current) return;
-    const t = performance.now() * 0.001;
-    ref.current.children.forEach((child, i) => {
-      const p = particles[i];
-      if (!p) return;
-      const mesh = child as THREE.Mesh;
-      mesh.position.x = p.x + Math.sin(t * p.speed + p.offset) * 0.8;
-      mesh.position.y = p.y + Math.sin(t * p.speed * 1.3 + p.offset) * 0.3;
-      mesh.position.z = p.z + Math.cos(t * p.speed * 0.7 + p.offset) * 0.6;
-      const glow = (Math.sin(t * p.pulseSpeed + p.offset) + 1) / 2;
-      (mesh.material as THREE.MeshBasicMaterial).opacity = 0.15 + glow * 0.85;
-      mesh.scale.setScalar(0.5 + glow * 0.8);
-    });
-  });
-
-  return (
-    <group ref={ref}>
-      {particles.map((p, i) => (
-        <mesh key={`firefly-${i}`} position={[p.x, p.y, p.z]}>
-          <sphereGeometry args={[0.015, 4, 3]} />
-          <meshBasicMaterial color="#CCFF66" transparent opacity={0.6} />
-        </mesh>
-      ))}
-    </group>
-  );
-}
-
-// Falling leaves particle system (autumn)
-function FallingLeaves({ count, gardenLength, gardenWidth }: { count: number; gardenLength: number; gardenWidth: number }) {
-  const ref = useRef<THREE.Group>(null);
-  const leaves = useMemo(() =>
-    Array.from({ length: count }, (_, i) => ({
-      x: (Math.random() - 0.5) * (gardenLength + 8),
-      z: (Math.random() - 0.5) * (gardenWidth + 8),
-      fallSpeed: 0.15 + Math.random() * 0.25,
-      swaySpeed: 0.8 + Math.random() * 1.2,
-      swayAmount: 0.3 + Math.random() * 0.5,
-      rotSpeed: 1 + Math.random() * 2,
-      offset: Math.random() * Math.PI * 2,
-      color: ['#E06010', '#C04020', '#D4A020', '#B8601A'][Math.floor(Math.random() * 4)],
-    })),
-  [count, gardenLength, gardenWidth]);
-
-  useFrame(() => {
-    if (!ref.current) return;
-    const t = performance.now() * 0.001;
-    ref.current.children.forEach((child, i) => {
-      const l = leaves[i];
-      if (!l) return;
-      const mesh = child as THREE.Mesh;
-      const fallPhase = ((t * l.fallSpeed + l.offset) % 3) / 3;
-      mesh.position.x = l.x + Math.sin(t * l.swaySpeed + l.offset) * l.swayAmount;
-      mesh.position.y = 4 - fallPhase * 5;
-      mesh.position.z = l.z + Math.cos(t * l.swaySpeed * 0.7 + l.offset) * l.swayAmount * 0.5;
-      mesh.rotation.x = t * l.rotSpeed;
-      mesh.rotation.z = t * l.rotSpeed * 0.7;
-      (mesh.material as THREE.MeshBasicMaterial).opacity = mesh.position.y > 0 ? 0.85 : Math.max(0, 0.85 + mesh.position.y * 0.4);
-    });
-  });
-
-  return (
-    <group ref={ref}>
-      {leaves.map((l, i) => (
-        <mesh key={`leaf-${i}`} position={[l.x, 3, l.z]}>
-          <boxGeometry args={[0.04, 0.002, 0.03]} />
-          <meshBasicMaterial color={l.color} transparent opacity={0.85} side={THREE.DoubleSide} />
-        </mesh>
-      ))}
-    </group>
-  );
-}
-
-// Season-aware particle effects container
-function SeasonalParticles({ season, timeOfDay, gardenLength, gardenWidth }: {
-  season: string; timeOfDay: string; gardenLength: number; gardenWidth: number;
-}) {
-  const isEvening = timeOfDay === 'evening';
-  return (
-    <group>
-      {/* Fireflies at night */}
-      {isEvening && <Fireflies count={20} gardenLength={gardenLength} gardenWidth={gardenWidth} />}
-      {/* Falling leaves in autumn */}
-      {season === 'autumn' && <FallingLeaves count={15} gardenLength={gardenLength} gardenWidth={gardenWidth} />}
-    </group>
   );
 }
 
@@ -390,65 +301,6 @@ function Cloud({ position, scale }: { position: [number, number, number]; scale:
   );
 }
 
-// Flying birds that cross the sky occasionally
-function FlyingBirds({ gardenLength, gardenWidth }: { gardenLength: number; gardenWidth: number }) {
-  const groupRef = useRef<THREE.Group>(null);
-  const birds = useMemo(() =>
-    Array.from({ length: 5 }, (_, i) => ({
-      offset: i * 2.5,
-      speed: 1.2 + Math.random() * 0.8,
-      height: 6 + Math.random() * 4,
-      z: (Math.random() - 0.5) * gardenWidth * 2,
-      flapSpeed: 8 + Math.random() * 4,
-      size: 0.06 + Math.random() * 0.04,
-    })),
-  [gardenLength, gardenWidth]);
-
-  useFrame(() => {
-    if (!groupRef.current) return;
-    const t = performance.now() * 0.001;
-    groupRef.current.children.forEach((child, i) => {
-      const b = birds[i];
-      if (!b) return;
-      const birdGroup = child as THREE.Group;
-      // Fly across the sky in a sine wave path
-      const phase = ((t * b.speed * 0.15 + b.offset) % 1);
-      birdGroup.position.x = -15 + phase * 30;
-      birdGroup.position.y = b.height + Math.sin(t * 0.5 + b.offset) * 0.5;
-      birdGroup.position.z = b.z + Math.sin(t * 0.3 + b.offset) * 1;
-      birdGroup.rotation.y = Math.PI * 0.5 + Math.sin(t * 0.2 + b.offset) * 0.2;
-      // Wing flapping
-      const wingAngle = Math.sin(t * b.flapSpeed) * 0.6;
-      if (birdGroup.children[1]) (birdGroup.children[1] as THREE.Mesh).rotation.z = -wingAngle - 0.2;
-      if (birdGroup.children[2]) (birdGroup.children[2] as THREE.Mesh).rotation.z = wingAngle + 0.2;
-    });
-  });
-
-  return (
-    <group ref={groupRef}>
-      {birds.map((b, i) => (
-        <group key={`fbird-${i}`}>
-          {/* Body */}
-          <mesh>
-            <capsuleGeometry args={[b.size * 0.3, b.size, 3, 4]} />
-            <meshStandardMaterial color="#2D3748" />
-          </mesh>
-          {/* Left wing */}
-          <mesh position={[-b.size * 0.8, 0, 0]}>
-            <boxGeometry args={[b.size * 1.5, 0.003, b.size * 0.5]} />
-            <meshStandardMaterial color="#4A5568" />
-          </mesh>
-          {/* Right wing */}
-          <mesh position={[b.size * 0.8, 0, 0]}>
-            <boxGeometry args={[b.size * 1.5, 0.003, b.size * 0.5]} />
-            <meshStandardMaterial color="#4A5568" />
-          </mesh>
-        </group>
-      ))}
-    </group>
-  );
-}
-
 // Camera controller with smooth focus transitions
 function CameraController({
   isIsometric,
@@ -516,9 +368,9 @@ function SceneLighting({ timeOfDay, season }: { timeOfDay: string; season: strin
   }, [timeOfDay]);
 
   const directionalIntensity = useMemo(() => {
-    if (timeOfDay === 'evening') return 0.6;
-    if (season === 'winter') return 0.8;
-    return 1.2;
+    if (timeOfDay === 'evening') return 0.7;
+    if (season === 'winter') return 0.9;
+    return 1.4;
   }, [timeOfDay, season]);
 
   // Warmer, cozier light colors -- golden hour feel
@@ -818,17 +670,11 @@ function SceneContent({
   onRightClickPlant,
   season,
   timeOfDay,
-  gardenerDialogue,
-  showGardenerDialogue,
-  onGardenerClick,
-  onDialogueClose,
   isIsometric,
   plants,
   activeTool,
   isPlacementMode,
   onGroundClick,
-  gardenerTarget,
-  gardenerAction,
   focusTarget,
   weather,
   showSpacing,
@@ -845,17 +691,11 @@ function SceneContent({
   onRightClickPlant: (index: number, event: MouseEvent) => void;
   season: 'spring' | 'summer' | 'autumn' | 'winter';
   timeOfDay: 'morning' | 'afternoon' | 'evening';
-  gardenerDialogue: string;
-  showGardenerDialogue: boolean;
-  onGardenerClick: () => void;
-  onDialogueClose: () => void;
   isIsometric: boolean;
   plants: Plant[];
   activeTool: string | null;
   isPlacementMode: boolean;
   onGroundClick: (x: number, z: number) => void;
-  gardenerTarget: THREE.Vector3 | null;
-  gardenerAction: 'idle' | 'walking' | 'watering' | 'digging' | 'harvesting' | 'pointing' | 'celebrating';
   focusTarget: THREE.Vector3 | null;
   weather: string;
   showSpacing: boolean;
@@ -919,9 +759,9 @@ function SceneContent({
 
       {/* Soft fog for depth -- warm tones */}
       <fog attach="fog" args={[
-        timeOfDay === 'evening' ? '#1E2040' : season === 'winter' ? '#D8E0E8' : season === 'autumn' ? '#E0D8C8' : '#D0ECD0',
-        12,
-        45,
+        timeOfDay === 'evening' ? '#2A2030' : season === 'winter' ? '#E0E8F0' : season === 'autumn' ? '#F0DCC0' : '#D0F0C8',
+        16,
+        55,
       ]} />
 
       {/* Terrain */}
@@ -1022,19 +862,6 @@ function SceneContent({
         onGroundClick={onGroundClick}
       />
 
-      {/* Gardener character */}
-      <GardenerCharacter
-        position={[halfL + 1.5, 0, -halfW - 1.0]}
-        gardenBounds={{ halfL, halfW }}
-        dialogue={gardenerDialogue}
-        showDialogue={showGardenerDialogue}
-        onAdviceRequest={onGardenerClick}
-        onDialogueClose={onDialogueClose}
-        walkToTarget={gardenerTarget}
-        currentAction={gardenerAction}
-        locale={locale}
-      />
-
       {/* Weather effects (rain, snow, sun rays, wind) — skip on mobile for perf */}
       {!isMobile && (
         <WeatherSystem
@@ -1043,30 +870,6 @@ function SceneContent({
           gardenLength={config.length}
           gardenWidth={config.width}
           weather={weather}
-        />
-      )}
-
-      {/* Seasonal particle effects (fireflies, falling leaves) — skip on mobile for perf */}
-      {!isMobile && (
-        <SeasonalParticles
-          season={season}
-          timeOfDay={timeOfDay}
-          gardenLength={config.length}
-          gardenWidth={config.width}
-        />
-      )}
-
-      {/* Flying birds in the sky — skip on mobile for perf */}
-      {!isMobile && (
-        <FlyingBirds gardenLength={config.length} gardenWidth={config.width} />
-      )}
-
-      {/* Decorations — skip on mobile for perf */}
-      {!isMobile && (
-        <GardenDecorations
-          gardenLength={config.length}
-          gardenWidth={config.width}
-          season={season}
         />
       )}
 
@@ -1099,8 +902,6 @@ function getWeather(season: string): string {
 export function GardenScene({ config, selectedPlantType: externalSelectedPlantType, showSpacing: externalShowSpacing = true, selectedBedId: externalSelectedBedId = null, onSelectBed: externalOnSelectBed, selectedZoneId: externalSelectedZoneId = null, onSelectZone: externalOnSelectZone, locale = 'en' }: GardenSceneProps) {
   const [selectedPlantIndex, setSelectedPlantIndex] = useState<number | null>(null);
   const [isIsometric, setIsIsometric] = useState(false);
-  const [gardenerDialogue, setGardenerDialogue] = useState('');
-  const [showGardenerDialogue, setShowGardenerDialogue] = useState(false);
   const [plants, setPlants] = useState<Plant[]>([]);
   const [activeTool, setActiveTool] = useState<string | null>(null);
   const [isPlacementMode, setIsPlacementMode] = useState(false);
@@ -1110,8 +911,6 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
     x: number;
     y: number;
   } | null>(null);
-  const [gardenerTarget, setGardenerTarget] = useState<THREE.Vector3 | null>(null);
-  const [gardenerAction, setGardenerAction] = useState<'idle' | 'walking' | 'watering' | 'digging' | 'harvesting' | 'pointing' | 'celebrating'>('idle');
   const [focusTarget, setFocusTarget] = useState<THREE.Vector3 | null>(null);
 
   const season = useMemo(() => getSeason(), []);
@@ -1133,20 +932,7 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
     });
   }, []);
 
-  // Show greeting on mount
-  useEffect(() => {
-    const greeting = getSeasonalDialogue(locale);
-    setGardenerDialogue(greeting);
-    setShowGardenerDialogue(true);
-
-    const timer = setTimeout(() => {
-      setShowGardenerDialogue(false);
-    }, 8000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  // When a plant is selected, move camera focus, send gardener there, and open info panel
+  // When a plant is selected, move camera focus and open info panel
   useEffect(() => {
     if (selectedPlantIndex !== null) {
       const item = config.plantedItems[selectedPlantIndex];
@@ -1156,62 +942,17 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
         const worldX = -halfL + (item.x / 100) * config.length;
         const worldZ = -halfW + (item.z / 100) * config.width;
         setFocusTarget(new THREE.Vector3(worldX, 0, worldZ));
-        setGardenerTarget(new THREE.Vector3(worldX + 0.3, 0, worldZ + 0.3));
-        setGardenerAction('walking');
 
         // Open the plant info panel automatically when a plant is clicked
         const infoEvent = new CustomEvent('garden:info', {
           detail: { index: selectedPlantIndex },
         });
         window.dispatchEvent(infoEvent);
-
-        // After walking, switch to pointing at the plant
-        const pointTimer = setTimeout(() => {
-          setGardenerAction('pointing');
-        }, 1500);
-
-        // Check if this plant is harvest-ready for celebration
-        const plantData = plants.find((p) => p.id === item.plantId);
-        if (plantData) {
-          const now = new Date();
-          const planted = new Date(item.plantedDate);
-          const daysPassed = Math.floor(
-            (now.getTime() - planted.getTime()) / (1000 * 60 * 60 * 24)
-          );
-          if (daysPassed >= plantData.harvestDays) {
-            const celebrateTimer = setTimeout(() => {
-              setGardenerAction('celebrating');
-              setGardenerDialogue(locale === 'fr' ? 'Celle-ci est prête à récolter ! Bravo !' : 'This one is ready to harvest! Great work!');
-              setShowGardenerDialogue(true);
-            }, 2500);
-            return () => {
-              clearTimeout(pointTimer);
-              clearTimeout(celebrateTimer);
-            };
-          }
-        }
-
-        return () => clearTimeout(pointTimer);
       }
     } else {
       setFocusTarget(null);
-      setGardenerAction('idle');
     }
   }, [selectedPlantIndex, config, plants]);
-
-  const handleGardenerClick = useCallback(() => {
-    const advice = getRandomAdvice(locale);
-    setGardenerDialogue(advice);
-    setShowGardenerDialogue(true);
-  }, []);
-
-  const handleDialogueClose = useCallback(() => {
-    setShowGardenerDialogue(false);
-  }, []);
-
-  const handleIsometricToggle = useCallback(() => {
-    setIsIsometric((prev) => !prev);
-  }, []);
 
   const handleToolSelect = useCallback((tool: string | null) => {
     setActiveTool(tool);
@@ -1222,22 +963,10 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
       setIsPlacementMode(false);
     }
     if (tool === 'water' && selectedPlantIndex !== null) {
-      setGardenerAction('watering');
       SoundEffects.play('water');
-      setGardenerDialogue(locale === 'fr' ? 'Arrosage ! Les plantes adorent boire !' : 'Watering time! Plants love a good drink.');
-      setShowGardenerDialogue(true);
     } else if (tool === 'harvest' && selectedPlantIndex !== null) {
-      setGardenerAction('harvesting');
       SoundEffects.play('harvest');
-      // Celebrate after harvest animation
-      setTimeout(() => {
-        setGardenerAction('celebrating');
-        setGardenerDialogue(locale === 'fr' ? 'Belle récolte ! Votre jardin produit bien !' : 'Great harvest! Your garden is producing well!');
-        setShowGardenerDialogue(true);
-      }, 2000);
     } else if (tool === 'info' && selectedPlantIndex !== null) {
-      setGardenerAction('pointing');
-      // Dispatch info event for the plant info panel
       const event = new CustomEvent('garden:info', {
         detail: { index: selectedPlantIndex },
       });
@@ -1283,11 +1012,6 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
           }
         }
         if (tooClose) {
-          const plantName = locale === 'fr' ? newPlantData.name.fr : newPlantData.name.en;
-          setGardenerDialogue(locale === 'fr'
-            ? `Trop proche ! ${plantName} nécessite ${newPlantData.spacingCm}cm d'espacement.`
-            : `Too close! ${plantName} needs ${newPlantData.spacingCm}cm spacing.`);
-          setShowGardenerDialogue(true);
           SoundEffects.play('click');
           return;
         }
@@ -1326,11 +1050,6 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
       // Check if click is inside the garden bounds or inside a container (bed/zone)
       const isInsideGarden = pctXFinal >= 0 && pctXFinal <= 100 && pctZFinal >= 0 && pctZFinal <= 100;
       if (!isInsideGarden && !raisedBedId && !zoneId) {
-        // Don't allow planting in empty ground outside the garden
-        setGardenerDialogue(locale === 'fr'
-          ? 'Vous ne pouvez planter que dans le jardin ou dans un bac !'
-          : 'You can only plant in the garden or inside a raised bed!');
-        setShowGardenerDialogue(true);
         SoundEffects.play('click');
         return;
       }
@@ -1341,8 +1060,6 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
       });
       window.dispatchEvent(event);
       SoundEffects.play('plant');
-      setGardenerAction('digging');
-      setGardenerTarget(new THREE.Vector3(worldX + 0.3, 0, worldZ + 0.3));
     }
   }, [isPlacementMode, selectedPlantType, config, plants]);
 
@@ -1362,60 +1079,6 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
     }
     setContextMenu(null);
   }, [selectedPlantIndex]);
-
-  const handleTogglePlacement = useCallback(() => {
-    setIsPlacementMode((prev) => !prev);
-  }, []);
-
-  // Count harvest-ready plants
-  const harvestReadyCount = useMemo(() => {
-    return config.plantedItems.filter((item) => {
-      const plant = plants.find((p) => p.id === item.plantId);
-      if (!plant) return false;
-      const now = new Date();
-      const planted = new Date(item.plantedDate);
-      const daysPassed = Math.floor(
-        (now.getTime() - planted.getTime()) / (1000 * 60 * 60 * 24)
-      );
-      return daysPassed >= plant.harvestDays;
-    }).length;
-  }, [config.plantedItems, plants]);
-
-  // Garden health score (0-100)
-  const gardenHealth = useMemo(() => {
-    if (config.plantedItems.length === 0) return 100;
-    let score = 0;
-    config.plantedItems.forEach((item) => {
-      const plant = plants.find((p) => p.id === item.plantId);
-      if (!plant) return;
-      const now = new Date();
-      const planted = new Date(item.plantedDate);
-      const daysPassed = Math.floor(
-        (now.getTime() - planted.getTime()) / (1000 * 60 * 60 * 24)
-      );
-      const progress = Math.min(daysPassed / plant.harvestDays, 1);
-      // Good progress + not overdue
-      if (daysPassed <= plant.harvestDays * 1.3) {
-        score += 80 + progress * 20;
-      } else {
-        score += 50;
-      }
-    });
-    return Math.round(score / config.plantedItems.length);
-  }, [config.plantedItems, plants]);
-
-  // Task count
-  const taskCount = useMemo(() => {
-    const hour = new Date().getHours();
-    const wateringTasks = config.plantedItems.filter((item) => {
-      const plant = plants.find((p) => p.id === item.plantId);
-      if (!plant) return false;
-      if (plant.wateringFrequency === 'daily') return hour > 14;
-      if (plant.wateringFrequency === 'every-2-days') return hour > 16;
-      return false;
-    }).length;
-    return wateringTasks + harvestReadyCount;
-  }, [config.plantedItems, plants, harvestReadyCount]);
 
   // Prevent browser context menu on the canvas
   const canvasRef = useRef<HTMLDivElement>(null);
@@ -1459,17 +1122,11 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
           onRightClickPlant={handleRightClickPlant}
           season={season}
           timeOfDay={timeOfDay}
-          gardenerDialogue={gardenerDialogue}
-          showGardenerDialogue={showGardenerDialogue}
-          onGardenerClick={handleGardenerClick}
-          onDialogueClose={handleDialogueClose}
           isIsometric={isIsometric}
           plants={plants}
           activeTool={activeTool}
           isPlacementMode={isPlacementMode}
           onGroundClick={handleGroundClick}
-          gardenerTarget={gardenerTarget}
-          gardenerAction={gardenerAction}
           focusTarget={focusTarget}
           weather={weather}
           showSpacing={externalShowSpacing}
@@ -1493,7 +1150,6 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
           locale={locale}
           onWater={() => {
             setActiveTool('water');
-            setGardenerAction('watering');
             setContextMenu(null);
           }}
           onRemove={handleRemoveSelectedPlant}
@@ -1510,29 +1166,6 @@ export function GardenScene({ config, selectedPlantType: externalSelectedPlantTy
         />
       )}
 
-      {/* UI Overlay */}
-      <GardenUIOverlay
-        season={season}
-        timeOfDay={timeOfDay}
-        taskCount={taskCount}
-        dialogue={gardenerDialogue}
-        showDialogue={showGardenerDialogue}
-        onDialogueClose={handleDialogueClose}
-        onIsometricToggle={handleIsometricToggle}
-        isIsometric={isIsometric}
-        plantCount={config.plantedItems.length}
-        harvestReadyCount={harvestReadyCount}
-        activeTool={activeTool}
-        onToolSelect={handleToolSelect}
-        plants={plants}
-        selectedPlantType={selectedPlantType}
-        onSelectPlantType={setSelectedPlantType}
-        isPlacementMode={isPlacementMode}
-        onTogglePlacement={handleTogglePlacement}
-        onRemoveSelectedPlant={handleRemoveSelectedPlant}
-        selectedPlantIndex={selectedPlantIndex}
-        gardenHealth={gardenHealth}
-      />
     </div>
   );
 }
