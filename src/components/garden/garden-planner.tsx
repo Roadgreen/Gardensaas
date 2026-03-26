@@ -1,602 +1,1133 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
-import Link from 'next/link';
-import { useLocale } from 'next-intl';
-import { Button } from '@/components/ui/button';
-import { Card, CardTitle, CardContent } from '@/components/ui/card';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useGarden, usePlants } from '@/lib/hooks';
-import { getPlantById } from '@/lib/garden-utils';
-import { computePlacements, validatePlacement } from '@/lib/auto-place';
-import type { PlantOrder } from '@/lib/auto-place';
-import {
-  Plus, Trash2, AlertTriangle, Check, Eye, ArrowLeft, Search, X,
-  Heart, ShieldAlert, Leaf, Sparkles, Minus, Zap, ChevronRight, RotateCcw,
-} from 'lucide-react';
-import type { Plant } from '@/types';
+import type { Plant, PlantedItem } from '@/types';
 
-/* ── Emoji map ─────────────────────────────────────────────────────────────── */
-const E: Record<string, string> = {
-  vegetable: '🥦', herb: '🌿', fruit: '🍓', root: '🥕', ancient: '🌾', exotic: '🌴',
+/* ═══════════════════════════════════════════════════════════════════════════
+   Color Palette
+   ═══════════════════════════════════════════════════════════════════════════ */
+const C = {
+  ink: '#1B2B1A', inkMid: '#3B5438', inkSoft: '#5E7B58',
+  leaf: '#4A7C59', leafDeep: '#2E5C3A', leafGlow: '#5D9970',
+  dew: '#C8DFC1',
+  paper: '#F5F1E8', paperMid: '#EDE8DC', paperTan: '#E2DACE', parchment: '#F9F6EE',
+  terra: '#B85C38', terraDk: '#8C4428', terraLt: '#D4876A', terraPal: '#F9EDE7',
+  gold: '#C09B4A', cream: '#FDFAF4',
 };
 
-const CATS = [
-  { key: 'all', fr: 'Tous', en: 'All' },
-  { key: 'vegetable', fr: 'Légumes', en: 'Vegetables', e: '🥦' },
-  { key: 'herb', fr: 'Herbes', en: 'Herbs', e: '🌿' },
-  { key: 'fruit', fr: 'Fruits', en: 'Fruits', e: '🍓' },
-  { key: 'root', fr: 'Racines', en: 'Roots', e: '🥕' },
-];
+/* ═══════════════════════════════════════════════════════════════════════════
+   Plant helpers
+   ═══════════════════════════════════════════════════════════════════════════ */
+const CAT_EMOJI: Record<string, string> = {
+  vegetable: '\u{1F966}', herb: '\u{1F33F}', fruit: '\u{1F353}',
+  root: '\u{1F955}', ancient: '\u{1F33E}', exotic: '\u{1F334}',
+};
 
-/* ── SVG Garden View ───────────────────────────────────────────────────────── */
-
-function GardenSVG({ items, widthM, lengthM, compact }: {
-  items: { plantId: string; x: number; z: number }[];
-  widthM: number;
-  lengthM: number;
-  compact?: boolean;
-}) {
-  const locale = useLocale() as 'fr' | 'en';
-  const wCm = widthM * 100;
-  const lCm = lengthM * 100;
-  const PAD = 8;
-
-  // Group plants by position to avoid overlaps in label
-  const plantCircles = items.map((item, idx) => {
-    const plant = getPlantById(item.plantId);
-    if (!plant) return null;
-    const cx = (item.x / 100) * wCm;
-    const cy = (item.z / 100) * lCm;
-    const r = plant.spacingCm / 2;
-    return { plant, cx, cy, r, idx };
-  }).filter(Boolean) as { plant: Plant; cx: number; cy: number; r: number; idx: number }[];
-
-  return (
-    <svg
-      viewBox={`${-PAD} ${-PAD} ${wCm + PAD * 2} ${lCm + PAD * 2}`}
-      className="w-full rounded-xl border"
-      style={{
-        maxHeight: compact ? 200 : 400,
-        background: 'var(--surface-container-lowest)',
-        borderColor: 'var(--outline-variant)',
-      }}
-      preserveAspectRatio="xMidYMid meet"
-    >
-      {/* Grid lines every 50cm */}
-      {Array.from({ length: Math.floor(wCm / 50) + 1 }, (_, i) => (
-        <line key={`v${i}`} x1={i * 50} y1={0} x2={i * 50} y2={lCm} stroke="var(--outline-variant)" strokeWidth={0.5} strokeDasharray="4 4" opacity={0.4} />
-      ))}
-      {Array.from({ length: Math.floor(lCm / 50) + 1 }, (_, i) => (
-        <line key={`h${i}`} x1={0} y1={i * 50} x2={wCm} y2={i * 50} stroke="var(--outline-variant)" strokeWidth={0.5} strokeDasharray="4 4" opacity={0.4} />
-      ))}
-
-      {/* Garden border */}
-      <rect x={0} y={0} width={wCm} height={lCm} fill="none" stroke="var(--primary)" strokeWidth={2} rx={4} />
-
-      {/* Dimension labels */}
-      <text x={wCm / 2} y={-3} textAnchor="middle" fontSize={compact ? 8 : 10} fill="var(--on-surface)" opacity={0.5}>{widthM}m</text>
-      <text x={-3} y={lCm / 2} textAnchor="middle" fontSize={compact ? 8 : 10} fill="var(--on-surface)" opacity={0.5} transform={`rotate(-90, -3, ${lCm / 2})`}>{lengthM}m</text>
-
-      {/* Plants */}
-      {plantCircles.map(({ plant, cx, cy, r, idx }) => {
-        const displayR = Math.max(r, compact ? 8 : 12);
-        return (
-          <g key={idx}>
-            {/* Spacing circle (faded) */}
-            <circle cx={cx} cy={cy} r={r} fill={plant.color + '15'} stroke={plant.color + '40'} strokeWidth={1} />
-            {/* Plant dot */}
-            <circle cx={cx} cy={cy} r={Math.max(displayR * 0.4, compact ? 5 : 7)} fill={plant.color} opacity={0.85} />
-            {/* Emoji */}
-            <text x={cx} y={cy + (compact ? 3 : 4)} textAnchor="middle" fontSize={compact ? 7 : 10}>
-              {E[plant.category] || '🌱'}
-            </text>
-            {/* Name (only in full view) */}
-            {!compact && (
-              <text x={cx} y={cy + r + 10} textAnchor="middle" fontSize={7} fill="var(--on-surface)" opacity={0.7}>
-                {plant.name[locale].length > 10 ? plant.name[locale].slice(0, 9) + '…' : plant.name[locale]}
-              </text>
-            )}
-          </g>
-        );
-      })}
-
-      {/* Empty state */}
-      {items.length === 0 && (
-        <text x={wCm / 2} y={lCm / 2} textAnchor="middle" fontSize={14} fill="var(--on-surface)" opacity={0.3}>
-          {locale === 'fr' ? 'Jardin vide' : 'Empty garden'}
-        </text>
-      )}
-    </svg>
-  );
+function monthsToSeason(months: number[]): string {
+  if (!months || months.length === 0) return 'any';
+  const avg = months.reduce((a, b) => a + b, 0) / months.length;
+  if (avg <= 3) return 'winter';
+  if (avg <= 6) return 'spring';
+  if (avg <= 9) return 'summer';
+  return 'autumn';
 }
 
-/* ── Main component ────────────────────────────────────────────────────────── */
+interface PlannerPlant {
+  id: string;
+  name: string;
+  nameFr: string;
+  cat: string;
+  sp: number;
+  rowSp: number;
+  dtm: number;
+  comp: string[];
+  enm: string[];
+  emoji: string;
+  color: string;
+  season: string;
+  difficulty: string;
+  heightCm: number;
+  wateringFrequency: string;
+}
 
-type Step = 'select' | 'review' | 'done';
+function toPlannerPlant(p: Plant): PlannerPlant {
+  return {
+    id: p.id,
+    name: p.name.en,
+    nameFr: p.name.fr,
+    cat: p.category,
+    sp: p.spacingCm,
+    rowSp: p.rowSpacingCm ?? Math.round(p.spacingCm * 1.5),
+    dtm: p.harvestDays,
+    comp: p.companionPlants ?? [],
+    enm: p.enemyPlants ?? [],
+    emoji: CAT_EMOJI[p.category] ?? '\u{1F331}',
+    color: p.color,
+    season: monthsToSeason(p.plantingMonths),
+    difficulty: p.difficulty,
+    heightCm: p.heightCm,
+    wateringFrequency: p.wateringFrequency,
+  };
+}
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   Constants
+   ═══════════════════════════════════════════════════════════════════════════ */
+type Tool = 'plant' | 'remove' | 'inspect';
+
+const CATEGORIES = [
+  { key: 'all', label: 'Tous', emoji: '\u{1F30D}' },
+  { key: 'vegetable', label: 'L\u00e9gumes', emoji: '\u{1F966}' },
+  { key: 'herb', label: 'Herbes', emoji: '\u{1F33F}' },
+  { key: 'fruit', label: 'Fruits', emoji: '\u{1F353}' },
+  { key: 'root', label: 'Racines', emoji: '\u{1F955}' },
+  { key: 'ancient', label: 'Anciens', emoji: '\u{1F33E}' },
+  { key: 'exotic', label: 'Exotiques', emoji: '\u{1F334}' },
+];
+
+const SEASON_LABELS: Record<string, string> = {
+  spring: '\u{1F331} Printemps', summer: '\u2600\uFE0F \u00c9t\u00e9',
+  autumn: '\u{1F342} Automne', winter: '\u2744\uFE0F Hiver',
+};
+const SEASON_COLORS: Record<string, string> = {
+  spring: '#5D9970', summer: '#C09B4A', autumn: '#B85C38', winter: '#5E7B58',
+};
+
+const GROWTH_STAGES = ['seed', 'seedling', 'growing', 'mature', 'harvest'] as const;
+type GrowthStage = (typeof GROWTH_STAGES)[number];
+
+function getGrowthStage(daysSincePlant: number, dtm: number): GrowthStage {
+  const pct = dtm > 0 ? daysSincePlant / dtm : 0;
+  if (pct < 0.1) return 'seed';
+  if (pct < 0.3) return 'seedling';
+  if (pct < 0.7) return 'growing';
+  if (pct < 1.0) return 'mature';
+  return 'harvest';
+}
+
+const STAGE_EMOJI_SIZE: Record<GrowthStage, number> = {
+  seed: 10, seedling: 14, growing: 18, mature: 22, harvest: 26,
+};
+
+const STAGE_LABEL: Record<GrowthStage, string> = {
+  seed: '\u{1FAD8} Graine', seedling: '\u{1F331} Pousse',
+  growing: '\u{1F33F} Croissance', mature: '\u{1FAB4} Mature',
+  harvest: '\u2728 R\u00e9colte!',
+};
+
+function cellKey(r: number, c: number): string { return `${r},${c}`; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Coordinate conversion helpers (grid <-> percentage)
+   ═══════════════════════════════════════════════════════════════════════════ */
+function gridToPercent(row: number, col: number, totalRows: number, totalCols: number) {
+  return {
+    x: ((col + 0.5) / totalCols) * 100,
+    z: ((row + 0.5) / totalRows) * 100,
+  };
+}
+
+function percentToGrid(x: number, z: number, totalRows: number, totalCols: number) {
+  return {
+    col: Math.floor((x / 100) * totalCols),
+    row: Math.floor((z / 100) * totalRows),
+  };
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Compute days elapsed from a planted date to simulated day offset
+   ═══════════════════════════════════════════════════════════════════════════ */
+function daysFromPlantedDate(plantedDate: string, simDayOffset: number): number {
+  const planted = new Date(plantedDate);
+  const now = new Date();
+  const realDays = Math.floor((now.getTime() - planted.getTime()) / (1000 * 60 * 60 * 24));
+  return Math.max(0, realDays + simDayOffset);
+}
+
+function getSeason(day: number): string {
+  const d = ((day % 365) + 365) % 365;
+  if (d < 80 || d >= 355) return 'winter';
+  if (d < 172) return 'spring';
+  if (d < 264) return 'summer';
+  return 'autumn';
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   GardenPlanner Component
+   ═══════════════════════════════════════════════════════════════════════════ */
 export function GardenPlanner() {
-  const { config, isLoaded, addPlant, removePlant, clearGarden } = useGarden();
-  const { plants } = usePlants();
-  const locale = useLocale() as 'fr' | 'en';
-  const L = locale === 'fr'; // shorthand
+  const { config, addPlant, removePlant, clearGarden, updateConfig, isLoaded } = useGarden();
+  const { plants: rawPlants, isLoading: plantsLoading } = usePlants();
 
-  const [step, setStep] = useState<Step>('select');
-  const [cart, setCart] = useState<Map<string, number>>(new Map());
+  /* ── Derived plant data ── */
+  const PLANTS = useMemo(() => rawPlants.map(toPlannerPlant), [rawPlants]);
+  const PLANT_MAP = useMemo(() => new Map(PLANTS.map((p) => [p.id, p])), [PLANTS]);
+
+  /* ── Grid dimensions from config ── */
+  const totalRows = config.length; // rows = length in meters
+  const totalCols = config.width;  // cols = width in meters
+
+  /* ── State ── */
+  const [selectedPlant, setSelectedPlant] = useState<PlannerPlant | null>(null);
+  const [tool, setTool] = useState<Tool>('plant');
   const [search, setSearch] = useState('');
   const [catFilter, setCatFilter] = useState('all');
-  const [placedCount, setPlacedCount] = useState(0);
-  const [skippedCount, setSkippedCount] = useState(0);
+  const [simDayOffset, setSimDayOffset] = useState(0); // offset from today (-180 to +180)
+  const [hoveredCell, setHoveredCell] = useState<string | null>(null);
+  const [dragPlant, setDragPlant] = useState<PlannerPlant | null>(null);
+  const [inspectedCell, setInspectedCell] = useState<{ r: number; c: number } | null>(null);
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
+  const gridRef = useRef<HTMLDivElement>(null);
 
-  /* ── Derived ── */
-  const cartTotal = useMemo(() => { let n = 0; cart.forEach(v => n += v); return n; }, [cart]);
+  /* ── Build cell map from plantedItems ── */
+  const cellMap = useMemo(() => {
+    const map = new Map<string, { item: PlantedItem; index: number }>();
+    config.plantedItems.forEach((item, index) => {
+      const { row, col } = percentToGrid(item.x, item.z, totalRows, totalCols);
+      if (row >= 0 && row < totalRows && col >= 0 && col < totalCols) {
+        const key = cellKey(row, col);
+        // Last plant placed wins the cell
+        map.set(key, { item, index });
+      }
+    });
+    return map;
+  }, [config.plantedItems, totalRows, totalCols]);
 
-  const cartItems = useMemo(() => {
-    const r: { plant: Plant; qty: number }[] = [];
-    cart.forEach((qty, id) => { const p = getPlantById(id); if (p && qty > 0) r.push({ plant: p, qty }); });
-    return r;
-  }, [cart]);
-
-  const filtered = useMemo(() => {
-    return plants.filter(p => {
-      if (catFilter !== 'all' && p.category !== catFilter) return false;
-      if (search) { const q = search.toLowerCase(); return p.name.en.toLowerCase().includes(q) || p.name.fr.toLowerCase().includes(q); }
+  /* ── Filtered plant list ── */
+  const filteredPlants = useMemo(() => {
+    return PLANTS.filter((p) => {
+      if (catFilter !== 'all' && p.cat !== catFilter) return false;
+      if (search) {
+        const q = search.toLowerCase();
+        return p.name.toLowerCase().includes(q) || p.nameFr.toLowerCase().includes(q) || p.id.includes(q);
+      }
       return true;
     });
-  }, [plants, catFilter, search]);
+  }, [PLANTS, catFilter, search]);
 
-  const analysis = useMemo(() => {
-    const companions: string[] = [];
-    const enemies: string[] = [];
-    for (let i = 0; i < cartItems.length; i++) {
-      for (let j = i + 1; j < cartItems.length; j++) {
-        const a = cartItems[i].plant, b = cartItems[j].plant;
-        if (a.companionPlants.includes(b.id) || b.companionPlants.includes(a.id))
-          companions.push(`${a.name[locale]} + ${b.name[locale]}`);
-        if (a.enemyPlants.includes(b.id) || b.enemyPlants.includes(a.id))
-          enemies.push(`${a.name[locale]} ✕ ${b.name[locale]}`);
+  /* ── Stats ── */
+  const totalCells = totalRows * totalCols;
+  const plantedCells = cellMap.size;
+  const fillPct = totalCells > 0 ? Math.round((plantedCells / totalCells) * 100) : 0;
+
+  const totalDensity = useMemo(() => {
+    let d = 0;
+    cellMap.forEach(({ item }) => {
+      const plant = PLANT_MAP.get(item.plantId);
+      if (plant) {
+        d += Math.max(1, Math.floor(10000 / (plant.sp * plant.rowSp)));
+      }
+    });
+    return d;
+  }, [cellMap, PLANT_MAP]);
+
+  /* ── Companion logic ── */
+  const getCompanionInfo = useCallback((r: number, c: number): { good: string[]; bad: string[] } => {
+    const key = cellKey(r, c);
+    const cellData = cellMap.get(key);
+    const target = selectedPlant ?? (cellData ? PLANT_MAP.get(cellData.item.plantId) : null);
+    if (!target) return { good: [], bad: [] };
+    const good: string[] = [];
+    const bad: string[] = [];
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        if (dr === 0 && dc === 0) continue;
+        const nk = cellKey(r + dr, c + dc);
+        const neighbor = cellMap.get(nk);
+        if (!neighbor) continue;
+        const np = PLANT_MAP.get(neighbor.item.plantId);
+        if (!np) continue;
+        if (target.comp.includes(np.id)) good.push(np.nameFr);
+        if (target.enm.includes(np.id)) bad.push(np.nameFr);
+        if (np.comp.includes(target.id) && !good.includes(np.nameFr)) good.push(np.nameFr);
+        if (np.enm.includes(target.id) && !bad.includes(np.nameFr)) bad.push(np.nameFr);
       }
     }
-    return { companions, enemies };
-  }, [cartItems, locale]);
+    return { good, bad };
+  }, [selectedPlant, cellMap, PLANT_MAP]);
 
-  const plantedGroups = useMemo(() => {
-    const m = new Map<string, number>();
-    config.plantedItems.forEach(i => m.set(i.plantId, (m.get(i.plantId) || 0) + 1));
-    const g: { plant: Plant; count: number }[] = [];
-    m.forEach((c, id) => { const p = getPlantById(id); if (p) g.push({ plant: p, count: c }); });
-    g.sort((a, b) => b.count - a.count);
-    return g;
-  }, [config.plantedItems]);
+  /* ── Cell highlight for companion hints ── */
+  const getCellHighlight = useCallback((r: number, c: number): string | null => {
+    if (!selectedPlant) return null;
+    const key = cellKey(r, c);
+    const cellData = cellMap.get(key);
+    if (cellData) {
+      const existing = PLANT_MAP.get(cellData.item.plantId);
+      if (!existing) return null;
+      if (selectedPlant.comp.includes(existing.id) || existing.comp.includes(selectedPlant.id))
+        return 'rgba(93, 153, 112, 0.35)';
+      if (selectedPlant.enm.includes(existing.id) || existing.enm.includes(selectedPlant.id))
+        return 'rgba(184, 92, 56, 0.35)';
+    }
+    return null;
+  }, [selectedPlant, cellMap, PLANT_MAP]);
 
-  const validation = useMemo(() => {
-    if (config.plantedItems.length < 2) return [];
-    return validatePlacement(config.plantedItems, config.width, config.length, getPlantById);
-  }, [config.plantedItems, config.width, config.length]);
+  /* ── Hover highlight ── */
+  const getHoverHighlight = useCallback((r: number, c: number): string | null => {
+    if (!hoveredCell) return null;
+    const [hr, hc] = hoveredCell.split(',').map(Number);
+    const hovData = cellMap.get(hoveredCell);
+    if (!hovData) return null;
+    const hovPlant = PLANT_MAP.get(hovData.item.plantId);
+    if (!hovPlant) return null;
+    const dist = Math.max(Math.abs(r - hr), Math.abs(c - hc));
+    if (dist !== 1) return null;
+    const cd = cellMap.get(cellKey(r, c));
+    if (!cd) return null;
+    const cp = PLANT_MAP.get(cd.item.plantId);
+    if (!cp) return null;
+    if (hovPlant.comp.includes(cp.id) || cp.comp.includes(hovPlant.id))
+      return 'rgba(93, 153, 112, 0.4)';
+    if (hovPlant.enm.includes(cp.id) || cp.enm.includes(hovPlant.id))
+      return 'rgba(184, 92, 56, 0.4)';
+    return null;
+  }, [hoveredCell, cellMap, PLANT_MAP]);
 
-  /* ── Cart helpers ── */
-  const setQty = (id: string, qty: number) => setCart(prev => {
-    const n = new Map(prev);
-    if (qty <= 0) n.delete(id); else n.set(id, qty);
-    return n;
-  });
+  /* ── Place a plant ── */
+  const placeCell = useCallback((r: number, c: number, plantToPlace?: PlannerPlant) => {
+    const p = plantToPlace ?? selectedPlant;
+    if (!p) return;
+    const { x, z } = gridToPercent(r, c, totalRows, totalCols);
+    addPlant(p.id, x, z);
+  }, [selectedPlant, totalRows, totalCols, addPlant]);
 
-  /* ── Execute placement ── */
-  const executePlacement = useCallback(() => {
-    if (cartItems.length === 0) return;
-    const orders: PlantOrder[] = cartItems.map(i => ({ plantId: i.plant.id, quantity: i.qty }));
-    const results = computePlacements(orders, config.plantedItems, config.width, config.length, getPlantById);
-    for (const r of results) addPlant(r.plantId, r.x, r.z);
-    const total = orders.reduce((s, o) => s + o.quantity, 0);
-    setPlacedCount(results.length);
-    setSkippedCount(total - results.length);
-    setCart(new Map());
-    setStep('done');
-  }, [cartItems, config.plantedItems, config.width, config.length, addPlant]);
+  /* ── Remove a plant ── */
+  const removeCell = useCallback((r: number, c: number) => {
+    const key = cellKey(r, c);
+    const cellData = cellMap.get(key);
+    if (cellData) {
+      removePlant(cellData.index);
+    }
+  }, [cellMap, removePlant]);
 
-  if (!isLoaded) {
-    return <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--background)' }}>
-      <div className="animate-pulse" style={{ color: 'var(--primary)' }}>Loading...</div>
-    </div>;
-  }
+  /* ── Cell click handler ── */
+  const handleCellClick = useCallback((r: number, c: number) => {
+    const key = cellKey(r, c);
+    if (tool === 'remove') {
+      removeCell(r, c);
+      setInspectedCell(null);
+      return;
+    }
+    if (tool === 'inspect') {
+      setInspectedCell(cellMap.has(key) ? { r, c } : null);
+      return;
+    }
+    // plant mode
+    if (cellMap.has(key)) {
+      removeCell(r, c);
+    } else if (selectedPlant) {
+      placeCell(r, c);
+    }
+  }, [tool, selectedPlant, cellMap, placeCell, removeCell]);
 
-  /* ═══════════════════════════════════════════════════════════════════════════
-     STEP 1: SELECT
-     ═══════════════════════════════════════════════════════════════════════════ */
-  if (step === 'select') return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'var(--background)' }}>
-      {/* Header */}
-      <header className="sticky top-0 z-30 backdrop-blur-md border-b" style={{ background: 'var(--nav-bg)', borderColor: 'var(--outline-variant)' }}>
-        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Link href="/garden/dashboard" style={{ color: 'var(--primary)' }}><ArrowLeft className="w-5 h-5" /></Link>
-          <div className="flex-1 min-w-0">
-            <h1 className="font-bold text-base" style={{ color: 'var(--heading)' }}>{L ? 'Planifier mon potager' : 'Plan my garden'}</h1>
-            <p className="text-[11px] opacity-60" style={{ color: 'var(--body-text)' }}>{config.width}m × {config.length}m</p>
-          </div>
-          <Link href="/garden/3d"><Button variant="ghost" size="sm" className="gap-1 text-xs"><Eye className="w-4 h-4" />3D</Button></Link>
-        </div>
-      </header>
+  /* ── Drag & drop ── */
+  const handleDrop = useCallback((r: number, c: number) => {
+    if (dragPlant) {
+      placeCell(r, c, dragPlant);
+      setDragPlant(null);
+    }
+  }, [dragPlant, placeCell]);
 
-      {/* Current garden preview */}
-      {config.plantedItems.length > 0 && (
-        <div className="max-w-2xl mx-auto w-full px-4 pt-4">
-          <Card>
-            <div className="flex items-center justify-between mb-2">
-              <CardTitle className="text-sm">{L ? 'Jardin actuel' : 'Current garden'}</CardTitle>
-              <button onClick={() => { if (confirm(L ? 'Vider le jardin ?' : 'Clear garden?')) clearGarden(); }}
-                className="text-xs flex items-center gap-1 cursor-pointer opacity-60 hover:opacity-100" style={{ color: 'var(--tertiary)' }}>
-                <Trash2 className="w-3 h-3" />{L ? 'Vider' : 'Clear'}
-              </button>
-            </div>
-            <GardenSVG items={config.plantedItems} widthM={config.width} lengthM={config.length} compact />
-            <div className="flex flex-wrap gap-1 mt-3">
-              {plantedGroups.map(({ plant, count }) => (
-                <span key={plant.id} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium"
-                  style={{ background: 'var(--badge-bg)', color: 'var(--badge-text)', border: '1px solid var(--badge-border)' }}>
-                  {E[plant.category]} {plant.name[locale]} ×{count}
-                </span>
-              ))}
-            </div>
-          </Card>
-        </div>
-      )}
+  /* ── Auto-fill ── */
+  const autoFill = useCallback(() => {
+    if (!selectedPlant) return;
+    for (let r = 0; r < totalRows; r++) {
+      for (let c = 0; c < totalCols; c++) {
+        const key = cellKey(r, c);
+        if (!cellMap.has(key)) {
+          const { x, z } = gridToPercent(r, c, totalRows, totalCols);
+          addPlant(selectedPlant.id, x, z);
+        }
+      }
+    }
+  }, [selectedPlant, totalRows, totalCols, cellMap, addPlant]);
 
-      {/* Search + categories */}
-      <div className="max-w-2xl mx-auto w-full px-4 pt-4">
-        <div className="relative mb-3">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 opacity-40" style={{ color: 'var(--on-surface)' }} />
-          <input
-            value={search} onChange={e => setSearch(e.target.value)}
-            placeholder={L ? 'Rechercher un légume...' : 'Search vegetables...'}
-            className="w-full pl-9 pr-9 py-3 text-sm rounded-xl border focus:outline-none focus:ring-2"
-            style={{ background: 'var(--input-bg)', borderColor: 'var(--input-border)', color: 'var(--on-surface)', '--tw-ring-color': 'var(--primary)' } as React.CSSProperties}
-          />
-          {search && <button onClick={() => setSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 opacity-50 hover:opacity-100 cursor-pointer"><X className="w-4 h-4" /></button>}
-        </div>
-        <div className="flex gap-1.5 overflow-x-auto pb-2 scrollbar-none">
-          {CATS.map(c => (
-            <button key={c.key} onClick={() => setCatFilter(c.key)}
-              className={`shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer border`}
-              style={catFilter === c.key
-                ? { background: 'var(--primary)', color: 'var(--on-primary)', borderColor: 'var(--primary)' }
-                : { background: 'var(--surface-container)', color: 'var(--on-surface)', borderColor: 'var(--outline-variant)', opacity: 0.8 }
-              }>
-              {c.e ? `${c.e} ` : ''}{c[locale]}
-            </button>
-          ))}
-        </div>
-      </div>
+  /* ── Smart suggest ── */
+  const smartSuggest = useCallback(() => {
+    const existingIds = new Set<string>();
+    cellMap.forEach(({ item }) => existingIds.add(item.plantId));
+    const goodIds = new Set<string>();
+    const badIds = new Set<string>();
+    existingIds.forEach((id) => {
+      const pl = PLANT_MAP.get(id);
+      if (pl) {
+        pl.comp.forEach((cid) => goodIds.add(cid));
+        pl.enm.forEach((eid) => badIds.add(eid));
+      }
+    });
+    const candidates = Array.from(goodIds)
+      .filter((id) => !badIds.has(id) && !existingIds.has(id) && PLANT_MAP.has(id));
+    if (candidates.length === 0) return;
+    let ci = 0;
+    for (let r = 0; r < totalRows; r++) {
+      for (let c = 0; c < totalCols; c++) {
+        const key = cellKey(r, c);
+        if (!cellMap.has(key) && ci < candidates.length) {
+          const { x, z } = gridToPercent(r, c, totalRows, totalCols);
+          addPlant(candidates[ci], x, z);
+          ci = (ci + 1) % candidates.length;
+        }
+      }
+    }
+  }, [cellMap, PLANT_MAP, totalRows, totalCols, addPlant]);
 
-      {/* Plant list */}
-      <div className="flex-1 overflow-y-auto px-4 pb-44 max-w-2xl mx-auto w-full">
-        <div className="space-y-2 pt-3">
-          {filtered.length === 0 && <p className="text-center text-sm py-8 opacity-40">{L ? 'Aucun résultat' : 'No results'}</p>}
-          {filtered.map(plant => {
-            const qty = cart.get(plant.id) || 0;
-            const name = plant.name[locale];
-            const cartIds = Array.from(cart.keys()).filter(id => id !== plant.id && (cart.get(id) || 0) > 0);
-            const isComp = cartIds.some(id => plant.companionPlants.includes(id) || (getPlantById(id)?.companionPlants.includes(plant.id) ?? false));
-            const isEnem = cartIds.some(id => plant.enemyPlants.includes(id) || (getPlantById(id)?.enemyPlants.includes(plant.id) ?? false));
+  /* ── Alerts ── */
+  const alerts = useMemo(() => {
+    const list: { type: 'warning' | 'info'; msg: string }[] = [];
+    const entries = Array.from(cellMap.entries());
+    for (const [key, { item }] of entries) {
+      const [r, c] = key.split(',').map(Number);
+      const p = PLANT_MAP.get(item.plantId);
+      if (!p) continue;
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          if (dr === 0 && dc === 0) continue;
+          const nk = cellKey(r + dr, c + dc);
+          const nd = cellMap.get(nk);
+          if (!nd) continue;
+          if (p.enm.includes(nd.item.plantId)) {
+            const np = PLANT_MAP.get(nd.item.plantId);
+            if (np) {
+              const msg = `${p.nameFr} et ${np.nameFr} sont ennemis!`;
+              if (!list.some((a) => a.msg === msg)) list.push({ type: 'warning', msg });
+            }
+          }
+        }
+      }
+      // Harvest alerts
+      const elapsed = daysFromPlantedDate(item.plantedDate, simDayOffset);
+      if (elapsed >= p.dtm && p.dtm > 0) {
+        const msg = `${p.nameFr} est pr\u00eat \u00e0 r\u00e9colter!`;
+        if (!list.some((a) => a.msg === msg)) list.push({ type: 'info', msg });
+      }
+    }
+    return list;
+  }, [cellMap, PLANT_MAP, simDayOffset]);
 
-            return (
-              <Card key={plant.id} className={`!p-3 ${qty > 0 ? 'ring-2' : ''}`} style={qty > 0 ? { '--tw-ring-color': 'var(--primary)' } as React.CSSProperties : {}}>
-                <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0" style={{ backgroundColor: plant.color + '18' }}>
-                    {E[plant.category] || '🌱'}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-sm font-medium truncate" style={{ color: 'var(--heading)' }}>{name}</span>
-                      {isComp && <Heart className="w-3.5 h-3.5 shrink-0" style={{ color: 'var(--primary)' }} />}
-                      {isEnem && <ShieldAlert className="w-3.5 h-3.5 shrink-0" style={{ color: 'var(--tertiary)' }} />}
-                    </div>
-                    <div className="flex items-center gap-2 text-[11px] mt-0.5 opacity-50" style={{ color: 'var(--body-text)' }}>
-                      <span>{plant.spacingCm}cm</span>
-                      <span>·</span>
-                      <span>{plant.harvestDays}{L ? 'j' : 'd'}</span>
-                      <span>·</span>
-                      <span>{plant.difficulty === 'easy' ? (L ? 'Facile' : 'Easy') : plant.difficulty === 'medium' ? (L ? 'Moyen' : 'Medium') : (L ? 'Difficile' : 'Hard')}</span>
-                    </div>
-                  </div>
-                  {qty > 0 ? (
-                    <div className="flex items-center gap-1 shrink-0">
-                      <button onClick={() => setQty(plant.id, qty - 1)}
-                        className="w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer transition-colors border"
-                        style={{ background: 'var(--surface-container)', borderColor: 'var(--outline-variant)', color: 'var(--on-surface)' }}>
-                        <Minus className="w-4 h-4" />
-                      </button>
-                      <span className="font-bold text-base w-8 text-center" style={{ color: 'var(--heading)' }}>{qty}</span>
-                      <button onClick={() => setQty(plant.id, qty + 1)}
-                        className="w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer transition-colors border"
-                        style={{ background: 'var(--surface-container)', borderColor: 'var(--outline-variant)', color: 'var(--on-surface)' }}>
-                        <Plus className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ) : (
-                    <button onClick={() => setQty(plant.id, 1)}
-                      className="w-9 h-9 rounded-xl flex items-center justify-center cursor-pointer transition-colors border"
-                      style={{ background: 'var(--surface-container)', borderColor: 'var(--outline-variant)', color: 'var(--primary)' }}>
-                      <Plus className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
+  /* ── Inspected cell data ── */
+  const inspectedData = useMemo(() => {
+    if (!inspectedCell) return null;
+    const key = cellKey(inspectedCell.r, inspectedCell.c);
+    const cd = cellMap.get(key);
+    if (!cd) return null;
+    const plant = PLANT_MAP.get(cd.item.plantId);
+    if (!plant) return null;
+    const elapsed = daysFromPlantedDate(cd.item.plantedDate, simDayOffset);
+    const stage = getGrowthStage(elapsed, plant.dtm);
+    const comp = getCompanionInfo(inspectedCell.r, inspectedCell.c);
+    const density = Math.max(1, Math.floor(10000 / (plant.sp * plant.rowSp)));
+    return { item: cd.item, plant, elapsed, stage, comp, density };
+  }, [inspectedCell, cellMap, PLANT_MAP, simDayOffset, getCompanionInfo]);
 
-      {/* Bottom CTA */}
-      {cartTotal > 0 && (
-        <div className="fixed bottom-0 left-0 right-0 z-40">
-          <div className="max-w-2xl mx-auto px-4" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
-            <div className="rounded-t-2xl px-4 pt-3 pb-4 shadow-2xl border-t backdrop-blur-md"
-              style={{ background: 'var(--nav-bg)', borderColor: 'var(--outline-variant)', boxShadow: '0 -4px 30px var(--shadow-lg)' }}>
-              {/* Cart chips */}
-              <div className="flex flex-wrap gap-1 mb-3">
-                {cartItems.map(({ plant, qty }) => (
-                  <span key={plant.id} className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-medium"
-                    style={{ background: 'var(--badge-bg)', color: 'var(--badge-text)', border: '1px solid var(--badge-border)' }}>
-                    {E[plant.category]} {plant.name[locale]} <strong>×{qty}</strong>
-                    <button onClick={() => setQty(plant.id, 0)} className="opacity-50 hover:opacity-100 ml-0.5 cursor-pointer"><X className="w-3 h-3" /></button>
-                  </span>
-                ))}
-              </div>
-              {analysis.companions.length > 0 && (
-                <p className="text-[10px] mb-1 flex items-center gap-1" style={{ color: 'var(--primary)' }}>
-                  <Heart className="w-3 h-3 shrink-0" /> {analysis.companions.join(', ')}
-                </p>
-              )}
-              {analysis.enemies.length > 0 && (
-                <p className="text-[10px] mb-1 flex items-center gap-1" style={{ color: 'var(--tertiary)' }}>
-                  <AlertTriangle className="w-3 h-3 shrink-0" /> {analysis.enemies.join(', ')}
-                </p>
-              )}
-              <Button size="lg" className="w-full gap-2 text-sm" onClick={() => setStep('review')}>
-                <ChevronRight className="w-5 h-5" />
-                {L ? `Continuer avec ${cartTotal} plante${cartTotal > 1 ? 's' : ''}` : `Continue with ${cartTotal} plant${cartTotal > 1 ? 's' : ''}`}
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+  /* ── Season info ── */
+  const todayOfYear = Math.floor(
+    (new Date().getTime() - new Date(new Date().getFullYear(), 0, 0).getTime()) / (1000 * 60 * 60 * 24)
   );
+  const simDay = todayOfYear + simDayOffset;
+  const currentSeason = getSeason(simDay);
+  const seasonLabel = SEASON_LABELS[currentSeason] ?? '';
 
-  /* ═══════════════════════════════════════════════════════════════════════════
-     STEP 2: REVIEW
-     ═══════════════════════════════════════════════════════════════════════════ */
-  if (step === 'review') {
-    const totalArea = config.width * config.length;
-    const neededArea = cartItems.reduce((a, { plant, qty }) => {
-      const s = plant.spacingCm / 100;
-      const rs = (plant.rowSpacingCm ?? plant.spacingCm * 1.5) / 100;
-      return a + qty * s * rs;
-    }, 0);
-    const existingArea = config.plantedItems.reduce((a, item) => {
-      const p = getPlantById(item.plantId);
-      if (!p) return a;
-      return a + (p.spacingCm / 100) * ((p.rowSpacingCm ?? p.spacingCm * 1.5) / 100);
-    }, 0);
-    const freeArea = totalArea - existingArea;
-    const fits = neededArea <= freeArea;
-
+  /* ── Loading state ── */
+  if (!isLoaded || plantsLoading) {
     return (
-      <div className="min-h-screen flex flex-col" style={{ background: 'var(--background)' }}>
-        <header className="sticky top-0 z-30 backdrop-blur-md border-b" style={{ background: 'var(--nav-bg)', borderColor: 'var(--outline-variant)' }}>
-          <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-            <button onClick={() => setStep('select')} className="cursor-pointer" style={{ color: 'var(--primary)' }}><ArrowLeft className="w-5 h-5" /></button>
-            <h1 className="font-bold text-base flex-1" style={{ color: 'var(--heading)' }}>{L ? 'Récapitulatif' : 'Review'}</h1>
-          </div>
-        </header>
-
-        <div className="flex-1 px-4 py-4 max-w-2xl mx-auto w-full space-y-4 pb-36">
-          {/* Space check */}
-          <Card>
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: fits ? 'var(--accent-muted)' : 'rgba(232, 169, 144, 0.15)' }}>
-                {fits ? <Check className="w-5 h-5" style={{ color: 'var(--primary)' }} /> : <AlertTriangle className="w-5 h-5" style={{ color: 'var(--tertiary)' }} />}
-              </div>
-              <div>
-                <p className="text-sm font-semibold" style={{ color: 'var(--heading)' }}>
-                  {fits ? (L ? 'Tout devrait rentrer !' : 'Everything should fit!') : (L ? 'Espace limité' : 'Limited space')}
-                </p>
-                <p className="text-[11px] opacity-60" style={{ color: 'var(--body-text)' }}>
-                  {L ? `~${neededArea.toFixed(1)}m² nécessaire / ${freeArea.toFixed(1)}m² disponible` : `~${neededArea.toFixed(1)}m² needed / ${freeArea.toFixed(1)}m² available`}
-                </p>
-              </div>
-            </div>
-            <div className="h-2 rounded-full overflow-hidden" style={{ background: 'var(--surface-container)' }}>
-              <div className="h-full rounded-full transition-all" style={{
-                width: `${Math.min(100, Math.round((neededArea / Math.max(freeArea, 0.1)) * 100))}%`,
-                background: fits ? 'var(--primary)' : 'var(--tertiary)',
-              }} />
-            </div>
-          </Card>
-
-          {/* Plant list */}
-          <Card>
-            <CardTitle className="text-sm mb-3">{L ? 'Mes plantes' : 'My plants'} ({cartTotal})</CardTitle>
-            <div className="divide-y" style={{ borderColor: 'var(--outline-variant)' }}>
-              {cartItems.map(({ plant, qty }) => (
-                <div key={plant.id} className="flex items-center gap-3 py-3">
-                  <div className="w-10 h-10 rounded-xl flex items-center justify-center text-xl" style={{ backgroundColor: plant.color + '18' }}>
-                    {E[plant.category] || '🌱'}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium" style={{ color: 'var(--heading)' }}>{plant.name[locale]}</p>
-                    <p className="text-[10px] opacity-50">{plant.spacingCm}cm {L ? 'entre chaque' : 'apart'}</p>
-                  </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <button onClick={() => setQty(plant.id, qty - 1)}
-                      className="w-8 h-8 rounded-lg flex items-center justify-center cursor-pointer border"
-                      style={{ background: 'var(--surface-container)', borderColor: 'var(--outline-variant)' }}>
-                      <Minus className="w-3.5 h-3.5" />
-                    </button>
-                    <span className="font-bold text-sm w-7 text-center" style={{ color: 'var(--heading)' }}>{qty}</span>
-                    <button onClick={() => setQty(plant.id, qty + 1)}
-                      className="w-8 h-8 rounded-lg flex items-center justify-center cursor-pointer border"
-                      style={{ background: 'var(--surface-container)', borderColor: 'var(--outline-variant)' }}>
-                      <Plus className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          {/* Companion/enemy */}
-          {analysis.companions.length > 0 && (
-            <Card className="!p-4">
-              <div className="flex items-start gap-2.5">
-                <Heart className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'var(--primary)' }} />
-                <div>
-                  <p className="text-xs font-semibold mb-0.5" style={{ color: 'var(--heading)' }}>{L ? 'Bons compagnons' : 'Good companions'}</p>
-                  <p className="text-[11px] opacity-60">{analysis.companions.join(' · ')}</p>
-                  <p className="text-[10px] opacity-40 mt-1">{L ? "L'algo les placera côte à côte" : 'Algorithm places them nearby'}</p>
-                </div>
-              </div>
-            </Card>
-          )}
-          {analysis.enemies.length > 0 && (
-            <Card className="!p-4">
-              <div className="flex items-start gap-2.5">
-                <ShieldAlert className="w-4 h-4 mt-0.5 shrink-0" style={{ color: 'var(--tertiary)' }} />
-                <div>
-                  <p className="text-xs font-semibold mb-0.5" style={{ color: 'var(--heading)' }}>{L ? 'Plantes ennemies' : 'Enemy plants'}</p>
-                  <p className="text-[11px] opacity-60">{analysis.enemies.join(' · ')}</p>
-                  <p className="text-[10px] opacity-40 mt-1">{L ? "L'algo les éloignera" : 'Algorithm keeps them apart'}</p>
-                </div>
-              </div>
-            </Card>
-          )}
-
-          {/* How it works */}
-          <Card className="!p-4">
-            <p className="text-xs font-semibold mb-2 flex items-center gap-1.5" style={{ color: 'var(--heading)' }}>
-              <Sparkles className="w-3.5 h-3.5" style={{ color: 'var(--primary)' }} />
-              {L ? 'Comment ça marche' : 'How it works'}
-            </p>
-            <div className="space-y-1.5 text-[11px] opacity-50">
-              <p>✓ {L ? 'Espacement optimal entre chaque plante' : 'Optimal spacing between each plant'}</p>
-              <p>✓ {L ? 'Compagnons placés proches' : 'Companions placed nearby'}</p>
-              <p>✓ {L ? 'Ennemis éloignés' : 'Enemies kept apart'}</p>
-              <p>✓ {L ? 'Plantes existantes respectées' : 'Existing plants respected'}</p>
-            </div>
-          </Card>
-        </div>
-
-        {/* CTA */}
-        <div className="fixed bottom-0 left-0 right-0 z-40">
-          <div className="max-w-2xl mx-auto px-4" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
-            <div className="rounded-t-2xl px-4 pt-3 pb-4 shadow-2xl border-t backdrop-blur-md space-y-2"
-              style={{ background: 'var(--nav-bg)', borderColor: 'var(--outline-variant)', boxShadow: '0 -4px 30px var(--shadow-lg)' }}>
-              <Button size="lg" className="w-full gap-2" onClick={executePlacement}>
-                <Zap className="w-5 h-5" />
-                {L ? `Planter ${cartTotal} légume${cartTotal > 1 ? 's' : ''} automatiquement` : `Auto-plant ${cartTotal} vegetable${cartTotal > 1 ? 's' : ''}`}
-              </Button>
-              <button onClick={() => setStep('select')}
-                className="w-full py-2.5 text-sm font-medium cursor-pointer opacity-60 hover:opacity-100" style={{ color: 'var(--on-surface)' }}>
-                {L ? '← Modifier ma sélection' : '← Edit selection'}
-              </button>
-            </div>
-          </div>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: C.paper }}>
+        <div className="text-center">
+          <span className="text-4xl block mb-3 animate-pulse">{'\u{1F331}'}</span>
+          <span className="text-sm font-medium" style={{ color: C.inkSoft }}>
+            Chargement du jardin...
+          </span>
         </div>
       </div>
     );
   }
 
   /* ═══════════════════════════════════════════════════════════════════════════
-     STEP 3: DONE
+     Render
      ═══════════════════════════════════════════════════════════════════════════ */
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: 'var(--background)' }}>
-      <header className="sticky top-0 z-30 backdrop-blur-md border-b" style={{ background: 'var(--nav-bg)', borderColor: 'var(--outline-variant)' }}>
-        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Link href="/garden/dashboard" style={{ color: 'var(--primary)' }}><ArrowLeft className="w-5 h-5" /></Link>
-          <h1 className="font-bold text-base flex-1" style={{ color: 'var(--heading)' }}>{L ? 'Mon Potager' : 'My Garden'}</h1>
-          <Link href="/garden/3d"><Button variant="ghost" size="sm" className="gap-1 text-xs"><Eye className="w-4 h-4" />3D</Button></Link>
+    <div
+      className="min-h-screen w-full flex flex-col"
+      style={{ background: C.paper, color: C.ink, fontFamily: "'Inter', system-ui, sans-serif" }}
+    >
+      {/* ── Top Stats Toolbar ── */}
+      <header
+        className="sticky top-0 z-30 flex items-center gap-3 px-4 py-2 border-b backdrop-blur-md"
+        style={{ background: C.cream + 'ee', borderColor: C.paperTan }}
+      >
+        <h1 className="text-lg font-bold mr-2 hidden sm:block" style={{ color: C.leafDeep }}>
+          {'\u{1F331}'} Planificateur de Jardin
+        </h1>
+        <div className="flex items-center gap-4 flex-1 justify-end text-sm font-medium" style={{ color: C.inkMid }}>
+          <span title="Dimensions du jardin (store partag\u00e9)" className="hidden sm:inline px-2 py-0.5 rounded text-xs gap-1 items-center"
+            style={{ background: C.dew + '60', color: C.leafDeep, display: 'inline-flex' }}
+          >
+            <button
+              className="hover:opacity-70 px-1"
+              onClick={() => updateConfig({ width: Math.max(1, config.width - 1) })}
+            >{'\u25C0'}</button>
+            {totalCols}m
+            <button
+              className="hover:opacity-70 px-1"
+              onClick={() => updateConfig({ width: config.width + 1 })}
+            >{'\u25B6'}</button>
+            {'\u00D7'}
+            <button
+              className="hover:opacity-70 px-1"
+              onClick={() => updateConfig({ length: Math.max(1, config.length - 1) })}
+            >{'\u25C0'}</button>
+            {totalRows}m
+            <button
+              className="hover:opacity-70 px-1"
+              onClick={() => updateConfig({ length: config.length + 1 })}
+            >{'\u25B6'}</button>
+          </span>
+          <span title="Surface totale">{totalCells} m\u00b2</span>
+          <span className="hidden sm:inline" style={{ color: C.inkSoft }}>|</span>
+          <span title="Cellules plant\u00e9es" className="hidden sm:inline">{'\u{1F33F}'} {plantedCells} plant\u00e9s</span>
+          <span className="hidden sm:inline" style={{ color: C.inkSoft }}>|</span>
+          <span title="Densit\u00e9 totale" className="hidden sm:inline">{'\u{1FAD8}'} {totalDensity} plants</span>
+          <span className="hidden sm:inline" style={{ color: C.inkSoft }}>|</span>
+          {/* Fill bar */}
+          <div className="flex items-center gap-1.5">
+            <div className="w-20 h-2 rounded-full overflow-hidden" style={{ background: C.paperTan }}>
+              <div
+                className="h-full rounded-full transition-all duration-500"
+                style={{ width: `${fillPct}%`, background: fillPct > 80 ? C.leaf : fillPct > 40 ? C.gold : C.terraLt }}
+              />
+            </div>
+            <span className="text-xs">{fillPct}%</span>
+          </div>
+          <span title={seasonLabel} className="text-base">{seasonLabel}</span>
         </div>
       </header>
 
-      <div className="flex-1 px-4 py-4 max-w-2xl mx-auto w-full space-y-4 pb-36">
-        {/* Success */}
-        <Card>
-          <div className="flex items-start gap-3">
-            <div className="w-12 h-12 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--accent-muted)' }}>
-              <Sparkles className="w-6 h-6" style={{ color: 'var(--primary)' }} />
-            </div>
-            <div>
-              <p className="font-semibold text-sm" style={{ color: 'var(--heading)' }}>
-                {placedCount > 0
-                  ? (L ? `${placedCount} plante${placedCount > 1 ? 's' : ''} placée${placedCount > 1 ? 's' : ''} !` : `${placedCount} plant${placedCount > 1 ? 's' : ''} placed!`)
-                  : (L ? 'Aucune plante placée' : 'No plants placed')}
-              </p>
-              {skippedCount > 0 && (
-                <p className="text-xs mt-0.5" style={{ color: 'var(--tertiary)' }}>
-                  {L ? `${skippedCount} non placée${skippedCount > 1 ? 's' : ''} (manque de place)` : `${skippedCount} skipped (not enough space)`}
-                </p>
+      <div className="flex flex-1 flex-col lg:flex-row overflow-hidden">
+        {/* ═══════════════════════════════════════════════════════════════════
+           LEFT SIDEBAR - Plant Library
+           ═══════════════════════════════════════════════════════════════════ */}
+        <aside
+          className="hidden lg:flex flex-col w-72 xl:w-80 border-r overflow-hidden"
+          style={{ background: C.parchment, borderColor: C.paperTan }}
+        >
+          {/* Search */}
+          <div className="p-3 border-b" style={{ borderColor: C.paperTan }}>
+            <div
+              className="flex items-center gap-2 px-3 py-2 rounded-lg"
+              style={{ background: C.paper, border: `1px solid ${C.dew}` }}
+            >
+              <span className="text-sm" style={{ color: C.inkSoft }}>{'\u{1F50D}'}</span>
+              <input
+                type="text"
+                placeholder="Rechercher une plante..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="flex-1 bg-transparent text-sm outline-none"
+                style={{ color: C.ink }}
+              />
+              {search && (
+                <button onClick={() => setSearch('')} className="text-xs opacity-50 hover:opacity-100 transition">{'\u2715'}</button>
               )}
-              <p className="text-[11px] opacity-50 mt-1">{L ? 'Espacements et compagnonnage optimisés' : 'Spacing and companions optimized'}</p>
             </div>
           </div>
-        </Card>
 
-        {/* Garden SVG */}
-        <Card>
-          <CardTitle className="text-sm mb-3">
-            {L ? 'Plan du jardin' : 'Garden layout'} — {config.plantedItems.length} {L ? 'plantes' : 'plants'}
-          </CardTitle>
-          <GardenSVG items={config.plantedItems} widthM={config.width} lengthM={config.length} />
-          <div className="flex flex-wrap gap-1.5 mt-3">
-            {plantedGroups.map(({ plant, count }) => (
-              <span key={plant.id} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium"
-                style={{ background: 'var(--badge-bg)', color: 'var(--badge-text)', border: '1px solid var(--badge-border)' }}>
-                <span className="w-2 h-2 rounded-full" style={{ backgroundColor: plant.color }} />
-                {plant.name[locale]} ×{count}
-              </span>
+          {/* Categories */}
+          <div className="flex flex-wrap gap-1.5 px-3 py-2 border-b" style={{ borderColor: C.paperTan }}>
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat.key}
+                onClick={() => setCatFilter(cat.key)}
+                className="px-2.5 py-1 text-xs rounded-full font-medium transition-all"
+                style={{
+                  background: catFilter === cat.key ? C.leaf : C.paperMid,
+                  color: catFilter === cat.key ? C.cream : C.inkMid,
+                  border: `1px solid ${catFilter === cat.key ? C.leafDeep : C.paperTan}`,
+                }}
+              >
+                {cat.emoji} {cat.label}
+              </button>
             ))}
           </div>
-        </Card>
 
-        {/* Validation */}
-        {validation.length > 0 && (
-          <Card>
-            <CardTitle className="text-sm mb-2">{L ? 'Analyse' : 'Analysis'}</CardTitle>
-            <div className="space-y-1.5">
-              {validation.slice(0, 10).map((v, i) => (
-                <div key={i} className="flex items-start gap-2 text-[11px]" style={{ color: v.type === 'error' ? 'var(--tertiary)' : v.type === 'warning' ? '#b8860b' : 'var(--primary)' }}>
-                  {v.type === 'good' ? <Heart className="w-3 h-3 mt-0.5 shrink-0" /> : <AlertTriangle className="w-3 h-3 mt-0.5 shrink-0" />}
-                  <span>{v.message}</span>
+          {/* Plant list */}
+          <div className="flex-1 overflow-y-auto px-2 py-2 space-y-1">
+            {filteredPlants.slice(0, 80).map((p) => {
+              const isSelected = selectedPlant?.id === p.id;
+              return (
+                <button
+                  key={p.id}
+                  draggable
+                  onDragStart={(e) => {
+                    setDragPlant(p);
+                    e.dataTransfer.setData('text/plain', p.id);
+                    e.dataTransfer.effectAllowed = 'copy';
+                  }}
+                  onClick={() => {
+                    setSelectedPlant(isSelected ? null : p);
+                    setTool('plant');
+                  }}
+                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left transition-all group"
+                  style={{
+                    background: isSelected ? C.leaf + '18' : 'transparent',
+                    border: isSelected ? `2px solid ${C.leaf}` : '2px solid transparent',
+                  }}
+                >
+                  <span
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0"
+                    style={{ background: p.color + '20', border: `1px solid ${p.color}40` }}
+                  >
+                    {p.emoji}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-medium truncate" style={{ color: C.ink }}>{p.nameFr}</div>
+                    <div className="text-xs truncate" style={{ color: C.inkSoft }}>
+                      {p.sp}cm &middot; {p.dtm}j &middot; {p.difficulty}
+                    </div>
+                  </div>
+                  <div
+                    className="w-2 h-2 rounded-full flex-shrink-0"
+                    style={{ background: SEASON_COLORS[p.season] }}
+                    title={SEASON_LABELS[p.season]}
+                  />
+                </button>
+              );
+            })}
+            {filteredPlants.length === 0 && (
+              <div className="text-center py-8 text-sm" style={{ color: C.inkSoft }}>
+                Aucune plante trouv\u00e9e
+              </div>
+            )}
+            {filteredPlants.length > 80 && (
+              <div className="text-center py-2 text-xs" style={{ color: C.inkSoft }}>
+                +{filteredPlants.length - 80} autres plantes... Affinez votre recherche
+              </div>
+            )}
+          </div>
+        </aside>
+
+        {/* ═══════════════════════════════════════════════════════════════════
+           CENTER - Garden Grid
+           ═══════════════════════════════════════════════════════════════════ */}
+        <main className="flex-1 flex flex-col overflow-hidden">
+          {/* Dimension display & toolbar row */}
+          <div
+            className="flex items-center gap-2 px-3 py-2 border-b flex-wrap"
+            style={{ background: C.cream, borderColor: C.paperTan }}
+          >
+            {/* Tool buttons */}
+            {([
+              { t: 'plant' as Tool, label: '\u{1F331} Planter' },
+              { t: 'remove' as Tool, label: '\u{1F5D1}\uFE0F Retirer' },
+              { t: 'inspect' as Tool, label: '\u{1F50D} Inspecter' },
+            ]).map(({ t, label }) => (
+              <button
+                key={t}
+                onClick={() => setTool(t)}
+                className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all"
+                style={{
+                  background: tool === t ? C.leaf : C.paperMid,
+                  color: tool === t ? C.cream : C.inkMid,
+                  border: `1px solid ${tool === t ? C.leafDeep : C.paperTan}`,
+                }}
+              >
+                {label}
+              </button>
+            ))}
+
+            <div className="w-px h-5 mx-1" style={{ background: C.paperTan }} />
+
+            {/* Auto-fill & suggest */}
+            <button
+              onClick={autoFill}
+              disabled={!selectedPlant}
+              className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all disabled:opacity-30"
+              style={{ background: C.gold + '25', color: C.gold, border: `1px solid ${C.gold}40` }}
+            >
+              {'\u26A1'} Remplir
+            </button>
+            <button
+              onClick={smartSuggest}
+              disabled={plantedCells === 0}
+              className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all disabled:opacity-30"
+              style={{ background: C.leafGlow + '25', color: C.leafDeep, border: `1px solid ${C.leaf}40` }}
+            >
+              {'\u2728'} Suggestion
+            </button>
+            <button
+              onClick={clearGarden}
+              className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all"
+              style={{ background: C.terraPal, color: C.terra, border: `1px solid ${C.terraLt}` }}
+            >
+              {'\u{1F504}'} Vider
+            </button>
+
+            {/* Selected plant badge */}
+            {selectedPlant && tool === 'plant' && (
+              <div
+                className="ml-auto flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium"
+                style={{ background: selectedPlant.color + '18', border: `1px solid ${selectedPlant.color}50`, color: C.ink }}
+              >
+                <span>{selectedPlant.emoji}</span>
+                <span>{selectedPlant.nameFr}</span>
+                <button onClick={() => setSelectedPlant(null)} className="opacity-50 hover:opacity-100">{'\u2715'}</button>
+              </div>
+            )}
+          </div>
+
+          {/* Garden Grid */}
+          <div className="flex-1 overflow-auto p-4 flex items-start justify-center" ref={gridRef}>
+            {totalRows === 0 || totalCols === 0 ? (
+              <div className="text-center py-16">
+                <span className="text-4xl block mb-3">{'\u{1F3E1}'}</span>
+                <p className="text-sm font-medium" style={{ color: C.inkMid }}>
+                  Configurez les dimensions de votre jardin dans les param\u00e8tres.
+                </p>
+              </div>
+            ) : (
+              <div
+                className="inline-grid gap-0.5"
+                style={{
+                  gridTemplateColumns: `repeat(${totalCols}, minmax(60px, 80px))`,
+                  gridTemplateRows: `repeat(${totalRows}, minmax(60px, 80px))`,
+                }}
+              >
+                {Array.from({ length: totalRows }, (_, r) =>
+                  Array.from({ length: totalCols }, (_, c) => {
+                    const key = cellKey(r, c);
+                    const cd = cellMap.get(key);
+                    const plant = cd ? PLANT_MAP.get(cd.item.plantId) : null;
+                    const elapsed = cd ? daysFromPlantedDate(cd.item.plantedDate, simDayOffset) : 0;
+                    const stage = cd && plant ? getGrowthStage(elapsed, plant.dtm) : null;
+                    const isHarvest = stage === 'harvest';
+                    const emojiSize = stage ? STAGE_EMOJI_SIZE[stage] : 0;
+                    const highlight = getCellHighlight(r, c);
+                    const hoverHL = getHoverHighlight(r, c);
+                    const isHovered = hoveredCell === key;
+                    const density = plant ? Math.max(1, Math.floor(10000 / (plant.sp * plant.rowSp))) : 0;
+
+                    return (
+                      <div
+                        key={key}
+                        className="relative flex flex-col items-center justify-center rounded-lg cursor-pointer transition-all group select-none"
+                        style={{
+                          background: cd && plant
+                            ? (isHarvest
+                              ? `linear-gradient(135deg, ${plant.color}18, ${C.gold}25)`
+                              : `${plant.color}10`)
+                            : C.cream,
+                          border: `1.5px solid ${
+                            isHovered ? C.leaf : cd && plant ? plant.color + '40' : C.paperTan
+                          }`,
+                          boxShadow: highlight
+                            ? `inset 0 0 0 2px ${highlight}`
+                            : hoverHL
+                              ? `inset 0 0 0 2px ${hoverHL}`
+                              : isHarvest
+                                ? `0 0 12px ${C.gold}40`
+                                : 'none',
+                          minHeight: 60,
+                          minWidth: 60,
+                          animation: isHarvest ? 'harvestGlow 2s ease-in-out infinite' : undefined,
+                        }}
+                        onMouseEnter={() => setHoveredCell(key)}
+                        onMouseLeave={() => setHoveredCell(null)}
+                        onClick={() => handleCellClick(r, c)}
+                        onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; }}
+                        onDrop={(e) => { e.preventDefault(); handleDrop(r, c); }}
+                      >
+                        {/* Coordinates */}
+                        <span
+                          className="absolute top-0.5 left-1 text-[9px] font-mono opacity-30"
+                          style={{ color: C.inkSoft }}
+                        >
+                          {r},{c}
+                        </span>
+
+                        {cd && plant ? (
+                          <>
+                            <span
+                              className="transition-all duration-700"
+                              style={{ fontSize: emojiSize, lineHeight: 1 }}
+                            >
+                              {plant.emoji}
+                            </span>
+                            <span
+                              className="text-[9px] font-medium mt-0.5 text-center leading-tight max-w-full truncate px-1"
+                              style={{ color: plant.color }}
+                            >
+                              {plant.nameFr.length > 10 ? plant.nameFr.slice(0, 9) + '\u2026' : plant.nameFr}
+                            </span>
+                            <span className="text-[8px] mt-0.5" style={{ color: C.inkSoft }}>
+                              {stage === 'seed' && '\u{1FAD8}'}
+                              {stage === 'seedling' && '\u{1F331}'}
+                              {stage === 'growing' && '\u{1F33F}'}
+                              {stage === 'mature' && '\u{1FAB4}'}
+                              {stage === 'harvest' && '\u2728'}
+                            </span>
+                            {density > 1 && (
+                              <div className="flex gap-0.5 mt-0.5 flex-wrap justify-center max-w-[50px]">
+                                {Array.from({ length: Math.min(density, 9) }, (_, i) => (
+                                  <span
+                                    key={i}
+                                    className="w-1 h-1 rounded-full"
+                                    style={{ background: plant.color + '80' }}
+                                  />
+                                ))}
+                                {density > 9 && (
+                                  <span className="text-[7px]" style={{ color: C.inkSoft }}>+{density - 9}</span>
+                                )}
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <span
+                            className="text-lg opacity-0 group-hover:opacity-20 transition-opacity"
+                            style={{ color: C.leaf }}
+                          >
+                            {selectedPlant && tool === 'plant' ? selectedPlant.emoji : '+'}
+                          </span>
+                        )}
+
+                        {isHarvest && (
+                          <div
+                            className="absolute inset-0 rounded-lg pointer-events-none"
+                            style={{
+                              background: `radial-gradient(circle, ${C.gold}15, transparent 70%)`,
+                              animation: 'harvestPulse 2s ease-in-out infinite',
+                            }}
+                          />
+                        )}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Time Slider */}
+          <div
+            className="px-4 py-3 border-t"
+            style={{ background: C.paperMid, borderColor: C.paperTan }}
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-medium" style={{ color: C.inkMid }}>{'\u{1F552}'} Simulation</span>
+              <div className="flex-1 relative">
+                <div className="absolute -top-4 left-0 right-0 flex text-[9px]" style={{ color: C.inkSoft }}>
+                  <span className="flex-1 text-center">{'\u2744\uFE0F'} Hiver</span>
+                  <span className="flex-1 text-center">{'\u{1F331}'} Print.</span>
+                  <span className="flex-1 text-center">{'\u2600\uFE0F'} \u00c9t\u00e9</span>
+                  <span className="flex-1 text-center">{'\u{1F342}'} Auto.</span>
                 </div>
-              ))}
-            </div>
-          </Card>
-        )}
-      </div>
-
-      {/* Bottom actions */}
-      <div className="fixed bottom-0 left-0 right-0 z-40">
-        <div className="max-w-2xl mx-auto px-4" style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
-          <div className="rounded-t-2xl px-4 pt-3 pb-4 shadow-2xl border-t backdrop-blur-md space-y-2"
-            style={{ background: 'var(--nav-bg)', borderColor: 'var(--outline-variant)', boxShadow: '0 -4px 30px var(--shadow-lg)' }}>
-            <Button size="lg" className="w-full gap-2" onClick={() => { setStep('select'); setPlacedCount(0); setSkippedCount(0); }}>
-              <Plus className="w-5 h-5" />
-              {L ? 'Ajouter des plantes' : 'Add more plants'}
-            </Button>
-            <div className="flex gap-2">
-              <Link href="/garden/3d" className="flex-1">
-                <Button variant="outline" size="sm" className="w-full gap-2">
-                  <Eye className="w-4 h-4" /> {L ? 'Vue 3D' : '3D View'}
-                </Button>
-              </Link>
-              <Button variant="ghost" size="sm" className="gap-1"
-                onClick={() => { if (confirm(L ? 'Tout effacer ?' : 'Clear all?')) { clearGarden(); setStep('select'); } }}>
-                <RotateCcw className="w-4 h-4" />
-              </Button>
+                <input
+                  type="range"
+                  min={-180}
+                  max={180}
+                  value={simDayOffset}
+                  onChange={(e) => setSimDayOffset(Number(e.target.value))}
+                  className="w-full h-2 rounded-full appearance-none cursor-pointer"
+                  style={{
+                    background: `linear-gradient(to right,
+                      ${C.inkSoft} 0%,
+                      ${C.leafGlow} 25%,
+                      ${C.gold} 50%,
+                      ${C.terra} 75%,
+                      ${C.inkSoft} 100%)`,
+                    accentColor: C.leaf,
+                  }}
+                />
+              </div>
+              <span
+                className="text-xs font-bold min-w-[100px] text-right"
+                style={{ color: SEASON_COLORS[currentSeason] }}
+              >
+                {simDayOffset === 0 ? "Aujourd'hui" : simDayOffset > 0 ? `+${simDayOffset}j` : `${simDayOffset}j`}
+              </span>
             </div>
           </div>
-        </div>
+
+          {/* Mobile bottom bar */}
+          <div className="lg:hidden border-t" style={{ borderColor: C.paperTan }}>
+            <button
+              onClick={() => setMobileSheetOpen(!mobileSheetOpen)}
+              className="w-full flex items-center justify-center gap-2 py-3 text-sm font-medium"
+              style={{ background: C.leaf, color: C.cream }}
+            >
+              {'\u{1F331}'} {mobileSheetOpen ? 'Fermer' : 'Choisir une plante'}
+              {selectedPlant && <span className="opacity-75">({selectedPlant.nameFr})</span>}
+            </button>
+
+            {mobileSheetOpen && (
+              <div
+                className="max-h-[50vh] overflow-y-auto"
+                style={{ background: C.parchment }}
+              >
+                <div className="p-3 sticky top-0 z-10" style={{ background: C.parchment }}>
+                  <input
+                    type="text"
+                    placeholder="Rechercher..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg text-sm outline-none"
+                    style={{ background: C.paper, border: `1px solid ${C.dew}`, color: C.ink }}
+                  />
+                  <div className="flex gap-1.5 mt-2 overflow-x-auto">
+                    {CATEGORIES.map((cat) => (
+                      <button
+                        key={cat.key}
+                        onClick={() => setCatFilter(cat.key)}
+                        className="px-2 py-1 text-xs rounded-full whitespace-nowrap"
+                        style={{
+                          background: catFilter === cat.key ? C.leaf : C.paperMid,
+                          color: catFilter === cat.key ? C.cream : C.inkMid,
+                        }}
+                      >
+                        {cat.emoji} {cat.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-1 p-2">
+                  {filteredPlants.slice(0, 60).map((p) => (
+                    <button
+                      key={p.id}
+                      onClick={() => { setSelectedPlant(p); setTool('plant'); setMobileSheetOpen(false); }}
+                      className="flex flex-col items-center gap-1 p-2 rounded-lg text-center"
+                      style={{
+                        background: selectedPlant?.id === p.id ? C.leaf + '18' : C.paper,
+                        border: selectedPlant?.id === p.id ? `2px solid ${C.leaf}` : '2px solid transparent',
+                      }}
+                    >
+                      <span className="text-lg">{p.emoji}</span>
+                      <span className="text-[10px] font-medium leading-tight" style={{ color: C.ink }}>
+                        {p.nameFr.length > 12 ? p.nameFr.slice(0, 11) + '\u2026' : p.nameFr}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </main>
+
+        {/* ═══════════════════════════════════════════════════════════════════
+           RIGHT SIDEBAR - Info Panel
+           ═══════════════════════════════════════════════════════════════════ */}
+        <aside
+          className="hidden lg:flex flex-col w-64 xl:w-72 border-l overflow-hidden"
+          style={{ background: C.parchment, borderColor: C.paperTan }}
+        >
+          {/* Active tool info */}
+          <div className="p-3 border-b" style={{ borderColor: C.paperTan }}>
+            <h3 className="text-xs font-bold uppercase tracking-wide mb-1" style={{ color: C.inkSoft }}>
+              Outil actif
+            </h3>
+            <div
+              className="flex items-center gap-2 px-3 py-2 rounded-lg"
+              style={{ background: C.paper, border: `1px solid ${C.dew}` }}
+            >
+              <span className="text-base">
+                {tool === 'plant' ? '\u{1F331}' : tool === 'remove' ? '\u{1F5D1}\uFE0F' : '\u{1F50D}'}
+              </span>
+              <div>
+                <div className="text-sm font-medium" style={{ color: C.ink }}>
+                  {tool === 'plant' ? 'Planter' : tool === 'remove' ? 'Retirer' : 'Inspecter'}
+                </div>
+                <div className="text-[10px]" style={{ color: C.inkSoft }}>
+                  {tool === 'plant' && (selectedPlant ? `${selectedPlant.nameFr} s\u00e9lectionn\u00e9` : 'Choisissez une plante')}
+                  {tool === 'remove' && 'Cliquez sur une cellule pour retirer'}
+                  {tool === 'inspect' && 'Cliquez sur une cellule pour d\u00e9tails'}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Inspected cell */}
+          {inspectedData && (
+            <div className="p-3 border-b" style={{ borderColor: C.paperTan }}>
+              <h3 className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: C.inkSoft }}>
+                Cellule inspect\u00e9e
+              </h3>
+              <div
+                className="rounded-lg p-3"
+                style={{ background: inspectedData.plant.color + '08', border: `1px solid ${inspectedData.plant.color}25` }}
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-2xl">{inspectedData.plant.emoji}</span>
+                  <div>
+                    <div className="text-sm font-bold" style={{ color: C.ink }}>
+                      {inspectedData.plant.nameFr}
+                    </div>
+                    <div className="text-[10px]" style={{ color: C.inkSoft }}>
+                      {inspectedData.plant.name}
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-1.5 text-xs" style={{ color: C.inkMid }}>
+                  <div className="flex justify-between">
+                    <span>Stade</span>
+                    <span className="font-medium">{STAGE_LABEL[inspectedData.stage]}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Plant\u00e9 le</span>
+                    <span>{new Date(inspectedData.item.plantedDate).toLocaleDateString('fr-FR')}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>\u00c2ge</span>
+                    <span>{inspectedData.elapsed}j / {inspectedData.plant.dtm}j</span>
+                  </div>
+                  {/* Progress bar */}
+                  <div className="w-full h-1.5 rounded-full overflow-hidden mt-1" style={{ background: C.paperTan }}>
+                    <div
+                      className="h-full rounded-full transition-all"
+                      style={{
+                        width: `${Math.min(100, (inspectedData.elapsed / Math.max(1, inspectedData.plant.dtm)) * 100)}%`,
+                        background: inspectedData.stage === 'harvest' ? C.gold : C.leaf,
+                      }}
+                    />
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Densit\u00e9</span>
+                    <span>{inspectedData.density} plants/m\u00b2</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Espacement</span>
+                    <span>{inspectedData.plant.sp}cm</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Arrosage</span>
+                    <span>{inspectedData.plant.wateringFrequency}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Companion info */}
+          {(inspectedData || selectedPlant) && (
+            <div className="p-3 border-b" style={{ borderColor: C.paperTan }}>
+              <h3 className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: C.inkSoft }}>
+                Compagnonnage
+              </h3>
+              {(() => {
+                const target = inspectedData?.plant ?? selectedPlant;
+                if (!target) return null;
+                return (
+                  <div className="space-y-2">
+                    <div>
+                      <div className="text-[10px] font-medium mb-1" style={{ color: C.leaf }}>
+                        {'\u{1F49A}'} Bons voisins
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {target.comp.length > 0 ? target.comp.slice(0, 8).map((id) => {
+                          const cp = PLANT_MAP.get(id);
+                          return cp ? (
+                            <span
+                              key={id}
+                              className="px-1.5 py-0.5 rounded text-[10px]"
+                              style={{ background: C.leaf + '15', color: C.leafDeep }}
+                            >
+                              {cp.emoji} {cp.nameFr}
+                            </span>
+                          ) : null;
+                        }) : (
+                          <span className="text-[10px]" style={{ color: C.inkSoft }}>Aucun</span>
+                        )}
+                      </div>
+                    </div>
+                    <div>
+                      <div className="text-[10px] font-medium mb-1" style={{ color: C.terra }}>
+                        {'\u{1F494}'} Mauvais voisins
+                      </div>
+                      <div className="flex flex-wrap gap-1">
+                        {target.enm.length > 0 ? target.enm.slice(0, 8).map((id) => {
+                          const ep = PLANT_MAP.get(id);
+                          return ep ? (
+                            <span
+                              key={id}
+                              className="px-1.5 py-0.5 rounded text-[10px]"
+                              style={{ background: C.terra + '15', color: C.terraDk }}
+                            >
+                              {ep.emoji} {ep.nameFr}
+                            </span>
+                          ) : null;
+                        }) : (
+                          <span className="text-[10px]" style={{ color: C.inkSoft }}>Aucun</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
+
+          {/* Alerts */}
+          <div className="flex-1 overflow-y-auto p-3">
+            <h3 className="text-xs font-bold uppercase tracking-wide mb-2" style={{ color: C.inkSoft }}>
+              Alertes {alerts.length > 0 && <span className="ml-1 px-1.5 py-0.5 rounded-full text-[9px]" style={{ background: C.terraPal, color: C.terra }}>{alerts.length}</span>}
+            </h3>
+            {alerts.length === 0 ? (
+              <div className="text-center py-6">
+                <span className="text-2xl block mb-2">{'\u{1F33F}'}</span>
+                <span className="text-xs" style={{ color: C.inkSoft }}>
+                  Tout va bien dans votre jardin!
+                </span>
+              </div>
+            ) : (
+              <div className="space-y-1.5">
+                {alerts.map((a, i) => (
+                  <div
+                    key={i}
+                    className="flex items-start gap-2 px-2.5 py-2 rounded-lg text-[11px]"
+                    style={{
+                      background: a.type === 'warning' ? C.terraPal : C.gold + '15',
+                      color: a.type === 'warning' ? C.terraDk : C.gold,
+                    }}
+                  >
+                    <span className="flex-shrink-0 mt-0.5">{a.type === 'warning' ? '\u26A0\uFE0F' : '\u{1F389}'}</span>
+                    <span>{a.msg}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </aside>
       </div>
+
+      {/* ── Global Styles (keyframes) ── */}
+      <style>{`
+        @keyframes harvestGlow {
+          0%, 100% { box-shadow: 0 0 8px ${C.gold}30; }
+          50% { box-shadow: 0 0 20px ${C.gold}60, 0 0 40px ${C.gold}20; }
+        }
+        @keyframes harvestPulse {
+          0%, 100% { opacity: 0.3; }
+          50% { opacity: 0.7; }
+        }
+        input[type="range"]::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: ${C.leaf};
+          border: 2px solid ${C.cream};
+          box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+          cursor: pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+          background: ${C.leaf};
+          border: 2px solid ${C.cream};
+          box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+          cursor: pointer;
+        }
+        aside::-webkit-scrollbar { width: 4px; }
+        aside::-webkit-scrollbar-thumb { background: ${C.paperTan}; border-radius: 2px; }
+        aside::-webkit-scrollbar-track { background: transparent; }
+      `}</style>
     </div>
   );
 }
