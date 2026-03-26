@@ -4,6 +4,7 @@ import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useGarden, usePlants } from '@/lib/hooks';
 import type { Plant, PlantedItem, GardenZone, ZoneType, SoilType, SunExposure } from '@/types';
 import { ZONE_TYPE_LABELS } from '@/types';
+import { getPlantImageUrl } from '@/lib/plant-images';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Color Palette
@@ -210,7 +211,7 @@ function AddZoneModal({
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       style={{ background: 'rgba(27,43,26,0.6)', backdropFilter: 'blur(8px)' }}
     >
-      <div className="w-full max-w-md rounded-2xl shadow-2xl overflow-hidden" style={{ background: C.parchment }}>
+      <div className="w-full max-w-md rounded-2xl shadow-2xl overflow-hidden add-zone-modal-mobile" style={{ background: C.parchment }}>
         <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: `1px solid ${C.dew}` }}>
           <h3 className="text-lg font-semibold" style={{ color: C.ink }}>
             {'\u{1F33F}'} Ajouter une zone
@@ -768,10 +769,15 @@ export function GardenPlanner() {
                   }}
                 >
                   <span
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0"
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-base flex-shrink-0 overflow-hidden"
                     style={{ background: p.color + '20', border: `1px solid ${p.color}40` }}
                   >
-                    {p.emoji}
+                    {(() => {
+                      const listImg = getPlantImageUrl(p.id);
+                      return listImg ? (
+                        <img src={listImg} alt="" className="w-full h-full object-cover" loading="lazy" />
+                      ) : p.emoji;
+                    })()}
                   </span>
                   <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium truncate" style={{ color: C.ink }}>{p.nameFr}</div>
@@ -870,7 +876,14 @@ export function GardenPlanner() {
                 className="ml-auto flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium"
                 style={{ background: selectedPlant.color + '18', border: `1px solid ${selectedPlant.color}50`, color: C.ink }}
               >
-                <span>{selectedPlant.emoji}</span>
+                {(() => {
+                  const badgeImg = getPlantImageUrl(selectedPlant.id);
+                  return badgeImg ? (
+                    <img src={badgeImg} alt="" className="w-5 h-5 rounded-full object-cover" loading="lazy" />
+                  ) : (
+                    <span>{selectedPlant.emoji}</span>
+                  );
+                })()}
                 <span>{selectedPlant.nameFr}</span>
                 <button onClick={() => setSelectedPlant(null)} className="opacity-50 hover:opacity-100">{'\u2715'}</button>
               </div>
@@ -890,8 +903,8 @@ export function GardenPlanner() {
               <div
                 className="inline-grid gap-0.5"
                 style={{
-                  gridTemplateColumns: `repeat(${totalCols}, minmax(60px, 80px))`,
-                  gridTemplateRows: `repeat(${totalRows}, minmax(60px, 80px))`,
+                  gridTemplateColumns: `repeat(${totalCols}, minmax(48px, 80px))`,
+                  gridTemplateRows: `repeat(${totalRows}, minmax(48px, 80px))`,
                 }}
               >
                 {Array.from({ length: totalRows }, (_, r) =>
@@ -971,12 +984,25 @@ export function GardenPlanner() {
 
                         {cd && plant ? (
                           <>
-                            <span
-                              className="transition-all duration-700"
-                              style={{ fontSize: emojiSize, lineHeight: 1 }}
-                            >
-                              {plant.emoji}
-                            </span>
+                            {(() => {
+                              const imgUrl = getPlantImageUrl(plant.id);
+                              return imgUrl ? (
+                                <img
+                                  src={imgUrl}
+                                  alt=""
+                                  className="rounded-full object-cover transition-all duration-700"
+                                  style={{ width: emojiSize + 6, height: emojiSize + 6 }}
+                                  loading="lazy"
+                                />
+                              ) : (
+                                <span
+                                  className="transition-all duration-700"
+                                  style={{ fontSize: emojiSize, lineHeight: 1 }}
+                                >
+                                  {plant.emoji}
+                                </span>
+                              );
+                            })()}
                             <span
                               className="text-[9px] font-medium mt-0.5 text-center leading-tight max-w-full truncate px-1"
                               style={{ color: plant.color }}
@@ -1010,7 +1036,14 @@ export function GardenPlanner() {
                             className="text-lg opacity-0 group-hover:opacity-20 transition-opacity"
                             style={{ color: C.leaf }}
                           >
-                            {selectedPlant && tool === 'plant' ? selectedPlant.emoji : '+'}
+                            {selectedPlant && tool === 'plant' ? (
+                              (() => {
+                                const hoverImg = getPlantImageUrl(selectedPlant.id);
+                                return hoverImg ? (
+                                  <img src={hoverImg} alt="" className="rounded-full object-cover" style={{ width: 20, height: 20 }} loading="lazy" />
+                                ) : selectedPlant.emoji;
+                              })()
+                            ) : '+'}
                           </span>
                         )}
 
@@ -1113,18 +1146,25 @@ export function GardenPlanner() {
                     ))}
                   </div>
                 </div>
-                <div className="grid grid-cols-3 gap-1 p-2">
+                <div className="grid grid-cols-3 gap-3 p-3">
                   {filteredPlants.slice(0, 60).map((p) => (
                     <button
                       key={p.id}
                       onClick={() => { setSelectedPlant(p); setTool('plant'); setMobileSheetOpen(false); }}
-                      className="flex flex-col items-center gap-1 p-2 rounded-lg text-center"
+                      className="flex flex-col items-center gap-1.5 p-3 rounded-xl text-center min-h-[64px]"
                       style={{
                         background: selectedPlant?.id === p.id ? C.leaf + '18' : C.paper,
                         border: selectedPlant?.id === p.id ? `2px solid ${C.leaf}` : '2px solid transparent',
                       }}
                     >
-                      <span className="text-lg">{p.emoji}</span>
+                      {(() => {
+                        const mImg = getPlantImageUrl(p.id);
+                        return mImg ? (
+                          <img src={mImg} alt="" className="w-8 h-8 rounded-lg object-cover" loading="lazy" />
+                        ) : (
+                          <span className="text-lg">{p.emoji}</span>
+                        );
+                      })()}
                       <span className="text-[10px] font-medium leading-tight" style={{ color: C.ink }}>
                         {p.nameFr.length > 12 ? p.nameFr.slice(0, 11) + '\u2026' : p.nameFr}
                       </span>
@@ -1179,7 +1219,14 @@ export function GardenPlanner() {
                 style={{ background: inspectedData.plant.color + '08', border: `1px solid ${inspectedData.plant.color}25` }}
               >
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-2xl">{inspectedData.plant.emoji}</span>
+                  {(() => {
+                    const inspImg = getPlantImageUrl(inspectedData.plant.id);
+                    return inspImg ? (
+                      <img src={inspImg} alt="" className="w-8 h-8 rounded-lg object-cover" loading="lazy" />
+                    ) : (
+                      <span className="text-2xl">{inspectedData.plant.emoji}</span>
+                    );
+                  })()}
                   <div>
                     <div className="text-sm font-bold" style={{ color: C.ink }}>
                       {inspectedData.plant.nameFr}
@@ -1253,7 +1300,7 @@ export function GardenPlanner() {
                               className="px-1.5 py-0.5 rounded text-[10px]"
                               style={{ background: C.leaf + '15', color: C.leafDeep }}
                             >
-                              {cp.emoji} {cp.nameFr}
+                              {(() => { const ci = getPlantImageUrl(cp.id); return ci ? <img src={ci} alt="" className="w-3.5 h-3.5 rounded-full object-cover inline-block mr-0.5" loading="lazy" /> : cp.emoji + ' '; })()}{cp.nameFr}
                             </span>
                           ) : null;
                         }) : (
@@ -1274,7 +1321,7 @@ export function GardenPlanner() {
                               className="px-1.5 py-0.5 rounded text-[10px]"
                               style={{ background: C.terra + '15', color: C.terraDk }}
                             >
-                              {ep.emoji} {ep.nameFr}
+                              {(() => { const ei = getPlantImageUrl(ep.id); return ei ? <img src={ei} alt="" className="w-3.5 h-3.5 rounded-full object-cover inline-block mr-0.5" loading="lazy" /> : ep.emoji + ' '; })()}{ep.nameFr}
                             </span>
                           ) : null;
                         }) : (

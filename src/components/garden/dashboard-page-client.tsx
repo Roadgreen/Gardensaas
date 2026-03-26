@@ -45,6 +45,7 @@ import type { WeatherContext } from '@/lib/watering-service';
 import { Skeleton, WeatherCardSkeleton } from '@/components/ui/skeleton';
 import { getSeasonalQuickPicks } from '@/lib/smart-planting';
 import type { PlantingSuggestionResult } from '@/lib/smart-planting';
+import { getPlantImageUrl } from '@/lib/plant-images';
 
 const sidebarLinksConfig = [
   { href: '/garden/dashboard', key: 'dashboard', icon: LayoutDashboard },
@@ -817,7 +818,14 @@ function SeasonalPicksWidget({ config, onAddPlant }: {
                 key={pick.plantId}
                 className="flex items-center gap-3 p-2.5 rounded-xl bg-[#0D1F17] border border-green-900/30 hover:border-green-700/40 transition-all"
               >
-                <span className="text-lg">{getPlantEmoji(pick.plantId)}</span>
+                {(() => {
+                  const pickImg = getPlantImageUrl(pick.plantId);
+                  return pickImg ? (
+                    <img src={pickImg} alt="" className="w-8 h-8 rounded-lg object-cover shrink-0" loading="lazy" />
+                  ) : (
+                    <span className="text-lg">{getPlantEmoji(pick.plantId)}</span>
+                  );
+                })()}
                 <div className="flex-1 min-w-0">
                   <span className="text-green-50 text-sm font-medium block truncate">
                     {pick.plantName[lang]}
@@ -1151,7 +1159,14 @@ export function DashboardPageClient() {
                           className="flex items-center justify-between p-3 rounded-xl bg-[#0D1F17] border border-green-900/30 hover:border-green-700/40 transition-all"
                         >
                           <div className="flex items-center gap-3">
-                            <span className="text-xl">{getPlantEmoji(plant!.id)}</span>
+                            {(() => {
+                              const pImg = getPlantImageUrl(plant!.id);
+                              return pImg ? (
+                                <img src={pImg} alt="" className="w-8 h-8 rounded-lg object-cover shrink-0" loading="lazy" />
+                              ) : (
+                                <span className="text-xl">{getPlantEmoji(plant!.id)}</span>
+                              );
+                            })()}
                             <div>
                               <span className="text-green-50 font-medium text-sm">{plant!.name[locale as 'en' | 'fr'] || plant!.name.en}</span>
                               <span className="text-xs text-green-500/50 ml-2">
@@ -1248,7 +1263,14 @@ export function DashboardPageClient() {
                             href={`/plants/${plant.id}`}
                             className="flex items-center gap-2.5 min-w-0 flex-1"
                           >
-                            <span className="text-lg">{getPlantEmoji(plant.id)}</span>
+                            {(() => {
+                              const rImg = getPlantImageUrl(plant.id);
+                              return rImg ? (
+                                <img src={rImg} alt="" className="w-7 h-7 rounded-lg object-cover shrink-0" loading="lazy" />
+                              ) : (
+                                <span className="text-lg">{getPlantEmoji(plant.id)}</span>
+                              );
+                            })()}
                             <div className="min-w-0">
                               <span className="text-green-50 text-sm font-medium truncate block">
                                 {plant.name.en}

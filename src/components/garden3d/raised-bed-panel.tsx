@@ -130,7 +130,7 @@ export function RaisedBedPanel({
   };
 
   return (
-    <div style={panelStyle}>
+    <div className="raised-bed-panel-mobile" style={panelStyle}>
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>

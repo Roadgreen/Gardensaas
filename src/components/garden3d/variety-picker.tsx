@@ -67,7 +67,7 @@ export function VarietyPicker({ plant, zones, raisedBeds, onConfirm, onCancel }:
         }}
       />
 
-      <div style={panelStyle}>
+      <div className="variety-picker-panel" style={panelStyle}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
           <PlantImage

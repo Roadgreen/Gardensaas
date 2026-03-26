@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import { useGarden, usePlants } from '@/lib/hooks';
 import type { Plant, Seedling } from '@/types';
 import { Plus, X, Search, Trash2, ArrowRightLeft, ChevronUp, CalendarDays } from 'lucide-react';
+import { getPlantImageUrl } from '@/lib/plant-images';
 
 /* ------------------------------------------------------------------ */
 /*  Color palette                                                      */
@@ -302,7 +303,7 @@ function SowModal({
       style={{ background: 'rgba(27,43,26,0.6)', backdropFilter: 'blur(8px)' }}
     >
       <div
-        className="w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden"
+        className="w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden sow-modal-mobile"
         style={{ background: C.parchment, maxHeight: '85vh' }}
       >
         <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: `1px solid ${C.dew}` }}>
@@ -340,10 +341,15 @@ function SowModal({
                     style={{ background: C.cream }}
                   >
                     <span
-                      className="w-9 h-9 rounded-lg flex items-center justify-center text-lg"
+                      className="w-9 h-9 rounded-lg flex items-center justify-center text-lg overflow-hidden"
                       style={{ background: p.color + '20' }}
                     >
-                      {p.category === 'vegetable' ? '\uD83E\uDD66' : p.category === 'herb' ? '\uD83C\uDF3F' : p.category === 'fruit' ? '\uD83C\uDF53' : '\uD83E\uDEB4'}
+                      {(() => {
+                        const sowImg = getPlantImageUrl(p.id);
+                        return sowImg ? (
+                          <img src={sowImg} alt="" className="w-full h-full object-cover" loading="lazy" />
+                        ) : (p.category === 'vegetable' ? '\uD83E\uDD66' : p.category === 'herb' ? '\uD83C\uDF3F' : p.category === 'fruit' ? '\uD83C\uDF53' : '\uD83E\uDEB4');
+                      })()}
                     </span>
                     <div className="flex-1 min-w-0">
                       <div className="text-sm font-medium truncate" style={{ color: C.ink }}>{p.name.fr}</div>
@@ -363,10 +369,15 @@ function SowModal({
           <div className="px-5 py-6 space-y-5">
             <div className="flex items-center gap-3">
               <span
-                className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+                className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl overflow-hidden"
                 style={{ background: selectedPlant.color + '20' }}
               >
-                {selectedPlant.category === 'vegetable' ? '\uD83E\uDD66' : selectedPlant.category === 'herb' ? '\uD83C\uDF3F' : '\uD83C\uDF53'}
+                {(() => {
+                  const selImg = getPlantImageUrl(selectedPlant.id);
+                  return selImg ? (
+                    <img src={selImg} alt="" className="w-full h-full object-cover" loading="lazy" />
+                  ) : (selectedPlant.category === 'vegetable' ? '\uD83E\uDD66' : selectedPlant.category === 'herb' ? '\uD83C\uDF3F' : '\uD83C\uDF53');
+                })()}
               </span>
               <div>
                 <div className="font-semibold" style={{ color: C.ink }}>{selectedPlant.name.fr}</div>
@@ -453,7 +464,14 @@ function SeedlingCard({
       title={`${plant.name.fr} - Jour ${days} - ${daysBeforeTransplant > 0 ? daysBeforeTransplant + 'j avant repiquage' : 'Pret !'}`}
     >
       <div className="flex items-start gap-2.5">
-        <span className="text-lg">{info.emoji}</span>
+        {(() => {
+          const cardImg = getPlantImageUrl(seedling.plantId);
+          return cardImg ? (
+            <img src={cardImg} alt="" className="w-7 h-7 rounded-lg object-cover flex-shrink-0" loading="lazy" />
+          ) : (
+            <span className="text-lg">{info.emoji}</span>
+          );
+        })()}
         <div className="flex-1 min-w-0">
           <div className="text-sm font-semibold truncate" style={{ color: C.ink }}>{plant.name.fr}</div>
           <div className="text-xs mt-0.5" style={{ color: C.inkSoft }}>
@@ -522,7 +540,14 @@ function InfoPanel({
     <div className="rounded-2xl p-4 md:p-5 space-y-4" style={{ background: C.cream, border: `1px solid ${C.dew}` }}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">{info.emoji}</span>
+          {(() => {
+            const panelImg = getPlantImageUrl(seedling.plantId);
+            return panelImg ? (
+              <img src={panelImg} alt="" className="w-10 h-10 rounded-xl object-cover flex-shrink-0" loading="lazy" />
+            ) : (
+              <span className="text-2xl">{info.emoji}</span>
+            );
+          })()}
           <div>
             <h3 className="font-semibold text-base" style={{ color: C.ink }}>{plant.name.fr}</h3>
             <p className="text-xs" style={{ color: C.inkSoft }}>{plant.name.en} &middot; {seedling.pots} godet{seedling.pots > 1 ? 's' : ''}</p>
@@ -831,7 +856,7 @@ export function SemisView() {
           </div>
 
           <div className="px-4 py-3">
-            <div className="flex gap-2.5 overflow-x-auto pb-2 -mx-4 px-4 snap-x">
+            <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 snap-x scrollbar-hide">
               {seedlings.map((s) => {
                 const plant = plants.find(p => p.id === s.plantId);
                 if (!plant) return null;

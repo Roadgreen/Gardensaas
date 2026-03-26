@@ -4,6 +4,7 @@ import { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
 import type { GardenConfig, Plant } from '@/types';
+import { getPlantImageUrl } from '@/lib/plant-images';
 
 interface Garden2DMobileProps {
   config: GardenConfig;
@@ -747,15 +748,32 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
                 <GrowthArc cx={cx} cy={cy} r={r + 0.035} progress={progress} />
               )}
 
-              <text
-                x={cx}
-                y={cy + 0.055}
-                textAnchor="middle"
-                fontSize={r * 1.4}
-                pointerEvents="none"
-              >
-                {CATEGORY_EMOJI[plantData.category] || '\uD83C\uDF31'}
-              </text>
+              {(() => {
+                const svgImg = getPlantImageUrl(plantData.id);
+                return svgImg ? (
+                  <image
+                    href={svgImg}
+                    x={cx - r * 0.7}
+                    y={cy - r * 0.7}
+                    width={r * 1.4}
+                    height={r * 1.4}
+                    preserveAspectRatio="xMidYMid slice"
+                    clipPath={`circle(${r * 0.7}px)`}
+                    pointerEvents="none"
+                    style={{ borderRadius: '50%' }}
+                  />
+                ) : (
+                  <text
+                    x={cx}
+                    y={cy + 0.055}
+                    textAnchor="middle"
+                    fontSize={r * 1.4}
+                    pointerEvents="none"
+                  >
+                    {CATEGORY_EMOJI[plantData.category] || '\uD83C\uDF31'}
+                  </text>
+                );
+              })()}
 
               {/* Always-visible compact plant label */}
               <text
@@ -824,16 +842,32 @@ export function Garden2DMobile({ config, plants, selectedPlantType, showSpacing,
                 stroke="rgba(255,255,255,0.3)"
                 strokeWidth={0.015}
               />
-              {/* Plant emoji */}
-              <text
-                x={cursorPos.x}
-                y={cursorPos.y + 0.045}
-                textAnchor="middle"
-                fontSize={previewR * 1.4}
-                opacity={0.6}
-              >
-                {CATEGORY_EMOJI[previewPlant.category] || '\uD83C\uDF31'}
-              </text>
+              {/* Plant image */}
+              {(() => {
+                const prevImg = getPlantImageUrl(previewPlant.id);
+                return prevImg ? (
+                  <image
+                    href={prevImg}
+                    x={cursorPos.x - previewR * 0.7}
+                    y={cursorPos.y - previewR * 0.7}
+                    width={previewR * 1.4}
+                    height={previewR * 1.4}
+                    preserveAspectRatio="xMidYMid slice"
+                    opacity={0.6}
+                    pointerEvents="none"
+                  />
+                ) : (
+                  <text
+                    x={cursorPos.x}
+                    y={cursorPos.y + 0.045}
+                    textAnchor="middle"
+                    fontSize={previewR * 1.4}
+                    opacity={0.6}
+                  >
+                    {CATEGORY_EMOJI[previewPlant.category] || '\uD83C\uDF31'}
+                  </text>
+                );
+              })()}
               {/* Plant name label */}
               <text
                 x={cursorPos.x}
