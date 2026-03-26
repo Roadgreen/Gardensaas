@@ -12,6 +12,8 @@ export type SunExposure = 'full-sun' | 'partial-shade' | 'full-shade';
 
 export type Difficulty = 'easy' | 'medium' | 'hard';
 
+export type PlantType = 'annuelle' | 'vivace_basse' | 'arbuste' | 'arbre';
+
 export type Shape3D = 'cone' | 'sphere' | 'cylinder' | 'box' | 'capsule' | 'bush' | 'vine' | 'leafy' | 'root' | 'tall-stem';
 
 export interface PlantVariety {
@@ -32,7 +34,8 @@ export interface Plant {
     en: string;
     fr: string;
   };
-  category: 'vegetable' | 'herb' | 'fruit' | 'root' | 'ancient' | 'exotic';
+  category: 'vegetable' | 'herb' | 'fruit' | 'root' | 'ancient' | 'exotic' | 'flower';
+  plantType: PlantType;
   soilTypes: SoilType[];
   sunExposure: SunExposure[];
   plantingMonths: number[];

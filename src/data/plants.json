@@ -307,7 +307,8 @@
           "fr": "Tomate entre la cerise et le calibre standard. Sucree, ferme et parfaite pour l'aperitif."
         }
       }
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "carrot",
@@ -477,7 +478,8 @@
           "fr": "Petite carotte ronde comme une balle de golf, parfaite en pot et en sol peu profond."
         }
       }
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "lettuce",
@@ -674,7 +676,8 @@
           "fr": "Magnifique laitue beurre ancienne aux reflets rouges. Semis quasi toute l'annee en climat doux."
         }
       }
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "basil",
@@ -774,7 +777,8 @@
           "fr": "Basilic parfume au citron, ideal pour le poisson et les desserts."
         }
       }
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pepper",
@@ -978,7 +982,8 @@
           "fr": "Piment doux du sud-ouest. Fruits longs et fins, excellent frit entier a la poele."
         }
       }
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "zucchini",
@@ -1157,7 +1162,8 @@
           "fr": "Variete provencale gris-vert a la peau tachetee. Chair dense qui tient bien dans la ratatouille."
         }
       }
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "cucumber",
@@ -1299,7 +1305,8 @@
           "fr": "Concombre ancien blanc ivoire a la chair croquante et douce. Aspect saisissant en salade."
         }
       }
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "onion",
@@ -1441,7 +1448,8 @@
           "fr": "Oignon rose de Bretagne, sucre et doux. Se tresse joliment pour la conservation."
         }
       }
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "garlic",
@@ -1518,7 +1526,8 @@
           "fr": "Ail blanc du sud-ouest de la France."
         }
       }
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "radish",
@@ -1607,7 +1616,8 @@
           "fr": "Long radis blanc japonais au gout doux."
         }
       }
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "spinach",
@@ -1684,7 +1694,8 @@
           "fr": "Type froise aux feuilles vert fonce et gaufrrees."
         }
       }
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pea",
@@ -1763,7 +1774,8 @@
           "fr": "Pois a cosse comestible, sucre et croquant."
         }
       }
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "bean",
@@ -1854,7 +1866,8 @@
           "fr": "Haricot grimpant avec de belles fleurs rouges."
         }
       }
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "potato",
@@ -1943,7 +1956,8 @@
           "fr": "Variete ancienne francaise violette a chair violette."
         }
       }
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "eggplant",
@@ -2029,7 +2043,8 @@
           "fr": "Variete italienne ancienne rayee violet et blanc."
         }
       }
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "cabbage",
@@ -2121,7 +2136,8 @@
           "fr": "Chou frise kale, super aliment vert."
         }
       }
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "broccoli",
@@ -2171,7 +2187,8 @@
       "Side shoots produce after main head is cut",
       "Rich in vitamins C and K",
       "Use row covers against cabbage worms"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "corn",
@@ -2217,7 +2234,8 @@
       "Silk turns brown when ears are ready",
       "Cook immediately after picking for best sweetness",
       "Grows well in the Three Sisters method with beans and squash"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "strawberry",
@@ -2320,7 +2338,8 @@
           "fr": "Variete precoce allongee, tres aromatique."
         }
       }
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "rosemary",
@@ -2393,7 +2412,8 @@
           "fr": "Variete rampante basse."
         }
       }
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "thyme",
@@ -2438,7 +2458,8 @@
       "Divide plants every 3-4 years",
       "Tolerates poor soil",
       "Harvest just before flowering for best flavor"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "mint",
@@ -2487,7 +2508,8 @@
       "Harvest regularly to keep compact",
       "Makes excellent tea",
       "Over 600 varieties exist"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "parsley",
@@ -2534,7 +2556,8 @@
       "Slow to germinate - be patient",
       "Cut outer stalks first",
       "Goes to seed in second year"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "chives",
@@ -2584,7 +2607,8 @@
       "Divide clumps every 3 years",
       "Flowers attract beneficial insects",
       "Freeze chopped chives for winter use"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "sage",
@@ -2631,7 +2655,8 @@
       "Prune woody stems in spring",
       "Drought tolerant once established",
       "Attracts pollinators when flowering"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "oregano",
@@ -2675,7 +2700,8 @@
       "Cut back hard in spring for fresh growth",
       "Spreads readily - contain if needed",
       "Harvest just before flowers open"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "kale",
@@ -2726,7 +2752,8 @@
       "Frost improves the flavor",
       "Remove yellowing leaves promptly",
       "One of the most nutritious vegetables"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "beet",
@@ -2776,7 +2803,8 @@
       "Harvest when golf ball sized for tenderness",
       "Leaves are as nutritious as the root",
       "Store in sand for winter use"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "turnip",
@@ -2825,7 +2853,8 @@
       "Greens are edible and nutritious",
       "Quick crop - ready in just weeks",
       "Tolerates light frost"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "leek",
@@ -2873,7 +2902,8 @@
       "Hardy enough to overwinter in many climates",
       "Transplant when pencil thickness",
       "Wash thoroughly between layers before cooking"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "celery",
@@ -2922,7 +2952,8 @@
       "Start seeds 10-12 weeks before transplanting",
       "Blanch stems for milder flavor",
       "Never let soil dry out completely"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "dill",
@@ -2970,7 +3001,8 @@
       "Let some plants go to seed for next year",
       "Attracts beneficial insects",
       "Harvest leaves before flowering for best flavor"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "cilantro",
@@ -3017,7 +3049,8 @@
       "Choose slow-bolt varieties for leaf production",
       "Harvest leaves before flower stalks appear",
       "Let some bolt for coriander seeds"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "sunflower",
@@ -3063,7 +3096,8 @@
       "Harvest seeds when back of head turns brown",
       "Plant near a fence for wind protection",
       "Attracts pollinators to the garden"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pumpkin",
@@ -3107,7 +3141,8 @@
       "Place cardboard under fruits to prevent rot",
       "Pollinate by hand if needed",
       "Harvest before first hard frost"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "watermelon",
@@ -3151,7 +3186,8 @@
       "Reduce watering as fruit ripens for sweeter flavor",
       "Use black plastic mulch to warm soil",
       "Tendril near fruit turns brown when ripe"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "raspberry",
@@ -3200,7 +3236,8 @@
       "Prune old canes after fruiting",
       "Mulch heavily to suppress weeds",
       "Net against birds during harvest"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "swiss-chard",
@@ -3247,7 +3284,8 @@
       "Rainbow chard adds color to the garden",
       "Very heat tolerant compared to spinach",
       "Can overwinter in mild climates"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "lavender",
@@ -3291,7 +3329,8 @@
       "Prune after flowering to maintain shape",
       "Flowers can be dried for sachets",
       "Do not over-water or over-fertilize"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "parsnip",
@@ -3339,7 +3378,8 @@
       "Use fresh seed each year as viability drops quickly",
       "Frost converts starch to sugar for sweeter roots",
       "Needs deep loose soil to avoid forking"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "jerusalem-artichoke",
@@ -3386,7 +3426,8 @@
       "Can become invasive - harvest all tubers or contain",
       "Leave some tubers in ground for next year's crop",
       "Harvest after first frost for best flavor"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "crosne",
@@ -3428,7 +3469,8 @@
       "Plant tubers in spring and harvest after leaves die back",
       "Leave some in ground for next year's crop",
       "Best eaten fresh as they dry out quickly"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "rutabaga",
@@ -3474,7 +3516,8 @@
       "Sow in early summer for autumn harvest",
       "Flavor improves after light frost",
       "Stores for months in cool dark conditions"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "salsify",
@@ -3516,7 +3559,8 @@
       "Needs deep, stone-free soil for straight roots",
       "Use fresh seed as germination drops after one year",
       "Can overwinter in the ground under mulch"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "scorzonera",
@@ -3558,7 +3602,8 @@
       "Can be left in ground for a second year for larger roots",
       "Peel under water to avoid staining hands",
       "Flowers are edible and attract pollinators"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "tuberous-chervil",
@@ -3601,7 +3646,8 @@
       "Seeds need a cold period to germinate - sow in autumn",
       "Very slow growing but worth the wait",
       "Harvest when foliage dies back in summer"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "oca",
@@ -3644,7 +3690,8 @@
       "Tubers form late - protect from early frost",
       "Sun-cure tubers for a few days to reduce acidity",
       "Hill soil around plants like potatoes"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "cardoon",
@@ -3686,7 +3733,8 @@
       "Blanch stems by wrapping in cardboard 3-4 weeks before harvest",
       "Needs lots of space - a dramatic garden statement",
       "Wear gloves when handling spiny varieties"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "orache",
@@ -3730,7 +3778,8 @@
       "Pinch out growing tips to delay bolting",
       "Red varieties add stunning color to salads",
       "Self-seeds readily if allowed to flower"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "new-zealand-spinach",
@@ -3773,7 +3822,8 @@
       "Soak seeds overnight before planting for better germination",
       "Harvest shoot tips regularly to encourage bushy growth",
       "Will not bolt in hot weather unlike true spinach"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "purslane",
@@ -3816,7 +3866,8 @@
       "One of the richest plant sources of omega-3 fatty acids",
       "Thrives in hot dry conditions where other greens fail",
       "Cut-and-come-again harvesting works well"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "corn-salad",
@@ -3861,7 +3912,8 @@
       "Perfect winter salad crop - very cold hardy",
       "Sow in late summer for autumn and winter harvest",
       "Harvest whole rosettes or pick individual leaves"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "watercress",
@@ -3906,7 +3958,8 @@
       "Keep roots constantly wet - grow in trays of water",
       "One of the most nutrient-dense vegetables known",
       "Harvest before flowering for mildest flavor"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pattypan-squash",
@@ -3951,7 +4004,8 @@
       "Harvest when 5-8cm across for best texture",
       "Highly productive - check plants every other day",
       "Stuff larger fruits for a delicious baked dish"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "chayote",
@@ -3992,7 +4046,8 @@
       "Plant the whole fruit on its side with the narrow end exposed",
       "Needs a strong trellis - very vigorous climber",
       "Protect from frost - not cold hardy"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "butternut-squash",
@@ -4036,7 +4091,8 @@
       "Cure in sun for 10 days after harvest for better storage",
       "Stores for up to 6 months in cool conditions",
       "Leave 5cm of stem attached when harvesting"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "spaghetti-squash",
@@ -4079,7 +4135,8 @@
       "Ripe when skin cannot be dented with a fingernail",
       "Great low-carb pasta alternative",
       "Stores well for several months in a cool place"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "muscat-squash",
@@ -4122,7 +4179,8 @@
       "Needs a long growing season - start indoors",
       "Can reach 10kg or more with good feeding",
       "Perfect for gratins and the classic soupe au potiron"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "red-kuri-squash",
@@ -4166,7 +4224,8 @@
       "No need to peel - skin softens when cooked",
       "Chestnut-like flavor makes it perfect for soups",
       "Stores 3-4 months in cool dry conditions"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "artichoke",
@@ -4209,7 +4268,8 @@
       "Protect crowns with mulch in cold winters",
       "Harvest buds before scales start opening",
       "Divide plants every 3-4 years for vigor"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "asparagus",
@@ -4254,7 +4314,8 @@
       "Do not harvest for the first 2 years to establish crowns",
       "Stop harvesting when spears become pencil-thin",
       "Let fern grow after harvest to feed the roots"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "fennel",
@@ -4302,7 +4363,8 @@
       "Hill soil around bulb as it swells for blanching",
       "Bolts easily in hot weather - sow in late summer",
       "Keep away from most other vegetables as it inhibits growth"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "cauliflower",
@@ -4350,7 +4412,8 @@
       "Tie leaves over curd to keep it white (blanching)",
       "Very sensitive to temperature fluctuations",
       "Harvest before curds start to separate"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "brussels-sprouts",
@@ -4396,7 +4459,8 @@
       "Remove top of plant in late summer to encourage sprout growth",
       "Harvest from bottom up as sprouts mature",
       "Flavor improves after a hard frost"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "red-cabbage",
@@ -4444,7 +4508,8 @@
       "Color deepens in acidic soil, turns blue in alkaline",
       "Stores well for months in cool conditions",
       "Add vinegar when cooking to keep the red color"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "kohlrabi",
@@ -4493,7 +4558,8 @@
       "Harvest when tennis-ball sized for best tenderness",
       "Can be eaten raw like an apple",
       "One of the quickest brassicas to mature"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "endive",
@@ -4536,7 +4602,8 @@
       "Force roots in dark for white chicons in winter",
       "Bitterness reduces when blanched or cooked",
       "Hardy enough for late autumn harvesting"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "escarole",
@@ -4580,7 +4647,8 @@
       "Tie outer leaves to blanch the heart 2 weeks before harvest",
       "Very good cold tolerance for late autumn salads",
       "Excellent braised in Italian-style dishes"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "frisee",
@@ -4623,7 +4691,8 @@
       "Cover center with a plate to blanch for milder flavor",
       "Classic in French salade lyonnaise with bacon and egg",
       "Harvest in morning when leaves are crispest"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "arugula",
@@ -4670,7 +4739,8 @@
       "Sow every 2-3 weeks for continuous harvest",
       "Becomes very peppery in hot weather",
       "Wild arugula is more pungent and slower-bolting"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "mesclun",
@@ -4716,7 +4786,8 @@
       "Cut when leaves are 8-10cm tall",
       "Will regrow 2-3 times if cut above growing point",
       "Sow thickly in a broad band rather than rows"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "white-bean",
@@ -4762,7 +4833,8 @@
       "Let pods dry on the plant before harvesting",
       "Soak dried beans overnight before cooking",
       "Fixes nitrogen in the soil for following crops"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "red-bean",
@@ -4808,7 +4880,8 @@
       "Must be boiled vigorously for 10 minutes before eating",
       "Let pods dry completely on the vine",
       "Needs a long warm season to mature seeds"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "lentil",
@@ -4852,7 +4925,8 @@
       "Drought tolerant once established",
       "Pull whole plants when pods rattle",
       "Green lentils (Lentilles du Puy) are a French specialty"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "chickpea",
@@ -4896,7 +4970,8 @@
       "Needs warm soil to germinate well",
       "Do not overwater - prefers drier conditions",
       "Harvest when pods turn brown and rattle"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "broad-bean",
@@ -4945,7 +5020,8 @@
       "Pinch out tops when first pods set to deter blackfly",
       "Autumn-sown crops give earlier harvests",
       "Double-peel beans for the most tender texture"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "sweet-potato",
@@ -4988,7 +5064,8 @@
       "Grow slips from a sprouted tuber in water",
       "Needs warm soil above 15C to grow well",
       "Cure after harvest in warm humid conditions for 10 days"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "ginger",
@@ -5029,7 +5106,8 @@
       "Start indoors in late winter for temperate climates",
       "Needs warmth, humidity, and filtered light",
       "Harvest young ginger after 4 months or mature after 8 months"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "rhubarb",
@@ -5074,7 +5152,8 @@
       "Do not harvest in the first year to let plants establish",
       "Never eat the leaves - they contain oxalic acid",
       "Pull stalks rather than cutting for better regrowth"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "gherkin",
@@ -5118,7 +5197,8 @@
       "Harvest daily at 3-5cm for traditional cornichons",
       "Provide a trellis to keep fruits clean",
       "Pickle within hours of harvesting for best crunch"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "melon",
@@ -5163,7 +5243,8 @@
       "Slip from vine when ripe - stem separates easily",
       "Limit to 3-4 fruits per plant for best size and sweetness",
       "Use black plastic mulch to warm soil"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "long-cucumber",
@@ -5208,7 +5289,8 @@
       "Train vertically for straight fruits",
       "Remove male flowers on all-female varieties",
       "Keep humidity high but ventilate to prevent mildew"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "chinese-chives",
@@ -5255,7 +5337,8 @@
       "Cut regularly to prevent flowering and promote tender leaves",
       "Blanch under a pot for yellow garlic chives (Chinese delicacy)",
       "Divide clumps every 2-3 years"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "tarragon",
@@ -5296,7 +5379,8 @@
       "French tarragon cannot be grown from seed - buy plants",
       "Protect crowns with mulch in cold winters",
       "Best used fresh as flavor fades when dried"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "chervil",
@@ -5340,7 +5424,8 @@
       "Prefers cool shade - bolts quickly in heat and sun",
       "Add at the end of cooking to preserve delicate flavor",
       "Sow in autumn for winter windowsill harvest"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "savory",
@@ -5381,7 +5466,8 @@
       "Add to bean dishes to improve flavor and reduce flatulence",
       "Harvest before flowering for strongest flavor",
       "Winter savory is a perennial alternative"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "lemon-balm",
@@ -5425,7 +5511,8 @@
       "Spreads vigorously like mint - contain in pots",
       "Makes a soothing bedtime herbal tea",
       "Cut back hard in midsummer for fresh new growth"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "lemon-verbena",
@@ -5466,7 +5553,8 @@
       "Loses leaves in winter but returns in spring",
       "Protect from frost - not fully hardy",
       "Dried leaves retain their intense lemon scent"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "hyssop",
@@ -5511,7 +5599,8 @@
       "Excellent companion plant attracting pollinators",
       "Trim after flowering to keep compact",
       "Used in liqueurs like Chartreuse"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "borage",
@@ -5555,7 +5644,8 @@
       "Freeze flowers in ice cubes for drinks",
       "Self-seeds prolifically once established",
       "Attracts pollinators and repels tomato hornworm"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "chamomile",
@@ -5598,7 +5688,8 @@
       "Harvest flowers when petals reflex back from the center",
       "Dry flowers quickly in a warm airy place",
       "Improves the health and flavor of neighboring plants"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "bay-laurel",
@@ -5640,7 +5731,8 @@
       "Can be grown in a large container and shaped",
       "Pick leaves year-round - dried leaves have stronger flavor",
       "Protect from cold winds in harsh winters"
-    ]
+    ],
+    "plantType": "arbre"
   },
   {
     "id": "creeping-rosemary",
@@ -5683,7 +5775,8 @@
       "Excellent trailing over raised bed edges",
       "Needs excellent drainage - add gravel if needed",
       "Same culinary uses as upright rosemary"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "marjoram",
@@ -5725,7 +5818,8 @@
       "More frost-sensitive than oregano - grow as annual in cold climates",
       "Add at end of cooking to preserve delicate flavor",
       "Excellent in herb butter and salad dressings"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "lovage",
@@ -5768,7 +5862,8 @@
       "One plant is enough for most households",
       "Use young leaves sparingly - very strong flavor",
       "Hollow stems make natural drinking straws for Bloody Marys"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "gooseberry",
@@ -5814,7 +5909,8 @@
       "Prune to open center for air circulation and easy picking",
       "Pick green for cooking or wait until soft and sweet for eating fresh",
       "Tolerates more shade than most fruit bushes"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "redcurrant",
@@ -5861,7 +5957,8 @@
       "Fruit on old wood - prune to maintain framework",
       "Net against birds as fruit ripens",
       "Makes the classic French Bar-le-duc jelly"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "blackcurrant",
@@ -5907,7 +6004,8 @@
       "Prune out one-third of old wood each winter",
       "Essential for creme de cassis and kir",
       "Four times more vitamin C than oranges"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "blueberry",
@@ -5952,7 +6050,8 @@
       "Must have acidic soil (pH 4.5-5.5) - use ericaceous compost",
       "Water with rainwater, not tap water",
       "Plant two varieties for better cross-pollination"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "blackberry",
@@ -5998,7 +6097,8 @@
       "Train on wires for easy management",
       "Cut out fruited canes after harvest",
       "Thornless varieties are much easier to manage"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "physalis",
@@ -6041,7 +6141,8 @@
       "Start indoors early like tomatoes",
       "Fruits are ripe when husks turn papery and brown",
       "Store in husks for several weeks"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "nasturtium",
@@ -6085,7 +6186,8 @@
       "Poor soil produces more flowers, rich soil more leaves",
       "Flowers, leaves, and seeds are all edible",
       "Excellent trap crop drawing aphids away from vegetables"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "calendula",
@@ -6130,7 +6232,8 @@
       "Deadhead regularly for continuous blooming",
       "Petals can be used as poor man's saffron",
       "Self-seeds freely for next year"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "marigold",
@@ -6175,7 +6278,8 @@
       "Plant around tomatoes to repel whitefly",
       "Roots release compounds that kill soil nematodes",
       "Deadhead regularly for continuous flowering"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "cosmos",
@@ -6217,7 +6321,8 @@
       "Thrives in poor soil - too much fertilizer reduces flowering",
       "Attracts hoverflies which eat aphids",
       "Deadhead for months of continuous bloom"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "dwarf-sunflower",
@@ -6261,7 +6366,8 @@
       "No staking required unlike tall sunflowers",
       "Great for children's gardens",
       "Attracts pollinators throughout summer"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pak-choi",
@@ -6308,7 +6414,8 @@
       "Sow in late summer to avoid bolting",
       "Baby pak choi can be harvested in 3 weeks",
       "Protect from flea beetles with fleece"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "chinese-cabbage",
@@ -6353,7 +6460,8 @@
       "Sow after midsummer to prevent bolting",
       "Needs consistent moisture for tight heads",
       "Use fleece to protect from flea beetles"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "mizuna",
@@ -6399,7 +6507,8 @@
       "Cut-and-come-again for multiple harvests",
       "Excellent in salad mixes and stir-fries",
       "Survives light frost for extended autumn harvest"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "edamame",
@@ -6443,7 +6552,8 @@
       "Harvest when pods are plump but still green",
       "Needs warm soil above 15C to germinate",
       "Blanch pods in boiling water and eat with salt"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "daikon",
@@ -6487,7 +6597,8 @@
       "Sow late summer for best results - bolts in spring",
       "Deep roots break up compacted soil like a bio-drill",
       "Grate fresh for a mild peppery condiment"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "shiso",
@@ -6529,7 +6640,8 @@
       "Red shiso is used to color umeboshi (pickled plums)",
       "Pinch tips regularly for bushy growth",
       "Self-seeds readily in warm climates"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "artichoke-violet",
@@ -6571,7 +6683,8 @@
       "Young buds can be sliced thin and eaten raw with lemon",
       "Protect crowns in cold climates with straw mulch",
       "Let a few heads bloom for spectacular purple thistle flowers"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "padron-pepper",
@@ -6615,7 +6728,8 @@
       "Pick small (2-3cm) for mildest flavor",
       "Blister in hot oil with coarse salt for classic tapas",
       "Roughly 1 in 10 will be unexpectedly hot"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "cherry-tomato",
@@ -6662,7 +6776,8 @@
       "Most forgiving tomato for beginners",
       "Will often self-seed from dropped fruit",
       "Extremely prolific - one plant can yield hundreds of fruits"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "beefsteak-tomato",
@@ -6708,7 +6823,8 @@
       "Support heavy fruits with slings or nets",
       "Limit to 4-5 trusses for largest individual fruits",
       "Water consistently to prevent cracking"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "black-crimea-tomato",
@@ -6754,7 +6870,8 @@
       "Skin darkens with more sun exposure",
       "Harvest when shoulders are still slightly green",
       "Complex flavor - best eaten raw at room temperature"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "green-zebra-tomato",
@@ -6800,7 +6917,8 @@
       "Ripe when the green lightens and yellow stripes appear",
       "Tangy flavor is exceptional in salads and fried green tomatoes",
       "Slightly softer when ripe compared to red varieties"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "espelette-pepper",
@@ -6845,7 +6963,8 @@
       "Mild heat (1000-4000 Scoville) - more flavor than fire",
       "Dry by stringing and hanging in an airy spot",
       "AOC protected - a true French terroir product"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "jalapeno",
@@ -6890,7 +7009,8 @@
       "Pick green for classic jalapeno or red for more heat",
       "Smoked jalapenos become chipotle peppers",
       "Stress (less water) increases heat level"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "habanero",
@@ -6934,7 +7054,8 @@
       "Needs a long hot season - start indoors very early",
       "Wear gloves when handling - extremely hot (100k-350k Scoville)",
       "Fruity flavor shines in hot sauces and tropical salsas"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "lettuce-batavia",
@@ -6986,7 +7107,8 @@
       "Leaves stay crisp even in warm weather",
       "Harvest outer leaves for continuous production",
       "Ideal for summer growing"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "lettuce-romaine",
@@ -7038,7 +7160,8 @@
       "More heat-tolerant than butterhead varieties",
       "Can be harvested as baby leaves or full heads",
       "Rich in vitamins A and K"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "lettuce-oak-leaf",
@@ -7090,7 +7213,8 @@
       "Harvest leaf by leaf for extended production",
       "Bolts faster than romaine in hot weather",
       "Excellent for mixed salads"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "lettuce-iceberg",
@@ -7140,7 +7264,8 @@
       "More demanding than leaf lettuce varieties",
       "Harvest when heads feel firm and solid",
       "Sensitive to heat - avoid midsummer planting"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "lettuce-butterhead",
@@ -7192,7 +7317,8 @@
       "Best harvested in the morning when crisp",
       "Classic French garden lettuce",
       "Sow in succession every 2-3 weeks"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "lettuce-little-gem",
@@ -7244,7 +7370,8 @@
       "Sweet and crunchy, excellent grilled",
       "Matures faster than full-size romaine",
       "Good bolt resistance"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "carrot-nantaise",
@@ -7294,7 +7421,8 @@
       "Sweet flavor excellent for eating raw",
       "Grows well in heavier soils than other varieties",
       "Stores well through winter"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "carrot-touchon",
@@ -7344,7 +7472,8 @@
       "Harvest young for baby carrots",
       "Virtually coreless flesh",
       "Excellent for juicing"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "carrot-purple",
@@ -7394,7 +7523,8 @@
       "Rich in antioxidant anthocyanins",
       "May stain hands and cutting boards",
       "Beautiful in raw salads for color contrast"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "carrot-yellow",
@@ -7444,7 +7574,8 @@
       "Sweetest flavor when roasted",
       "Great for rainbow carrot mixes",
       "Mild flavor appealing to children"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "onion-yellow",
@@ -7492,7 +7623,8 @@
       "Stop watering when tops fall over",
       "Cure in dry, airy location for 2 weeks before storing",
       "Stores up to 6 months in cool, dry conditions"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "onion-red",
@@ -7540,7 +7672,8 @@
       "Color fades when cooked at high heat",
       "Does not store as long as yellow onions",
       "Rich in anthocyanins and quercetin"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "onion-white",
@@ -7588,7 +7721,8 @@
       "Can be harvested young as spring onions",
       "Use quickly after harvest - shorter storage life",
       "Perfect for French onion soup"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "spring-onion",
@@ -7641,7 +7775,8 @@
       "Harvest by pulling or cut and come again",
       "Very fast growing - ready in 8 weeks from seed",
       "Excellent in stir-fries and as garnish"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "shallot",
@@ -7690,7 +7825,8 @@
       "Essential in classic French sauces",
       "Each bulb multiplies into a cluster",
       "Autumn planting gives larger bulbs"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "potato-charlotte",
@@ -7739,7 +7875,8 @@
       "Holds its shape well when cooked",
       "Excellent cold in potato salad",
       "Earth up as stems grow to increase yield"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "potato-bintje",
@@ -7788,7 +7925,8 @@
       "High starch content makes fluffy mash",
       "Susceptible to blight - monitor closely",
       "Store in cool, dark place to avoid greening"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "potato-ratte",
@@ -7836,7 +7974,8 @@
       "Best simply steamed with butter",
       "Distinctive nutty, chestnut flavor",
       "Lower yield than common varieties"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "potato-vitelotte",
@@ -7885,7 +8024,8 @@
       "Purple color is retained after cooking",
       "Makes stunning purple mashed potatoes",
       "Late season variety - patience required"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "potato-belle-de-fontenay",
@@ -7934,7 +8074,8 @@
       "Harvest as new potatoes for best flavor",
       "Does not store as long as maincrop varieties",
       "Heritage French variety dating to 1885"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "potato-roseval",
@@ -7983,7 +8124,8 @@
       "Cross between Rosa and Vale varieties",
       "Excellent roasted with herbs",
       "Good disease resistance"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "radish-black",
@@ -8030,7 +8172,8 @@
       "Traditional French cold remedy",
       "Peel before eating raw or grate finely",
       "Stores well in cool cellar through winter"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "radish-18-days",
@@ -8083,7 +8226,8 @@
       "Perfect for impatient gardeners and children",
       "Sow every 2 weeks for continuous harvest",
       "Don't leave in ground too long or they become pithy"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "radish-watermelon",
@@ -8131,7 +8275,8 @@
       "Best sown in late summer for autumn harvest",
       "Milder and sweeter than spring radishes",
       "Beautiful garnish for salads"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "radish-purple",
@@ -8182,7 +8327,8 @@
       "Quick growing spring and autumn crop",
       "Sow in succession for continuous supply",
       "Milder flavor than classic red radish"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "zucchini-ronde-de-nice",
@@ -8229,7 +8375,8 @@
       "Classic Nicoise variety for petits farcis",
       "Very productive - check daily in summer",
       "Compact bush habit suits smaller gardens"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "zucchini-yellow",
@@ -8276,7 +8423,8 @@
       "Beautiful mixed with green zucchini in ratatouille",
       "Harvest at 15-20cm for best flavor",
       "Equally productive as green varieties"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "zucchini-trompette",
@@ -8323,7 +8471,8 @@
       "Seeds are concentrated in the bulbous end",
       "Resistant to squash vine borers",
       "Can grow over 1 meter long if left"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "eggplant-long-purple",
@@ -8370,7 +8519,8 @@
       "Harvest when skin is glossy, not dull",
       "Limit to 5-6 fruits per plant for best size",
       "Classic variety for moussaka and ratatouille"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "eggplant-white",
@@ -8417,7 +8567,8 @@
       "Creamy texture excellent for baba ganoush",
       "The original 'egg' plant - egg-shaped and white",
       "Harvest slightly smaller for best tenderness"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "eggplant-graffiti",
@@ -8464,7 +8615,8 @@
       "Thinner skin than classic varieties",
       "Beautiful addition to market displays",
       "Slightly sweeter and less bitter"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pea-dwarf",
@@ -8517,7 +8669,8 @@
       "Pick regularly to encourage more pods",
       "Sow autumn crop for spring harvest in mild areas",
       "Fixes nitrogen in the soil for following crops"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pea-sugar-snap",
@@ -8568,7 +8721,8 @@
       "Eat pods whole when peas are just visible inside",
       "Remove string from pod edge before eating",
       "Best eaten raw, straight from the vine"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pea-snow",
@@ -8619,7 +8773,8 @@
       "Over-mature pods become stringy",
       "Needs support - provide pea sticks or netting",
       "Excellent raw in salads or briefly stir-fried"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "basil-purple",
@@ -8665,7 +8820,8 @@
       "Infuse in vinegar for beautiful color",
       "Slightly slower to germinate than green basil",
       "Pinch flowers to maintain leaf production"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "basil-thai",
@@ -8711,7 +8867,8 @@
       "Essential for pad thai and Vietnamese pho",
       "Flavor holds up better when cooked",
       "Distinctive purple stems and flower buds"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "basil-lemon",
@@ -8757,7 +8914,8 @@
       "Pairs beautifully with fish and seafood",
       "Add to fruit salads and desserts",
       "More delicate than sweet basil - use fresh"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "basil-greek",
@@ -8803,7 +8961,8 @@
       "Tiny leaves don't need chopping",
       "More cold-tolerant than sweet basil",
       "Natural globe shape is very ornamental"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "mint-peppermint",
@@ -8852,7 +9011,8 @@
       "Highest menthol content of all mints",
       "Excellent for digestion and herbal tea",
       "Cut back hard in autumn for fresh spring growth"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "mint-chocolate",
@@ -8901,7 +9061,8 @@
       "Perfect garnish for chocolate desserts",
       "Grow in a container to control spreading",
       "Makes an unusual and delicious tea"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "mint-moroccan",
@@ -8950,7 +9111,8 @@
       "Sweeter and smoother than peppermint",
       "Grows more compactly than other mints",
       "Brew with green tea and sugar for Moroccan tea"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "strawberry-gariguette",
@@ -8999,7 +9161,8 @@
       "Short harvest season - enjoy while it lasts",
       "Fragile fruit - handle with care",
       "Mulch with straw to keep fruit clean"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "strawberry-mara-des-bois",
@@ -9049,7 +9212,8 @@
       "Everbearing - produces all summer long",
       "Best flavor when fully ripe and deep red",
       "Feed regularly for continuous fruiting"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "strawberry-charlotte",
@@ -9098,7 +9262,8 @@
       "Good resistance to powdery mildew",
       "Heart-shaped fruits are sweet and fragrant",
       "Reliable producer even in cooler summers"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "strawberry-wild",
@@ -9149,7 +9314,8 @@
       "Excellent ground cover for shaded areas",
       "Spreads by runners - can be used as edging",
       "Perfect for forest garden and permaculture designs"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "corn-popcorn",
@@ -9194,7 +9360,8 @@
       "Plant in blocks of 4x4 minimum for pollination",
       "Separate from sweet corn to avoid cross-pollination",
       "Dry cobs for 4-6 weeks before popping"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "corn-multicolor",
@@ -9239,7 +9406,8 @@
       "Plant in blocks, isolated from other corn",
       "Beautiful for autumn decoration",
       "Can be ground into colorful polenta or cornmeal"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "beet-chioggia",
@@ -9290,7 +9458,8 @@
       "Rings fade when cooked - best eaten raw or lightly pickled",
       "Harvest at golf-ball size for best ring definition",
       "Italian heirloom from the town of Chioggia"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "beet-golden",
@@ -9341,7 +9510,8 @@
       "Leaves are also edible and delicious",
       "Sweeter and milder than red beets",
       "Germination can be slower - be patient"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "tomato-roma",
@@ -9388,7 +9558,8 @@
       "Great for paste and sauce",
       "Less pruning needed than indeterminate types",
       "Resistant to many common diseases"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "tomato-san-marzano",
@@ -9434,7 +9605,8 @@
       "DOP variety from Italy",
       "Low acidity, very sweet",
       "Perfect for passata and conserves"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "tomato-marmande",
@@ -9481,7 +9653,8 @@
       "Classic French market tomato",
       "Ribbed shape adds character to dishes",
       "Tolerates cooler climates well"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "tomato-rose-de-berne",
@@ -9527,7 +9700,8 @@
       "Thin skin, handle with care",
       "Indeterminate, stake well",
       "Best eaten fresh in salads"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "tomato-ananas",
@@ -9573,7 +9747,8 @@
       "Beautiful sliced for presentation",
       "Needs strong staking",
       "Very sweet, almost no acidity"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "tomato-brandywine",
@@ -9619,7 +9794,8 @@
       "Slow to ripen but worth the wait",
       "Exceptional flavor, benchmark for taste tests",
       "Sensitive to diseases, needs good airflow"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "tomato-andine-cornue",
@@ -9665,7 +9841,8 @@
       "Perfect for stuffing",
       "Excellent disease resistance",
       "Very productive variety"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "tomato-costoluto",
@@ -9711,7 +9888,8 @@
       "Great for stuffing or slicing",
       "Good balance of acid and sweet",
       "Traditional Ligurian variety"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "tomato-yellow-pear",
@@ -9757,7 +9935,8 @@
       "Kids love the sweet flavor",
       "Great for snacking and salads",
       "Vigorous grower, needs space"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "tomato-tigerella",
@@ -9803,7 +9982,8 @@
       "Early ripening variety",
       "Good cold tolerance",
       "Tangy, complex flavor"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "tomato-ox-heart",
@@ -9849,7 +10029,8 @@
       "Perfect for Caprese salad",
       "Needs strong support",
       "Very few seeds, all flesh"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "tomato-supersweet-100",
@@ -9895,7 +10076,8 @@
       "Very high sugar content",
       "Long harvest season",
       "Great for containers too"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "tomato-moneymaker",
@@ -9941,7 +10123,8 @@
       "Great for beginners",
       "Performs well in greenhouses",
       "Classic all-purpose tomato"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pepper-cayenne",
@@ -9987,7 +10170,8 @@
       "Dry for year-round use",
       "Very productive plants",
       "Pick regularly to encourage more fruit"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pepper-banana",
@@ -10032,7 +10216,8 @@
       "Great pickled or stuffed",
       "Turns from yellow to red",
       "Prolific producer"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pepper-poblano",
@@ -10076,7 +10261,8 @@
       "Perfect for stuffing",
       "Roast and peel before using",
       "Called Ancho when dried"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pepper-serrano",
@@ -10120,7 +10306,8 @@
       "Used fresh, not dried",
       "Very productive plants",
       "Essential for Mexican cuisine"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pepper-carolina-reaper",
@@ -10165,7 +10352,8 @@
       "Wear gloves when handling",
       "Long growing season needed",
       "A tiny piece flavors a whole dish"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pepper-scotch-bonnet",
@@ -10210,7 +10398,8 @@
       "Essential for Caribbean cuisine",
       "Fruity flavor beneath the heat",
       "Can be yellow, red or green"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pepper-shishito",
@@ -10254,7 +10443,8 @@
       "1 in 10 is spicy - it's a game!",
       "Very prolific producer",
       "Popular tapas/izakaya snack"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pepper-piquillo",
@@ -10299,7 +10489,8 @@
       "Traditional Navarra variety",
       "Roast and peel before stuffing",
       "Great preserved in jars"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "bean-coco",
@@ -10346,7 +10537,8 @@
       "Harvest when pods are plump",
       "Excellent dried for winter",
       "Classic French bistro ingredient"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "bean-tarbais",
@@ -10391,7 +10583,8 @@
       "AOC protected variety",
       "Traditionally grown with corn",
       "Thin skin, melting texture"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "bean-runner",
@@ -10437,7 +10630,8 @@
       "Pick young for tender beans",
       "Very vigorous climber",
       "Attracts pollinators"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "bean-lima",
@@ -10482,7 +10676,8 @@
       "Also called butter bean",
       "Rich, creamy when cooked",
       "Bush and pole varieties available"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "bean-azuki",
@@ -10527,7 +10722,8 @@
       "Used for sweet red bean paste",
       "Very nutritious and digestible",
       "Let pods dry on plant for storage"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "bean-flageolet",
@@ -10572,7 +10768,8 @@
       "Classic with roast lamb",
       "Delicate, refined flavor",
       "Premium French variety"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "bean-borlotti",
@@ -10617,7 +10814,8 @@
       "Essential in minestrone",
       "Both bush and climbing types",
       "Harvest fresh or dry for winter"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "squash-musquee-provence",
@@ -10661,7 +10859,8 @@
       "Beautiful deep ribbed shape",
       "Sweet, almost like chestnut",
       "Stores for months in a cool place"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "squash-delicata",
@@ -10705,7 +10904,8 @@
       "Perfect single-serving size",
       "Slice and roast with olive oil",
       "Stores well for 2-3 months"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "squash-kabocha",
@@ -10749,7 +10949,8 @@
       "Perfect for tempura",
       "Green skin, orange flesh",
       "Also called Japanese pumpkin"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "squash-acorn",
@@ -10793,7 +10994,8 @@
       "Roast halved with butter and brown sugar",
       "Stores for 2-3 months",
       "Also comes in gold and white varieties"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "squash-blue-hubbard",
@@ -10837,7 +11039,8 @@
       "Stores up to 6 months",
       "Hard shell needs a heavy knife",
       "Sweet, fine-grained flesh"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "squash-crown-prince",
@@ -10881,7 +11084,8 @@
       "Rich, sweet orange flesh",
       "Stores for months",
       "Award-winning variety"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "cucumber-lemon",
@@ -10928,7 +11132,8 @@
       "No bitterness at all",
       "Pick when tennis-ball sized",
       "Very productive vine"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "cucumber-armenian",
@@ -10972,7 +11177,8 @@
       "Never bitter, even in heat",
       "Can grow 50cm+ long",
       "Eat with skin, no peeling needed"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "cucumber-japanese",
@@ -11018,7 +11224,8 @@
       "Almost seedless",
       "Perfect for sushi and salads",
       "Needs trellising for straight fruits"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "cucumber-marketmore",
@@ -11065,7 +11272,8 @@
       "Pick at 20cm for best flavor",
       "Classic American slicer",
       "Reliable producer all summer"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "melon-charentais",
@@ -11110,7 +11318,8 @@
       "Incredibly fragrant when ready",
       "Reduce watering near harvest for sweeter fruit",
       "Protect from cold nights"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "melon-honeydew",
@@ -11154,7 +11363,8 @@
       "Skin turns creamy white when ripe",
       "Stores longer than cantaloupe",
       "Very sweet when fully ripe"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "melon-galia",
@@ -11198,7 +11408,8 @@
       "Very fragrant when ripe",
       "Green flesh is very sweet",
       "Developed in Israel in 1973"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "watermelon-sugar-baby",
@@ -11242,7 +11453,8 @@
       "Perfect for small gardens",
       "Sounds hollow when ripe",
       "Very sweet red flesh"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "watermelon-crimson-sweet",
@@ -11286,7 +11498,8 @@
       "Can grow 10-12 kg",
       "Very high sugar content",
       "Needs lots of space"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "radicchio",
@@ -11331,7 +11544,8 @@
       "Colors intensify in cool weather",
       "Cut and it regrows",
       "Beautiful addition to salad mix"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "chicory",
@@ -11375,7 +11589,8 @@
       "Bitter flavor aids digestion",
       "Very cold hardy",
       "Roasted root makes coffee substitute"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "sorrel",
@@ -11422,7 +11637,8 @@
       "Lemony, tangy flavor",
       "Classic in French cuisine",
       "Remove flower stalks to keep producing"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "mache",
@@ -11469,7 +11685,8 @@
       "Nutty, mild flavor",
       "Very cold hardy",
       "Self-seeds readily"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "claytonia",
@@ -11514,7 +11731,8 @@
       "Very cold hardy",
       "Mild, pleasant flavor",
       "Self-seeds prolifically"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "skirret",
@@ -11557,7 +11775,8 @@
       "Sweet, white roots",
       "Perennial - can harvest year after year",
       "Remove woody core before eating"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "yacon",
@@ -11599,7 +11818,8 @@
       "Very low calorie sweetness",
       "Grows tall like sunflower",
       "Store tubers frost-free over winter"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "hamburg-parsley",
@@ -11644,7 +11864,8 @@
       "Root tastes like parsley-parsnip hybrid",
       "Popular in Central European cooking",
       "Slow to germinate, be patient"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "sea-kale",
@@ -11683,7 +11904,8 @@
       "Perennial, lives 10+ years",
       "Tolerates salt and wind",
       "Wait 2 years before first harvest"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "angelica",
@@ -11723,7 +11945,8 @@
       "Candied stems for cake decoration",
       "All parts are edible",
       "Impressive architectural plant"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "bergamot",
@@ -11766,7 +11989,8 @@
       "Makes tea similar to Earl Grey",
       "Beautiful ornamental and edible",
       "Perennial, spreads by runners"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "lemon-thyme",
@@ -11809,7 +12033,8 @@
       "Perfect with fish dishes",
       "Low-growing ground cover",
       "Very drought tolerant"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "winter-savory",
@@ -11852,7 +12077,8 @@
       "Traditional with beans to reduce gas",
       "Stronger than summer savory",
       "Provence herb blend essential"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "stevia",
@@ -11891,7 +12117,8 @@
       "Dry leaves for sweetening tea",
       "Not frost hardy, bring inside in winter",
       "30-40x sweeter than sugar"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "viola",
@@ -11936,7 +12163,8 @@
       "Mild, slightly sweet flavor",
       "Beautiful on cakes and desserts",
       "Cool weather lovers"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "lavender-culinary",
@@ -11979,7 +12207,8 @@
       "Dry flowers for year-round use",
       "Part of herbes de Provence",
       "Attracts bees and butterflies"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "hibiscus",
@@ -12018,7 +12247,8 @@
       "Called bissap in West Africa",
       "Very rich in vitamin C",
       "Bring inside before frost"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "cornflower",
@@ -12062,7 +12292,8 @@
       "Petals in salads and cocktails",
       "Self-seeds prolifically",
       "Symbol of remembrance in France"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "rose-edible",
@@ -12106,7 +12337,8 @@
       "Damask rose has the best flavor",
       "Make rose water and syrup",
       "Remove the bitter white base of petals"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "good-king-henry",
@@ -12146,7 +12378,8 @@
       "Young shoots eaten like asparagus",
       "Very low maintenance once established",
       "Medieval garden essential"
-    ]
+    ],
+    "plantType": "vivace_basse"
   },
   {
     "id": "alexanders",
@@ -12187,7 +12420,8 @@
       "Was the parsley of medieval Europe",
       "Blanch stems for milder flavor",
       "Self-seeds readily"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "rampion",
@@ -12227,7 +12461,8 @@
       "Both root and leaves are edible",
       "Root is radish-like, mild",
       "Very rare in modern gardens"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "chinese-mustard",
@@ -12274,7 +12509,8 @@
       "Peppery when raw, mild when cooked",
       "Cut-and-come-again harvest",
       "Cool weather crop"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "tatsoi",
@@ -12320,7 +12556,8 @@
       "Beautiful rosette shape",
       "Mild, versatile flavor",
       "Baby leaves great in salads"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "kai-lan",
@@ -12367,7 +12604,8 @@
       "Essential in dim sum restaurants",
       "Blanch and serve with oyster sauce",
       "Regrows after cutting"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "perilla",
@@ -12409,7 +12647,8 @@
       "Wraps sushi and sashimi",
       "Self-seeds aggressively",
       "Unique minty-basil-anise flavor"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "fig",
@@ -12454,7 +12693,8 @@
       "Grows well against a sunny wall",
       "Restrict roots for better fruiting",
       "Protect from hard frost"
-    ]
+    ],
+    "plantType": "arbre"
   },
   {
     "id": "grape",
@@ -12498,7 +12738,8 @@
       "Needs strong support structure",
       "Prune hard in winter",
       "Full sun essential for sweet fruit"
-    ]
+    ],
+    "plantType": "arbre"
   },
   {
     "id": "kiwi",
@@ -12539,7 +12780,8 @@
       "Very vigorous grower",
       "Hardy kiwi varieties for cold climates",
       "Can take 3-5 years to first fruit"
-    ]
+    ],
+    "plantType": "arbre"
   },
   {
     "id": "passion-fruit",
@@ -12578,7 +12820,8 @@
       "Fruits fall when ripe",
       "Needs frost-free conditions",
       "Vigorous climber needs strong support"
-    ]
+    ],
+    "plantType": "arbre"
   },
   {
     "id": "pepper-corno-di-toro",
@@ -12625,7 +12868,8 @@
       "Harvest when fruits are 20-25 cm long",
       "Excellent for roasting and grilling",
       "Stake plants when loaded with fruit"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pepper-lamuyo",
@@ -12672,7 +12916,8 @@
       "Thick sweet flesh ideal for salads and stuffing",
       "Needs warm conditions for best results",
       "Pick first fruits green to encourage more production"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pepper-marconi",
@@ -12719,7 +12964,8 @@
       "Long cylindrical fruits up to 16 cm",
       "Pulpy flesh, excellent for stuffing",
       "Available in red, yellow and green"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pepper-doux-des-landes",
@@ -12766,7 +13012,8 @@
       "Very thin skin, easy to digest",
       "Quick growing and highly productive",
       "Turns from dark green to red-orange when ripe"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pepper-california-wonder",
@@ -12813,7 +13060,8 @@
       "Thick walls make it perfect for stuffing",
       "Turns from green to red when fully ripe",
       "Start indoors 8 weeks before transplanting"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "cucumber-noa",
@@ -12862,7 +13110,8 @@
       "Very productive, harvest regularly",
       "Grow on a trellis to save space",
       "Parthenocarpic: no pollination needed"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "cucumber-tanja",
@@ -12911,7 +13160,8 @@
       "Vigorous growth, needs support",
       "Harvest at 20-25 cm for best flavor",
       "Water consistently to avoid bitterness"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "cucumber-white-wonder",
@@ -12960,7 +13210,8 @@
       "Never bitter, even in hot weather",
       "Harvest when 15-20 cm long",
       "Excellent for fresh eating and salads"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "melon-canari",
@@ -13006,7 +13257,8 @@
       "Needs warm soil above 18°C for germination",
       "Pinch main stem after 4 leaves",
       "Stores well for several weeks after harvest"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "melon-petit-gris-de-rennes",
@@ -13052,7 +13304,8 @@
       "Small 500-800g fruits, very sweet",
       "Grey-green skin with orange flesh",
       "Earlier than most cantaloupe varieties"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "melon-jenny-lind",
@@ -13098,7 +13351,8 @@
       "Sweet green flesh with distinctive turban on top",
       "Early maturing variety",
       "Detaches from vine when ripe"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "watermelon-charleston-gray",
@@ -13144,7 +13398,8 @@
       "Good disease resistance including fusarium wilt",
       "Needs long warm season",
       "Thump test: ripe when it sounds hollow"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "watermelon-moon-and-stars",
@@ -13190,7 +13445,8 @@
       "Rare heirloom variety, very decorative",
       "Fruits can reach 10-15 kg",
       "Needs at least 100 days of warm weather"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "watermelon-yellow-flesh",
@@ -13236,7 +13492,8 @@
       "Slightly smaller than traditional red varieties",
       "Same growing requirements as red watermelons",
       "Great conversation starter at summer meals"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "turnip-boule-dor",
@@ -13287,7 +13544,8 @@
       "Yellow flesh keeps its color when cooked",
       "Best harvested at 10-12 cm diameter",
       "Excellent for autumn production"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "turnip-marteau",
@@ -13339,7 +13597,8 @@
       "Very tender white flesh",
       "Quick growing, ready in about 2 months",
       "Good for forced cultivation"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "turnip-milan-rouge",
@@ -13391,7 +13650,8 @@
       "Flat round shape with purple-red top",
       "White flesh is mild and tender",
       "Can be sown from spring through autumn"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "turnip-nancy",
@@ -13440,7 +13700,8 @@
       "Excellent winter keeper",
       "Round white roots with firm flesh",
       "Best sown in late summer for autumn harvest"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "turnip-noir-long",
@@ -13488,7 +13749,8 @@
       "Strong peppery flavor",
       "Excellent for winter storage",
       "Best after first frost for sweeter flavor"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "celery-rave",
@@ -13537,7 +13799,8 @@
       "Needs constant moisture throughout growing season",
       "Remove lower leaves to encourage root development",
       "Harvest after first light frost for better flavor"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "celery-branche-vert-elne",
@@ -13586,7 +13849,8 @@
       "Tolerates light autumn frosts",
       "Harvest from August to November",
       "Blanch stalks by hilling soil around base"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "celery-pascal",
@@ -13635,7 +13899,8 @@
       "Good production and cold hardiness",
       "Blanch by wrapping or hilling for white stalks",
       "Harvest from August to November"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "celery-a-couper",
@@ -13686,7 +13951,8 @@
       "Intense celery flavor, use like parsley",
       "Easier to grow than stalk or root celery",
       "Leaves similar to flat-leaf parsley"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "spinach-geant-hiver",
@@ -13735,7 +14001,8 @@
       "Large, thick, crispy leaves",
       "Sow in late summer for autumn and winter harvest",
       "Does not bolt as quickly as spring varieties"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "spinach-butterflay",
@@ -13786,7 +14053,8 @@
       "Round leaves rich in vitamin C",
       "Resistant to bolting, good for spring sowing",
       "Bright green color, excellent for salads"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "spinach-matador",
@@ -13836,7 +14104,8 @@
       "Thick, wide dark green leaves",
       "Good cold resistance for winter harvest",
       "Sow from June to September"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "spinach-bloomsdale",
@@ -13887,7 +14156,8 @@
       "Rich earthy flavor, excellent cooked",
       "Good bolt resistance for an heirloom",
       "Can be grown spring and autumn"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pea-merveille-kelvedon",
@@ -13940,7 +14210,8 @@
       "Very sweet and tender peas",
       "One of the earliest to mature",
       "Sow successionally for extended harvest"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pea-telephone",
@@ -13992,7 +14263,8 @@
       "Large pods with 8-10 peas each",
       "Very productive over a long season",
       "Train on netting or pea sticks"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "pea-petit-provencal",
@@ -14045,7 +14317,8 @@
       "Can be autumn-sown in mild winter areas",
       "Compact plants, no staking needed",
       "Small sweet peas, perfect fresh or frozen"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "bean-mange-tout",
@@ -14095,7 +14368,8 @@
       "Stringless when picked at 12-15 cm",
       "Sow after all frost risk has passed",
       "Pick regularly to encourage more pods"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "bean-beurre",
@@ -14145,7 +14419,8 @@
       "Stringless and very tender",
       "Easy to spot for harvesting against green foliage",
       "Very popular in French bistro cooking"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "romanesco",
@@ -14197,7 +14472,8 @@
       "Slow growing, about 7 months from seed to harvest",
       "Needs rich soil with plenty of compost",
       "Harvest when head is firm, before florets separate"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "cabbage-savoy",
@@ -14248,7 +14524,8 @@
       "Good frost tolerance, flavor improves after frost",
       "Excellent for stuffed cabbage recipes",
       "Protect from cabbage butterfly with netting"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "cabbage-pointed",
@@ -14298,7 +14575,8 @@
       "Conical shape, sweet and tender",
       "Excellent for spring and early summer harvest",
       "More delicate than round cabbages"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "squash-jack-be-little",
@@ -14344,7 +14622,8 @@
       "Edible and decorative",
       "Great for children's gardens",
       "Stores for months in a cool, dry place"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "squash-longue-de-nice",
@@ -14390,7 +14669,8 @@
       "Traditional Nicoise variety",
       "Can grow very large if left to mature",
       "Dense, sweet orange flesh when mature"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "carrot-colmar",
@@ -14439,7 +14719,8 @@
       "Long roots up to 25 cm",
       "Red-hearted with excellent flavor",
       "Harvest before hard frost and store in sand"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "carrot-chantenay",
@@ -14490,7 +14771,8 @@
       "Grows well in heavy and shallow soils",
       "Sweet and flavorful, great for containers",
       "Less prone to forking than long varieties"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "carrot-imperator",
@@ -14538,7 +14820,8 @@
       "Needs deep, loose, stone-free soil",
       "Deep orange color with high beta-carotene",
       "Thin seedlings early for straight roots"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "radish-flamboyant",
@@ -14591,7 +14874,8 @@
       "Never becomes hollow or pithy",
       "Ready in 3-4 weeks",
       "Sow little and often for continuous harvest"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "radish-national",
@@ -14644,7 +14928,8 @@
       "Firm white flesh, tender and flavorful",
       "Does not become pithy when well watered",
       "Classic French market garden variety"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "radish-zlata",
@@ -14697,7 +14982,8 @@
       "Mild and sweet flavor, never hot",
       "Thin skin, white tender flesh",
       "Great for mixed radish platters"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "lettuce-reine-des-glaces",
@@ -14750,7 +15036,8 @@
       "Excellent cold resistance",
       "Compact heads, great texture",
       "Top-rated variety in taste tests"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "lettuce-rouge-grenobloise",
@@ -14804,7 +15091,8 @@
       "Resistant to both heat and cold",
       "Suitable for spring, summer and autumn",
       "Very rustic, tolerates varied conditions"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "lettuce-sucrine",
@@ -14855,7 +15143,8 @@
       "Excellent heat resistance, slow to bolt",
       "Sweet and crunchy, great for summer salads",
       "Dark green exterior, pale heart"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "artichoke-gros-vert-laon",
@@ -14901,7 +15190,8 @@
       "Large round green heads",
       "Perennial, produces for 4-5 years",
       "Mulch heavily in winter in cold regions"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "artichoke-imperial-star",
@@ -14947,7 +15237,8 @@
       "Start indoors 8-10 weeks before last frost",
       "Needs cold exposure (vernalization) to set buds",
       "Thornless variety, easy to harvest"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "cardoon-plein-blanc",
@@ -14991,7 +15282,8 @@
       "Blanch stalks 3-4 weeks before harvest",
       "Wrap with cardboard or burlap to blanch",
       "Harvest after first light frost for sweeter flavor"
-    ]
+    ],
+    "plantType": "arbuste"
   },
   {
     "id": "salsify-mammouth",
@@ -15034,7 +15326,8 @@
       "Delicate oyster-like flavor",
       "Needs deep, stone-free soil",
       "Harvest after first frost for sweeter taste"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "endive-witloof",
@@ -15077,7 +15370,8 @@
       "Dig roots in autumn, trim, and replant in dark container",
       "Keep below 15°C during forcing for tight chicons",
       "Harvest chicons when 12-15 cm tall"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "kohlrabi-purple",
@@ -15129,7 +15423,8 @@
       "Harvest when bulb is 7-8 cm diameter",
       "Slightly more cold-hardy than green kohlrabi",
       "Eat raw for crunchy, sweet flavor"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "kohlrabi-superschmelz",
@@ -15179,7 +15474,8 @@
       "Stays tender and sweet even at large sizes",
       "Space generously for best results",
       "Excellent storage variety"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "watercress-large-leaf",
@@ -15225,7 +15521,8 @@
       "Keep soil constantly wet",
       "Prefers partial shade",
       "Peppery flavor, rich in vitamins"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "arugula-wild",
@@ -15273,7 +15570,8 @@
       "Smaller, deeply lobed leaves",
       "More peppery flavor than cultivated arugula",
       "Very slow to bolt, produces all season"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "mache-verte-cambrai",
@@ -15320,7 +15618,8 @@
       "Very cold-hardy, survives frost easily",
       "Sow in late summer for autumn/winter harvest",
       "Small round dark green rosettes"
-    ]
+    ],
+    "plantType": "annuelle"
   },
   {
     "id": "sorrel-large-belleville",
@@ -15365,6 +15664,7 @@
       "Large arrow-shaped leaves with lemony tang",
       "Cut flower stalks to prevent bolting",
       "Classic ingredient for French sorrel soup"
-    ]
+    ],
+    "plantType": "vivace_basse"
   }
 ]

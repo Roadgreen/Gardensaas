@@ -1,6 +1,6 @@
 import { getAllPlants, getPlantById } from '@/lib/garden-utils';
 import { getPlantFamily, getFeedingCategory, PLANT_FAMILIES } from '@/lib/crop-rotation';
-import type { Plant, SoilType, SunExposure, ClimateZone, GardenZone, RaisedBed } from '@/types';
+import type { Plant, PlantType, SoilType, SunExposure, ClimateZone, GardenZone, RaisedBed } from '@/types';
 
 export interface PlantingSuggestionResult {
   plantId: string;
@@ -19,8 +19,11 @@ export interface PlantingSuggestionResult {
   canSowIndoors: boolean;
   plantingMonths: number[];
   areaNeededM2: number; // per plant
+  plantType: PlantType;
+  heightCm: number;
   companionBenefits?: { en: string; fr: string }[];
   rotationTip?: { en: string; fr: string };
+  shrubWarning?: { en: string; fr: string };
 }
 
 export interface ZonePlantingPlan {
@@ -34,7 +37,7 @@ export interface ZonePlantingPlan {
 }
 
 export interface PlantingWarning {
-  type: 'bad-companion' | 'spacing' | 'season' | 'soil' | 'sun' | 'frost';
+  type: 'bad-companion' | 'spacing' | 'season' | 'soil' | 'sun' | 'frost' | 'shrub-space';
   message: { en: string; fr: string };
   plantIds: string[];
 }
@@ -93,6 +96,7 @@ function calculateQuantity(areaM2: number, spacingCm: number, rowSpacingCm?: num
 
 /**
  * Score a plant for a given zone. Higher = better fit.
+ * Now factors in plant type (annuelle vs arbuste) and zone area.
  */
 function scorePlant(
   plant: Plant,
@@ -100,9 +104,29 @@ function scorePlant(
   sunExposure: SunExposure,
   climateZone: ClimateZone,
   existingPlantIds: string[],
-  weatherTemp?: number
+  weatherTemp?: number,
+  areaM2?: number
 ): number {
   let score = 50; // base score
+
+  // Plant type scoring - prioritize annuals for potager
+  const ptype = plant.plantType || 'annuelle';
+  if (ptype === 'annuelle') {
+    score += 8; // best for classic potager
+  } else if (ptype === 'vivace_basse') {
+    score += 5; // fine herbs for borders
+  } else if (ptype === 'arbuste') {
+    score -= 10; // needs dedicated zone
+  } else if (ptype === 'arbre') {
+    score -= 20; // not for potager grid
+  }
+
+  // Small area penalty for large plants
+  if (areaM2 !== undefined && areaM2 < 4) {
+    if (ptype === 'arbuste' || ptype === 'arbre') score -= 15;
+    // Favor compact plants for small areas
+    if (plant.spacingCm <= 30) score += 5;
+  }
 
   // Season match (most important)
   if (canPlantNow(plant)) {
@@ -131,11 +155,11 @@ function scorePlant(
   if (plant.difficulty === 'easy') score += 8;
   else if (plant.difficulty === 'medium') score += 4;
 
-  // Companion planting bonus
+  // Companion planting bonus - stronger for direct companions
   const companionBonus = existingPlantIds.filter(id =>
     plant.companionPlants.includes(id)
   ).length;
-  score += companionBonus * 5;
+  score += companionBonus * 8; // increased from 5 to 8
 
   // Enemy penalty
   const enemyPenalty = existingPlantIds.filter(id =>
@@ -169,7 +193,8 @@ function scorePlant(
 
   // Category diversity bonus (prefer vegetables for main garden)
   if (plant.category === 'vegetable') score += 3;
-  if (plant.category === 'herb') score += 2;
+  if (plant.category === 'herb' && ptype === 'annuelle') score += 4; // annual herbs like basil, cilantro
+  if (plant.category === 'herb' && ptype === 'vivace_basse') score += 2; // perennial herbs
 
   return Math.max(0, Math.min(100, score));
 }
@@ -193,13 +218,29 @@ export function getZoneSuggestions(
   const scored = allPlants
     .filter(p => !p.id.includes('-')) // Only use base plants for suggestions, not varieties
     .map(plant => {
-      const score = scorePlant(plant, soilType, sunExposure, climateZone, existingPlantIds, weatherTemp);
+      const score = scorePlant(plant, soilType, sunExposure, climateZone, existingPlantIds, weatherTemp, areaM2);
       const rowSpacingCm = plant.rowSpacingCm || Math.round(plant.spacingCm * 1.5);
       const quantity = calculateQuantity(areaM2, plant.spacingCm, rowSpacingCm);
       const areaPerPlant = (plant.spacingCm / 100) * (rowSpacingCm / 100);
 
       const reasonEn = buildReason(plant, soilType, sunExposure, existingPlantIds, 'en');
       const reasonFr = buildReason(plant, soilType, sunExposure, existingPlantIds, 'fr');
+
+      const ptype = plant.plantType || 'annuelle';
+
+      // Generate shrub/tree warning
+      let shrubWarning: { en: string; fr: string } | undefined;
+      if (ptype === 'arbuste') {
+        shrubWarning = {
+          en: `${plant.name.en} is a shrub/perennial — plan a dedicated zone, it grows back every year and takes space.`,
+          fr: `${plant.name.fr} est un arbuste/vivace — prevoir une zone dediee, il repousse chaque annee et prend de la place.`,
+        };
+      } else if (ptype === 'arbre') {
+        shrubWarning = {
+          en: `${plant.name.en} is a tree/vine — it needs its own permanent spot and can grow very large.`,
+          fr: `${plant.name.fr} est un arbre/liane — il a besoin d'un emplacement permanent et peut devenir tres grand.`,
+        };
+      }
 
       return {
         plantId: plant.id,
@@ -218,6 +259,9 @@ export function getZoneSuggestions(
         canSowIndoors: canStartIndoors(plant),
         plantingMonths: plant.plantingMonths,
         areaNeededM2: areaPerPlant,
+        plantType: ptype,
+        heightCm: plant.heightCm,
+        shrubWarning,
       } as PlantingSuggestionResult;
     })
     .sort((a, b) => b.score - a.score)
@@ -401,6 +445,7 @@ export function getSeasonalQuickPicks(
     .map(plant => {
       const score = scorePlant(plant, soilType, sunExposure, climateZone, []);
       const rowSpacingCm = plant.rowSpacingCm || Math.round(plant.spacingCm * 1.5);
+      const ptype = plant.plantType || 'annuelle';
       return {
         plantId: plant.id,
         plantName: plant.name,
@@ -421,6 +466,8 @@ export function getSeasonalQuickPicks(
         canSowIndoors: canStartIndoors(plant),
         plantingMonths: plant.plantingMonths,
         areaNeededM2: (plant.spacingCm / 100) * ((plant.rowSpacingCm || plant.spacingCm * 1.5) / 100),
+        plantType: ptype,
+        heightCm: plant.heightCm,
       } as PlantingSuggestionResult;
     })
     .sort((a, b) => b.score - a.score)

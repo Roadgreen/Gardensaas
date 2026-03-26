@@ -23,7 +23,13 @@ const CATEGORY_ICONS: Record<string, string> = {
   root: '\uD83E\uDD55',
   ancient: '\uD83C\uDFDB\uFE0F',
   exotic: '\uD83C\uDF34',
+  flower: '\uD83C\uDF3B',
   all: '\uD83C\uDF31',
+};
+
+const PLANT_TYPE_BADGE: Record<string, { label: string; color: string; bg: string }> = {
+  arbuste: { label: 'Arbuste', color: '#F97316', bg: 'rgba(249, 115, 22, 0.2)' },
+  arbre: { label: 'Arbre', color: '#EF4444', bg: 'rgba(239, 68, 68, 0.2)' },
 };
 
 const DIFFICULTY_COLORS: Record<string, string> = {
@@ -390,15 +396,34 @@ export function PlantCatalogSidebar({
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div
                   style={{
-                    color: selectedPlantType === plant.id ? '#86EFAC' : '#E5E7EB',
-                    fontSize: '12px',
-                    fontWeight: selectedPlantType === plant.id ? 'bold' : 'normal',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px',
                   }}
                 >
-                  {locale === 'fr' ? plant.name.fr : plant.name.en}
+                  <span
+                    style={{
+                      color: selectedPlantType === plant.id ? '#86EFAC' : '#E5E7EB',
+                      fontSize: '12px',
+                      fontWeight: selectedPlantType === plant.id ? 'bold' : 'normal',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {locale === 'fr' ? plant.name.fr : plant.name.en}
+                  </span>
+                  {PLANT_TYPE_BADGE[plant.plantType] && (
+                    <span style={{
+                      padding: '0px 4px', borderRadius: '3px',
+                      fontSize: '7px', fontWeight: 'bold',
+                      color: PLANT_TYPE_BADGE[plant.plantType].color,
+                      background: PLANT_TYPE_BADGE[plant.plantType].bg,
+                      flexShrink: 0,
+                    }}>
+                      {PLANT_TYPE_BADGE[plant.plantType].label}
+                    </span>
+                  )}
                 </div>
                 <div
                   style={{
@@ -435,10 +460,10 @@ export function PlantCatalogSidebar({
                   <span
                     style={{
                       fontSize: '9px',
-                      color: '#9CA3AF',
+                      color: '#60A5FA',
                     }}
                   >
-                    {plant.wateringFrequency.replace('-', ' ')}
+                    {plant.heightCm}cm h
                   </span>
                 </div>
               </div>

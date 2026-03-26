@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
-import type { Plant, GardenConfig, PlantingSuggestion, GardenZone, RaisedBed } from '@/types';
+import type { Plant, GardenConfig, PlantingSuggestion, GardenZone, RaisedBed, PlantType } from '@/types';
 
 interface PlantingSuggestionsProps {
   config: GardenConfig;
@@ -44,14 +44,52 @@ interface SuggestionsLabels {
   betweenRows: string;
 }
 
-function computeSuggestions(config: GardenConfig, plants: Plant[], locale: string, labels: SuggestionsLabels): PlantingSuggestion[] {
+type PlantTypeFilter = 'all' | 'legumes' | 'herbes' | 'arbustes' | 'fruits';
+
+const PLANT_TYPE_FILTER_LABELS: Record<PlantTypeFilter, { en: string; fr: string; icon: string }> = {
+  all: { en: 'All', fr: 'Tous', icon: '\uD83C\uDF31' },
+  legumes: { en: 'Vegetables', fr: 'Legumes', icon: '\uD83E\uDD66' },
+  herbes: { en: 'Herbs', fr: 'Herbes', icon: '\uD83C\uDF3F' },
+  arbustes: { en: 'Shrubs', fr: 'Arbustes', icon: '\uD83C\uDF33' },
+  fruits: { en: 'Fruits', fr: 'Fruits', icon: '\uD83C\uDF53' },
+};
+
+const PLANT_TYPE_BADGES: Record<string, { en: string; fr: string; color: string; bg: string }> = {
+  annuelle: { en: 'Annual', fr: 'Annuelle', color: '#4ADE80', bg: 'rgba(74, 222, 128, 0.15)' },
+  vivace_basse: { en: 'Perennial', fr: 'Vivace', color: '#60A5FA', bg: 'rgba(96, 165, 250, 0.15)' },
+  arbuste: { en: 'Shrub - dedicated zone', fr: 'Arbuste - zone dediee', color: '#F97316', bg: 'rgba(249, 115, 22, 0.15)' },
+  arbre: { en: 'Tree - permanent spot', fr: 'Arbre - emplacement permanent', color: '#EF4444', bg: 'rgba(239, 68, 68, 0.15)' },
+};
+
+function matchesTypeFilter(plant: Plant, filter: PlantTypeFilter): boolean {
+  if (filter === 'all') return true;
+  const ptype = plant.plantType || 'annuelle';
+  switch (filter) {
+    case 'legumes':
+      return (plant.category === 'vegetable' || plant.category === 'root') && ptype === 'annuelle';
+    case 'herbes':
+      return plant.category === 'herb' && (ptype === 'annuelle' || ptype === 'vivace_basse');
+    case 'arbustes':
+      return ptype === 'arbuste' || ptype === 'arbre';
+    case 'fruits':
+      return plant.category === 'fruit';
+    default:
+      return true;
+  }
+}
+
+interface ExtendedSuggestion extends PlantingSuggestion {
+  plantType?: PlantType;
+  heightCm?: number;
+}
+
+function computeSuggestions(config: GardenConfig, plants: Plant[], locale: string, labels: SuggestionsLabels): ExtendedSuggestion[] {
   const currentMonth = new Date().getMonth() + 1;
   const totalAreaM2 = config.length * config.width;
 
   // Compute area used by zones and beds
   const zoneAreas = (config.zones || []).map((z: GardenZone) => ({ id: z.id, area: z.lengthM * z.widthM, soil: z.soilType, sun: z.sunExposure }));
   const bedAreas = (config.raisedBeds || []).map((b: RaisedBed) => ({ id: b.id, area: b.lengthM * b.widthM }));
-  const usedZoneArea = zoneAreas.reduce((s: number, z: { area: number }) => s + z.area, 0);
   const usedBedArea = bedAreas.reduce((s: number, b: { area: number }) => s + b.area, 0);
   const availableArea = Math.max(totalAreaM2 - usedBedArea, 1);
 
@@ -62,11 +100,24 @@ function computeSuggestions(config: GardenConfig, plants: Plant[], locale: strin
     plantedCounts.set(p.plantId, (plantedCounts.get(p.plantId) || 0) + 1);
   });
 
-  const suggestions: PlantingSuggestion[] = [];
+  const suggestions: ExtendedSuggestion[] = [];
 
   for (const plant of plants) {
     let score = 0;
     const reasons: string[] = [];
+    const ptype = plant.plantType || 'annuelle';
+
+    // Plant type scoring - prioritize annuals
+    if (ptype === 'annuelle') score += 8;
+    else if (ptype === 'vivace_basse') score += 5;
+    else if (ptype === 'arbuste') score -= 5;
+    else if (ptype === 'arbre') score -= 15;
+
+    // Small garden penalty for large plants
+    if (availableArea < 4) {
+      if (ptype === 'arbuste' || ptype === 'arbre') score -= 10;
+      if (plant.spacingCm <= 30) score += 5;
+    }
 
     // Season match (can plant now)
     if (plant.plantingMonths.includes(currentMonth)) {
@@ -99,10 +150,10 @@ function computeSuggestions(config: GardenConfig, plants: Plant[], locale: strin
       reasons.push(labels.easyToGrow);
     }
 
-    // Companion planting bonus
+    // Companion planting bonus - stronger weight
     const companionBonus = plant.companionPlants.filter((c) => plantedIds.has(c)).length;
     if (companionBonus > 0) {
-      score += companionBonus * 10;
+      score += companionBonus * 12; // increased from 10
       const companionNames = plant.companionPlants
         .filter((c) => plantedIds.has(c))
         .map((c) => {
@@ -135,7 +186,6 @@ function computeSuggestions(config: GardenConfig, plants: Plant[], locale: strin
     const spacingM = plant.spacingCm / 100;
     const rowSpacingM = (plant.rowSpacingCm || plant.spacingCm * 1.5) / 100;
     const plantAreaM2 = spacingM * rowSpacingM;
-    // Use a fraction of total area (no single crop should take more than 20%)
     const maxArea = availableArea * 0.2;
     const quantity = Math.max(1, Math.min(20, Math.floor(maxArea / plantAreaM2)));
 
@@ -153,13 +203,15 @@ function computeSuggestions(config: GardenConfig, plants: Plant[], locale: strin
             return p ? (locale === 'fr' ? p.name.fr : p.name.en) : c;
           }),
         spacingNote: `${plant.spacingCm}cm ${labels.betweenPlants}, ${plant.rowSpacingCm || Math.round(plant.spacingCm * 1.5)}cm ${labels.betweenRows}`,
+        plantType: ptype,
+        heightCm: plant.heightCm,
       });
     }
   }
 
   // Sort by score descending
   suggestions.sort((a, b) => b.score - a.score);
-  return suggestions.slice(0, 15);
+  return suggestions.slice(0, 20);
 }
 
 export function PlantingSuggestions({ config, plants, onClose, onSelectPlant }: PlantingSuggestionsProps) {
@@ -167,6 +219,7 @@ export function PlantingSuggestions({ config, plants, onClose, onSelectPlant }: 
   const tInfo = useTranslations('garden3d.infoPanel');
   const locale = useLocale();
   const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [typeFilter, setTypeFilter] = useState<PlantTypeFilter>('all');
 
   const totalArea = config.length * config.width;
   const zoneArea = (config.zones || []).reduce((s: number, z: GardenZone) => s + z.lengthM * z.widthM, 0);
@@ -185,7 +238,16 @@ export function PlantingSuggestions({ config, plants, onClose, onSelectPlant }: 
     betweenRows: tInfo('betweenRows'),
   }), [t, tInfo]);
 
-  const suggestions = useMemo(() => computeSuggestions(config, plants, locale, suggestionLabels), [config, plants, locale, suggestionLabels]);
+  const allSuggestions = useMemo(() => computeSuggestions(config, plants, locale, suggestionLabels), [config, plants, locale, suggestionLabels]);
+
+  // Filter suggestions by type filter
+  const suggestions = useMemo(() => {
+    if (typeFilter === 'all') return allSuggestions;
+    return allSuggestions.filter(s => {
+      const plant = plants.find(p => p.id === s.plantId);
+      return plant ? matchesTypeFilter(plant, typeFilter) : true;
+    });
+  }, [allSuggestions, typeFilter, plants]);
 
   const scoreColor = (score: number) => {
     if (score >= 70) return '#4ADE80';
@@ -213,7 +275,7 @@ export function PlantingSuggestions({ config, plants, onClose, onSelectPlant }: 
 
       {/* Garden area summary */}
       <div style={{
-        padding: '10px', borderRadius: '10px', marginBottom: '14px',
+        padding: '10px', borderRadius: '10px', marginBottom: '10px',
         background: 'rgba(251, 191, 36, 0.08)',
         border: '1px solid rgba(251, 191, 36, 0.15)',
         display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px',
@@ -233,6 +295,36 @@ export function PlantingSuggestions({ config, plants, onClose, onSelectPlant }: 
         </div>
       </div>
 
+      {/* Type filters */}
+      <div style={{
+        display: 'flex', gap: '4px', marginBottom: '12px', flexWrap: 'wrap',
+      }}>
+        {(Object.keys(PLANT_TYPE_FILTER_LABELS) as PlantTypeFilter[]).map((key) => {
+          const label = PLANT_TYPE_FILTER_LABELS[key];
+          const isActive = typeFilter === key;
+          return (
+            <button
+              key={key}
+              onClick={() => setTypeFilter(key)}
+              style={{
+                background: isActive ? 'rgba(251, 191, 36, 0.25)' : 'rgba(0,0,0,0.2)',
+                border: isActive ? '1px solid #FBBF24' : '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '8px',
+                padding: '5px 10px',
+                color: isActive ? '#FBBF24' : '#9CA3AF',
+                fontSize: '10px',
+                cursor: 'pointer',
+                fontFamily: '"Nunito", system-ui, sans-serif',
+                fontWeight: isActive ? 'bold' : 'normal',
+                transition: 'all 0.15s',
+              }}
+            >
+              {label.icon} {locale === 'fr' ? label.fr : label.en}
+            </button>
+          );
+        })}
+      </div>
+
       {/* Suggestion list */}
       {suggestions.length === 0 ? (
         <div style={{ textAlign: 'center', padding: '20px', color: '#6B7280', fontSize: '12px' }}>
@@ -243,6 +335,9 @@ export function PlantingSuggestions({ config, plants, onClose, onSelectPlant }: 
           {suggestions.map((s) => {
             const plantData = plants.find((p) => p.id === s.plantId);
             const isExpanded = expandedId === s.plantId;
+            const ptype = s.plantType || 'annuelle';
+            const badge = PLANT_TYPE_BADGES[ptype];
+            const isShrubOrTree = ptype === 'arbuste' || ptype === 'arbre';
             return (
               <div key={s.plantId} style={{ marginBottom: '4px' }}>
                 <div
@@ -266,11 +361,26 @@ export function PlantingSuggestions({ config, plants, onClose, onSelectPlant }: 
                   }} />
 
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: '12px', color: '#E5E7EB', fontWeight: 'bold' }}>
-                      {s.plantName}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <span style={{ fontSize: '12px', color: '#E5E7EB', fontWeight: 'bold' }}>
+                        {s.plantName}
+                      </span>
+                      {badge && (
+                        <span style={{
+                          padding: '1px 5px', borderRadius: '4px',
+                          fontSize: '8px', fontWeight: 'bold',
+                          background: badge.bg, color: badge.color,
+                        }}>
+                          {locale === 'fr' ? badge.fr : badge.en}
+                        </span>
+                      )}
                     </div>
-                    <div style={{ fontSize: '9px', color: '#9CA3AF' }}>
-                      {t('suggestedQty', { count: Math.max(1, s.quantity) })} | {s.spacingNote}
+                    <div style={{ fontSize: '9px', color: '#9CA3AF', display: 'flex', gap: '6px' }}>
+                      <span>{t('suggestedQty', { count: Math.max(1, s.quantity) })}</span>
+                      <span>|</span>
+                      <span>{s.heightCm ? `${s.heightCm}cm` : ''}</span>
+                      <span>|</span>
+                      <span>{s.spacingNote}</span>
                     </div>
                   </div>
 
@@ -296,6 +406,37 @@ export function PlantingSuggestions({ config, plants, onClose, onSelectPlant }: 
                     border: '1px solid rgba(251, 191, 36, 0.2)',
                     borderTop: 'none',
                   }}>
+                    {/* Shrub/tree warning */}
+                    {isShrubOrTree && (
+                      <div style={{
+                        padding: '8px 10px', borderRadius: '8px', marginBottom: '8px',
+                        background: ptype === 'arbre' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(249, 115, 22, 0.1)',
+                        border: `1px solid ${ptype === 'arbre' ? 'rgba(239, 68, 68, 0.3)' : 'rgba(249, 115, 22, 0.3)'}`,
+                        fontSize: '10px',
+                        color: ptype === 'arbre' ? '#FCA5A5' : '#FDBA74',
+                      }}>
+                        {ptype === 'arbre' ? '\u26A0\uFE0F' : '\uD83C\uDF33'}{' '}
+                        {locale === 'fr'
+                          ? (ptype === 'arbre'
+                            ? `${s.plantName} est un arbre/liane — il a besoin d'un emplacement permanent et peut devenir tres grand.`
+                            : `${s.plantName} est un arbuste/vivace — prevoir une zone dediee, il repousse chaque annee et prend de la place.`)
+                          : (ptype === 'arbre'
+                            ? `${s.plantName} is a tree/vine — needs a permanent spot and can grow very large.`
+                            : `${s.plantName} is a shrub/perennial — plan a dedicated zone, it grows back yearly and takes space.`)}
+                      </div>
+                    )}
+
+                    {/* Height info */}
+                    {s.heightCm && (
+                      <div style={{
+                        display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '8px',
+                        fontSize: '10px', color: '#D1D5DB',
+                      }}>
+                        <span>{'\uD83D\uDCCF'}</span>
+                        <span>{locale === 'fr' ? `Hauteur estimee: ${s.heightCm}cm` : `Estimated height: ${s.heightCm}cm`}</span>
+                      </div>
+                    )}
+
                     <div style={{ fontSize: '11px', color: '#D1D5DB', marginBottom: '8px' }}>
                       {s.reason}
                     </div>
