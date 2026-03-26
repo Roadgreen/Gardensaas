@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { useSession } from 'next-auth/react';
 import { useGardenStore } from '@/lib/garden-store';
 
 // Re-export useGarden as a thin wrapper around the Zustand store.
@@ -8,12 +9,23 @@ import { useGardenStore } from '@/lib/garden-store';
 // with cross-tab sync via the 'storage' event listener in garden-store.ts.
 export function useGarden() {
   const store = useGardenStore();
+  const { data: session, status: authStatus } = useSession();
+  const hasSynced = useRef(false);
 
   // Initialize from localStorage on first mount
   useEffect(() => {
     store._initialize();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Sync from server when authenticated
+  useEffect(() => {
+    if (authStatus === 'authenticated' && session?.user && store.isLoaded && !hasSynced.current) {
+      hasSynced.current = true;
+      store.syncFromServer();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authStatus, store.isLoaded]);
 
   const isSetupComplete = store.isLoaded && store.config.setupCompleted === true;
   const hasBasicConfig = store.isLoaded && store.config.length > 0 && store.config.width > 0;
@@ -31,11 +43,16 @@ export function useGarden() {
     addZone: store.addZone,
     removeZone: store.removeZone,
     updateZone: store.updateZone,
+    addSeedling: store.addSeedling,
+    removeSeedling: store.removeSeedling,
+    transplantSeedling: store.transplantSeedling,
     isLoaded: store.isLoaded,
     isSetupComplete,
     hasBasicConfig,
     completeSetup: store.completeSetup,
     advanceOnboarding: store.advanceOnboarding,
+    syncStatus: store.syncStatus,
+    syncFromServer: store.syncFromServer,
   };
 }
 

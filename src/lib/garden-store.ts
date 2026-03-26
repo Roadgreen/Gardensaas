@@ -1,9 +1,12 @@
 'use client';
 
 import { create } from 'zustand';
-import type { GardenConfig, PlantedItem, RaisedBed, GardenZone } from '@/types';
+import type { GardenConfig, PlantedItem, RaisedBed, GardenZone, Seedling } from '@/types';
 
 const GARDEN_STORAGE_KEY = 'garden-config';
+const SYNC_DEBOUNCE_MS = 2000;
+
+export type SyncStatus = 'idle' | 'saving' | 'saved' | 'error';
 
 const defaultConfig: GardenConfig = {
   length: 4,
@@ -14,6 +17,7 @@ const defaultConfig: GardenConfig = {
   plantedItems: [],
   raisedBeds: [],
   zones: [],
+  seedlings: [],
   latitude: undefined,
   longitude: undefined,
   city: undefined,
@@ -26,6 +30,7 @@ function loadFromStorage(): GardenConfig {
       const parsed = JSON.parse(stored) as GardenConfig;
       if (!parsed.raisedBeds) parsed.raisedBeds = [];
       if (!parsed.zones) parsed.zones = [];
+      if (!parsed.seedlings) parsed.seedlings = [];
       parsed.zones = parsed.zones.map((z: GardenZone) => ({
         ...z,
         zoneType: z.zoneType || 'in-ground',
@@ -49,8 +54,10 @@ function saveToStorage(config: GardenConfig) {
 interface GardenStore {
   config: GardenConfig;
   isLoaded: boolean;
+  syncStatus: SyncStatus;
 
   _initialize: () => void;
+  _debouncedSync: ReturnType<typeof setTimeout> | null;
   setConfig: (config: GardenConfig) => void;
   updateConfig: (partial: Partial<GardenConfig>) => void;
   addPlant: (plantId: string, x: number, z: number, raisedBedId?: string, varietyId?: string, zoneId?: string) => void;
@@ -62,13 +69,20 @@ interface GardenStore {
   addZone: (zone: GardenZone) => void;
   removeZone: (zoneId: string) => void;
   updateZone: (zoneId: string, partial: Partial<GardenZone>) => void;
+  addSeedling: (seedling: Seedling) => void;
+  removeSeedling: (seedlingId: string) => void;
+  transplantSeedling: (seedlingId: string, x: number, z: number) => void;
   completeSetup: () => void;
   advanceOnboarding: (step: 'setup' | 'inspect' | 'plant' | 'done') => void;
+  syncFromServer: () => Promise<void>;
+  syncToServer: () => void;
 }
 
 export const useGardenStore = create<GardenStore>((set, get) => ({
   config: defaultConfig,
   isLoaded: false,
+  syncStatus: 'idle' as SyncStatus,
+  _debouncedSync: null,
 
   _initialize: () => {
     if (get().isLoaded) return;
@@ -76,15 +90,75 @@ export const useGardenStore = create<GardenStore>((set, get) => ({
     set({ config: loaded, isLoaded: true });
   },
 
+  syncFromServer: async () => {
+    try {
+      const res = await fetch('/api/garden');
+      if (!res.ok) return;
+      const data = await res.json();
+      if (data.garden) {
+        const serverConfig = data.garden as GardenConfig;
+        // Ensure arrays exist
+        if (!serverConfig.raisedBeds) serverConfig.raisedBeds = [];
+        if (!serverConfig.zones) serverConfig.zones = [];
+        if (!serverConfig.seedlings) serverConfig.seedlings = [];
+        serverConfig.zones = serverConfig.zones.map((z: GardenZone) => ({
+          ...z,
+          zoneType: z.zoneType || 'in-ground',
+        }));
+        // Server data takes priority when it exists
+        saveToStorage(serverConfig);
+        set({ config: serverConfig });
+      }
+    } catch {
+      // Non-blocking: if API fails, local data is preserved
+    }
+  },
+
+  syncToServer: () => {
+    // Clear any pending debounce
+    const existing = get()._debouncedSync;
+    if (existing) clearTimeout(existing);
+
+    set({ syncStatus: 'saving' });
+
+    const timer = setTimeout(async () => {
+      try {
+        const config = get().config;
+        const res = await fetch('/api/garden', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(config),
+        });
+        if (res.ok) {
+          set({ syncStatus: 'saved' });
+          // Reset to idle after 3 seconds
+          setTimeout(() => {
+            if (get().syncStatus === 'saved') {
+              set({ syncStatus: 'idle' });
+            }
+          }, 3000);
+        } else {
+          set({ syncStatus: 'error' });
+        }
+      } catch {
+        set({ syncStatus: 'error' });
+      }
+    }, SYNC_DEBOUNCE_MS);
+
+    set({ _debouncedSync: timer });
+  },
+
   setConfig: (newConfig: GardenConfig) => {
     saveToStorage(newConfig);
     set({ config: newConfig });
+    get().syncToServer();
   },
 
   updateConfig: (partial: Partial<GardenConfig>) => {
     const updated = { ...get().config, ...partial };
     saveToStorage(updated);
     set({ config: updated });
+    get().syncToServer();
   },
 
   addPlant: (plantId, x, z, raisedBedId?, varietyId?, zoneId?) => {
@@ -101,6 +175,7 @@ export const useGardenStore = create<GardenStore>((set, get) => ({
     const updated = { ...prev, plantedItems: [...prev.plantedItems, item] };
     saveToStorage(updated);
     set({ config: updated });
+    get().syncToServer();
   },
 
   removePlant: (index: number) => {
@@ -108,6 +183,7 @@ export const useGardenStore = create<GardenStore>((set, get) => ({
     const updated = { ...prev, plantedItems: prev.plantedItems.filter((_, i) => i !== index) };
     saveToStorage(updated);
     set({ config: updated });
+    get().syncToServer();
   },
 
   clearGarden: () => {
@@ -115,6 +191,7 @@ export const useGardenStore = create<GardenStore>((set, get) => ({
     const updated = { ...prev, plantedItems: [], raisedBeds: [] };
     saveToStorage(updated);
     set({ config: updated });
+    get().syncToServer();
   },
 
   addRaisedBed: (bed: RaisedBed) => {
@@ -122,6 +199,7 @@ export const useGardenStore = create<GardenStore>((set, get) => ({
     const updated = { ...prev, raisedBeds: [...(prev.raisedBeds || []), bed] };
     saveToStorage(updated);
     set({ config: updated });
+    get().syncToServer();
   },
 
   removeRaisedBed: (bedId: string) => {
@@ -133,6 +211,7 @@ export const useGardenStore = create<GardenStore>((set, get) => ({
     };
     saveToStorage(updated);
     set({ config: updated });
+    get().syncToServer();
   },
 
   updateRaisedBed: (bedId: string, partial: Partial<RaisedBed>) => {
@@ -145,6 +224,7 @@ export const useGardenStore = create<GardenStore>((set, get) => ({
     };
     saveToStorage(updated);
     set({ config: updated });
+    get().syncToServer();
   },
 
   addZone: (zone: GardenZone) => {
@@ -152,6 +232,7 @@ export const useGardenStore = create<GardenStore>((set, get) => ({
     const updated = { ...prev, zones: [...(prev.zones || []), zone] };
     saveToStorage(updated);
     set({ config: updated });
+    get().syncToServer();
   },
 
   removeZone: (zoneId: string) => {
@@ -165,6 +246,7 @@ export const useGardenStore = create<GardenStore>((set, get) => ({
     };
     saveToStorage(updated);
     set({ config: updated });
+    get().syncToServer();
   },
 
   updateZone: (zoneId: string, partial: Partial<GardenZone>) => {
@@ -177,6 +259,44 @@ export const useGardenStore = create<GardenStore>((set, get) => ({
     };
     saveToStorage(updated);
     set({ config: updated });
+    get().syncToServer();
+  },
+
+  addSeedling: (seedling: Seedling) => {
+    const prev = get().config;
+    const updated = { ...prev, seedlings: [...(prev.seedlings || []), seedling] };
+    saveToStorage(updated);
+    set({ config: updated });
+    get().syncToServer();
+  },
+
+  removeSeedling: (seedlingId: string) => {
+    const prev = get().config;
+    const updated = { ...prev, seedlings: (prev.seedlings || []).filter((s) => s.id !== seedlingId) };
+    saveToStorage(updated);
+    set({ config: updated });
+    get().syncToServer();
+  },
+
+  transplantSeedling: (seedlingId: string, x: number, z: number) => {
+    const prev = get().config;
+    const seedling = (prev.seedlings || []).find((s) => s.id === seedlingId);
+    if (!seedling) return;
+    const item: PlantedItem = {
+      plantId: seedling.plantId,
+      x,
+      z,
+      plantedDate: new Date().toISOString(),
+      ...(seedling.varietyId ? { varietyId: seedling.varietyId } : {}),
+    };
+    const updated = {
+      ...prev,
+      plantedItems: [...prev.plantedItems, item],
+      seedlings: (prev.seedlings || []).filter((s) => s.id !== seedlingId),
+    };
+    saveToStorage(updated);
+    set({ config: updated });
+    get().syncToServer();
   },
 
   completeSetup: () => {
@@ -184,6 +304,7 @@ export const useGardenStore = create<GardenStore>((set, get) => ({
     const updated = { ...prev, setupCompleted: true, onboardingStep: 'inspect' as const };
     saveToStorage(updated);
     set({ config: updated });
+    get().syncToServer();
   },
 
   advanceOnboarding: (step: 'setup' | 'inspect' | 'plant' | 'done') => {
@@ -191,6 +312,7 @@ export const useGardenStore = create<GardenStore>((set, get) => ({
     const updated = { ...prev, onboardingStep: step };
     saveToStorage(updated);
     set({ config: updated });
+    get().syncToServer();
   },
 }));
 
@@ -202,6 +324,7 @@ if (typeof window !== 'undefined') {
         const parsed = JSON.parse(e.newValue) as GardenConfig;
         if (!parsed.raisedBeds) parsed.raisedBeds = [];
         if (!parsed.zones) parsed.zones = [];
+        if (!parsed.seedlings) parsed.seedlings = [];
         parsed.zones = parsed.zones.map((z: GardenZone) => ({
           ...z,
           zoneType: z.zoneType || 'in-ground',

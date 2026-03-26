@@ -73,6 +73,15 @@ export interface GardenZone {
   color: string; // display color for the zone outline
 }
 
+export interface Seedling {
+  id: string;
+  plantId: string;
+  varietyId?: string;
+  seededAt: string; // ISO date
+  pots: number;
+  notes?: string;
+}
+
 export interface GardenConfig {
   length: number;
   width: number;
@@ -82,9 +91,15 @@ export interface GardenConfig {
   plantedItems: PlantedItem[];
   raisedBeds: RaisedBed[];
   zones?: GardenZone[];
+  seedlings?: Seedling[];
   latitude?: number;
   longitude?: number;
   city?: string;
+  hasGreenhouse?: boolean;
+  hasRaisedBeds?: boolean;
+  gardenType?: 'outdoor' | 'indoor' | 'balcony' | 'terrace';
+  emailNotifications?: boolean;
+  notificationFrequency?: 'daily' | 'weekly' | 'never';
   setupCompleted?: boolean; // true after user finishes the setup wizard
   onboardingStep?: 'setup' | 'inspect' | 'plant' | 'done'; // guided flow progress
 }
