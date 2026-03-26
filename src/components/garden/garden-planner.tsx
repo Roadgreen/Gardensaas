@@ -2,7 +2,8 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useGarden, usePlants } from '@/lib/hooks';
-import type { Plant, PlantedItem } from '@/types';
+import type { Plant, PlantedItem, GardenZone, ZoneType, SoilType, SunExposure } from '@/types';
+import { ZONE_TYPE_LABELS } from '@/types';
 
 /* ═══════════════════════════════════════════════════════════════════════════
    Color Palette
@@ -154,10 +155,168 @@ function getSeason(day: number): string {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   Zone colors for grid overlay
+   ═══════════════════════════════════════════════════════════════════════════ */
+const ZONE_GRID_COLORS: Record<string, { bg: string; border: string; badge: string; label: string }> = {
+  greenhouse: { bg: 'rgba(147, 197, 253, 0.18)', border: 'rgba(96, 165, 250, 0.5)', badge: '#3B82F6', label: 'Serre' },
+  'in-ground': { bg: 'rgba(134, 239, 172, 0.18)', border: 'rgba(74, 222, 128, 0.5)', badge: '#22C55E', label: 'Exterieur' },
+  'raised-bed': { bg: 'rgba(253, 186, 116, 0.18)', border: 'rgba(251, 146, 60, 0.5)', badge: '#F97316', label: 'Bac' },
+  pot: { bg: 'rgba(196, 181, 253, 0.18)', border: 'rgba(167, 139, 250, 0.5)', badge: '#8B5CF6', label: 'Pot' },
+};
+
+function getZoneStyle(zoneType: ZoneType) {
+  return ZONE_GRID_COLORS[zoneType] || ZONE_GRID_COLORS['in-ground'];
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Add Zone Modal
+   ═══════════════════════════════════════════════════════════════════════════ */
+function AddZoneModal({
+  onAdd,
+  onClose,
+  gardenCols,
+  gardenRows,
+}: {
+  onAdd: (zone: GardenZone) => void;
+  onClose: () => void;
+  gardenCols: number;
+  gardenRows: number;
+}) {
+  const [name, setName] = useState('');
+  const [zoneType, setZoneType] = useState<ZoneType>('greenhouse');
+  const [widthM, setWidthM] = useState(2);
+  const [lengthM, setLengthM] = useState(2);
+
+  const handleSubmit = () => {
+    if (!name.trim()) return;
+    const zone: GardenZone = {
+      id: `zone-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+      name: name.trim(),
+      x: 10,
+      z: 10,
+      widthM: Math.min(widthM, gardenCols),
+      lengthM: Math.min(lengthM, gardenRows),
+      soilType: 'loamy' as SoilType,
+      sunExposure: 'full-sun' as SunExposure,
+      zoneType,
+      color: getZoneStyle(zoneType).badge,
+    };
+    onAdd(zone);
+    onClose();
+  };
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style={{ background: 'rgba(27,43,26,0.6)', backdropFilter: 'blur(8px)' }}
+    >
+      <div className="w-full max-w-md rounded-2xl shadow-2xl overflow-hidden" style={{ background: C.parchment }}>
+        <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: `1px solid ${C.dew}` }}>
+          <h3 className="text-lg font-semibold" style={{ color: C.ink }}>
+            {'\u{1F33F}'} Ajouter une zone
+          </h3>
+          <button onClick={onClose} className="p-2 rounded-lg hover:bg-black/5 transition-colors min-w-[48px] min-h-[48px] flex items-center justify-center">
+            {'\u2715'}
+          </button>
+        </div>
+        <div className="px-5 py-5 space-y-4">
+          <div>
+            <label className="text-sm font-medium block mb-1.5" style={{ color: C.inkMid }}>Nom de la zone</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Ex: Serre principale"
+              className="w-full px-4 py-3 rounded-xl text-sm outline-none"
+              style={{ background: C.paper, border: `1px solid ${C.dew}`, color: C.ink }}
+              autoFocus
+            />
+          </div>
+          <div>
+            <label className="text-sm font-medium block mb-1.5" style={{ color: C.inkMid }}>Type</label>
+            <div className="grid grid-cols-2 gap-2">
+              {(['greenhouse', 'in-ground', 'raised-bed', 'pot'] as ZoneType[]).map((t) => {
+                const style = getZoneStyle(t);
+                const selected = zoneType === t;
+                return (
+                  <button
+                    key={t}
+                    onClick={() => setZoneType(t)}
+                    className="flex items-center gap-2 px-3 py-3 rounded-xl text-sm font-medium transition-all min-h-[48px]"
+                    style={{
+                      background: selected ? style.badge + '20' : C.paper,
+                      border: `2px solid ${selected ? style.badge : C.dew}`,
+                      color: selected ? style.badge : C.inkMid,
+                    }}
+                  >
+                    <span className="w-3 h-3 rounded-full" style={{ background: style.badge }} />
+                    {ZONE_TYPE_LABELS[t].fr}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="text-sm font-medium block mb-1.5" style={{ color: C.inkMid }}>Largeur (m)</label>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setWidthM(Math.max(1, widthM - 1))}
+                  className="w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold"
+                  style={{ background: C.paper, border: `1px solid ${C.dew}`, color: C.ink }}
+                >-</button>
+                <span className="text-xl font-bold flex-1 text-center" style={{ color: C.leaf }}>{widthM}</span>
+                <button
+                  onClick={() => setWidthM(Math.min(gardenCols, widthM + 1))}
+                  className="w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold"
+                  style={{ background: C.paper, border: `1px solid ${C.dew}`, color: C.ink }}
+                >+</button>
+              </div>
+            </div>
+            <div>
+              <label className="text-sm font-medium block mb-1.5" style={{ color: C.inkMid }}>Longueur (m)</label>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setLengthM(Math.max(1, lengthM - 1))}
+                  className="w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold"
+                  style={{ background: C.paper, border: `1px solid ${C.dew}`, color: C.ink }}
+                >-</button>
+                <span className="text-xl font-bold flex-1 text-center" style={{ color: C.leaf }}>{lengthM}</span>
+                <button
+                  onClick={() => setLengthM(Math.min(gardenRows, lengthM + 1))}
+                  className="w-12 h-12 rounded-xl flex items-center justify-center text-lg font-bold"
+                  style={{ background: C.paper, border: `1px solid ${C.dew}`, color: C.ink }}
+                >+</button>
+              </div>
+            </div>
+          </div>
+          <div className="text-xs text-center py-1" style={{ color: C.inkSoft }}>
+            Zone de {widthM}m x {lengthM}m = {widthM * lengthM} m²
+          </div>
+          <div className="flex gap-3 pt-1">
+            <button
+              onClick={onClose}
+              className="flex-1 py-3 rounded-xl text-sm font-medium transition-colors min-h-[48px]"
+              style={{ background: C.paper, color: C.inkMid }}
+            >Annuler</button>
+            <button
+              onClick={handleSubmit}
+              disabled={!name.trim()}
+              className="flex-1 py-3 rounded-xl text-sm font-medium text-white transition-all hover:brightness-110 min-h-[48px] disabled:opacity-40"
+              style={{ background: C.leaf }}
+            >{'\u{1F33F}'} Ajouter</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
    GardenPlanner Component
    ═══════════════════════════════════════════════════════════════════════════ */
 export function GardenPlanner() {
-  const { config, addPlant, removePlant, clearGarden, updateConfig, isLoaded } = useGarden();
+  const { config, addPlant, removePlant, clearGarden, updateConfig, addZone, removeZone, isLoaded } = useGarden();
   const { plants: rawPlants, isLoading: plantsLoading } = usePlants();
 
   /* ── Derived plant data ── */
@@ -178,6 +337,7 @@ export function GardenPlanner() {
   const [dragPlant, setDragPlant] = useState<PlannerPlant | null>(null);
   const [inspectedCell, setInspectedCell] = useState<{ r: number; c: number } | null>(null);
   const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
+  const [showAddZoneModal, setShowAddZoneModal] = useState(false);
   const gridRef = useRef<HTMLDivElement>(null);
 
   /* ── Build cell map from plantedItems ── */
@@ -193,6 +353,35 @@ export function GardenPlanner() {
     });
     return map;
   }, [config.plantedItems, totalRows, totalCols]);
+
+  /* ── Zone cell map: which cells belong to which zone ── */
+  const zoneCellMap = useMemo(() => {
+    const map = new Map<string, GardenZone>();
+    const zones = config.zones || [];
+    zones.forEach((zone) => {
+      // Convert zone percent position to grid cells
+      const startCol = Math.floor((zone.x / 100) * totalCols);
+      const startRow = Math.floor((zone.z / 100) * totalRows);
+      const zoneCols = Math.min(Math.round(zone.widthM), totalCols - startCol);
+      const zoneRows = Math.min(Math.round(zone.lengthM), totalRows - startRow);
+      for (let r = startRow; r < startRow + zoneRows && r < totalRows; r++) {
+        for (let c = startCol; c < startCol + zoneCols && c < totalCols; c++) {
+          map.set(cellKey(r, c), zone);
+        }
+      }
+    });
+    return map;
+  }, [config.zones, totalCols, totalRows]);
+
+  /* ── Zone top-left corners for badge rendering ── */
+  const zoneCorners = useMemo(() => {
+    const zones = config.zones || [];
+    return zones.map((zone) => {
+      const startCol = Math.floor((zone.x / 100) * totalCols);
+      const startRow = Math.floor((zone.z / 100) * totalRows);
+      return { zone, key: cellKey(startRow, startCol) };
+    });
+  }, [config.zones, totalCols, totalRows]);
 
   /* ── Filtered plant list ── */
   const filteredPlants = useMemo(() => {
@@ -487,6 +676,12 @@ export function GardenPlanner() {
           <span title="Cellules plant\u00e9es" className="hidden sm:inline">{'\u{1F33F}'} {plantedCells} plant\u00e9s</span>
           <span className="hidden sm:inline" style={{ color: C.inkSoft }}>|</span>
           <span title="Densit\u00e9 totale" className="hidden sm:inline">{'\u{1FAD8}'} {totalDensity} plants</span>
+          {(config.zones || []).length > 0 && (
+            <>
+              <span className="hidden sm:inline" style={{ color: C.inkSoft }}>|</span>
+              <span title="Zones" className="hidden sm:inline">{'\u{1F33F}'} {(config.zones || []).length} zones</span>
+            </>
+          )}
           <span className="hidden sm:inline" style={{ color: C.inkSoft }}>|</span>
           {/* Fill bar */}
           <div className="flex items-center gap-1.5">
@@ -660,6 +855,14 @@ export function GardenPlanner() {
             >
               {'\u{1F504}'} Vider
             </button>
+            <div className="w-px h-5 mx-1" style={{ background: C.paperTan }} />
+            <button
+              onClick={() => setShowAddZoneModal(true)}
+              className="px-3 py-1.5 text-xs font-medium rounded-lg transition-all"
+              style={{ background: '#3B82F620', color: '#3B82F6', border: '1px solid #3B82F640' }}
+            >
+              {'\u{1F33F}'} + Zone
+            </button>
 
             {/* Selected plant badge */}
             {selectedPlant && tool === 'plant' && (
@@ -704,6 +907,9 @@ export function GardenPlanner() {
                     const hoverHL = getHoverHighlight(r, c);
                     const isHovered = hoveredCell === key;
                     const density = plant ? Math.max(1, Math.floor(10000 / (plant.sp * plant.rowSp))) : 0;
+                    const cellZone = zoneCellMap.get(key);
+                    const zoneStyle = cellZone ? getZoneStyle(cellZone.zoneType) : null;
+                    const zoneCorner = zoneCorners.find((zc) => zc.key === key);
 
                     return (
                       <div
@@ -714,9 +920,9 @@ export function GardenPlanner() {
                             ? (isHarvest
                               ? `linear-gradient(135deg, ${plant.color}18, ${C.gold}25)`
                               : `${plant.color}10`)
-                            : C.cream,
+                            : zoneStyle ? zoneStyle.bg : C.cream,
                           border: `1.5px solid ${
-                            isHovered ? C.leaf : cd && plant ? plant.color + '40' : C.paperTan
+                            isHovered ? C.leaf : cd && plant ? plant.color + '40' : zoneStyle ? zoneStyle.border : C.paperTan
                           }`,
                           boxShadow: highlight
                             ? `inset 0 0 0 2px ${highlight}`
@@ -742,6 +948,26 @@ export function GardenPlanner() {
                         >
                           {r},{c}
                         </span>
+
+                        {/* Zone badge at top-left corner */}
+                        {zoneCorner && (
+                          <div
+                            className="absolute -top-2.5 left-1 z-10 flex items-center gap-1 px-1.5 py-0.5 rounded text-[8px] font-bold whitespace-nowrap"
+                            style={{
+                              background: getZoneStyle(zoneCorner.zone.zoneType).badge,
+                              color: '#fff',
+                              boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                            }}
+                          >
+                            {zoneCorner.zone.zoneType === 'greenhouse' ? '\u{1F3E1}' : '\u{1F33F}'}{' '}
+                            {getZoneStyle(zoneCorner.zone.zoneType).label}
+                            <button
+                              onClick={(e) => { e.stopPropagation(); removeZone(zoneCorner.zone.id); }}
+                              className="ml-1 opacity-70 hover:opacity-100"
+                              title="Supprimer la zone"
+                            >{'\u2715'}</button>
+                          </div>
+                        )}
 
                         {cd && plant ? (
                           <>
@@ -1094,6 +1320,16 @@ export function GardenPlanner() {
           </div>
         </aside>
       </div>
+
+      {/* ── Add Zone Modal ── */}
+      {showAddZoneModal && (
+        <AddZoneModal
+          onAdd={addZone}
+          onClose={() => setShowAddZoneModal(false)}
+          gardenCols={totalCols}
+          gardenRows={totalRows}
+        />
+      )}
 
       {/* ── Global Styles (keyframes) ── */}
       <style>{`
