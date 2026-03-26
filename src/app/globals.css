@@ -1,91 +1,91 @@
 @import "tailwindcss";
 
 :root {
-  /* Terra Bloom / Living Herbarium Design System */
-  --primary: #23422a;
-  --primary-container: #3a5a40;
-  --secondary: #805533;
-  --tertiary: #682812;
-  --on-primary: #ffffff;
-  --on-surface: #1b1c17;
-  --surface: #fbf9f1;
-  --surface-bright: #fbf9f1;
-  --surface-container-lowest: #ffffff;
-  --surface-container-low: #f6f4ec;
-  --surface-container: #f0ede6;
-  --surface-container-high: #eae8e0;
-  --surface-container-highest: #e4e2db;
-  --outline-variant: #c2c8bf;
-  --secondary-container: #e8d5c0;
-  --secondary-fixed-dim: #c9a97a;
+  /* Warm Garden Journal — Light-mode-first palette */
+  --primary: #4A7C59;
+  --primary-container: #5D9970;
+  --secondary: #B85C38;
+  --tertiary: #8C4428;
+  --on-primary: #FDFAF4;
+  --on-surface: #1B2B1A;
+  --surface: #F5F1E8;
+  --surface-bright: #F9F6EE;
+  --surface-container-lowest: #FDFAF4;
+  --surface-container-low: #F9F6EE;
+  --surface-container: #EDE8DC;
+  --surface-container-high: #E2DACE;
+  --surface-container-highest: #C8DFC1;
+  --outline-variant: #C8DFC1;
+  --secondary-container: #F9EDE7;
+  --secondary-fixed-dim: #C09B4A;
 
   /* Mapped aliases for existing usage */
-  --background: #fbf9f1;
-  --foreground: #1b1c17;
-  --card-bg: #ffffff;
-  --card-border: #eae8e0;
-  --card-bg-hover: #f0ede6;
-  --muted: #805533;
-  --accent: #23422a;
-  --accent-hover: #3a5a40;
-  --accent-muted: rgba(35, 66, 42, 0.1);
-  --heading: #1b1c17;
-  --body-text: #1b1c17;
-  --nav-bg: rgba(251, 249, 241, 0.7);
+  --background: #F5F1E8;
+  --foreground: #1B2B1A;
+  --card-bg: #FDFAF4;
+  --card-border: #E2DACE;
+  --card-bg-hover: #EDE8DC;
+  --muted: #5E7B58;
+  --accent: #4A7C59;
+  --accent-hover: #2E5C3A;
+  --accent-muted: rgba(74, 124, 89, 0.12);
+  --heading: #1B2B1A;
+  --body-text: #3B5438;
+  --nav-bg: rgba(245, 241, 232, 0.85);
   --nav-border: transparent;
-  --section-alt: #f6f4ec;
-  --input-bg: #ffffff;
-  --input-border: rgba(194, 200, 191, 0.2);
-  --badge-bg: rgba(35, 66, 42, 0.08);
-  --badge-border: rgba(35, 66, 42, 0.15);
-  --badge-text: #23422a;
-  --shadow-color: rgba(27, 28, 23, 0.06);
-  --shadow-lg: rgba(27, 28, 23, 0.1);
-  --ambient-shadow: 0 8px 24px rgba(27, 28, 23, 0.06);
-  --cta-gradient: linear-gradient(135deg, #23422a, #3a5a40);
+  --section-alt: #F9F6EE;
+  --input-bg: #FDFAF4;
+  --input-border: rgba(200, 223, 193, 0.35);
+  --badge-bg: rgba(74, 124, 89, 0.10);
+  --badge-border: rgba(74, 124, 89, 0.20);
+  --badge-text: #2E5C3A;
+  --shadow-color: rgba(27, 43, 26, 0.06);
+  --shadow-lg: rgba(27, 43, 26, 0.10);
+  --ambient-shadow: 0 8px 24px rgba(27, 43, 26, 0.06);
+  --cta-gradient: linear-gradient(135deg, #B85C38, #D4876A);
 }
 
 .dark {
-  /* M3 design tokens — dark palette */
-  --primary: #a4d4ae;
-  --primary-container: #3a5a40;
-  --secondary: #c9a97a;
-  --tertiary: #e8a990;
-  --on-primary: #1b1c17;
-  --on-surface: #e4e2db;
-  --surface: #1b1c17;
-  --surface-bright: #2a2b25;
-  --surface-container-lowest: #131410;
-  --surface-container-low: #1f201b;
-  --surface-container: #242520;
-  --surface-container-high: #2e2f2a;
-  --surface-container-highest: #393a34;
-  --outline-variant: #44483f;
-  --secondary-container: #5a4530;
-  --secondary-fixed-dim: #c9a97a;
+  /* Rich dark-green palette — secondary mode */
+  --primary: #5D9970;
+  --primary-container: #2E5C3A;
+  --secondary: #D4876A;
+  --tertiary: #C09B4A;
+  --on-primary: #1B2B1A;
+  --on-surface: #C8DFC1;
+  --surface: #1B2B1A;
+  --surface-bright: #243524;
+  --surface-container-lowest: #142013;
+  --surface-container-low: #1E2E1D;
+  --surface-container: #253525;
+  --surface-container-high: #2E4030;
+  --surface-container-highest: #3B5438;
+  --outline-variant: #3B5438;
+  --secondary-container: #8C4428;
+  --secondary-fixed-dim: #C09B4A;
 
   /* Mapped aliases */
-  --background: #1b1c17;
-  --foreground: #e4e2db;
-  --card-bg: #242520;
-  --card-border: #44483f;
-  --card-bg-hover: #2e2f2a;
-  --muted: #c9a97a;
-  --accent: #a4d4ae;
-  --accent-hover: #3a5a40;
-  --accent-muted: rgba(164, 212, 174, 0.15);
-  --heading: #e4e2db;
-  --body-text: #c2c8bf;
-  --nav-bg: rgba(27, 28, 23, 0.92);
+  --background: #1B2B1A;
+  --foreground: #C8DFC1;
+  --card-bg: #253525;
+  --card-border: #3B5438;
+  --card-bg-hover: #2E4030;
+  --muted: #C09B4A;
+  --accent: #5D9970;
+  --accent-hover: #4A7C59;
+  --accent-muted: rgba(93, 153, 112, 0.18);
+  --heading: #C8DFC1;
+  --body-text: #9BB897;
+  --nav-bg: rgba(27, 43, 26, 0.92);
   --nav-border: transparent;
-  --section-alt: #242520;
-  --input-bg: #242520;
-  --input-border: rgba(194, 200, 191, 0.2);
-  --badge-bg: rgba(164, 212, 174, 0.12);
-  --badge-border: rgba(164, 212, 174, 0.2);
-  --badge-text: #c9a97a;
-  --shadow-color: rgba(0, 0, 0, 0.2);
-  --shadow-lg: rgba(0, 0, 0, 0.3);
+  --section-alt: #253525;
+  --input-bg: #253525;
+  --input-border: rgba(93, 153, 112, 0.2);
+  --badge-bg: rgba(93, 153, 112, 0.14);
+  --badge-border: rgba(93, 153, 112, 0.25);
+  --badge-text: #C09B4A;
+  --shadow-color: rgba(0, 0, 0, 0.25);
+  --shadow-lg: rgba(0, 0, 0, 0.35);
 }
 
 @theme inline {
@@ -107,7 +107,7 @@
   --color-outline-variant: var(--outline-variant);
   --color-secondary-container: var(--secondary-container);
   --color-secondary-fixed-dim: var(--secondary-fixed-dim);
-  --color-garden-dark: #23422a;
+  --color-garden-dark: #1B2B1A;
   --color-garden-card: var(--card-bg);
   --color-garden-border: var(--card-border);
   --font-sans: var(--font-jakarta);
@@ -142,14 +142,14 @@ body {
 
 /* Primary CTA button */
 .btn-cta {
-  background: linear-gradient(135deg, #23422a, #3a5a40);
-  color: #ffffff;
+  background: linear-gradient(135deg, #B85C38, #D4876A);
+  color: #FDFAF4;
   border-radius: 1.5rem;
   border: none;
 }
 
 .btn-cta:hover {
-  background: linear-gradient(135deg, #3a5a40, #23422a);
+  background: linear-gradient(135deg, #8C4428, #B85C38);
 }
 
 /* Custom scrollbar */
@@ -195,8 +195,8 @@ body {
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 5px rgba(74, 222, 128, 0.2); }
-  50% { box-shadow: 0 0 20px rgba(74, 222, 128, 0.4), 0 0 40px rgba(74, 222, 128, 0.1); }
+  0%, 100% { box-shadow: 0 0 5px rgba(74, 124, 89, 0.25); }
+  50% { box-shadow: 0 0 20px rgba(74, 124, 89, 0.4), 0 0 40px rgba(74, 124, 89, 0.12); }
 }
 
 @keyframes bounce-in {
@@ -242,15 +242,15 @@ body {
 }
 .game-card:hover {
   transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 8px 30px rgba(74, 222, 128, 0.15);
+  box-shadow: 0 8px 30px rgba(74, 124, 89, 0.18);
 }
 
 /* Pixel-art inspired border */
 .pixel-border {
-  border: 3px solid #4ADE80;
+  border: 3px solid #4A7C59;
   box-shadow:
-    3px 3px 0 0 #2D9B52,
-    -1px -1px 0 0 #86EFAC;
+    3px 3px 0 0 #2E5C3A,
+    -1px -1px 0 0 #5D9970;
 }
 
 /* Speech bubble tail */
@@ -264,7 +264,7 @@ body {
   height: 0;
   border-left: 10px solid transparent;
   border-right: 10px solid transparent;
-  border-top: 10px solid #4ADE80;
+  border-top: 10px solid #4A7C59;
 }
 
 /* Fade-in-up animation for UI elements */
@@ -307,7 +307,7 @@ body {
 
 /* Warm earth-tone accent highlights */
 .earth-glow {
-  box-shadow: 0 0 20px rgba(139, 69, 19, 0.15), 0 0 40px rgba(74, 222, 128, 0.08);
+  box-shadow: 0 0 20px rgba(184, 92, 56, 0.18), 0 0 40px rgba(74, 124, 89, 0.10);
 }
 
 /* Flower pop color accents */
@@ -323,25 +323,25 @@ body {
 
 /* Glass morphism card */
 .glass-card {
-  background: rgba(251, 249, 241, 0.7);
+  background: rgba(245, 241, 232, 0.75);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
 .dark .glass-card {
-  background: rgba(27, 28, 23, 0.7);
+  background: rgba(27, 43, 26, 0.75);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
 
 /* Text gradient helper */
 .text-gradient {
-  background: linear-gradient(135deg, #23422a 0%, #3a5a40 50%, #805533 100%);
+  background: linear-gradient(135deg, #2E5C3A 0%, #4A7C59 50%, #B85C38 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 .dark .text-gradient {
-  background: linear-gradient(135deg, #3a5a40 0%, #c9a97a 50%, #e8d5c0 100%);
+  background: linear-gradient(135deg, #5D9970 0%, #C09B4A 50%, #D4876A 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -366,21 +366,21 @@ body {
 /* CSS-only starfield — replaces 40 framer-motion divs for better CWV */
 .hero-starfield {
   background-image:
-    radial-gradient(1px 1px at 10% 15%, rgba(134,239,172,0.25) 50%, transparent 50%),
-    radial-gradient(1px 1px at 25% 40%, rgba(134,239,172,0.18) 50%, transparent 50%),
-    radial-gradient(1px 1px at 42% 8%, rgba(134,239,172,0.22) 50%, transparent 50%),
-    radial-gradient(1px 1px at 55% 65%, rgba(134,239,172,0.15) 50%, transparent 50%),
-    radial-gradient(1px 1px at 70% 25%, rgba(134,239,172,0.20) 50%, transparent 50%),
-    radial-gradient(1px 1px at 85% 50%, rgba(134,239,172,0.18) 50%, transparent 50%),
-    radial-gradient(1px 1px at 15% 70%, rgba(134,239,172,0.22) 50%, transparent 50%),
-    radial-gradient(1px 1px at 35% 85%, rgba(134,239,172,0.16) 50%, transparent 50%),
-    radial-gradient(1px 1px at 60% 35%, rgba(134,239,172,0.20) 50%, transparent 50%),
-    radial-gradient(1px 1px at 78% 75%, rgba(134,239,172,0.18) 50%, transparent 50%),
-    radial-gradient(1px 1px at 5% 45%, rgba(134,239,172,0.15) 50%, transparent 50%),
-    radial-gradient(1px 1px at 92% 10%, rgba(134,239,172,0.22) 50%, transparent 50%),
-    radial-gradient(1px 1px at 48% 55%, rgba(134,239,172,0.17) 50%, transparent 50%),
-    radial-gradient(1px 1px at 30% 20%, rgba(134,239,172,0.20) 50%, transparent 50%),
-    radial-gradient(1px 1px at 65% 90%, rgba(134,239,172,0.15) 50%, transparent 50%);
+    radial-gradient(1px 1px at 10% 15%, rgba(93,153,112,0.25) 50%, transparent 50%),
+    radial-gradient(1px 1px at 25% 40%, rgba(192,155,74,0.18) 50%, transparent 50%),
+    radial-gradient(1px 1px at 42% 8%, rgba(93,153,112,0.22) 50%, transparent 50%),
+    radial-gradient(1px 1px at 55% 65%, rgba(184,92,56,0.15) 50%, transparent 50%),
+    radial-gradient(1px 1px at 70% 25%, rgba(93,153,112,0.20) 50%, transparent 50%),
+    radial-gradient(1px 1px at 85% 50%, rgba(192,155,74,0.18) 50%, transparent 50%),
+    radial-gradient(1px 1px at 15% 70%, rgba(93,153,112,0.22) 50%, transparent 50%),
+    radial-gradient(1px 1px at 35% 85%, rgba(184,92,56,0.16) 50%, transparent 50%),
+    radial-gradient(1px 1px at 60% 35%, rgba(93,153,112,0.20) 50%, transparent 50%),
+    radial-gradient(1px 1px at 78% 75%, rgba(192,155,74,0.18) 50%, transparent 50%),
+    radial-gradient(1px 1px at 5% 45%, rgba(93,153,112,0.15) 50%, transparent 50%),
+    radial-gradient(1px 1px at 92% 10%, rgba(184,92,56,0.22) 50%, transparent 50%),
+    radial-gradient(1px 1px at 48% 55%, rgba(93,153,112,0.17) 50%, transparent 50%),
+    radial-gradient(1px 1px at 30% 20%, rgba(192,155,74,0.20) 50%, transparent 50%),
+    radial-gradient(1px 1px at 65% 90%, rgba(93,153,112,0.15) 50%, transparent 50%);
   animation: starfield-twinkle 4s ease-in-out infinite alternate;
 }
 

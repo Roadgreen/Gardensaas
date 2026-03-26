@@ -48,6 +48,7 @@ import type { PlantingSuggestionResult } from '@/lib/smart-planting';
 
 const sidebarLinksConfig = [
   { href: '/garden/dashboard', key: 'dashboard', icon: LayoutDashboard },
+  { href: '/garden/semis', key: 'semis', icon: Sprout },
   { href: '/garden/planner', key: 'gardenPlanner', icon: Map },
   { href: '/garden/3d', key: '3dView', icon: Eye },
   { href: '/garden/history', key: 'gardenHistory', icon: History },

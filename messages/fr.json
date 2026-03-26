@@ -8,7 +8,8 @@
     "signIn": "Connexion",
     "startFree": "Essai Gratuit",
     "account": "Compte",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "semis": "Semis"
   },
   "hero": {
     "badge": "Planification de jardin intelligente",
@@ -169,7 +170,8 @@
       "gardenTips": "Conseils",
       "plantEncyclopedia": "Encyclopédie",
       "billingSettings": "Facturation",
-      "gardenSetup": "Configuration"
+      "gardenSetup": "Configuration",
+      "semis": "Semis"
     },
     "greeting": "Bonjour, {name}",
     "myGarden": "Mon Jardin",

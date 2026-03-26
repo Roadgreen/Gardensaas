@@ -15,7 +15,7 @@ import {
   type ClimateZone,
   type SunExposure,
 } from '@/types';
-import { ArrowLeft, ArrowRight, Check, Ruler, Mountain, Cloud, Sun, Sprout, Trophy, Star, MapPin, Locate, Search, Plus, Trash2, Layers, Leaf, AlertTriangle, Clock, ChevronRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Check, Ruler, Mountain, Cloud, Sun, Sprout, Trophy, Star, MapPin, Locate, Search, Plus, Trash2, Layers, Leaf, AlertTriangle, Clock, ChevronRight, Home, Mail, Bell } from 'lucide-react';
 import type { GardenZone, RaisedBed, ZoneType } from '@/types';
 import { ZONE_COLORS, ZONE_TYPE_LABELS } from '@/types';
 import { useLocale } from 'next-intl';
@@ -95,6 +95,9 @@ const ALL_SUBSTEPS = [
   { id: 'climate', majorStep: 1, icon: Cloud, titleKey: 'climate.title', descKey: 'climate.description', tipKey: 'climate' },
   { id: 'sun', majorStep: 1, icon: Sun, titleKey: 'sun.title', descKey: 'sun.description', tipKey: 'sun' },
   { id: 'zones', majorStep: 1, icon: Layers, titleKey: 'zones.title', descKey: 'zones.description', tipKey: 'zones' },
+  { id: 'gardenType', majorStep: 1, icon: Home, titleKey: 'gardenType.title', descKey: 'gardenType.description', tipKey: 'gardenType' },
+  { id: 'gardenFeatures', majorStep: 1, icon: Layers, titleKey: 'gardenFeatures.title', descKey: 'gardenFeatures.description', tipKey: 'gardenFeatures' },
+  { id: 'notifications', majorStep: 1, icon: Bell, titleKey: 'notifications.title', descKey: 'notifications.description', tipKey: 'notifications' },
   { id: 'review', majorStep: 2, icon: Search, titleKey: 'review.title', descKey: 'review.description', tipKey: 'review' },
   { id: 'suggestions', majorStep: 2, icon: Leaf, titleKey: 'suggestions.title', descKey: 'suggestions.description', tipKey: 'suggestions' },
 ];
@@ -294,6 +297,13 @@ export function SetupForm() {
   const [geoError, setGeoError] = useState('');
   const [citySearching, setCitySearching] = useState(false);
 
+  // New garden features state
+  const [hasGreenhouse, setHasGreenhouse] = useState(config.hasGreenhouse || false);
+  const [hasRaisedBeds, setHasRaisedBeds] = useState(config.hasRaisedBeds || false);
+  const [gardenType, setGardenType] = useState<'outdoor' | 'indoor' | 'balcony' | 'terrace'>(config.gardenType || 'outdoor');
+  const [emailNotifications, setEmailNotifications] = useState(config.emailNotifications !== false);
+  const [notificationFrequency, setNotificationFrequency] = useState<'daily' | 'weekly' | 'never'>(config.notificationFrequency || 'daily');
+
   // City autocomplete state
   const [citySuggestions, setCitySuggestions] = useState<CityResult[]>([]);
   const [showCitySuggestions, setShowCitySuggestions] = useState(false);
@@ -481,6 +491,15 @@ export function SetupForm() {
       gainXp(35);
     } else if (id === 'zones') {
       gainXp(40);
+    } else if (id === 'gardenType') {
+      updateConfig({ gardenType });
+      gainXp(15);
+    } else if (id === 'gardenFeatures') {
+      updateConfig({ hasGreenhouse, hasRaisedBeds });
+      gainXp(15);
+    } else if (id === 'notifications') {
+      updateConfig({ emailNotifications, notificationFrequency });
+      gainXp(10);
     } else if (id === 'review') {
       gainXp(15);
     } else if (id === 'suggestions') {
@@ -518,6 +537,21 @@ export function SetupForm() {
     }
     if (currentSubStep.id === 'review') {
       return t('sproutTips.review');
+    }
+    if (currentSubStep.id === 'gardenType') {
+      return locale === 'fr'
+        ? 'Le type de culture influence les conseils que je te donnerai !'
+        : 'The type of growing affects the advice I will give you!';
+    }
+    if (currentSubStep.id === 'gardenFeatures') {
+      return locale === 'fr'
+        ? 'Une serre ou des bacs sureleves changent beaucoup les possibilites !'
+        : 'A greenhouse or raised beds open up many possibilities!';
+    }
+    if (currentSubStep.id === 'notifications') {
+      return locale === 'fr'
+        ? 'Je peux t\'envoyer un email chaque jour avec les taches a faire au jardin !'
+        : 'I can send you a daily email with your garden tasks!';
     }
     return t(`sproutTips.${currentSubStep.tipKey}`);
   };
@@ -989,6 +1023,240 @@ export function SetupForm() {
                   t={t}
                   onXpGain={gainXp}
                 />
+              )}
+
+              {/* ===== Garden Type Step ===== */}
+              {currentSubStep.id === 'gardenType' && (
+                <div className="space-y-3">
+                  {([
+                    { value: 'outdoor' as const, emoji: '\u{1F333}', label: locale === 'fr' ? 'Plein air' : 'Outdoor', desc: locale === 'fr' ? 'Potager classique en pleine terre' : 'Classic outdoor vegetable garden' },
+                    { value: 'indoor' as const, emoji: '\u{1F3E0}', label: locale === 'fr' ? 'Interieur' : 'Indoor', desc: locale === 'fr' ? 'Culture en interieur (lampes, hydroponique...)' : 'Indoor growing (lamps, hydroponics...)' },
+                    { value: 'balcony' as const, emoji: '\u{1FA9F}', label: locale === 'fr' ? 'Balcon' : 'Balcony', desc: locale === 'fr' ? 'Jardiniere et pots sur un balcon' : 'Planters and pots on a balcony' },
+                    { value: 'terrace' as const, emoji: '\u{2600}\u{FE0F}', label: locale === 'fr' ? 'Terrasse' : 'Terrace', desc: locale === 'fr' ? 'Espace de culture sur terrasse' : 'Growing space on a terrace' },
+                  ]).map((opt) => (
+                    <motion.button
+                      key={opt.value}
+                      type="button"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setGardenType(opt.value)}
+                      className={`w-full p-5 rounded-xl border text-left transition-all cursor-pointer ${
+                        gardenType === opt.value
+                          ? 'border-green-500 bg-green-900/30 text-green-50 shadow-lg shadow-green-900/20'
+                          : 'border-green-900/40 bg-[#0D1F17] text-green-300/70 hover:border-green-700/50'
+                      }`}
+                    >
+                      <div className="flex items-center gap-4">
+                        <span className="text-3xl">{opt.emoji}</span>
+                        <div>
+                          <span className="font-medium block text-lg">{opt.label}</span>
+                          <span className="text-xs text-green-500/50 block mt-1">{opt.desc}</span>
+                        </div>
+                      </div>
+                    </motion.button>
+                  ))}
+                </div>
+              )}
+
+              {/* ===== Garden Features Step (Greenhouse + Raised Beds) ===== */}
+              {currentSubStep.id === 'gardenFeatures' && (
+                <div className="space-y-5">
+                  {/* Greenhouse toggle */}
+                  <motion.button
+                    type="button"
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    onClick={() => setHasGreenhouse(!hasGreenhouse)}
+                    className={`w-full p-5 rounded-xl border text-left transition-all cursor-pointer ${
+                      hasGreenhouse
+                        ? 'border-green-500 bg-green-900/30 text-green-50 shadow-lg shadow-green-900/20'
+                        : 'border-green-900/40 bg-[#0D1F17] text-green-300/70 hover:border-green-700/50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className="text-3xl">{'\u{1F3E1}'}</span>
+                      <div className="flex-1">
+                        <span className="font-medium block text-lg">
+                          {locale === 'fr' ? 'Avez-vous une serre ?' : 'Do you have a greenhouse?'}
+                        </span>
+                        <span className="text-xs text-green-500/50 block mt-1">
+                          {locale === 'fr'
+                            ? 'Une serre permet de prolonger la saison et proteger les plants fragiles'
+                            : 'A greenhouse extends the season and protects fragile plants'}
+                        </span>
+                      </div>
+                      <div className={`w-12 h-7 rounded-full transition-colors flex items-center px-1 ${
+                        hasGreenhouse ? 'bg-green-600' : 'bg-green-900/40'
+                      }`}>
+                        <motion.div
+                          animate={{ x: hasGreenhouse ? 20 : 0 }}
+                          transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                          className="w-5 h-5 rounded-full bg-white shadow"
+                        />
+                      </div>
+                    </div>
+                  </motion.button>
+
+                  {/* Raised beds toggle */}
+                  <motion.button
+                    type="button"
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    onClick={() => setHasRaisedBeds(!hasRaisedBeds)}
+                    className={`w-full p-5 rounded-xl border text-left transition-all cursor-pointer ${
+                      hasRaisedBeds
+                        ? 'border-green-500 bg-green-900/30 text-green-50 shadow-lg shadow-green-900/20'
+                        : 'border-green-900/40 bg-[#0D1F17] text-green-300/70 hover:border-green-700/50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className="text-3xl">{'\u{1F9F1}'}</span>
+                      <div className="flex-1">
+                        <span className="font-medium block text-lg">
+                          {locale === 'fr' ? 'Avez-vous des bacs sureleves ?' : 'Do you have raised beds?'}
+                        </span>
+                        <span className="text-xs text-green-500/50 block mt-1">
+                          {locale === 'fr'
+                            ? 'Les bacs sureleves offrent un meilleur drainage et moins de mauvaises herbes'
+                            : 'Raised beds offer better drainage and fewer weeds'}
+                        </span>
+                      </div>
+                      <div className={`w-12 h-7 rounded-full transition-colors flex items-center px-1 ${
+                        hasRaisedBeds ? 'bg-green-600' : 'bg-green-900/40'
+                      }`}>
+                        <motion.div
+                          animate={{ x: hasRaisedBeds ? 20 : 0 }}
+                          transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                          className="w-5 h-5 rounded-full bg-white shadow"
+                        />
+                      </div>
+                    </div>
+                  </motion.button>
+
+                  {/* Summary */}
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="text-center p-3 rounded-xl bg-green-900/20 border border-green-800/30"
+                  >
+                    <span className="text-green-300/70 text-sm">
+                      {hasGreenhouse && hasRaisedBeds
+                        ? (locale === 'fr' ? 'Super ! Serre + bacs sureleves = un potager au top !' : 'Great! Greenhouse + raised beds = an amazing garden!')
+                        : hasGreenhouse
+                        ? (locale === 'fr' ? 'Une serre, c\'est un vrai plus pour votre jardin !' : 'A greenhouse is a real asset for your garden!')
+                        : hasRaisedBeds
+                        ? (locale === 'fr' ? 'Les bacs sureleves facilitent le jardinage !' : 'Raised beds make gardening easier!')
+                        : (locale === 'fr' ? 'Pas de souci, un potager classique fonctionne tres bien !' : 'No worries, a classic garden works great!')}
+                    </span>
+                  </motion.div>
+                </div>
+              )}
+
+              {/* ===== Notifications Step ===== */}
+              {currentSubStep.id === 'notifications' && (
+                <div className="space-y-5">
+                  {/* Email toggle */}
+                  <motion.button
+                    type="button"
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    onClick={() => setEmailNotifications(!emailNotifications)}
+                    className={`w-full p-5 rounded-xl border text-left transition-all cursor-pointer ${
+                      emailNotifications
+                        ? 'border-green-500 bg-green-900/30 text-green-50 shadow-lg shadow-green-900/20'
+                        : 'border-green-900/40 bg-[#0D1F17] text-green-300/70 hover:border-green-700/50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className="text-3xl">{'\u{1F4E7}'}</span>
+                      <div className="flex-1">
+                        <span className="font-medium block text-lg">
+                          {locale === 'fr'
+                            ? 'Recevoir des notifications par email ?'
+                            : 'Receive email notifications?'}
+                        </span>
+                        <span className="text-xs text-green-500/50 block mt-1">
+                          {locale === 'fr'
+                            ? 'Meteo, arrosage, recoltes et conseils directement dans votre boite mail'
+                            : 'Weather, watering, harvests and tips directly in your inbox'}
+                        </span>
+                      </div>
+                      <div className={`w-12 h-7 rounded-full transition-colors flex items-center px-1 ${
+                        emailNotifications ? 'bg-green-600' : 'bg-green-900/40'
+                      }`}>
+                        <motion.div
+                          animate={{ x: emailNotifications ? 20 : 0 }}
+                          transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                          className="w-5 h-5 rounded-full bg-white shadow"
+                        />
+                      </div>
+                    </div>
+                  </motion.button>
+
+                  {/* Frequency selector - only visible when notifications enabled */}
+                  <AnimatePresence>
+                    {emailNotifications && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="overflow-hidden"
+                      >
+                        <label className="text-sm font-medium text-green-200 block mb-3">
+                          {locale === 'fr' ? 'Frequence des emails' : 'Email frequency'}
+                        </label>
+                        <div className="space-y-2">
+                          {([
+                            { value: 'daily' as const, emoji: '\u{2600}\u{FE0F}', label: locale === 'fr' ? 'Tous les jours' : 'Every day', desc: locale === 'fr' ? 'Un resume quotidien chaque matin' : 'A daily summary every morning' },
+                            { value: 'weekly' as const, emoji: '\u{1F4C5}', label: locale === 'fr' ? 'Une fois par semaine' : 'Once a week', desc: locale === 'fr' ? 'Un resume hebdomadaire le lundi' : 'A weekly summary on Monday' },
+                          ]).map((opt) => (
+                            <motion.button
+                              key={opt.value}
+                              type="button"
+                              whileHover={{ scale: 1.01 }}
+                              whileTap={{ scale: 0.99 }}
+                              onClick={() => setNotificationFrequency(opt.value)}
+                              className={`w-full p-4 rounded-xl border text-left transition-all cursor-pointer ${
+                                notificationFrequency === opt.value
+                                  ? 'border-green-500 bg-green-900/30 text-green-50 shadow-lg shadow-green-900/20'
+                                  : 'border-green-900/40 bg-[#0D1F17] text-green-300/70 hover:border-green-700/50'
+                              }`}
+                            >
+                              <div className="flex items-center gap-3">
+                                <span className="text-2xl">{opt.emoji}</span>
+                                <div>
+                                  <span className="font-medium block">{opt.label}</span>
+                                  <span className="text-xs text-green-500/50 block mt-0.5">{opt.desc}</span>
+                                </div>
+                              </div>
+                            </motion.button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Info about what's included */}
+                  <div className="p-4 rounded-xl bg-[#0D1F17] border border-green-900/40">
+                    <div className="text-sm font-medium text-green-200 mb-3">
+                      {locale === 'fr' ? 'Contenu des emails :' : 'Email content:'}
+                    </div>
+                    <div className="space-y-2">
+                      {[
+                        { emoji: '\u{1F324}\u{FE0F}', text: locale === 'fr' ? 'Meteo du jour pour votre jardin' : 'Today\'s weather for your garden' },
+                        { emoji: '\u{1F4A7}', text: locale === 'fr' ? 'Quoi arroser et en quelle quantite' : 'What to water and how much' },
+                        { emoji: '\u{1F33E}', text: locale === 'fr' ? 'Recoltes pretes ou a venir' : 'Ready or upcoming harvests' },
+                        { emoji: '\u{26A0}\u{FE0F}', text: locale === 'fr' ? 'Alertes gel et canicule' : 'Frost and heat wave alerts' },
+                        { emoji: '\u{1F4A1}', text: locale === 'fr' ? 'Conseils saisonniers' : 'Seasonal tips' },
+                      ].map((item) => (
+                        <div key={item.text} className="flex items-center gap-2 text-xs text-green-400/60">
+                          <span>{item.emoji}</span>
+                          <span>{item.text}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               )}
 
               {/* ===== Review Step ===== */}

@@ -67,7 +67,7 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale} className="dark" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         {/* Preconnect to image CDN for faster LCP on plant pages */}

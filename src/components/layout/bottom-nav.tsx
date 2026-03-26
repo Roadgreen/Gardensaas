@@ -8,6 +8,7 @@ import { Sprout, Leaf, LayoutDashboard, Box, Settings } from 'lucide-react';
 const navRoutes = [
   { href: '/', labelKey: 'home', icon: Sprout },
   { href: '/plants', labelKey: 'plants', icon: Leaf },
+  { href: '/garden/semis', labelKey: 'semis', icon: Sprout },
   { href: '/garden/dashboard', labelKey: 'myGarden', icon: LayoutDashboard },
   { href: '/garden/3d', labelKey: '3dView', icon: Box },
   { href: '/garden/settings', labelKey: 'settings', icon: Settings },
@@ -20,6 +21,7 @@ export function BottomNav() {
   const navLabels: Record<string, string> = {
     home: t('home'),
     plants: t('plants'),
+    semis: t('semis'),
     myGarden: t('myGarden'),
     '3dView': t('3dView'),
     settings: t('settings'),

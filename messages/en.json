@@ -8,7 +8,8 @@
     "signIn": "Sign In",
     "startFree": "Start Free",
     "account": "Account",
-    "settings": "Settings"
+    "settings": "Settings",
+    "semis": "Seedlings"
   },
   "hero": {
     "badge": "Smart Garden Planning Made Easy",
@@ -169,7 +170,8 @@
       "gardenTips": "Garden Tips",
       "plantEncyclopedia": "Plant Encyclopedia",
       "billingSettings": "Billing & Settings",
-      "gardenSetup": "Garden Setup"
+      "gardenSetup": "Garden Setup",
+      "semis": "Seedlings"
     },
     "greeting": "Hello, {name}",
     "myGarden": "My Garden",
